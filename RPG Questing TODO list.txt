@@ -1,4 +1,18 @@
-Quest flags
+Quest indicators
+* ? for available quests
+* ... for quests in progress
+* ! for quests ready to turn in
+
+Quest indicator colors
+* Green for normal quests
+* Blue for repeatable quests
+* Orange for limited time quests (eg. event quests)
+
+
+Quest attributes
+* Hidden (does not display marker when status is "available")
+* Shareable (allows you to invite other players, giving them the option to start the quest, bypassing the normal quest start trigger)
+
 
 Quest start triggers
 * Dialogue choice
@@ -42,3 +56,8 @@ Actions
 * Teleport entities
 * Remove items from inventory
 * Give items
+
+
+
+Journal
+Tabview
