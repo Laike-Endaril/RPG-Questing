@@ -1,0 +1,44 @@
+Quest flags
+
+Quest start triggers
+* Dialogue choice
+* Entity killed
+* Item obtained
+* Item broken
+* Entity damaged
+* Entity healed
+* Area entered
+* Area left
+
+
+Quest start conditions
+* Items in inventory
+* Quest progression point reached
+* HP level of entity
+* Space in inventory
+* Entity within area
+
+
+Quest start actions (see actions)
+
+
+Quest objectives
+* Dialogue choices
+* Kill entities
+* Damage entities
+* Heal entities
+* Item collection
+* Enter area
+* Leave area
+
+
+Quest completion actions (see actions)
+
+
+Actions
+* Kill entities
+* Deal damage to entities
+* Heal entities
+* Teleport entities
+* Remove items from inventory
+* Give items
