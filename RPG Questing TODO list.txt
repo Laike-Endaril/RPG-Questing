@@ -1,21 +1,27 @@
-Quest indicators
-* ? for available quests
+Quest indicator symbols
+* ! for available quests that can't be reapated
+* Circular arrow for available quests that can be repeated
 * ... for quests in progress
-* ! for quests ready to turn in
+* ? for quests ready to turn in
 
-Quest indicator colors
-* Green for normal quests
-* Blue for repeatable quests
-* Orange for limited time quests (eg. event quests)
+Quest indicator color config; each is a level difference and a color
+Eg. "0, FFFF00" would mean that a level difference of 0 makes the indicator yellow
+Based on BlueRPG level
 
 
 Quest attributes
 * Group (string; the quest group that the quest belongs to; this will often be the name of the area where it's started; a blank quest group is replaced with "General")
+* Suggested level (if BlueRPG is installed)
 * Hidden (boolean; does not display marker when status or appear in journal when "available")
 * Shareable (boolean; allows you to invite other players, giving them the option to start the quest, bypassing the normal quest start trigger)
+* Quest start triggers
+* Quest start conditions
+* Quest start actions
+* Quest objectives
+* Quest completion actions
 
 
-Quest start triggers
+Triggers
 * Dialogue choice
 * Entity killed
 * Item obtained
@@ -26,28 +32,12 @@ Quest start triggers
 * Area left
 
 
-Quest start conditions
+Conditions
+* Space in inventory
 * Items in inventory
 * Quest progression point reached
 * HP level of entity
-* Space in inventory
 * Entity within area
-
-
-Quest start actions (see actions)
-
-
-Quest objectives
-* Dialogue choices
-* Kill entities
-* Damage entities
-* Heal entities
-* Item collection
-* Enter area
-* Leave area
-
-
-Quest completion actions (see actions)
 
 
 Actions
@@ -57,6 +47,15 @@ Actions
 * Teleport entities
 * Remove items from inventory
 * Give items
+
+
+Objectives types
+* Dialogue
+* Kills
+* Gather items
+* Enter area
+* Leave area
+* Survive
 
 
 
