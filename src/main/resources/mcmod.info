@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rpgquesting",
+  "name": "RPG Questing",
+  "description": "An RPG-style questing system",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Laike_Endaril"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
