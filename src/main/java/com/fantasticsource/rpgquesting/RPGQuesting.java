@@ -1,8 +1,10 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.rpgquesting.dialogue.Dialogues;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -25,5 +27,11 @@ public class RPGQuesting
     public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
     {
         if (event.getModID().equals(MODID)) ConfigManager.sync(MODID, Config.Type.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
+    {
+        if (Dialogues.handle(event.getTarget())) event.setCanceled(true);
     }
 }
