@@ -1,7 +1,8 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.rpgquesting.dialogue.DialogueGUI;
+import com.fantasticsource.rpgquesting.dialogue.Dialogue;
 import com.fantasticsource.rpgquesting.dialogue.Dialogues;
+import com.fantasticsource.rpgquesting.dialogue.DialoguesGUI;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -10,6 +11,8 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
 
 @Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.021i,)")
 public class RPGQuesting
@@ -33,7 +36,14 @@ public class RPGQuesting
     @SubscribeEvent
     public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
     {
-        DialogueGUI.show(null);
+        //TODO testing area start
+        ArrayList<Dialogue> dialogues = new ArrayList<>();
+        dialogues.add(new Dialogue("The One Ring"));
+        dialogues.add(new Dialogue("The Two Towers"));
+        dialogues.add(new Dialogue("The Return of the King"));
+        DialoguesGUI.show(dialogues);
+        //TODO testing area end
+
         if (Dialogues.handle(event.getTarget())) event.setCanceled(true);
     }
 }
