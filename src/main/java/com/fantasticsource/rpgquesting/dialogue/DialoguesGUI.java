@@ -6,20 +6,22 @@ import com.fantasticsource.mctools.gui.guielements.rect.view.GUIRectScrollView;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
-public class DialogueGUI extends GUIScreen
+import java.util.ArrayList;
+
+public class DialoguesGUI extends GUIScreen
 {
-    public static DialogueGUI GUI;
+    public static DialoguesGUI GUI;
 
     static
     {
-        GUI = new DialogueGUI();
+        GUI = new DialoguesGUI();
     }
 
-    private DialogueGUI()
+    private DialoguesGUI()
     {
     }
 
-    public static void show(Dialogue dialogue)
+    public static void show(ArrayList<Dialogue> dialogues)
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
     }

@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.rpgquesting.dialogue.DialogueGUI;
 import com.fantasticsource.rpgquesting.dialogue.Dialogues;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -32,6 +33,7 @@ public class RPGQuesting
     @SubscribeEvent
     public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
     {
+        DialogueGUI.show(null);
         if (Dialogues.handle(event.getTarget())) event.setCanceled(true);
     }
 }

@@ -17,7 +17,11 @@ public class Dialogues
         }
         if (found.size() == 0) return false;
 
-        if (entity.world.isRemote) DialogueGUI.IN
+        //Early exit if we're server-side
+        if (!entity.world.isRemote) return true;
+
+        if (found.size() == 1) DialogueGUI.show(found.get(0));
+        else DialoguesGUI.show(found);
         return true;
     }
 }
