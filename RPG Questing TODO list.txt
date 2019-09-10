@@ -12,13 +12,15 @@ Based on BlueRPG level
 Quest attributes
 * Group (string; the quest group that the quest belongs to; this will often be the name of the area where it's started; a blank quest group is replaced with "General")
 * Suggested level (if BlueRPG is installed)
-* Hidden (boolean; does not display marker when status or appear in journal when "available")
 * Shareable (boolean; allows you to invite other players, giving them the option to start the quest, bypassing the normal quest start trigger)
+* Hidden (boolean; does not display marker when status or appear in journal when "available")
 * Quest start triggers
 * Quest start conditions
 * Quest start actions
 * Quest objectives
 * Quest completion actions
+* Rewarded exp
+* Rewarded items
 
 
 Triggers
