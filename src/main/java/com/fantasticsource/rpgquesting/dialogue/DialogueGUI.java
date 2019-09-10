@@ -19,7 +19,7 @@ public class DialogueGUI extends GUIScreen
     {
     }
 
-    public static void show(Dialogue dialogue)
+    public static void show(CDialogue dialogue)
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
     }

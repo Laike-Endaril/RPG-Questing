@@ -18,7 +18,7 @@ public class DialoguesGUI extends GUIScreen
 {
     public static DialoguesGUI GUI;
     private static GUIRectScrollView scrollView;
-    private static LinkedHashMap<GUIElement, Dialogue> dialogueLinks = new LinkedHashMap<>();
+    private static LinkedHashMap<GUIElement, CDialogue> dialogueLinks = new LinkedHashMap<>();
 
     static
     {
@@ -30,16 +30,16 @@ public class DialoguesGUI extends GUIScreen
     {
     }
 
-    public static void show(ArrayList<Dialogue> dialogues)
+    public static void show(ArrayList<CDialogue> dialogues)
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         dialogueLinks.clear();
         scrollView.clear();
         double yy = 0;
-        for (Dialogue dialogue : dialogues)
+        for (CDialogue dialogue : dialogues)
         {
-            GUITextButton button = new GUITextButton(GUI, 0, yy, dialogue.name);
+            GUITextButton button = new GUITextButton(GUI, 0, yy, dialogue.name.value);
             scrollView.add(button);
             dialogueLinks.put(button, dialogue);
 
@@ -58,7 +58,7 @@ public class DialoguesGUI extends GUIScreen
     @SubscribeEvent
     public static void click(GUILeftClickEvent event)
     {
-        Dialogue dialogue = dialogueLinks.get(event.getElement());
+        CDialogue dialogue = dialogueLinks.get(event.getElement());
         if (dialogue != null) DialogueGUI.show(dialogue);
     }
 }

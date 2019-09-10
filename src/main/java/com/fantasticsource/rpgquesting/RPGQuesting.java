@@ -1,6 +1,6 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.rpgquesting.dialogue.Dialogue;
+import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.Dialogues;
 import com.fantasticsource.rpgquesting.dialogue.DialoguesGUI;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,10 +37,10 @@ public class RPGQuesting
     public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
     {
         //TODO testing area start
-        ArrayList<Dialogue> dialogues = new ArrayList<>();
-        dialogues.add(new Dialogue("The One Ring"));
-        dialogues.add(new Dialogue("The Two Towers"));
-        dialogues.add(new Dialogue("The Return of the King"));
+        ArrayList<CDialogue> dialogues = new ArrayList<>();
+        dialogues.add(new CDialogue("The One Ring"));
+        dialogues.add(new CDialogue("The Two Towers"));
+        dialogues.add(new CDialogue("The Return of the King"));
         DialoguesGUI.show(dialogues);
         //TODO testing area end
 
