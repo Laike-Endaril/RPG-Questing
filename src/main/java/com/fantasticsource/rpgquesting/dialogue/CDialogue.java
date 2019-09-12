@@ -10,10 +10,13 @@ import net.minecraft.entity.Entity;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class CDialogue extends Component
 {
-    public final CStringUTF8 name;
+    public CStringUTF8 name;
+    public ArrayList<Component> mainContents = new ArrayList<>();
+    public ArrayList<Component> buttons = new ArrayList<>();
 
     public CDialogue(String name)
     {
