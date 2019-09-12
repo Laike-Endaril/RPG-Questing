@@ -11,6 +11,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 
@@ -37,11 +38,14 @@ public class RPGQuesting
     public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
     {
         //TODO testing area start
-        ArrayList<CDialogue> dialogues = new ArrayList<>();
-        dialogues.add(new CDialogue("The One Ring"));
-        dialogues.add(new CDialogue("The Two Towers"));
-        dialogues.add(new CDialogue("The Return of the King"));
-        DialoguesGUI.show(dialogues);
+        if (event.getSide() == Side.CLIENT)
+        {
+            ArrayList<CDialogue> dialogues = new ArrayList<>();
+            dialogues.add(new CDialogue("The One Ring"));
+            dialogues.add(new CDialogue("The Two Towers"));
+            dialogues.add(new CDialogue("The Return of the King"));
+            DialoguesGUI.show(dialogues);
+        }
         //TODO testing area end
 
         if (Dialogues.handle(event.getTarget())) event.setCanceled(true);

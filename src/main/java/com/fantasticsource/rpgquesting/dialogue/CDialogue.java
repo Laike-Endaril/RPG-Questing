@@ -2,7 +2,8 @@ package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.mctools.component.CStringUTF8;
 import com.fantasticsource.mctools.component.Component;
-import com.fantasticsource.mctools.gui.guielements.GUIElement;
+import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 
@@ -16,7 +17,7 @@ public class CDialogue extends Component
 
     public CDialogue(String name)
     {
-        this.name = new CStringUTF8(this);
+        this.name = new CStringUTF8(this).set(name);
     }
 
     public boolean entityHas(Entity entity)
@@ -61,7 +62,7 @@ public class CDialogue extends Component
     }
 
     @Override
-    public GUIElement getGUIElement()
+    public GUIElement getGUIElement(GUIScreen screen)
     {
         return null;
     }

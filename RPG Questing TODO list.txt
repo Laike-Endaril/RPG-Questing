@@ -66,3 +66,7 @@ Journal
 * "Available" tab can be disabled in global config (still shows for OPs in creative mode)
 * Each navigator view is a scrollview containing multiple spoilerviews (each of which is a quest group)
 * Scrollview on right; shows info for currently selected quest
+
+
+
+Show player and NPC models during dialogue

@@ -2,7 +2,8 @@ package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CStringUTF8;
 import com.fantasticsource.mctools.component.Component;
-import com.fantasticsource.mctools.gui.guielements.GUIElement;
+import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import io.netty.buffer.ByteBuf;
 
 import java.io.FileInputStream;
@@ -50,7 +51,7 @@ public class CQuest extends Component
     }
 
     @Override
-    public GUIElement getGUIElement()
+    public GUIElement getGUIElement(GUIScreen screen)
     {
         return null;
     }
