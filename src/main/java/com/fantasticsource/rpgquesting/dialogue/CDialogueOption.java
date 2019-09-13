@@ -1,5 +1,6 @@
-package com.fantasticsource.rpgquesting.quest;
+package com.fantasticsource.rpgquesting.dialogue;
 
+import com.fantasticsource.mctools.component.CInt;
 import com.fantasticsource.mctools.component.CStringUTF8;
 import com.fantasticsource.mctools.component.Component;
 import com.fantasticsource.mctools.gui.GUIScreen;
@@ -10,54 +11,55 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class CQuest extends Component
+public class CDialogueOption extends Component
 {
-    public CStringUTF8 name, description;
+    CStringUTF8 value;
+    CInt nextDialogueSection;
 
     @Override
-    public CQuest write(ByteBuf byteBuf)
+    public CDialogueOption write(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CQuest read(ByteBuf byteBuf)
+    public CDialogueOption read(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CQuest save(FileOutputStream fileOutputStream) throws IOException
+    public CDialogueOption save(FileOutputStream fileOutputStream) throws IOException
     {
         return this;
     }
 
     @Override
-    public CQuest load(FileInputStream fileInputStream) throws IOException
+    public CDialogueOption load(FileInputStream fileInputStream) throws IOException
     {
         return this;
     }
 
     @Override
-    public CQuest parse(String s)
+    public CDialogueOption parse(String s)
     {
         return this;
     }
 
     @Override
-    public CQuest copy()
+    public CDialogueOption copy()
     {
         return null;
     }
 
     @Override
-    public GUIElement getGUIElement(GUIScreen screen)
+    public GUIElement getGUIElement(GUIScreen guiScreen)
     {
         return null;
     }
 
     @Override
-    public CQuest setFromGUIElement(GUIElement guiElement)
+    public CDialogueOption setFromGUIElement(GUIElement guiElement)
     {
         return this;
     }

@@ -41,9 +41,8 @@ public class RPGQuesting
         if (event.getSide() == Side.CLIENT)
         {
             ArrayList<CDialogue> dialogues = new ArrayList<>();
-            dialogues.add(new CDialogue("The One Ring"));
-            dialogues.add(new CDialogue("The Two Towers"));
-            dialogues.add(new CDialogue("The Return of the King"));
+            dialogues.add(new CDialogue("The Depths of Waterdeep"));
+            dialogues.add(new CDialogue("Wirt's Arm"));
             DialoguesGUI.show(dialogues);
         }
         //TODO testing area end
