@@ -27,7 +27,7 @@ public class Dialogues
         }
         else
         {
-            //TODO multiple dialogues to choose from
+            Network.WRAPPER.sendTo(new Network.MultipleDialoguesPacket(entity.getEntityId(), found), player);
         }
 
         return true;
