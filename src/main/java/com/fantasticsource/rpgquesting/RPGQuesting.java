@@ -30,6 +30,7 @@ public class RPGQuesting
 
         //TODO test code here
         CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("minecraft", "chicken"));
+        filter = new CDialogueFilter().add("chicken");
         Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter));
         Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter));
     }

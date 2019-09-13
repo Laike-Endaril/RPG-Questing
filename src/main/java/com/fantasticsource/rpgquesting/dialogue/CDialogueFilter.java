@@ -63,6 +63,7 @@ public class CDialogueFilter extends Component
             if (entity.getPersistentID().equals(id.value)) return true;
         }
 
+        System.out.println("1");
         boolean found = allowedEntityEntries.size() == 0;
         for (EntityEntry entry : allowedEntityEntries)
         {
@@ -74,10 +75,11 @@ public class CDialogueFilter extends Component
         }
         if (!found) return false;
 
+        System.out.println("2");
         found = allowedEntityNames.size() == 0;
         for (CStringUTF8 name : allowedEntityNames)
         {
-            if (name.value.equals(entity.getDisplayName().toString()))
+            if (name.value.equals(entity.getName()))
             {
                 found = true;
                 break;
