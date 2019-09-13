@@ -53,11 +53,7 @@ public class DialoguesGUI extends GUIScreen
     public static void click(GUILeftClickEvent event)
     {
         CStringUTF8 saveName = buttonToSaveName.get(event.getElement());
-        if (saveName != null)
-        {
-            Network.WRAPPER.sendToServer(new ChooseDialoguePacket(saveName));
-        }
-        GUI.close();
+        if (saveName != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(saveName));
     }
 
     @Override

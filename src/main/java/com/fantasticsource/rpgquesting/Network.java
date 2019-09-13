@@ -199,7 +199,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(CloseDialoguePacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> DialoguesGUI.GUI.close());
+            Minecraft.getMinecraft().addScheduledTask(() -> DialogueGUI.GUI.close());
             return null;
         }
     }
