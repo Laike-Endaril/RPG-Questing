@@ -15,13 +15,16 @@ import java.util.ArrayList;
 
 public class CDialogue extends Component implements IObfuscatedComponent
 {
-    public CStringUTF8 name;
-    public ArrayList<Component> mainContents = new ArrayList<>();
-    public ArrayList<Component> buttons = new ArrayList<>();
+    //Only exists server-side
+    public CStringUTF8 saveName;
+    public CStringUTF8 displayName; //Visible to the player on the dialogue selection screen (DialoguesGUI) when multiple dialogues are available
+    public ArrayList<CDialogueBranch> branches = new ArrayList<>(); //All branches that make up the possible dialogue routes that can be taken
+    public int currentBranch = 0; //The currently active branch (enforce changes upon packet received from client)
 
-    public CDialogue(String name)
+    public CDialogue(String saveName, String displayName)
     {
-        this.name = new CStringUTF8().set(name);
+        this.saveName = new CStringUTF8().set(saveName);
+        this.displayName = new CStringUTF8().set(displayName);
     }
 
     public boolean entityHas(Entity entity)

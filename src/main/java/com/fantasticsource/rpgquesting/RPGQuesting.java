@@ -1,8 +1,7 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.Dialogues;
-import com.fantasticsource.rpgquesting.dialogue.DialoguesGUI;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -12,8 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.ArrayList;
 
 @Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.021i,)")
 public class RPGQuesting
@@ -37,16 +34,9 @@ public class RPGQuesting
     @SubscribeEvent
     public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
     {
-        //TODO testing area start
-        if (event.getSide() == Side.CLIENT)
+        if (event.getSide() == Side.SERVER)
         {
-            ArrayList<CDialogue> dialogues = new ArrayList<>();
-            dialogues.add(new CDialogue("The Depths of Waterdeep"));
-            dialogues.add(new CDialogue("Wirt's Arm"));
-            DialoguesGUI.show(dialogues);
+            if (Dialogues.handle((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
         }
-        //TODO testing area end
-
-        if (Dialogues.handle(event.getTarget())) event.setCanceled(true);
     }
 }
