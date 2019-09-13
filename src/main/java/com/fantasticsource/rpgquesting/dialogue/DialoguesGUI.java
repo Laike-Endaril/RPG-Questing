@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.dialogue;
 import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
+import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
@@ -49,6 +50,8 @@ public class DialoguesGUI extends GUIScreen
     @Override
     protected void init()
     {
+        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+
         scrollView = new GUIScrollView(this, 0, 0, 0.98, 1);
         scrollView.setSubElementAutoplaceMethod(AP_CENTER_V_CENTER_H);
         guiElements.add(scrollView);

@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
@@ -50,6 +51,8 @@ public class DialogueGUI extends GUIScreen
     @Override
     protected void init()
     {
+        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+
         double buttonHeight = new GUITextButton(this, "A").height;
 
         scrollView = new GUIScrollView(this, 0, 0, 0.98, 1 - buttonHeight);
@@ -57,13 +60,17 @@ public class DialogueGUI extends GUIScreen
         scrollbar = new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1 - buttonHeight, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView);
         guiElements.add(scrollbar);
 
-        buttonBar = new GUIGradientBorder(this, 0, 1 - buttonHeight, 1, buttonHeight, 0.05, Color.WHITE, Color.BLANK);
+        buttonBar = new GUIGradientBorder(this, 0, 1 - buttonHeight, 1, buttonHeight, 0.2, Color.GRAY, Color.BLANK);
         guiElements.add(buttonBar);
 
+        //TODO temp code past this point
         scrollView.add(new GUIText(this, "Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", Color.WHITE, Color.RED, Color.BLUE));
         scrollView.add(new GUIText(this, "Blah blah", Color.WHITE, Color.RED, Color.BLUE));
         scrollView.add(new GUIText(this, "Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", Color.WHITE, Color.RED, Color.BLUE));
         scrollView.add(new GUIText(this, "Blah blah", Color.WHITE, Color.RED, Color.BLUE));
         scrollView.add(new GUIText(this, "Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", Color.WHITE, Color.RED, Color.BLUE));
+
+        buttonBar.add(new GUITextButton(this, "Accept"));
+        buttonBar.add(new GUITextButton(this, "Decline"));
     }
 }
