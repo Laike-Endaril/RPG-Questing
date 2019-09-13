@@ -1,14 +1,17 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.component.CStringUTF8;
+import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
+import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 
@@ -24,6 +27,7 @@ public class DialogueGUI extends GUIScreen
     static
     {
         GUI = new DialogueGUI();
+        MinecraftForge.EVENT_BUS.register(DialogueGUI.class);
     }
 
     private DialogueGUI()
@@ -34,17 +38,18 @@ public class DialogueGUI extends GUIScreen
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
-        if (packet.clear)
-        {
-            lines.clear();
-            current = packet.branch;
-        }
+        if (packet.clear) lines.clear();
+
+        current = packet.branch;
         lines.add(current.paragraph.value);
         lines.add("\n");
 
         scrollView.clear();
         for (String line : lines) scrollView.add(new GUIText(GUI, processString(line)));
-        for (CStringUTF8 choice : current.choices) scrollView.add(new GUIText(GUI, processString(choice.value)));
+        for (CDialogueChoice choice : current.choices)
+        {
+            scrollView.add(new GUIText(GUI, processString(choice.text.value), Color.GREEN, Color.AQUA, Color.WHITE));
+        }
     }
 
     public static String processString(String string)
@@ -61,5 +66,19 @@ public class DialogueGUI extends GUIScreen
         guiElements.add(scrollView);
         GUIVerticalScrollbar scrollbar = new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView);
         guiElements.add(scrollbar);
+    }
+
+    @SubscribeEvent
+    public static void click(GUILeftClickEvent event)
+    {
+        String s = event.getElement().toString();
+        for (CDialogueChoice choice : current.choices)
+        {
+            if (choice.text.value.equals(s))
+            {
+                Network.WRAPPER.sendToServer(new Network.MakeChoicePacket(current, s));
+                break;
+            }
+        }
     }
 }

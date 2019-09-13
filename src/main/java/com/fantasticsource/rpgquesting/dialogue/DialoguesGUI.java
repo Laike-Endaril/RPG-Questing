@@ -22,7 +22,6 @@ import static com.fantasticsource.mctools.gui.element.GUIElement.AP_CENTER_V_CEN
 public class DialoguesGUI extends GUIScreen
 {
     public static DialoguesGUI GUI;
-    private static int targetID;
     private static LinkedHashMap<GUITextButton, CStringUTF8> buttonToSaveName = new LinkedHashMap<>();
     private static GUIScrollView scrollView;
 
@@ -38,8 +37,6 @@ public class DialoguesGUI extends GUIScreen
 
     public static void show(MultipleDialoguesPacket packet)
     {
-        targetID = packet.targetID;
-
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         scrollView.clear();
@@ -58,7 +55,7 @@ public class DialoguesGUI extends GUIScreen
         CStringUTF8 saveName = buttonToSaveName.get(event.getElement());
         if (saveName != null)
         {
-            Network.WRAPPER.sendToServer(new ChooseDialoguePacket(targetID, saveName));
+            Network.WRAPPER.sendToServer(new ChooseDialoguePacket(saveName));
         }
         GUI.close();
     }

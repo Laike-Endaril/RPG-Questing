@@ -1,9 +1,9 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.rpgquesting.dialogue.CDialogue;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueFilter;
-import com.fantasticsource.rpgquesting.dialogue.Dialogues;
+import com.fantasticsource.rpgquesting.dialogue.*;
+import com.fantasticsource.rpgquesting.dialogue.actions.CActionEndDialogue;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -28,9 +28,13 @@ public class RPGQuesting
         MinecraftForge.EVENT_BUS.register(RPGQuesting.class);
 
         //TODO test code here
-        CDialogueFilter filter = new CDialogueFilter().add("chicken");
-        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter));
-        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter));
+        CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("wolf"));
+
+        CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").add(new CActionEndDialogue());
+        CDialogueBranch branch = new CDialogueBranch("Stuff happens", choiceEndDialogue);
+
+        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter).add(branch));
+        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter).add(branch));
     }
 
     @SubscribeEvent
@@ -46,5 +50,6 @@ public class RPGQuesting
         {
             if (Dialogues.handle((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
         }
+        else Dialogues.targetID = event.getTarget().getEntityId();
     }
 }

@@ -89,13 +89,13 @@ public class CDialogueFilter extends Component
     @Override
     public CDialogueFilter write(ByteBuf buf)
     {
-        return null;
+        return this;
     }
 
     @Override
     public CDialogueFilter read(ByteBuf buf)
     {
-        return null;
+        return this;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class CDialogueFilter extends Component
         {
             name.save(stream);
         }
-        return null;
+        return this;
     }
 
     @Override
@@ -131,13 +131,13 @@ public class CDialogueFilter extends Component
         {
             allowedEntityNames.add(new CStringUTF8().load(stream));
         }
-        return null;
+        return this;
     }
 
     @Override
     public CDialogueFilter parse(String s)
     {
-        return null;
+        return this;
     }
 
     @Override
@@ -155,6 +155,6 @@ public class CDialogueFilter extends Component
     @Override
     public CDialogueFilter setFromGUIElement(GUIElement guiElement)
     {
-        return null;
+        return this;
     }
 }

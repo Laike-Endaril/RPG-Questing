@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.mctools.component.CStringUTF8;
+import com.fantasticsource.mctools.component.CUUID;
 import com.fantasticsource.mctools.component.Component;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
@@ -11,10 +12,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class CDialogue extends Component
 {
-    //Only used server-side
+    CUUID sessionID = new CUUID().set(UUID.randomUUID());
     public CStringUTF8 saveName;
     public CStringUTF8 displayName;
     public ArrayList<CDialogueFilter> filters = new ArrayList<>();
@@ -30,6 +32,12 @@ public class CDialogue extends Component
     public CDialogue add(CDialogueFilter filter)
     {
         filters.add(filter);
+        return this;
+    }
+
+    public CDialogue add(CDialogueBranch branch)
+    {
+        branches.add(branch.setParent(this));
         return this;
     }
 

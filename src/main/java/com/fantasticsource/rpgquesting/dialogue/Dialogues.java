@@ -2,20 +2,25 @@ package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
+import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 
 public class Dialogues
 {
-    private static LinkedHashMap<String, CDialogue> dialogues = new LinkedHashMap<>();
+    public static int targetID = -1;
+
+    private static LinkedHashMap<String, CDialogue> dialoguesBySaveName = new LinkedHashMap<>();
+    private static LinkedHashMap<UUID, CDialogue> dialoguesByID = new LinkedHashMap<>();
 
     public static boolean handle(EntityPlayerMP player, Entity entity)
     {
         ArrayList<CDialogue> found = new ArrayList<>();
-        for (CDialogue dialogue : dialogues.values())
+        for (CDialogue dialogue : dialoguesBySaveName.values())
         {
             if (dialogue.entityHas(entity)) found.add(dialogue);
         }
@@ -27,7 +32,7 @@ public class Dialogues
         }
         else
         {
-            Network.WRAPPER.sendTo(new Network.MultipleDialoguesPacket(entity.getEntityId(), found), player);
+            Network.WRAPPER.sendTo(new MultipleDialoguesPacket(found), player);
         }
 
         return true;
@@ -35,11 +40,17 @@ public class Dialogues
 
     public static void add(CDialogue dialogue)
     {
-        dialogues.put(dialogue.saveName.value, dialogue);
+        dialoguesBySaveName.put(dialogue.saveName.value, dialogue);
+        dialoguesByID.put(dialogue.sessionID.value, dialogue);
     }
 
     public static CDialogue get(String saveName)
     {
-        return dialogues.get(saveName);
+        return dialoguesBySaveName.get(saveName);
+    }
+
+    public static CDialogue get(UUID id)
+    {
+        return dialoguesByID.get(id);
     }
 }

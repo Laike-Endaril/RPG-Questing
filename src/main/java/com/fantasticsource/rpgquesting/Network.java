@@ -27,6 +27,8 @@ public class Network
         WRAPPER.registerMessage(DialogueBranchPacketHandler.class, DialogueBranchPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(MultipleDialoguesPacketHandler.class, MultipleDialoguesPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(ChooseDialoguePacketHandler.class, ChooseDialoguePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(CloseDialoguePacketHandler.class, CloseDialoguePacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(MakeChoicePacketHandler.class, MakeChoicePacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -75,7 +77,6 @@ public class Network
 
     public static class MultipleDialoguesPacket implements IMessage
     {
-        public int targetID;
         public ArrayList<CStringUTF8> dialogueSaveNames = new ArrayList<>();
         public ArrayList<CStringUTF8> dialogueDisplayNames = new ArrayList<>();
 
@@ -84,9 +85,8 @@ public class Network
             //Required
         }
 
-        public MultipleDialoguesPacket(int targetID, ArrayList<CDialogue> dialogues)
+        public MultipleDialoguesPacket(ArrayList<CDialogue> dialogues)
         {
-            this.targetID = targetID;
             for (CDialogue dialogue : dialogues)
             {
                 dialogueSaveNames.add(dialogue.saveName);
@@ -97,7 +97,6 @@ public class Network
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(targetID);
             buf.writeInt(dialogueSaveNames.size());
             for (CStringUTF8 dialogueSaveName : dialogueSaveNames) dialogueSaveName.write(buf);
             for (CStringUTF8 dialogueDisplayName : dialogueDisplayNames) dialogueDisplayName.write(buf);
@@ -106,7 +105,6 @@ public class Network
         @Override
         public void fromBytes(ByteBuf buf)
         {
-            targetID = buf.readInt();
             int size = buf.readInt();
             for (int i = size; i > 0; i--)
             {
@@ -133,7 +131,7 @@ public class Network
 
     public static class ChooseDialoguePacket implements IMessage
     {
-        public int targetID;
+        int targetID;
         CStringUTF8 dialogueSavename;
 
         public ChooseDialoguePacket()
@@ -141,16 +139,15 @@ public class Network
             //Required
         }
 
-        public ChooseDialoguePacket(int targetID, CStringUTF8 dialogueSaveName)
+        public ChooseDialoguePacket(CStringUTF8 dialogueSaveName)
         {
-            this.targetID = targetID;
             this.dialogueSavename = dialogueSaveName;
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(targetID);
+            buf.writeInt(Dialogues.targetID);
             dialogueSavename.write(buf);
         }
 
@@ -172,9 +169,102 @@ public class Network
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
-                if (target != null && target.getDistanceSq(player) < 25)
+                CDialogue dialogue = Dialogues.get(packet.dialogueSavename.value);
+                if (target != null && target.getDistanceSq(player) < 25 && dialogue.entityHas(target))
                 {
-                    WRAPPER.sendTo(new DialogueBranchPacket(true, Dialogues.get(packet.dialogueSavename.value).branches.get(0)), player);
+                    WRAPPER.sendTo(new DialogueBranchPacket(true, dialogue.branches.get(0)), player);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class CloseDialoguePacket implements IMessage
+    {
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+        }
+    }
+
+    public static class CloseDialoguePacketHandler implements IMessageHandler<CloseDialoguePacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(CloseDialoguePacket packet, MessageContext ctx)
+        {
+            Minecraft.getMinecraft().addScheduledTask(() -> DialoguesGUI.GUI.close());
+            return null;
+        }
+    }
+
+
+    public static class MakeChoicePacket implements IMessage
+    {
+        int targetID;
+        public CDialogueBranch currentBranch = new CDialogueBranch();
+        public CStringUTF8 choice = new CStringUTF8();
+
+        public MakeChoicePacket()
+        {
+            //Required
+        }
+
+        public MakeChoicePacket(CDialogueBranch currentBranch, String choice)
+        {
+            this.choice.set(choice);
+            this.currentBranch = currentBranch;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            buf.writeInt(Dialogues.targetID);
+            currentBranch.writeObf(buf);
+            choice.write(buf);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            targetID = buf.readInt();
+            currentBranch = currentBranch.readObf(buf);
+            choice.read(buf);
+        }
+    }
+
+    public static class MakeChoicePacketHandler implements IMessageHandler<MakeChoicePacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(MakeChoicePacket packet, MessageContext ctx)
+        {
+            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+            server.addScheduledTask(() ->
+            {
+                EntityPlayerMP player = ctx.getServerHandler().player;
+                Entity target = player.world.getEntityByID(packet.targetID);
+                CDialogue dialogue = Dialogues.get(packet.currentBranch.parentID.value);
+                if (target != null && target.getDistanceSq(player) < 25 && dialogue.entityHas(target))
+                {
+                    for (CDialogueBranch branch : dialogue.branches)
+                    {
+                        if (branch.sessionID.value.equals(packet.currentBranch.sessionID.value))
+                        {
+                            for (CDialogueChoice choice : branch.choices)
+                            {
+                                if (choice.text.value.equals(packet.choice.value))
+                                {
+                                    choice.execute(player);
+                                }
+                            }
+                        }
+                    }
                 }
             });
             return null;
