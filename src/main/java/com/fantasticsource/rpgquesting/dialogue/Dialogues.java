@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 
 public class Dialogues
 {
-    public static LinkedHashMap<String, CDialogue> dialogues = new LinkedHashMap<>();
+    private static LinkedHashMap<String, CDialogue> dialogues = new LinkedHashMap<>();
 
     public static boolean handle(EntityPlayerMP player, Entity entity)
     {
@@ -31,5 +31,15 @@ public class Dialogues
         }
 
         return true;
+    }
+
+    public static void add(CDialogue dialogue)
+    {
+        dialogues.put(dialogue.saveName.value, dialogue);
+    }
+
+    public static CDialogue get(String saveName)
+    {
+        return dialogues.get(saveName);
     }
 }

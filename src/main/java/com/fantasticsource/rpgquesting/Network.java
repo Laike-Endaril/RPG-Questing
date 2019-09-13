@@ -108,8 +108,14 @@ public class Network
         {
             targetID = buf.readInt();
             int size = buf.readInt();
-            for (int i = size; i > 0; i--) dialogueSaveNames.add(new CStringUTF8().read(buf));
-            for (int i = size; i > 0; i--) dialogueDisplayNames.add(new CStringUTF8().read(buf));
+            for (int i = size; i > 0; i--)
+            {
+                dialogueSaveNames.add(new CStringUTF8().read(buf));
+            }
+            for (int i = size; i > 0; i--)
+            {
+                dialogueDisplayNames.add(new CStringUTF8().read(buf));
+            }
         }
     }
 
@@ -168,7 +174,7 @@ public class Network
                 Entity target = player.world.getEntityByID(packet.targetID);
                 if (target != null && target.getDistanceSq(player) < 25)
                 {
-                    WRAPPER.sendTo(new DialogueBranchPacket(true, Dialogues.dialogues.get(packet.dialogueSavename.value).branches.get(0)), player);
+                    WRAPPER.sendTo(new DialogueBranchPacket(true, Dialogues.get(packet.dialogueSavename.value).branches.get(0)), player);
                 }
             });
             return null;

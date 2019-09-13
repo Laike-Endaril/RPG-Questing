@@ -2,7 +2,6 @@ package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.mctools.component.CStringUTF8;
 import com.fantasticsource.mctools.component.Component;
-import com.fantasticsource.mctools.component.IObfuscatedComponent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import io.netty.buffer.ByteBuf;
@@ -13,13 +12,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CDialogue extends Component implements IObfuscatedComponent
+public class CDialogue extends Component
 {
     //Only exists server-side
     public CStringUTF8 saveName;
     public CStringUTF8 displayName; //Visible to the player on the dialogue selection screen (DialoguesGUI) when multiple dialogues are available
     public ArrayList<CDialogueBranch> branches = new ArrayList<>(); //All branches that make up the possible dialogue routes that can be taken
     public int currentBranch = 0; //The currently active branch (enforce changes upon packet received from client)
+    public ArrayList<CDialogueFilter> filters = new ArrayList<>();
 
     public CDialogue(String saveName, String displayName)
     {
@@ -29,6 +29,10 @@ public class CDialogue extends Component implements IObfuscatedComponent
 
     public boolean entityHas(Entity entity)
     {
+        for (CDialogueFilter filter : filters)
+        {
+            if (filter.allowed(entity)) return true;
+        }
         return false;
     }
 
@@ -76,18 +80,6 @@ public class CDialogue extends Component implements IObfuscatedComponent
 
     @Override
     public CDialogue setFromGUIElement(GUIElement guiElement)
-    {
-        return this;
-    }
-
-    @Override
-    public CDialogue writeObf(ByteBuf byteBuf)
-    {
-        return this;
-    }
-
-    @Override
-    public CDialogue readObf(ByteBuf byteBuf)
     {
         return this;
     }

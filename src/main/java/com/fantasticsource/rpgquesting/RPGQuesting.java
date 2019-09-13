@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.Dialogues;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +23,12 @@ public class RPGQuesting
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
     {
+        Network.init();
         MinecraftForge.EVENT_BUS.register(RPGQuesting.class);
+
+        //TODO test code here
+        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm"));
+        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep"));
     }
 
     @SubscribeEvent
