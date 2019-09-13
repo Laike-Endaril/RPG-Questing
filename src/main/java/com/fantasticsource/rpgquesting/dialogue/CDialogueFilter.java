@@ -2,6 +2,7 @@ package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.mctools.component.CInt;
 import com.fantasticsource.mctools.component.CStringUTF8;
+import com.fantasticsource.mctools.component.CUUID;
 import com.fantasticsource.mctools.component.Component;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
@@ -18,11 +19,50 @@ import java.util.ArrayList;
 
 public class CDialogueFilter extends Component
 {
+    private ArrayList<CUUID> allowedEntities = new ArrayList<>();
     private ArrayList<EntityEntry> allowedEntityEntries = new ArrayList<>();
     private ArrayList<CStringUTF8> allowedEntityNames = new ArrayList<>();
 
+    public CDialogueFilter(Entity... entities)
+    {
+        for (Entity entity : entities)
+        {
+            allowedEntities.add(new CUUID().set(entity.getPersistentID()));
+        }
+    }
+
+    public CDialogueFilter add(Entity entity)
+    {
+        allowedEntities.add(new CUUID().set(entity.getPersistentID()));
+        return this;
+    }
+
+    public CDialogueFilter add(ResourceLocation rl)
+    {
+        EntityEntry entry = ForgeRegistries.ENTITIES.getValue(rl);
+        if (entry != null) add(entry);
+        return this;
+    }
+
+    public CDialogueFilter add(EntityEntry entry)
+    {
+        allowedEntityEntries.add(entry);
+        return this;
+    }
+
+    public CDialogueFilter add(String entityName)
+    {
+        allowedEntityNames.add(new CStringUTF8().set(entityName));
+        return this;
+    }
+
     public boolean allowed(Entity entity)
     {
+        for (CUUID id : allowedEntities)
+        {
+            if (entity.getPersistentID().equals(id.value)) return true;
+        }
+
         boolean found = allowedEntityEntries.size() == 0;
         for (EntityEntry entry : allowedEntityEntries)
         {

@@ -1,8 +1,10 @@
 package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueFilter;
 import com.fantasticsource.rpgquesting.dialogue.Dialogues;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -27,8 +29,9 @@ public class RPGQuesting
         MinecraftForge.EVENT_BUS.register(RPGQuesting.class);
 
         //TODO test code here
-        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm"));
-        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep"));
+        CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("minecraft", "chicken"));
+        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter));
+        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter));
     }
 
     @SubscribeEvent
