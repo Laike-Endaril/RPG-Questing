@@ -10,6 +10,7 @@ import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -17,6 +18,11 @@ import java.util.ArrayList;
 
 public class DialogueGUI extends GUIScreen
 {
+    private static final Color C_CHOICE = Color.GREEN.copy().setRF(0.2f).setBF(0.2f);
+    private static final TextFormatting
+            TF_OLD_CHOICE = TextFormatting.DARK_GREEN,
+            TF_OLD_DIALOGUE = TextFormatting.DARK_GRAY;
+
     public static DialogueGUI GUI;
 
     private static GUIScrollView scrollView;
@@ -51,13 +57,13 @@ public class DialogueGUI extends GUIScreen
 
         for (CDialogueChoice choice : current.choices)
         {
-            scrollView.add(new GUIText(GUI, processString(choice.text.value) + '\n', Color.GREEN, Color.AQUA, Color.WHITE));
+            scrollView.add(new GUIText(GUI, processString(choice.text.value) + '\n', C_CHOICE, Color.AQUA, Color.YELLOW));
         }
     }
 
     public static String processString(String string)
     {
-        return string.replaceAll("@p", Minecraft.getMinecraft().player.getName());
+        return string.replaceAll("@p|@P", Minecraft.getMinecraft().player.getName());
     }
 
     @Override
@@ -80,6 +86,12 @@ public class DialogueGUI extends GUIScreen
         {
             if (choice.text.value.equals(s))
             {
+                for (int i = 0; i < lines.size(); i++)
+                {
+                    String line = lines.get(i);
+                    if (!line.contains(TF_OLD_CHOICE.toString())) lines.set(i, TF_OLD_DIALOGUE + line);
+                }
+                lines.add(TF_OLD_CHOICE + s + "\n\n\n");
                 Network.WRAPPER.sendToServer(new Network.MakeChoicePacket(current, s));
                 break;
             }

@@ -8,6 +8,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.rpgquesting.dialogue.actions.CAction;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import scala.actors.threadpool.Arrays;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,9 +31,9 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
         return this;
     }
 
-    public CDialogueChoice add(CAction action)
+    public CDialogueChoice add(CAction... actions)
     {
-        actions.add(action);
+        this.actions.addAll(Arrays.asList(actions));
         return this;
     }
 

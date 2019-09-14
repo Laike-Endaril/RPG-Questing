@@ -32,11 +32,11 @@ public class RPGQuesting
         CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("wolf"));
 
         CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").add(new CActionEndDialogue());
-        CDialogueBranch branch = new CDialogueBranch("Stuff happens", choiceEndDialogue);
+        CDialogueBranch branch = new CDialogueBranch("Stuff happens @p");
 
         CDialogueBranch branch2 = new CDialogueBranch("Stuff happens 2", choiceEndDialogue);
         CDialogueChoice choiceSure = new CDialogueChoice().setText("Sure").add(new CActionBranch().set(branch2));
-        branch.add(choiceSure);
+        branch.add(choiceSure, choiceEndDialogue);
 
         Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter).add(branch).add(branch2));
         Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter).add(branch).add(branch2));

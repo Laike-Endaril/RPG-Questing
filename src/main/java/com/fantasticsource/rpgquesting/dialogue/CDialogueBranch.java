@@ -39,9 +39,9 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
         return this;
     }
 
-    public CDialogueBranch add(CDialogueChoice choice)
+    public CDialogueBranch add(CDialogueChoice... choices)
     {
-        choices.add(choice);
+        this.choices.addAll(Arrays.asList(choices));
         return this;
     }
 
