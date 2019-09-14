@@ -9,7 +9,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ChooseDialoguePacket;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
-import com.fantasticsource.tools.component.CStringUTF8;
+import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +22,7 @@ import static com.fantasticsource.mctools.gui.element.GUIElement.AP_CENTER_V_CEN
 public class DialoguesGUI extends GUIScreen
 {
     public static DialoguesGUI GUI;
-    private static LinkedHashMap<GUITextButton, CStringUTF8> buttonToSaveName = new LinkedHashMap<>();
+    private static LinkedHashMap<GUITextButton, CUUID> buttonToDialogueSessionID = new LinkedHashMap<>();
     private static GUIScrollView scrollView;
 
     static
@@ -40,11 +40,11 @@ public class DialoguesGUI extends GUIScreen
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         scrollView.clear();
-        buttonToSaveName.clear();
+        buttonToDialogueSessionID.clear();
         for (int i = 0; i < packet.dialogueDisplayNames.size(); i++)
         {
             GUITextButton button = new GUITextButton(GUI, packet.dialogueDisplayNames.get(i).value);
-            buttonToSaveName.put(button, packet.dialogueSaveNames.get(i));
+            buttonToDialogueSessionID.put(button, packet.dialogueSessionIDs.get(i));
             scrollView.add(button);
         }
     }
@@ -52,8 +52,8 @@ public class DialoguesGUI extends GUIScreen
     @SubscribeEvent
     public static void click(GUILeftClickEvent event)
     {
-        CStringUTF8 saveName = buttonToSaveName.get(event.getElement());
-        if (saveName != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(saveName));
+        CUUID dialogueSessionID = buttonToDialogueSessionID.get(event.getElement());
+        if (dialogueSessionID != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(dialogueSessionID));
     }
 
     @Override

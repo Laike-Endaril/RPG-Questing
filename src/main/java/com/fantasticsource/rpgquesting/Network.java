@@ -2,6 +2,7 @@ package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.rpgquesting.dialogue.*;
 import com.fantasticsource.tools.component.CStringUTF8;
+import com.fantasticsource.tools.component.CUUID;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -77,7 +78,7 @@ public class Network
 
     public static class MultipleDialoguesPacket implements IMessage
     {
-        public ArrayList<CStringUTF8> dialogueSaveNames = new ArrayList<>();
+        public ArrayList<CUUID> dialogueSessionIDs = new ArrayList<>();
         public ArrayList<CStringUTF8> dialogueDisplayNames = new ArrayList<>();
 
         public MultipleDialoguesPacket()
@@ -89,7 +90,7 @@ public class Network
         {
             for (CDialogue dialogue : dialogues)
             {
-                dialogueSaveNames.add(dialogue.saveName);
+                dialogueSessionIDs.add(dialogue.sessionID);
                 dialogueDisplayNames.add(dialogue.name);
             }
         }
@@ -97,8 +98,8 @@ public class Network
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(dialogueSaveNames.size());
-            for (CStringUTF8 dialogueSaveName : dialogueSaveNames) dialogueSaveName.write(buf);
+            buf.writeInt(dialogueSessionIDs.size());
+            for (CUUID dialogueSessionID : dialogueSessionIDs) dialogueSessionID.write(buf);
             for (CStringUTF8 dialogueDisplayName : dialogueDisplayNames) dialogueDisplayName.write(buf);
         }
 
@@ -108,7 +109,7 @@ public class Network
             int size = buf.readInt();
             for (int i = size; i > 0; i--)
             {
-                dialogueSaveNames.add(new CStringUTF8().read(buf));
+                dialogueSessionIDs.add(new CUUID().read(buf));
             }
             for (int i = size; i > 0; i--)
             {
@@ -132,30 +133,30 @@ public class Network
     public static class ChooseDialoguePacket implements IMessage
     {
         int targetID;
-        CStringUTF8 dialogueSavename;
+        CUUID dialogueSessionID;
 
         public ChooseDialoguePacket()
         {
             //Required
         }
 
-        public ChooseDialoguePacket(CStringUTF8 dialogueSaveName)
+        public ChooseDialoguePacket(CUUID dialogueSessionID)
         {
-            this.dialogueSavename = dialogueSaveName;
+            this.dialogueSessionID = dialogueSessionID;
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
             buf.writeInt(CDialogues.targetID);
-            dialogueSavename.write(buf);
+            dialogueSessionID.write(buf);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
             targetID = buf.readInt();
-            dialogueSavename = new CStringUTF8().read(buf);
+            dialogueSessionID = new CUUID().read(buf);
         }
     }
 
@@ -169,7 +170,7 @@ public class Network
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
-                CDialogue dialogue = CDialogues.getBySessionID(packet.dialogueSavename.value);
+                CDialogue dialogue = CDialogues.getBySessionID(packet.dialogueSessionID.value);
                 if (target != null && target.getDistanceSq(player) < 25 && dialogue.entityHas(target))
                 {
                     WRAPPER.sendTo(new DialogueBranchPacket(true, dialogue.branches.get(0)), player);
