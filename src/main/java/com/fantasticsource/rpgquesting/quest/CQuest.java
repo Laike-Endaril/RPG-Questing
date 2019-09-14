@@ -2,9 +2,7 @@ package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
-import com.fantasticsource.tools.component.CBoolean;
-import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.Component;
+import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -15,8 +13,11 @@ import java.util.ArrayList;
 
 public class CQuest extends Component
 {
+    public CUUID permanentID = new CUUID();
+
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
+    public CStringUTF8 name = new CStringUTF8();
     public CInt level = new CInt();
     public ArrayList<CObjective> objectives = new ArrayList<>();
     public CBoolean repeatable = new CBoolean();
