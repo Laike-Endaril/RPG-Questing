@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class Quests
 {
-    private static LinkedHashMap<UUID, CQuestData> playerQuestData = new LinkedHashMap<>();
+    private static LinkedHashMap<UUID, CQuestPlayerData> playerQuestData = new LinkedHashMap<>();
 
 
     public static void loadMainQuestData(FMLServerAboutToStartEvent event)
@@ -26,13 +26,13 @@ public class Quests
 
     public static void loadPlayerQuestData(EntityPlayerMP player) throws IOException
     {
-        CQuestData data = new CQuestData(player).load();
+        CQuestPlayerData data = new CQuestPlayerData(player).load();
         if (data != null) playerQuestData.put(player.getPersistentID(), data);
     }
 
     public static void unloadPlayerQuestData(EntityPlayerMP player) throws IOException
     {
-        CQuestData data = playerQuestData.remove(player.getPersistentID());
+        CQuestPlayerData data = playerQuestData.remove(player.getPersistentID());
         if (data != null) data.save();
     }
 
@@ -54,7 +54,7 @@ public class Quests
 
     public static boolean isInProgress(UUID playerID, UUID questID)
     {
-        CQuestData data = playerQuestData.get(playerID);
+        CQuestPlayerData data = playerQuestData.get(playerID);
         if (data == null) return false;
 
         return data.inProgressQuests.contains(questID);
@@ -78,7 +78,7 @@ public class Quests
 
     public static boolean isCompleted(UUID playerID, UUID questID)
     {
-        CQuestData data = playerQuestData.get(playerID);
+        CQuestPlayerData data = playerQuestData.get(playerID);
         if (data == null) return false;
 
         return data.completedQuests.contains(questID);

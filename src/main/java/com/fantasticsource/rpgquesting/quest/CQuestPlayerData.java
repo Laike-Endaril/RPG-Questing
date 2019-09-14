@@ -13,19 +13,19 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class CQuestData extends Component
+public class CQuestPlayerData extends Component
 {
     public final EntityPlayerMP player;
     public ArrayList<UUID> completedQuests = new ArrayList<>();
     public ArrayList<UUID> inProgressQuests = new ArrayList<>();
 
-    public CQuestData(EntityPlayerMP player) throws IOException
+    public CQuestPlayerData(EntityPlayerMP player) throws IOException
     {
         this.player = player;
         load();
     }
 
-    public CQuestData save() throws IOException
+    public CQuestPlayerData save() throws IOException
     {
         File file = new File(MCTools.getPlayerDataDir(FMLCommonHandler.instance().getMinecraftServerInstance()) + player.getPersistentID() + "." + RPGQuesting.MODID);
         File file2 = new File(MCTools.getPlayerDataDir(FMLCommonHandler.instance().getMinecraftServerInstance()) + player.getPersistentID() + "." + RPGQuesting.MODID + ".new");
@@ -41,7 +41,7 @@ public class CQuestData extends Component
         return this;
     }
 
-    public CQuestData load() throws IOException
+    public CQuestPlayerData load() throws IOException
     {
         File file = new File(MCTools.getPlayerDataDir(FMLCommonHandler.instance().getMinecraftServerInstance()) + player.getPersistentID() + "." + RPGQuesting.MODID);
         if (!file.exists()) return null;
@@ -54,7 +54,7 @@ public class CQuestData extends Component
     }
 
     @Override
-    public CQuestData write(ByteBuf buf)
+    public CQuestPlayerData write(ByteBuf buf)
     {
         buf.writeInt(completedQuests.size());
         for (UUID id : completedQuests) new CUUID().set(id).write(buf);
@@ -65,7 +65,7 @@ public class CQuestData extends Component
     }
 
     @Override
-    public CQuestData read(ByteBuf buf)
+    public CQuestPlayerData read(ByteBuf buf)
     {
         for (int i = new CInt().read(buf).value; i > 0; i--) completedQuests.add(new CUUID().read(buf).value);
         for (int i = new CInt().read(buf).value; i > 0; i--) inProgressQuests.add(new CUUID().read(buf).value);
@@ -74,7 +74,7 @@ public class CQuestData extends Component
     }
 
     @Override
-    public CQuestData save(OutputStream stream) throws IOException
+    public CQuestPlayerData save(OutputStream stream) throws IOException
     {
         new CInt().set(completedQuests.size()).save(stream);
         for (UUID id : completedQuests) new CUUID().set(id).save(stream);
@@ -85,7 +85,7 @@ public class CQuestData extends Component
     }
 
     @Override
-    public CQuestData load(InputStream stream) throws IOException
+    public CQuestPlayerData load(InputStream stream) throws IOException
     {
         for (int i = new CInt().load(stream).value; i > 0; i--) completedQuests.add(new CUUID().load(stream).value);
         for (int i = new CInt().load(stream).value; i > 0; i--) inProgressQuests.add(new CUUID().load(stream).value);
