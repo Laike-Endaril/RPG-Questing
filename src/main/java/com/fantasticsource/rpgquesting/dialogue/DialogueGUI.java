@@ -44,11 +44,14 @@ public class DialogueGUI extends GUIScreen
         lines.add(current.paragraph.value);
         lines.add("\n");
 
+
         scrollView.clear();
+
         for (String line : lines) scrollView.add(new GUIText(GUI, processString(line)));
+
         for (CDialogueChoice choice : current.choices)
         {
-            scrollView.add(new GUIText(GUI, processString(choice.text.value), Color.GREEN, Color.AQUA, Color.WHITE));
+            scrollView.add(new GUIText(GUI, processString(choice.text.value) + '\n', Color.GREEN, Color.AQUA, Color.WHITE));
         }
     }
 
@@ -72,6 +75,7 @@ public class DialogueGUI extends GUIScreen
     public static void click(GUILeftClickEvent event)
     {
         String s = event.getElement().toString();
+        s = s.substring(0, s.length() - 1);
         for (CDialogueChoice choice : current.choices)
         {
             if (choice.text.value.equals(s))
