@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.quest;
 
-import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
@@ -9,31 +8,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class CQuest extends Component
+public class CObjective extends Component
 {
-    public CStringUTF8 saveName = new CStringUTF8();
-    public CInt level = new CInt();
+    CStringUTF8 text = new CStringUTF8();
 
     @Override
-    public CQuest write(ByteBuf byteBuf)
+    public CObjective write(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CQuest read(ByteBuf byteBuf)
+    public CObjective read(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CQuest save(OutputStream fileOutputStream) throws IOException
+    public CObjective save(OutputStream fileOutputStream) throws IOException
     {
         return this;
     }
 
     @Override
-    public CQuest load(InputStream fileInputStream) throws IOException
+    public CObjective load(InputStream fileInputStream) throws IOException
     {
         return this;
     }

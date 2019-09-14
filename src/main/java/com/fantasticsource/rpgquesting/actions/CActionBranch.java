@@ -1,17 +1,15 @@
-package com.fantasticsource.rpgquesting.dialogue.actions;
+package com.fantasticsource.rpgquesting.actions;
 
-import com.fantasticsource.mctools.component.CBoolean;
-import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.tools.component.CBoolean;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class CActionBranch extends CAction
 {
@@ -49,37 +47,13 @@ public class CActionBranch extends CAction
     }
 
     @Override
-    public CActionBranch save(FileOutputStream fileOutputStream) throws IOException
+    public CActionBranch save(OutputStream fileOutputStream) throws IOException
     {
         return this;
     }
 
     @Override
-    public CActionBranch load(FileInputStream fileInputStream) throws IOException
-    {
-        return this;
-    }
-
-    @Override
-    public CActionBranch parse(String s)
-    {
-        return this;
-    }
-
-    @Override
-    public CActionBranch copy()
-    {
-        return null;
-    }
-
-    @Override
-    public GUIElement getGUIElement(GUIScreen guiScreen)
-    {
-        return null;
-    }
-
-    @Override
-    public CActionBranch setFromGUIElement(GUIElement guiElement)
+    public CActionBranch load(InputStream fileInputStream) throws IOException
     {
         return this;
     }

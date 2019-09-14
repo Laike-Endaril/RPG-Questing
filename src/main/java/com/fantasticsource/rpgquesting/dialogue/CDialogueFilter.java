@@ -1,20 +1,18 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.component.CInt;
-import com.fantasticsource.mctools.component.CStringUTF8;
-import com.fantasticsource.mctools.component.CUUID;
-import com.fantasticsource.mctools.component.Component;
-import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
+import com.fantasticsource.tools.component.CInt;
+import com.fantasticsource.tools.component.CStringUTF8;
+import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class CDialogueFilter extends Component
@@ -99,7 +97,7 @@ public class CDialogueFilter extends Component
     }
 
     @Override
-    public CDialogueFilter save(FileOutputStream stream) throws IOException
+    public CDialogueFilter save(OutputStream stream) throws IOException
     {
         CInt i = new CInt().set(allowedEntityEntries.size()).save(stream);
         CStringUTF8 str = new CStringUTF8();
@@ -117,7 +115,7 @@ public class CDialogueFilter extends Component
     }
 
     @Override
-    public CDialogueFilter load(FileInputStream stream) throws IOException
+    public CDialogueFilter load(InputStream stream) throws IOException
     {
         allowedEntityEntries.clear();
         CStringUTF8 str = new CStringUTF8();
@@ -131,30 +129,6 @@ public class CDialogueFilter extends Component
         {
             allowedEntityNames.add(new CStringUTF8().load(stream));
         }
-        return this;
-    }
-
-    @Override
-    public CDialogueFilter parse(String s)
-    {
-        return this;
-    }
-
-    @Override
-    public CDialogueFilter copy()
-    {
-        return null;
-    }
-
-    @Override
-    public GUIElement getGUIElement(GUIScreen guiScreen)
-    {
-        return null;
-    }
-
-    @Override
-    public CDialogueFilter setFromGUIElement(GUIElement guiElement)
-    {
         return this;
     }
 }

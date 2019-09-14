@@ -1,8 +1,8 @@
 package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.rpgquesting.dialogue.*;
-import com.fantasticsource.rpgquesting.dialogue.actions.CActionBranch;
-import com.fantasticsource.rpgquesting.dialogue.actions.CActionEndDialogue;
+import com.fantasticsource.rpgquesting.actions.CActionBranch;
+import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;

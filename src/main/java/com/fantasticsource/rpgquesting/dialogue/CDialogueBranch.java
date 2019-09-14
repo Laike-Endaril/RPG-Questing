@@ -1,16 +1,14 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.component.CStringUTF8;
-import com.fantasticsource.mctools.component.CUUID;
-import com.fantasticsource.mctools.component.Component;
-import com.fantasticsource.mctools.component.IObfuscatedComponent;
-import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
+import com.fantasticsource.tools.component.CStringUTF8;
+import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.Component;
+import com.fantasticsource.tools.component.IObfuscatedComponent;
 import io.netty.buffer.ByteBuf;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -58,37 +56,13 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueBranch save(FileOutputStream fileOutputStream) throws IOException
+    public CDialogueBranch save(OutputStream fileOutputStream) throws IOException
     {
         return this;
     }
 
     @Override
-    public CDialogueBranch load(FileInputStream fileInputStream) throws IOException
-    {
-        return this;
-    }
-
-    @Override
-    public CDialogueBranch parse(String s)
-    {
-        return this;
-    }
-
-    @Override
-    public CDialogueBranch copy()
-    {
-        return null;
-    }
-
-    @Override
-    public GUIElement getGUIElement(GUIScreen guiScreen)
-    {
-        return null;
-    }
-
-    @Override
-    public CDialogueBranch setFromGUIElement(GUIElement guiElement)
+    public CDialogueBranch load(InputStream fileInputStream) throws IOException
     {
         return this;
     }

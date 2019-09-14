@@ -1,6 +1,6 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.mctools.component.CStringUTF8;
+import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.rpgquesting.dialogue.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;

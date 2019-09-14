@@ -1,6 +1,6 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.component.CStringUTF8;
+import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;

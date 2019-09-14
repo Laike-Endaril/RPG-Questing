@@ -1,18 +1,16 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.component.CStringUTF8;
-import com.fantasticsource.mctools.component.Component;
-import com.fantasticsource.mctools.component.IObfuscatedComponent;
-import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
-import com.fantasticsource.rpgquesting.dialogue.actions.CAction;
+import com.fantasticsource.rpgquesting.actions.CAction;
+import com.fantasticsource.tools.component.CStringUTF8;
+import com.fantasticsource.tools.component.Component;
+import com.fantasticsource.tools.component.IObfuscatedComponent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import scala.actors.threadpool.Arrays;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class CDialogueChoice extends Component implements IObfuscatedComponent
@@ -50,37 +48,13 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueChoice save(FileOutputStream fileOutputStream) throws IOException
+    public CDialogueChoice save(OutputStream fileOutputStream) throws IOException
     {
         return this;
     }
 
     @Override
-    public CDialogueChoice load(FileInputStream fileInputStream) throws IOException
-    {
-        return this;
-    }
-
-    @Override
-    public CDialogueChoice parse(String s)
-    {
-        return this;
-    }
-
-    @Override
-    public CDialogueChoice copy()
-    {
-        return null;
-    }
-
-    @Override
-    public GUIElement getGUIElement(GUIScreen guiScreen)
-    {
-        return null;
-    }
-
-    @Override
-    public CDialogueChoice setFromGUIElement(GUIElement guiElement)
+    public CDialogueChoice load(InputStream fileInputStream) throws IOException
     {
         return this;
     }
