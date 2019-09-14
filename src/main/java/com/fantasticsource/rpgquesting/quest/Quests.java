@@ -1,13 +1,40 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
 public class Quests
 {
     private static LinkedHashMap<UUID, CQuestData> playerQuestData = new LinkedHashMap<>();
+
+
+    public static void loadMainQuestData(FMLServerAboutToStartEvent event)
+    {
+        playerQuestData.clear();
+        //TODO
+    }
+
+    public static void unloadMainQuestData(FMLServerStoppedEvent event)
+    {
+        playerQuestData.clear();
+    }
+
+    public static void loadPlayerQuestData(EntityPlayerMP player) throws IOException
+    {
+        CQuestData data = new CQuestData(player).load();
+        if (data != null) playerQuestData.put(player.getPersistentID(), data);
+    }
+
+    public static void unloadPlayerQuestData(EntityPlayerMP player) throws IOException
+    {
+        CQuestData data = playerQuestData.remove(player.getPersistentID());
+        if (data != null) data.save();
+    }
 
 
     public static boolean isInProgress(EntityPlayerMP player, CQuest quest)

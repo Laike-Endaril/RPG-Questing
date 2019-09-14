@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting;
 import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.*;
+import com.fantasticsource.rpgquesting.quest.Quests;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -12,8 +13,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.io.IOException;
 
 @Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.021i,)")
 public class RPGQuesting
@@ -27,6 +33,7 @@ public class RPGQuesting
     {
         Network.init();
         MinecraftForge.EVENT_BUS.register(RPGQuesting.class);
+
 
         //TODO test code here
         CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("wolf"));
@@ -59,5 +66,29 @@ public class RPGQuesting
             if (Dialogues.handle((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
         }
         else Dialogues.targetID = event.getTarget().getEntityId();
+    }
+
+    @Mod.EventHandler
+    public static void serverStart(FMLServerAboutToStartEvent event)
+    {
+        Quests.loadMainQuestData(event);
+    }
+
+    @Mod.EventHandler
+    public static void serverStop(FMLServerStoppedEvent event)
+    {
+        Quests.unloadMainQuestData(event);
+    }
+
+    @SubscribeEvent
+    public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) throws IOException
+    {
+        if (event.player instanceof EntityPlayerMP) Quests.loadPlayerQuestData((EntityPlayerMP) event.player);
+    }
+
+    @SubscribeEvent
+    public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) throws IOException
+    {
+        if (event.player instanceof EntityPlayerMP) Quests.unloadPlayerQuestData((EntityPlayerMP) event.player);
     }
 }
