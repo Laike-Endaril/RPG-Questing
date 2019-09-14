@@ -1,18 +1,33 @@
 package com.fantasticsource.rpgquesting.quest;
 
+import com.fantasticsource.mctools.component.CItemStack;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CQuest extends Component
 {
-    public CStringUTF8 saveName = new CStringUTF8();
+    public ArrayList<CCondition> conditions = new ArrayList<>();
+
     public CInt level = new CInt();
+    public ArrayList<CObjective> objectives = new ArrayList<>();
+
+    public CInt experience = new CInt();
+    public ArrayList<CItemStack> rewards = new ArrayList<>();
+
+
+    public final boolean isAvailable(EntityPlayerMP player)
+    {
+        for (CCondition condition : conditions) if (!condition.check(player)) return false;
+        return true;
+    }
 
     @Override
     public CQuest write(ByteBuf byteBuf)
