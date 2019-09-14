@@ -14,17 +14,16 @@ import java.util.UUID;
 
 public class CDialogue extends Component
 {
-    public CStringUTF8 saveName;
-    public CStringUTF8 displayName;
+    public CUUID permanentID = new CUUID();
+    public CStringUTF8 name = new CStringUTF8();
     public ArrayList<CDialogueFilter> filters = new ArrayList<>();
     public ArrayList<CDialogueBranch> branches = new ArrayList<>();
-    public int currentBranch = 0;
-    CUUID sessionID = new CUUID().set(UUID.randomUUID());
+    public CUUID sessionID = new CUUID().set(UUID.randomUUID());
 
-    public CDialogue(String saveName, String displayName)
+    public CDialogue setName(String name)
     {
-        this.saveName = new CStringUTF8().set(saveName);
-        this.displayName = new CStringUTF8().set(displayName);
+        this.name.set(name);
+        return this;
     }
 
     public CDialogue add(CDialogueFilter filter)

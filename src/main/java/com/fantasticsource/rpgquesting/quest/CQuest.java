@@ -14,13 +14,13 @@ import java.util.ArrayList;
 public class CQuest extends Component
 {
     public CUUID permanentID = new CUUID();
-
-    public ArrayList<CCondition> conditions = new ArrayList<>();
-
     public CStringUTF8 name = new CStringUTF8();
     public CInt level = new CInt();
-    public ArrayList<CObjective> objectives = new ArrayList<>();
+
     public CBoolean repeatable = new CBoolean();
+    public ArrayList<CCondition> conditions = new ArrayList<>();
+
+    public ArrayList<CObjective> objectives = new ArrayList<>();
 
     public CInt experience = new CInt();
     public ArrayList<CItemStack> rewards = new ArrayList<>();
@@ -38,12 +38,12 @@ public class CQuest extends Component
 
     public final boolean isInProgress(EntityPlayerMP player)
     {
-        return Quests.isInProgress(player, this);
+        return CQuests.isInProgress(player, this);
     }
 
     public final boolean isCompleted(EntityPlayerMP player)
     {
-        return Quests.isCompleted(player, this);
+        return CQuests.isCompleted(player, this);
     }
 
     @Override
@@ -59,14 +59,41 @@ public class CQuest extends Component
     }
 
     @Override
-    public CQuest save(OutputStream fileOutputStream) throws IOException
+    public CQuest save(OutputStream stream) throws IOException
     {
+        permanentID.save(stream);
+        name.save(stream);
+        level.save(stream);
+
+        repeatable.save(stream);
+        new CInt().set(conditions.size()).save(stream);
+        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
+
+        new CInt().set(objectives.size()).save(stream);
+        for (CObjective objective : objectives) Component.saveMarked(stream, objective);
+
+        experience.save(stream);
+        new CInt().set(rewards.size()).save(stream);
+        for (CItemStack reward : rewards) reward.save(stream);
+
         return this;
     }
 
     @Override
-    public CQuest load(InputStream fileInputStream) throws IOException
+    public CQuest load(InputStream stream) throws IOException
     {
+        permanentID.load(stream);
+        name.load(stream);
+        level.load(stream);
+
+        repeatable.load(stream);
+        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
+
+        for (int i = new CInt().load(stream).value; i > 0; i--) objectives.add((CObjective) Component.loadMarked(stream));
+
+        experience.load(stream);
+        for (int i = new CInt().load(stream).value; i > 0; i--) rewards.add(new CItemStack().load(stream));
+
         return this;
     }
 }

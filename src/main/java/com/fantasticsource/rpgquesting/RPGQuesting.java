@@ -3,8 +3,9 @@ package com.fantasticsource.rpgquesting;
 import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.*;
-import com.fantasticsource.rpgquesting.quest.Quests;
+import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -28,11 +29,37 @@ public class RPGQuesting
     public static final String NAME = "RPG Questing";
     public static final String VERSION = "1.12.2.000";
 
+    public static MinecraftServer server = null;
+
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
     {
         Network.init();
         MinecraftForge.EVENT_BUS.register(RPGQuesting.class);
+    }
+
+    @SubscribeEvent
+    public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
+    {
+        if (event.getModID().equals(MODID)) ConfigManager.sync(MODID, Config.Type.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
+    {
+        if (event.getSide() == Side.SERVER)
+        {
+            if (CDialogues.handle((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
+        }
+        else CDialogues.targetID = event.getTarget().getEntityId();
+    }
+
+    @Mod.EventHandler
+    public static void serverStart(FMLServerAboutToStartEvent event) throws IOException
+    {
+        server = event.getServer();
+        CQuests.QUESTS.load();
+        CDialogues.DIALOGUES.load();
 
 
         //TODO test code here
@@ -48,47 +75,27 @@ public class RPGQuesting
 
         branch.add(choiceYes, choiceNo);
 
-        Dialogues.add(new CDialogue("Fishin", "Fishin'").add(filter).add(branch).add(branch2));
-        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter).add(branch).add(branch2));
-    }
-
-    @SubscribeEvent
-    public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
-    {
-        if (event.getModID().equals(MODID)) ConfigManager.sync(MODID, Config.Type.INSTANCE);
-    }
-
-    @SubscribeEvent
-    public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
-    {
-        if (event.getSide() == Side.SERVER)
-        {
-            if (Dialogues.handle((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
-        }
-        else Dialogues.targetID = event.getTarget().getEntityId();
+        CDialogues.add(new CDialogue().setName("Fishin'").add(filter).add(branch).add(branch2));
+        CDialogues.add(new CDialogue().setName("The Depths of Waterdeep").add(filter).add(branch).add(branch2));
     }
 
     @Mod.EventHandler
-    public static void serverStart(FMLServerAboutToStartEvent event)
+    public static void serverStop(FMLServerStoppedEvent event) throws IOException
     {
-        Quests.loadMainQuestData(event);
-    }
-
-    @Mod.EventHandler
-    public static void serverStop(FMLServerStoppedEvent event)
-    {
-        Quests.unloadMainQuestData(event);
+        CQuests.QUESTS.save();
+        CDialogues.DIALOGUES.save();
+        server = null;
     }
 
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) throws IOException
     {
-        if (event.player instanceof EntityPlayerMP) Quests.loadPlayerQuestData((EntityPlayerMP) event.player);
+        if (event.player instanceof EntityPlayerMP) CQuests.loadPlayerQuestData((EntityPlayerMP) event.player);
     }
 
     @SubscribeEvent
     public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) throws IOException
     {
-        if (event.player instanceof EntityPlayerMP) Quests.unloadPlayerQuestData((EntityPlayerMP) event.player);
+        if (event.player instanceof EntityPlayerMP) CQuests.unloadPlayerQuestData((EntityPlayerMP) event.player);
     }
 }

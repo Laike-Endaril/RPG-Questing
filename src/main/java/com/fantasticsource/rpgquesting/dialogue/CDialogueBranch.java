@@ -90,7 +90,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
         for (int i = buf.readInt(); i > 0; i--) choices.add(new CDialogueChoice().readObf(buf));
 
         //This will only happen on server-side
-        parent = Dialogues.get(parentID.value);
+        parent = CDialogues.getBySessionID(parentID.value);
         if (parent != null)
         {
             for (CDialogueBranch branch : parent.branches)

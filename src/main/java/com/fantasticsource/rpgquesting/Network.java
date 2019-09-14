@@ -90,7 +90,7 @@ public class Network
             for (CDialogue dialogue : dialogues)
             {
                 dialogueSaveNames.add(dialogue.saveName);
-                dialogueDisplayNames.add(dialogue.displayName);
+                dialogueDisplayNames.add(dialogue.name);
             }
         }
 
@@ -147,7 +147,7 @@ public class Network
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(Dialogues.targetID);
+            buf.writeInt(CDialogues.targetID);
             dialogueSavename.write(buf);
         }
 
@@ -169,7 +169,7 @@ public class Network
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
-                CDialogue dialogue = Dialogues.get(packet.dialogueSavename.value);
+                CDialogue dialogue = CDialogues.getBySessionID(packet.dialogueSavename.value);
                 if (target != null && target.getDistanceSq(player) < 25 && dialogue.entityHas(target))
                 {
                     WRAPPER.sendTo(new DialogueBranchPacket(true, dialogue.branches.get(0)), player);
@@ -225,7 +225,7 @@ public class Network
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(Dialogues.targetID);
+            buf.writeInt(CDialogues.targetID);
             currentBranch.writeObf(buf);
             choice.write(buf);
         }
@@ -249,7 +249,7 @@ public class Network
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
-                CDialogue dialogue = Dialogues.get(packet.currentBranch.parentID.value);
+                CDialogue dialogue = CDialogues.getBySessionID(packet.currentBranch.parentID.value);
                 if (target != null && target.getDistanceSq(player) < 25 && dialogue.entityHas(target))
                 {
                     for (CDialogueBranch branch : dialogue.branches)
