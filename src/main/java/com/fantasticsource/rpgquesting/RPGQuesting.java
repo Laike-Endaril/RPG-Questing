@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.rpgquesting.dialogue.*;
+import com.fantasticsource.rpgquesting.dialogue.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.dialogue.actions.CActionEndDialogue;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
@@ -33,8 +34,12 @@ public class RPGQuesting
         CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").add(new CActionEndDialogue());
         CDialogueBranch branch = new CDialogueBranch("Stuff happens", choiceEndDialogue);
 
-        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter).add(branch));
-        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter).add(branch));
+        CDialogueBranch branch2 = new CDialogueBranch("Stuff happens 2", choiceEndDialogue);
+        CDialogueChoice choiceSure = new CDialogueChoice().setText("Sure").add(new CActionBranch().set(branch2));
+        branch.add(choiceSure);
+
+        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter).add(branch).add(branch2));
+        Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter).add(branch).add(branch2));
     }
 
     @SubscribeEvent

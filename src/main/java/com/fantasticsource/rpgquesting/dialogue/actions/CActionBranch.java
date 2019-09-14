@@ -18,6 +18,18 @@ public class CActionBranch extends CAction
     CBoolean clear = new CBoolean();
     CDialogueBranch targetBranch = new CDialogueBranch();
 
+    public CActionBranch set(CDialogueBranch targetBranch)
+    {
+        return set(false, targetBranch);
+    }
+
+    public CActionBranch set(boolean clear, CDialogueBranch targetBranch)
+    {
+        this.clear.set(clear);
+        this.targetBranch = targetBranch;
+        return this;
+    }
+
     @Override
     public void execute(EntityPlayerMP player)
     {
