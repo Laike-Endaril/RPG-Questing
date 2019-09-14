@@ -2,6 +2,7 @@ package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
@@ -18,6 +19,7 @@ public class CQuest extends Component
 
     public CInt level = new CInt();
     public ArrayList<CObjective> objectives = new ArrayList<>();
+    public CBoolean repeatable = new CBoolean();
 
     public CInt experience = new CInt();
     public ArrayList<CItemStack> rewards = new ArrayList<>();
@@ -25,8 +27,22 @@ public class CQuest extends Component
 
     public final boolean isAvailable(EntityPlayerMP player)
     {
+        if (isInProgress(player)) return false;
+
+        if (!repeatable.value && isComplete(player)) return false;
+
         for (CCondition condition : conditions) if (!condition.check(player)) return false;
         return true;
+    }
+
+    public final boolean isInProgress(EntityPlayerMP player)
+    {
+        //TODO
+    }
+
+    public final boolean isComplete(EntityPlayerMP player)
+    {
+        //TODO
     }
 
     @Override
