@@ -32,13 +32,14 @@ public class RPGQuesting
         CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("wolf"));
 
         CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").add(new CActionEndDialogue());
-        CDialogueBranch branch = new CDialogueBranch("Stuff happens @p");
+        CDialogueChoice choiceNo = new CDialogueChoice().setText("No").add(new CActionEndDialogue());
+        CDialogueBranch branch = new CDialogueBranch("Mornin' @p!  Nice day fur fishin', ain't it?");
 
-        CDialogueBranch branch2 = new CDialogueBranch("Stuff happens 2", choiceEndDialogue);
-        CDialogueChoice choiceSure = new CDialogueChoice().setText("Sure").add(new CActionBranch().set(branch2));
-        branch.add(choiceSure, choiceEndDialogue);
+        CDialogueBranch branch2 = new CDialogueBranch("Hu-huh!", choiceEndDialogue);
+        CDialogueChoice choiceYes = new CDialogueChoice().setText("Yes").add(new CActionBranch().set(branch2));
+        branch.add(choiceYes, choiceNo);
 
-        Dialogues.add(new CDialogue("Wirts_Arm", "Wirt's Arm").add(filter).add(branch).add(branch2));
+        Dialogues.add(new CDialogue("Fishin", "Fishin'").add(filter).add(branch).add(branch2));
         Dialogues.add(new CDialogue("The_Depths_of_Waterdeep", "The Depths of Waterdeep").add(filter).add(branch).add(branch2));
     }
 
