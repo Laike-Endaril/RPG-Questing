@@ -9,28 +9,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class CQuestData extends Component
 {
-    public CUUID player = new CUUID();
-    public ArrayList<CUUID> completedQuests = new ArrayList<>();
-    public ArrayList<CUUID> inProgressQuests = new ArrayList<>();
+    public UUID player = null;
+    public ArrayList<UUID> completedQuests = new ArrayList<>();
+    public ArrayList<UUID> inProgressQuests = new ArrayList<>();
 
     @Override
     public Component write(ByteBuf buf)
     {
         buf.writeInt(completedQuests.size());
-        for (CUUID id : completedQuests) id.write(buf);
+        for (UUID id : completedQuests) new CUUID().set(id).write(buf);
         buf.writeInt(inProgressQuests.size());
-        for (CUUID id : inProgressQuests) id.write(buf);
+        for (UUID id : inProgressQuests) new CUUID().set(id).write(buf);
         return this;
     }
 
     @Override
     public Component read(ByteBuf buf)
     {
-        for (int i = new CInt().read(buf).value; i > 0; i--) completedQuests.add(new CUUID().read(buf));
-        for (int i = new CInt().read(buf).value; i > 0; i--) inProgressQuests.add(new CUUID().read(buf));
+        for (int i = new CInt().read(buf).value; i > 0; i--) completedQuests.add(new CUUID().read(buf).value);
+        for (int i = new CInt().read(buf).value; i > 0; i--) inProgressQuests.add(new CUUID().read(buf).value);
         return this;
     }
 
@@ -38,17 +39,17 @@ public class CQuestData extends Component
     public Component save(OutputStream stream) throws IOException
     {
         new CInt().set(completedQuests.size()).save(stream);
-        for (CUUID id : completedQuests) id.save(stream);
+        for (UUID id : completedQuests) new CUUID().set(id).save(stream);
         new CInt().set(inProgressQuests.size()).save(stream);
-        for (CUUID id : inProgressQuests) id.save(stream);
+        for (UUID id : inProgressQuests) new CUUID().set(id).save(stream);
         return this;
     }
 
     @Override
     public Component load(InputStream stream) throws IOException
     {
-        for (int i = new CInt().load(stream).value; i > 0; i--) completedQuests.add(new CUUID().load(stream));
-        for (int i = new CInt().load(stream).value; i > 0; i--) inProgressQuests.add(new CUUID().load(stream));
+        for (int i = new CInt().load(stream).value; i > 0; i--) completedQuests.add(new CUUID().load(stream).value);
+        for (int i = new CInt().load(stream).value; i > 0; i--) inProgressQuests.add(new CUUID().load(stream).value);
         return this;
     }
 }

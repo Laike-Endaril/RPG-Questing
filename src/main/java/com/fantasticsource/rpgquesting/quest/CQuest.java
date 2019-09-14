@@ -30,7 +30,7 @@ public class CQuest extends Component
     {
         if (isInProgress(player)) return false;
 
-        if (!repeatable.value && isComplete(player)) return false;
+        if (!repeatable.value && isCompleted(player)) return false;
 
         for (CCondition condition : conditions) if (!condition.check(player)) return false;
         return true;
@@ -38,12 +38,12 @@ public class CQuest extends Component
 
     public final boolean isInProgress(EntityPlayerMP player)
     {
-        //TODO
+        return Quests.isInProgress(player, this);
     }
 
-    public final boolean isComplete(EntityPlayerMP player)
+    public final boolean isCompleted(EntityPlayerMP player)
     {
-        //TODO
+        return Quests.isCompleted(player, this);
     }
 
     @Override
