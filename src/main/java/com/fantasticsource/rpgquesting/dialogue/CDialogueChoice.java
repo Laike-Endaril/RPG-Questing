@@ -6,21 +6,19 @@ import com.fantasticsource.tools.component.Component;
 import com.fantasticsource.tools.component.IObfuscatedComponent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 public class CDialogueChoice extends Component implements IObfuscatedComponent
 {
     public CStringUTF8 text = new CStringUTF8();
-    public ArrayList<CAction> actions = new ArrayList<>();
+    public CAction action;
 
     public void execute(EntityPlayerMP player)
     {
-        for (CAction action : actions) action.execute(player);
+        action.tryExecute(player);
     }
 
     public CDialogueChoice setText(String text)
@@ -29,9 +27,9 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
         return this;
     }
 
-    public CDialogueChoice add(CAction... actions)
+    public CDialogueChoice setAction(CAction action)
     {
-        this.actions.addAll(Arrays.asList(actions));
+        this.action = action;
         return this;
     }
 

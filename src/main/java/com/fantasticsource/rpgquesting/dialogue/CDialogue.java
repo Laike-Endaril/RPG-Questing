@@ -14,12 +14,12 @@ import java.util.UUID;
 
 public class CDialogue extends Component
 {
-    CUUID sessionID = new CUUID().set(UUID.randomUUID());
     public CStringUTF8 saveName;
     public CStringUTF8 displayName;
     public ArrayList<CDialogueFilter> filters = new ArrayList<>();
     public ArrayList<CDialogueBranch> branches = new ArrayList<>();
     public int currentBranch = 0;
+    CUUID sessionID = new CUUID().set(UUID.randomUUID());
 
     public CDialogue(String saveName, String displayName)
     {

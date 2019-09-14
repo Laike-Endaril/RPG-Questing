@@ -1,50 +1,21 @@
 package com.fantasticsource.rpgquesting.actions;
 
-import com.fantasticsource.tools.component.CStringUTF8;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.tools.component.Component;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.ArrayList;
 
-public class CAction extends Component
+public abstract class CAction extends Component
 {
-    public void execute(EntityPlayerMP player)
+    public ArrayList<CCondition> conditions = new ArrayList<>();
+
+    public void tryExecute(EntityPlayerMP player)
     {
+        for (CCondition condition : conditions) if (!condition.check(player)) return;
+
+        execute(player);
     }
 
-    @Override
-    public CAction write(ByteBuf buf)
-    {
-        new CStringUTF8().set(getClass().getName()).write(buf);
-        return this;
-    }
-
-    @Override
-    public CAction read(ByteBuf buf)
-    {
-        try
-        {
-            return ((CAction) Class.forName(new CStringUTF8().read(buf).value).newInstance()).read(buf);
-        }
-        catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public CAction save(OutputStream fileOutputStream) throws IOException
-    {
-        return this;
-    }
-
-    @Override
-    public CAction load(InputStream fileInputStream) throws IOException
-    {
-        return this;
-    }
+    protected abstract void execute(EntityPlayerMP player);
 }

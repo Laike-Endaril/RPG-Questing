@@ -1,7 +1,7 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.rpgquesting.dialogue.*;
+import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -207,9 +207,9 @@ public class Network
 
     public static class MakeChoicePacket implements IMessage
     {
-        int targetID;
         public CDialogueBranch currentBranch = new CDialogueBranch();
         public CStringUTF8 choice = new CStringUTF8();
+        int targetID;
 
         public MakeChoicePacket()
         {

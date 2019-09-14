@@ -1,8 +1,8 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.rpgquesting.dialogue.*;
 import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
+import com.fantasticsource.rpgquesting.dialogue.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,12 +31,14 @@ public class RPGQuesting
         //TODO test code here
         CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("wolf"));
 
-        CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").add(new CActionEndDialogue());
-        CDialogueChoice choiceNo = new CDialogueChoice().setText("No").add(new CActionEndDialogue());
-        CDialogueBranch branch = new CDialogueBranch("Mornin' @p!  Nice day fur fishin', ain't it?");
+        CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue());
+        CDialogueChoice choiceNo = new CDialogueChoice().setText("No").setAction(new CActionEndDialogue());
+
+        CDialogueBranch branch = new CDialogueBranch("Mornin' @p!  Nice day fer fishin', ain't it?");
 
         CDialogueBranch branch2 = new CDialogueBranch("Hu-huh!", choiceEndDialogue);
-        CDialogueChoice choiceYes = new CDialogueChoice().setText("Yes").add(new CActionBranch().set(branch2));
+        CDialogueChoice choiceYes = new CDialogueChoice().setText("Yes").setAction(new CActionBranch().set(branch2));
+
         branch.add(choiceYes, choiceNo);
 
         Dialogues.add(new CDialogue("Fishin", "Fishin'").add(filter).add(branch).add(branch2));

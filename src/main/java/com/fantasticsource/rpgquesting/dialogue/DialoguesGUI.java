@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
@@ -10,6 +9,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ChooseDialoguePacket;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
+import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;

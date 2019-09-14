@@ -15,10 +15,10 @@ import java.util.UUID;
 
 public class CDialogueBranch extends Component implements IObfuscatedComponent
 {
-    CDialogue parent = null;
     public CUUID sessionID = new CUUID().set(UUID.randomUUID()), parentID = new CUUID();
-    CStringUTF8 paragraph = new CStringUTF8();
     public ArrayList<CDialogueChoice> choices = new ArrayList<>();
+    CDialogue parent = null;
+    CStringUTF8 paragraph = new CStringUTF8();
 
     public CDialogueBranch()
     {
