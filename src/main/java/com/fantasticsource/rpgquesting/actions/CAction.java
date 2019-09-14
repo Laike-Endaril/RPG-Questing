@@ -10,7 +10,7 @@ public abstract class CAction extends Component
 {
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
-    public void tryExecute(EntityPlayerMP player)
+    public final void tryExecute(EntityPlayerMP player)
     {
         for (CCondition condition : conditions) if (!condition.check(player)) return;
 
