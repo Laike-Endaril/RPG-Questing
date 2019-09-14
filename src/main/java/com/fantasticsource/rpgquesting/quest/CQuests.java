@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.quest;
 
-import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
@@ -77,7 +76,7 @@ public class CQuests extends Component
 
     public CQuests save() throws IOException
     {
-        File file = new File(MCTools.getWorldSaveDir(RPGQuesting.server) + RPGQuesting.MODID);
+        File file = RPGQuesting.dataFolder;
         if (!file.exists()) file.mkdir();
 
         file = new File(file.getAbsolutePath() + File.separator + "Quests.dat");
@@ -98,7 +97,7 @@ public class CQuests extends Component
         mainQuestData.clear();
         playerQuestData.clear();
 
-        File file = new File(MCTools.getWorldSaveDir(RPGQuesting.server) + RPGQuesting.MODID);
+        File file = RPGQuesting.dataFolder;
         if (!file.exists()) return this;
 
         file = new File(file.getAbsolutePath() + File.separator + "Quests.dat");

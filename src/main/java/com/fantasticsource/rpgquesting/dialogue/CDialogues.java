@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
@@ -62,7 +61,7 @@ public class CDialogues extends Component
 
     public CDialogues save() throws IOException
     {
-        File file = new File(MCTools.getWorldSaveDir(RPGQuesting.server) + RPGQuesting.MODID);
+        File file = RPGQuesting.dataFolder;
         if (!file.exists()) file.mkdir();
 
         file = new File(file.getAbsolutePath() + File.separator + "Dialogues.dat");
@@ -83,7 +82,7 @@ public class CDialogues extends Component
         dialoguesBySessionID.clear();
         dialoguesByPermanentID.clear();
 
-        File file = new File(MCTools.getWorldSaveDir(RPGQuesting.server) + RPGQuesting.MODID);
+        File file = RPGQuesting.dataFolder;
         if (!file.exists()) return this;
 
         file = new File(file.getAbsolutePath() + File.separator + "Dialogues.dat");

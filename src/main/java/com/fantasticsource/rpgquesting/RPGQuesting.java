@@ -1,11 +1,11 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.*;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -14,12 +14,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.io.File;
 import java.io.IOException;
 
 @Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.021i,)")
@@ -29,7 +30,7 @@ public class RPGQuesting
     public static final String NAME = "RPG Questing";
     public static final String VERSION = "1.12.2.000";
 
-    public static MinecraftServer server = null;
+    public static File dataFolder;
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
@@ -55,9 +56,9 @@ public class RPGQuesting
     }
 
     @Mod.EventHandler
-    public static void serverStart(FMLServerAboutToStartEvent event) throws IOException
+    public static void serverStart(FMLServerStartingEvent event) throws IOException
     {
-        server = event.getServer();
+        dataFolder = new File(MCTools.getWorldSaveDir(event.getServer()));
         CQuests.QUESTS.load();
         CDialogues.DIALOGUES.load();
 
@@ -84,7 +85,7 @@ public class RPGQuesting
     {
         CQuests.QUESTS.save();
         CDialogues.DIALOGUES.save();
-        server = null;
+        dataFolder = null;
     }
 
     @SubscribeEvent
