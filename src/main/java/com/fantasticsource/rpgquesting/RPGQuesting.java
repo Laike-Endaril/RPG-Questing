@@ -1,13 +1,6 @@
 package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.mctools.MCTools;
-import com.fantasticsource.rpgquesting.actions.CActionBranch;
-import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
-import com.fantasticsource.rpgquesting.conditions.CConditionEntityEntryIs;
-import com.fantasticsource.rpgquesting.conditions.CConditionNameIs;
-import com.fantasticsource.rpgquesting.dialogue.CDialogue;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,7 +28,7 @@ public class RPGQuesting
     public static final String VERSION = "1.12.2.000";
 
     public static File dataFolder;
-    public static boolean test = false;
+    public static boolean addedNewStuff = false;
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
@@ -69,9 +62,9 @@ public class RPGQuesting
 
 
         //TODO test code here
-        if (!test)
+        if (!addedNewStuff)
         {
-            test = true;
+            addedNewStuff = true;
 
 //            CDialogue dialogue = new CDialogue().setName("The Depths of Waterdeep");
 //            CDialogues.add(dialogue);
