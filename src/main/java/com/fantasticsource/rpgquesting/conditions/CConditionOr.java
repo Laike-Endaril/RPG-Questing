@@ -3,7 +3,7 @@ package com.fantasticsource.rpgquesting.conditions;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.Entity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +16,9 @@ public class CConditionOr extends CCondition
 
 
     @Override
-    public boolean check(EntityPlayerMP player)
+    public boolean check(Entity entity)
     {
-        for (CCondition condition : orred) if (condition.check(player)) return true;
+        for (CCondition condition : orred) if (condition.check(entity)) return true;
         return false;
     }
 

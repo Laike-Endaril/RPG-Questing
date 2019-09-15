@@ -2,7 +2,7 @@ package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.Entity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +13,9 @@ public class CConditionNot extends CCondition
     public CCondition condition = null;
 
     @Override
-    public boolean check(EntityPlayerMP player)
+    public boolean check(Entity entity)
     {
-        return !condition.check(player);
+        return !condition.check(entity);
     }
 
     @Override

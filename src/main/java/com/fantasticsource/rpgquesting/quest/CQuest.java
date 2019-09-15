@@ -2,6 +2,7 @@ package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;

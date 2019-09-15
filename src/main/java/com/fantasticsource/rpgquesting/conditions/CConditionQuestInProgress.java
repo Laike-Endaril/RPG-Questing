@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.conditions;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.tools.component.CUUID;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.IOException;
@@ -14,9 +15,10 @@ public class CConditionQuestInProgress extends CCondition
     public CUUID permanentQuestID = new CUUID();
 
     @Override
-    public boolean check(EntityPlayerMP player)
+    public boolean check(Entity entity)
     {
-        return CQuests.isInProgress(player, permanentQuestID.value);
+        if (!(entity instanceof EntityPlayerMP)) return false;
+        return CQuests.isInProgress((EntityPlayerMP) entity, permanentQuestID.value);
     }
 
     @Override
