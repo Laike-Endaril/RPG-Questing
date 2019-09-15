@@ -88,11 +88,14 @@ public class CQuest extends Component implements IObfuscatedComponent
         level.load(stream);
 
         repeatable.load(stream);
+        conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
 
+        objectives.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) objectives.add((CObjective) Component.loadMarked(stream));
 
         experience.load(stream);
+        rewards.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) rewards.add(new CItemStack().load(stream));
 
         return this;
