@@ -7,15 +7,18 @@ import net.minecraft.entity.Entity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CConditionClassIs extends CCondition
 {
     public CStringUTF8 className = new CStringUTF8();
 
     @Override
-    public boolean check(Entity entity)
+    public ArrayList<String> unmetConditions(Entity entity)
     {
-        return entity.getClass().getName().equals(className.value);
+        ArrayList<String> result = new ArrayList<>();
+        if (!entity.getClass().getName().equals(className.value)) result.add("Entity class must be " + className.value);
+        return result;
     }
 
     @Override

@@ -9,16 +9,23 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CConditionQuestInProgress extends CCondition
 {
     public CUUID permanentQuestID = new CUUID();
 
     @Override
-    public boolean check(Entity entity)
+    public ArrayList<String> unmetConditions(Entity entity)
     {
-        if (!(entity instanceof EntityPlayerMP)) return false;
-        return CQuests.isInProgress((EntityPlayerMP) entity, permanentQuestID.value);
+        ArrayList<String> result = new ArrayList<>();
+
+        if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
+        else
+        {
+            if (!CQuests.isInProgress((EntityPlayerMP) entity, permanentQuestID.value)) result.add("Quest must be in progress: \"" + CQuests.get(permanentQuestID.value).name.value + '"');
+        }
+        return result;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
@@ -16,7 +17,7 @@ public class CDialogue extends Component
 {
     public CUUID permanentID = new CUUID();
     public CStringUTF8 name = new CStringUTF8();
-    public ArrayList<CDialogueFilter> filters = new ArrayList<>();
+    public ArrayList<CCondition> dialogueConditions = new ArrayList<>();
     public ArrayList<CDialogueBranch> branches = new ArrayList<>();
     public CUUID sessionID = new CUUID().set(UUID.randomUUID());
 
@@ -26,9 +27,9 @@ public class CDialogue extends Component
         return this;
     }
 
-    public CDialogue add(CDialogueFilter filter)
+    public CDialogue add(CCondition condition)
     {
-        filters.add(filter);
+        dialogueConditions.add(condition);
         return this;
     }
 
@@ -40,9 +41,9 @@ public class CDialogue extends Component
 
     public boolean entityHas(Entity entity)
     {
-        for (CDialogueFilter filter : filters)
+        for (CCondition condition : dialogueConditions)
         {
-            if (filter.allowed(entity)) return true;
+            if (condition.check(entity)) return true;
         }
         return false;
     }

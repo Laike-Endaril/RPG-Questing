@@ -16,6 +16,13 @@ public class CQuests extends Component
     private static LinkedHashMap<UUID, CPlayerQuestData> playerQuestData = new LinkedHashMap<>();
     private LinkedHashMap<UUID, CQuest> mainQuestData = new LinkedHashMap<>();
 
+
+    public static CQuest get(UUID id)
+    {
+        return QUESTS.mainQuestData.get(id);
+    }
+
+
     public static void loadPlayerQuestData(EntityPlayerMP player) throws IOException
     {
         CPlayerQuestData data = new CPlayerQuestData(player).load();

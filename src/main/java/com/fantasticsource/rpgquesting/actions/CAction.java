@@ -1,8 +1,9 @@
 package com.fantasticsource.rpgquesting.actions;
 
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.conditions.CConditionAnd;
 import com.fantasticsource.tools.component.Component;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.Entity;
 
 import java.util.ArrayList;
 
@@ -10,12 +11,12 @@ public abstract class CAction extends Component
 {
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
-    public final void tryExecute(EntityPlayerMP player)
+    public final ArrayList<String> tryExecute(Entity entity)
     {
-        for (CCondition condition : conditions) if (!condition.check(player)) return;
-
-        execute(player);
+        ArrayList<String> result = new CConditionAnd().add(conditions.toArray(new CCondition[0])).unmetConditions(entity);
+        if (result.size() == 0) execute(entity);
+        return result;
     }
 
-    protected abstract void execute(EntityPlayerMP player);
+    protected abstract void execute(Entity entity);
 }

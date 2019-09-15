@@ -4,6 +4,7 @@ import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,43 +13,65 @@ import java.util.ArrayList;
 
 public class CConditionAnd extends CCondition
 {
-    public ArrayList<CCondition> anded = new ArrayList<>();
+    public ArrayList<CCondition> conditions = new ArrayList<>();
 
 
     @Override
-    public boolean check(Entity entity)
+    public ArrayList<String> unmetConditions(Entity entity)
     {
-        for (CCondition condition : anded) if (!condition.check(entity)) return false;
-        return true;
+        ArrayList<String> result = new ArrayList<>();
+        for (CCondition condition : conditions)
+        {
+            result.addAll(condition.unmetConditions(entity));
+        }
+
+        if (result.size() > 0)
+        {
+            for (int i = 0; i < result.size(); i++)
+            {
+                result.set(i, " " + result.get(i));
+            }
+            result.add(0, "{");
+            result.add("}");
+            result.add(0, "ALL OF:");
+        }
+
+        return result;
+    }
+
+    public CConditionAnd add(CCondition... conditions)
+    {
+        this.conditions.addAll(Arrays.asList(conditions));
+        return this;
     }
 
     @Override
     public CConditionAnd write(ByteBuf buf)
     {
-        buf.writeInt(anded.size());
-        for (CCondition condition : anded) Component.writeMarked(buf, condition);
+        buf.writeInt(conditions.size());
+        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
         return this;
     }
 
     @Override
     public CConditionAnd read(ByteBuf buf)
     {
-        for (int i = buf.readInt(); i > 0; i--) anded.add((CCondition) Component.readMarked(buf));
+        for (int i = buf.readInt(); i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
         return this;
     }
 
     @Override
     public CConditionAnd save(OutputStream stream) throws IOException
     {
-        new CInt().set(anded.size()).save(stream);
-        for (CCondition condition : anded) Component.saveMarked(stream, condition);
+        new CInt().set(conditions.size()).save(stream);
+        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
         return this;
     }
 
     @Override
     public CConditionAnd load(InputStream stream) throws IOException
     {
-        for (int i = new CInt().load(stream).value; i > 0; i--) anded.add((CCondition) Component.loadMarked(stream));
+        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
         return this;
     }
 }

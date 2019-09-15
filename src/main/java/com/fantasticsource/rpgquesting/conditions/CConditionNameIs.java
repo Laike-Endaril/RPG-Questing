@@ -7,15 +7,18 @@ import net.minecraft.entity.Entity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CConditionNameIs extends CCondition
 {
     public CStringUTF8 name = new CStringUTF8();
 
     @Override
-    public boolean check(Entity entity)
+    public ArrayList<String> unmetConditions(Entity entity)
     {
-        return entity.getName().equals(name.value);
+        ArrayList<String> result = new ArrayList<>();
+        if (!entity.getName().equals(name.value)) result.add("Entity name must be \"" + name.value + '"');
+        return result;
     }
 
     @Override

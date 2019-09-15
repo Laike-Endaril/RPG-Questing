@@ -7,15 +7,25 @@ import net.minecraft.entity.Entity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CConditionNot extends CCondition
 {
     public CCondition condition = null;
 
     @Override
-    public boolean check(Entity entity)
+    public ArrayList<String> unmetConditions(Entity entity)
     {
-        return !condition.check(entity);
+        ArrayList<String> result = condition.unmetConditions(entity);
+
+        if (result.size() > 0) return new ArrayList<>();
+
+
+        result.add(0, "{");
+        result.add("}");
+        result.add(0, "NOT:");
+
+        return result;
     }
 
     @Override
