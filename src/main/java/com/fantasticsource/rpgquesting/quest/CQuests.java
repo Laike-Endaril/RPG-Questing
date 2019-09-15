@@ -28,47 +28,43 @@ public class CQuests extends Component
         if (data != null) data.save();
     }
 
-    public static boolean isInProgress(EntityPlayerMP player, CQuest quest)
+
+    public static boolean isAvailable(EntityPlayerMP player, CQuest quest)
     {
-        return isCompleted(player.getPersistentID(), quest.permanentID.value);
+        return isAvailable(player, quest.permanentID.value);
     }
 
-    public static boolean isInProgress(UUID playerID, CQuest quest)
+    public static boolean isAvailable(EntityPlayerMP player, UUID questID)
     {
-        return isCompleted(playerID, quest.permanentID.value);
+        CQuest quest = QUESTS.mainQuestData.get(questID);
+        if (quest == null) return false;
+
+        return quest.isAvailable(player);
+    }
+
+
+    public static boolean isInProgress(EntityPlayerMP player, CQuest quest)
+    {
+        return isInProgress(player, quest.permanentID.value);
     }
 
     public static boolean isInProgress(EntityPlayerMP player, UUID questID)
     {
-        return isCompleted(player.getPersistentID(), questID);
-    }
-
-    public static boolean isInProgress(UUID playerID, UUID questID)
-    {
-        CPlayerQuestData data = playerQuestData.get(playerID);
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
         return data.inProgressQuests.contains(questID);
     }
 
+
     public static boolean isCompleted(EntityPlayerMP player, CQuest quest)
     {
-        return isCompleted(player.getPersistentID(), quest.permanentID.value);
-    }
-
-    public static boolean isCompleted(UUID playerID, CQuest quest)
-    {
-        return isCompleted(playerID, quest.permanentID.value);
+        return isCompleted(player, quest.permanentID.value);
     }
 
     public static boolean isCompleted(EntityPlayerMP player, UUID questID)
     {
-        return isCompleted(player.getPersistentID(), questID);
-    }
-
-    public static boolean isCompleted(UUID playerID, UUID questID)
-    {
-        CPlayerQuestData data = playerQuestData.get(playerID);
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
         return data.completedQuests.contains(questID);
