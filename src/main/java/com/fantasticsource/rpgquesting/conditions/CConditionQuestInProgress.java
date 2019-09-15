@@ -9,37 +9,37 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class CConditionQuestComplete extends CCondition
+public class CConditionQuestInProgress extends CCondition
 {
     public CUUID permanentQuestID = new CUUID();
 
     @Override
     public boolean check(EntityPlayerMP player)
     {
-        return CQuests.isCompleted(player, permanentQuestID.value);
+        return CQuests.isInProgress(player, permanentQuestID.value);
     }
 
     @Override
-    public CConditionQuestComplete write(ByteBuf byteBuf)
+    public CConditionQuestInProgress write(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CConditionQuestComplete read(ByteBuf byteBuf)
+    public CConditionQuestInProgress read(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CConditionQuestComplete save(OutputStream stream) throws IOException
+    public CConditionQuestInProgress save(OutputStream stream) throws IOException
     {
         permanentQuestID.save(stream);
         return this;
     }
 
     @Override
-    public CConditionQuestComplete load(InputStream stream) throws IOException
+    public CConditionQuestInProgress load(InputStream stream) throws IOException
     {
         permanentQuestID.load(stream);
         return this;
