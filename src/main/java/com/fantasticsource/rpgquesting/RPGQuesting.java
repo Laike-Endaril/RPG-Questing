@@ -27,6 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 @Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.021i,)")
 public class RPGQuesting
@@ -63,7 +64,7 @@ public class RPGQuesting
     @Mod.EventHandler
     public static void serverStart(FMLServerStartingEvent event) throws IOException
     {
-        dataFolder = new File(MCTools.getWorldSaveDir(event.getServer()));
+        dataFolder = new File(MCTools.getWorldSaveDir(event.getServer()) + MODID + File.separator);
         CQuests.QUESTS.load();
         CDialogues.DIALOGUES.load();
 
@@ -84,7 +85,9 @@ public class RPGQuesting
 
         CDialogue dialogue = new CDialogue().setName("Fishin'").add(wolfCondition, chickenNameCondition).add(branch).add(branch2);
         CDialogues.add(dialogue);
-        CDialogues.add(((CDialogue) dialogue.copy()).setName("The Depths of Waterdeep"));
+        dialogue = (CDialogue) dialogue.copy();
+        dialogue.setName("The Depths of Waterdeep").sessionID.set(UUID.randomUUID());
+        CDialogues.add(dialogue);
     }
 
     @Mod.EventHandler
