@@ -12,15 +12,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-public class CQuest extends Component
+public class CQuest extends Component implements IObfuscatedComponent
 {
     public CUUID permanentID = new CUUID();
-    public CStringUTF8 name = new CStringUTF8();
-    public CInt level = new CInt();
 
-    public CBoolean repeatable = new CBoolean();
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
+    public CStringUTF8 name = new CStringUTF8();
+    public CInt level = new CInt();
+    public CBoolean repeatable = new CBoolean();
     public ArrayList<CObjective> objectives = new ArrayList<>();
 
     public CInt experience = new CInt();
@@ -94,6 +94,32 @@ public class CQuest extends Component
 
         experience.load(stream);
         for (int i = new CInt().load(stream).value; i > 0; i--) rewards.add(new CItemStack().load(stream));
+
+        return this;
+    }
+
+    @Override
+    public Component writeObf(ByteBuf buf)
+    {
+        name.write(buf);
+        level.write(buf);
+        repeatable.write(buf);
+
+        new CInt().set(objectives.size()).write(buf);
+        for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+
+        return this;
+    }
+
+    @Override
+    public Component readObf(ByteBuf buf)
+    {
+        name.read(buf);
+        level.read(buf);
+        repeatable.read(buf);
+
+        objectives.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) objectives.add((CObjective) Component.readMarked(buf));
 
         return this;
     }
