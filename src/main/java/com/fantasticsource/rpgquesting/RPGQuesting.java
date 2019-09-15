@@ -85,8 +85,8 @@ public class RPGQuesting
     @Mod.EventHandler
     public static void serverStop(FMLServerStoppedEvent event) throws IOException
     {
-        CQuests.QUESTS.save().clear();
         CDialogues.DIALOGUES.save().clear();
+        CQuests.QUESTS.save().clear();
         dataFolder = null;
     }
 
