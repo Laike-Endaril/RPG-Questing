@@ -56,7 +56,6 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     public CDialogueBranch save(OutputStream stream) throws IOException
     {
         parentID.save(stream);
-        parent.save(stream);
         paragraph.save(stream);
 
         new CInt().set(choices.size()).save(stream);
@@ -69,7 +68,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     public CDialogueBranch load(InputStream stream) throws IOException
     {
         parentID.load(stream);
-        parent.load(stream);
+        parent = CDialogues.getByPermanentID(parentID.value);
         paragraph.load(stream);
 
         choices.clear();
