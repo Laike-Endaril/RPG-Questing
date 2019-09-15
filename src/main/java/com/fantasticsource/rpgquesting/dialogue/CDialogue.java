@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class CDialogue extends Component
 {
-    public CUUID permanentID = new CUUID();
+    public CUUID permanentID = new CUUID().set(UUID.randomUUID());
     public CStringUTF8 name = new CStringUTF8();
 
     public ArrayList<CCondition> dialogueConditions = new ArrayList<>();
