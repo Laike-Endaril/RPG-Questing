@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -30,6 +31,7 @@ public class Network
         WRAPPER.registerMessage(ChooseDialoguePacketHandler.class, ChooseDialoguePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(CloseDialoguePacketHandler.class, CloseDialoguePacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(MakeChoicePacketHandler.class, MakeChoicePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(ActionErrorPacketHandler.class, ActionErrorPacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -268,6 +270,47 @@ public class Network
                     }
                 }
             });
+            return null;
+        }
+    }
+
+
+    public static class ActionErrorPacket implements IMessage
+    {
+        public ArrayList<String> error;
+
+        public ActionErrorPacket()
+        {
+            //Required
+        }
+
+        public ActionErrorPacket(String choiceText, ArrayList<String> error)
+        {
+            this.error = error;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            buf.writeInt(error.size());
+            for (String s : error) ByteBufUtils.writeUTF8String(buf, s);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            error = new ArrayList<>();
+            for (int i = buf.readInt(); i > 0; i--) error.add(ByteBufUtils.readUTF8String(buf));
+        }
+    }
+
+    public static class ActionErrorPacketHandler implements IMessageHandler<ActionErrorPacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(ActionErrorPacket packet, MessageContext ctx)
+        {
+            Minecraft.getMinecraft().addScheduledTask(() -> DialogueGUI.showChoiceActionError(packet));
             return null;
         }
     }

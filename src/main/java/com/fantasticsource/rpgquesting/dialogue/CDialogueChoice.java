@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
+import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.actions.CAction;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.tools.component.CInt;
@@ -31,7 +32,7 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
         ArrayList<String> unmetConditions = action.tryExecute(player);
         if (unmetConditions.size() > 0)
         {
-            //TODO Send action error packet to player
+            Network.WRAPPER.sendTo(new Network.ActionErrorPacket(text.value, unmetConditions), player);
         }
     }
 

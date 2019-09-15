@@ -7,6 +7,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.Network;
+import com.fantasticsource.rpgquesting.Network.ActionErrorPacket;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -29,6 +30,7 @@ public class DialogueGUI extends GUIScreen
 
     private static CDialogueBranch current = null;
     private static ArrayList<String> lines = new ArrayList<>();
+    private static ArrayList<GUIText> errorLines = new ArrayList<>();
 
     static
     {
@@ -45,6 +47,7 @@ public class DialogueGUI extends GUIScreen
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         if (packet.clear) lines.clear();
+        clearErrors();
 
         current = packet.branch;
         lines.add(current.paragraph.value);
@@ -59,6 +62,23 @@ public class DialogueGUI extends GUIScreen
         {
             scrollView.add(new GUIText(GUI, processString(choice.text.value) + '\n', C_CHOICE, Color.AQUA, Color.YELLOW));
         }
+    }
+
+    public static void showChoiceActionError(ActionErrorPacket packet)
+    {
+        clearErrors();
+        for (String line : packet.error)
+        {
+            GUIText text = new GUIText(GUI, processString(line), Color.RED, Color.RED, Color.RED);
+            scrollView.add(text);
+            errorLines.add(text);
+        }
+    }
+
+    public static void clearErrors()
+    {
+        for (GUIText text : errorLines) scrollView.remove(text);
+        errorLines.clear();
     }
 
     public static String processString(String string)

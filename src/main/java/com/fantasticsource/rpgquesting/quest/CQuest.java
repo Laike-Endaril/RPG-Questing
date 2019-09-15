@@ -33,7 +33,7 @@ public class CQuest extends Component
 
         if (!repeatable.value && isCompleted(player)) return false;
 
-        for (CCondition condition : conditions) if (!condition.check(player)) return false;
+        for (CCondition condition : conditions) if (condition.unmetConditions(player).size() > 0) return false;
         return true;
     }
 
