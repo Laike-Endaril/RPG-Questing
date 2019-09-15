@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class CDialogueBranch extends Component implements IObfuscatedComponent
 {
-    public CUUID sessionID = new CUUID().set(UUID.randomUUID()), parentID = new CUUID();
+    public CUUID sessionID = new CUUID().set(UUID.randomUUID()), parentSessionID = new CUUID();
     public ArrayList<CDialogueChoice> choices = new ArrayList<>();
     CDialogue parent = null;
     CStringUTF8 paragraph = new CStringUTF8();
@@ -30,7 +30,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     public CDialogueBranch setParent(CDialogue parent)
     {
         this.parent = parent;
-        parentID = parent.sessionID;
+        parentSessionID = parent.sessionID;
         return this;
     }
 
@@ -55,7 +55,6 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch save(OutputStream stream) throws IOException
     {
-        parentID.save(stream);
         paragraph.save(stream);
 
         new CInt().set(choices.size()).save(stream);
@@ -67,8 +66,6 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch load(InputStream stream) throws IOException
     {
-        parentID.load(stream);
-        parent = CDialogues.getByPermanentID(parentID.value);
         paragraph.load(stream);
 
         choices.clear();
@@ -80,7 +77,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch writeObf(ByteBuf buf)
     {
-        parentID.write(buf);
+        parentSessionID.write(buf);
         sessionID.write(buf);
         paragraph.write(buf);
 
@@ -92,7 +89,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch readObf(ByteBuf buf)
     {
-        parentID.read(buf);
+        parentSessionID.read(buf);
 
         sessionID.read(buf);
         paragraph.read(buf);
@@ -100,7 +97,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
         for (int i = buf.readInt(); i > 0; i--) choices.add(new CDialogueChoice().readObf(buf));
 
         //This will only happen on server-side
-        parent = CDialogues.getBySessionID(parentID.value);
+        parent = CDialogues.getBySessionID(parentSessionID.value);
         if (parent != null)
         {
             for (CDialogueBranch branch : parent.branches)

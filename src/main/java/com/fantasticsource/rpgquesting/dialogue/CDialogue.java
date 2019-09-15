@@ -92,7 +92,7 @@ public class CDialogue extends Component
         for (int i = new CInt().load(stream).value; i > 0; i--) dialogueConditions.add((CCondition) Component.loadMarked(stream));
 
         branches.clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) branches.add(new CDialogueBranch().load(stream));
+        for (int i = new CInt().load(stream).value; i > 0; i--) branches.add(new CDialogueBranch().load(stream).setParent(this));
 
         return this;
     }

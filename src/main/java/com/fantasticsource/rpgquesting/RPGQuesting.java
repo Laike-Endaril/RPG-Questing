@@ -37,6 +37,7 @@ public class RPGQuesting
     public static final String VERSION = "1.12.2.000";
 
     public static File dataFolder;
+    public static boolean test = false;
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
@@ -70,31 +71,36 @@ public class RPGQuesting
 
 
         //TODO test code here
-        CCondition wolfCondition = new CConditionEntityEntryIs("wolf");
-        CCondition chickenNameCondition = new CConditionNameIs("chicken");
+        if (!test)
+        {
+            test = true;
 
-        CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue());
-        CDialogueChoice choiceNo = new CDialogueChoice().setText("No").setAction(new CActionEndDialogue());
+            CCondition wolfCondition = new CConditionEntityEntryIs("wolf");
+            CCondition chickenNameCondition = new CConditionNameIs("chicken");
 
-        CDialogueBranch branch = new CDialogueBranch("Mornin' @p!  Nice day fer fishin', ain't it?");
+            CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue());
+            CDialogueChoice choiceNo = new CDialogueChoice().setText("No").setAction(new CActionEndDialogue());
 
-        CDialogueBranch branch2 = new CDialogueBranch("Hu-huh!", choiceEndDialogue);
-        CDialogueChoice choiceYes = new CDialogueChoice().setText("Yes").setAction(new CActionBranch().set(branch2));
+            CDialogueBranch branch = new CDialogueBranch("Mornin' @p!  Nice day fer fishin', ain't it?");
 
-        branch.add(choiceYes, choiceNo);
+            CDialogueBranch branch2 = new CDialogueBranch("Hu-huh!", choiceEndDialogue);
+            CDialogueChoice choiceYes = new CDialogueChoice().setText("Yes").setAction(new CActionBranch().set(branch2));
 
-        CDialogue dialogue = new CDialogue().setName("Fishin'").add(wolfCondition, chickenNameCondition).add(branch).add(branch2);
-        CDialogues.add(dialogue);
-        dialogue = (CDialogue) dialogue.copy();
-        dialogue.setName("The Depths of Waterdeep").sessionID.set(UUID.randomUUID());
-        CDialogues.add(dialogue);
+            branch.add(choiceYes, choiceNo);
+
+            CDialogue dialogue = new CDialogue().setName("Fishin'").add(wolfCondition, chickenNameCondition).add(branch).add(branch2);
+            CDialogues.add(dialogue);
+            dialogue = (CDialogue) dialogue.copy();
+            dialogue.setName("The Depths of Waterdeep").sessionID.set(UUID.randomUUID());
+        }
+//        CDialogues.add(dialogue);
     }
 
     @Mod.EventHandler
     public static void serverStop(FMLServerStoppedEvent event) throws IOException
     {
-        CQuests.QUESTS.save();
-        CDialogues.DIALOGUES.save();
+        CQuests.QUESTS.save().clear();
+        CDialogues.DIALOGUES.save().clear();
         dataFolder = null;
     }
 

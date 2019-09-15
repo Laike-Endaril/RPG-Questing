@@ -252,7 +252,7 @@ public class Network
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
-                CDialogue dialogue = CDialogues.getBySessionID(packet.currentBranch.parentID.value);
+                CDialogue dialogue = CDialogues.getBySessionID(packet.currentBranch.parentSessionID.value);
                 if (target != null && target.getDistanceSq(player) < 25 && dialogue.entityHas(target))
                 {
                     for (CDialogueBranch branch : dialogue.branches)

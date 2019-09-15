@@ -95,10 +95,30 @@ public class CQuests extends Component
         return this;
     }
 
+    public CQuests clear()
+    {
+        playerQuestData.entrySet().removeIf(e ->
+        {
+            try
+            {
+                e.getValue().save();
+            }
+            catch (IOException e1)
+            {
+                e1.printStackTrace();
+            }
+            return true;
+        });
+
+        mainQuestData.clear();
+
+        return this;
+    }
+
     public CQuests load() throws IOException
     {
-        mainQuestData.clear();
         playerQuestData.clear();
+        mainQuestData.clear();
 
         File file = RPGQuesting.dataFolder;
         if (!file.exists()) return this;

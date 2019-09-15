@@ -19,8 +19,8 @@ public class CDialogues extends Component
 {
     public static final CDialogues DIALOGUES = new CDialogues();
     public static int targetID = -1;
-    private static LinkedHashMap<UUID, CDialogue> dialoguesByPermanentID = new LinkedHashMap<>();
-    private static LinkedHashMap<UUID, CDialogue> dialoguesBySessionID = new LinkedHashMap<>();
+    public static LinkedHashMap<UUID, CDialogue> dialoguesByPermanentID = new LinkedHashMap<>();
+    public static LinkedHashMap<UUID, CDialogue> dialoguesBySessionID = new LinkedHashMap<>();
 
     public static boolean handle(EntityPlayerMP player, Entity entity)
     {
@@ -77,10 +77,16 @@ public class CDialogues extends Component
         return this;
     }
 
+    public CDialogues clear()
+    {
+        dialoguesByPermanentID.clear();
+        dialoguesBySessionID.clear();
+        return this;
+    }
+
     public CDialogues load() throws IOException
     {
-        dialoguesBySessionID.clear();
-        dialoguesByPermanentID.clear();
+        clear();
 
         File file = RPGQuesting.dataFolder;
         if (!file.exists()) return this;
@@ -118,8 +124,7 @@ public class CDialogues extends Component
     @Override
     public CDialogues load(InputStream stream) throws IOException
     {
-        dialoguesByPermanentID.clear();
-        dialoguesBySessionID.clear();
+        clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
         {
             CDialogue dialogue = new CDialogue().load(stream);
