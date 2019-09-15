@@ -23,15 +23,12 @@ public class CActionArray extends CAction
     @Override
     public CActionArray write(ByteBuf buf)
     {
-        buf.writeInt(actions.size());
-        for (CAction action : actions) Component.writeMarked(buf, action);
         return this;
     }
 
     @Override
     public CActionArray read(ByteBuf buf)
     {
-        for (int i = buf.readInt(); i > 0; i--) actions.add((CAction) Component.readMarked(buf));
         return this;
     }
 

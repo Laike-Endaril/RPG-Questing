@@ -2,8 +2,12 @@ package com.fantasticsource.rpgquesting.actions;
 
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
+import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.tools.component.CBoolean;
+import com.fantasticsource.tools.component.CInt;
+import com.fantasticsource.tools.component.CUUID;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,7 +19,8 @@ import java.io.OutputStream;
 public class CActionBranch extends CAction
 {
     CBoolean clear = new CBoolean();
-    CDialogueBranch targetBranch = new CDialogueBranch();
+    CUUID dialogueID = new CUUID();
+    CInt branchIndex = new CInt();
 
     public CActionBranch set(CDialogueBranch targetBranch)
     {
@@ -24,8 +29,20 @@ public class CActionBranch extends CAction
 
     public CActionBranch set(boolean clear, CDialogueBranch targetBranch)
     {
+        return set(clear, targetBranch.parent, targetBranch.parent.branches.indexOf(targetBranch));
+    }
+
+    public CActionBranch set(CDialogue dialogue, int branchIndex)
+    {
+        return set(false, dialogue, branchIndex);
+    }
+
+    public CActionBranch set(boolean clear, CDialogue dialogue, int branchIndex)
+    {
         this.clear.set(clear);
-        this.targetBranch = targetBranch;
+        this.dialogueID = dialogue.permanentID;
+        this.branchIndex.set(branchIndex);
+
         return this;
     }
 
@@ -33,7 +50,8 @@ public class CActionBranch extends CAction
     public void execute(Entity entity)
     {
         if (!(entity instanceof EntityPlayerMP)) return;
-        Network.WRAPPER.sendTo(new DialogueBranchPacket(clear.value, targetBranch), (EntityPlayerMP) entity);
+        CDialogue dialogue = CDialogues.getByPermanentID(dialogueID.value);
+        Network.WRAPPER.sendTo(new DialogueBranchPacket(clear.value, dialogue.branches.get(branchIndex.value)), (EntityPlayerMP) entity);
     }
 
     @Override
@@ -52,7 +70,9 @@ public class CActionBranch extends CAction
     public CActionBranch save(OutputStream stream) throws IOException
     {
         clear.save(stream);
-        targetBranch.save(stream);
+        dialogueID.save(stream);
+        branchIndex.save(stream);
+
         return this;
     }
 
@@ -60,7 +80,9 @@ public class CActionBranch extends CAction
     public CActionBranch load(InputStream stream) throws IOException
     {
         clear.load(stream);
-        targetBranch.load(stream);
+        dialogueID.load(stream);
+        branchIndex.load(stream);
+
         return this;
     }
 }

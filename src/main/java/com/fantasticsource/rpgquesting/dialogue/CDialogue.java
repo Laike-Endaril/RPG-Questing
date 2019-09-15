@@ -86,13 +86,15 @@ public class CDialogue extends Component
     public CDialogue load(InputStream stream) throws IOException
     {
         permanentID.load(stream);
+        CDialogues.add(this);
         name.load(stream);
 
         dialogueConditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) dialogueConditions.add((CCondition) Component.loadMarked(stream));
 
         branches.clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) branches.add(new CDialogueBranch().load(stream).setParent(this));
+        for (int i = new CInt().load(stream).value; i > 0; i--) branches.add(new CDialogueBranch());
+        for (CDialogueBranch branch : branches) branch.load(stream);
 
         return this;
     }

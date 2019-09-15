@@ -125,12 +125,7 @@ public class CDialogues extends Component
     public CDialogues load(InputStream stream) throws IOException
     {
         clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--)
-        {
-            CDialogue dialogue = new CDialogue().load(stream);
-            dialoguesByPermanentID.put(dialogue.permanentID.value, dialogue);
-            dialoguesBySessionID.put(dialogue.sessionID.value, dialogue);
-        }
+        for (int i = new CInt().load(stream).value; i > 0; i--) new CDialogue().load(stream);
         return this;
     }
 }

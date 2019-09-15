@@ -3,7 +3,6 @@ package com.fantasticsource.rpgquesting;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
-import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.conditions.CConditionEntityEntryIs;
 import com.fantasticsource.rpgquesting.conditions.CConditionNameIs;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
@@ -27,7 +26,6 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 @Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.021i,)")
 public class RPGQuesting
@@ -75,25 +73,20 @@ public class RPGQuesting
         {
             test = true;
 
-            CCondition wolfCondition = new CConditionEntityEntryIs("wolf");
-            CCondition chickenNameCondition = new CConditionNameIs("chicken");
-
-            CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue());
-            CDialogueChoice choiceNo = new CDialogueChoice().setText("No").setAction(new CActionEndDialogue());
-
-            CDialogueBranch branch = new CDialogueBranch("Mornin' @p!  Nice day fer fishin', ain't it?");
-
-            CDialogueBranch branch2 = new CDialogueBranch("Hu-huh!", choiceEndDialogue);
-            CDialogueChoice choiceYes = new CDialogueChoice().setText("Yes").setAction(new CActionBranch().set(branch2));
-
-            branch.add(choiceYes, choiceNo);
-
-            CDialogue dialogue = new CDialogue().setName("Fishin'").add(wolfCondition, chickenNameCondition).add(branch).add(branch2);
-            CDialogues.add(dialogue);
-            dialogue = (CDialogue) dialogue.copy();
-            dialogue.setName("The Depths of Waterdeep").sessionID.set(UUID.randomUUID());
+//            CDialogue dialogue = new CDialogue().setName("The Depths of Waterdeep");
+//            CDialogues.add(dialogue);
+//
+//            dialogue.add(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("chicken"));
+//
+//            CDialogueBranch branch = new CDialogueBranch("Hey @p, you wanna know a secret?");
+//            CDialogueBranch branch2 = new CDialogueBranch("Well too bad.");
+//            dialogue.add(branch, branch2);
+//
+//            branch.add(new CDialogueChoice().setText("Yes").setAction(new CActionBranch().set(branch2)));
+//            branch.add(new CDialogueChoice().setText("No").setAction(new CActionEndDialogue()));
+//
+//            branch2.add(new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue()));
         }
-//        CDialogues.add(dialogue);
     }
 
     @Mod.EventHandler

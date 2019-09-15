@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
+import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 
@@ -13,18 +14,22 @@ import java.util.UUID;
 public class CDialogueBranch extends Component implements IObfuscatedComponent
 {
     public CUUID sessionID = new CUUID().set(UUID.randomUUID()), parentSessionID = new CUUID();
+    public CDialogue parent = null;
+
     public ArrayList<CDialogueChoice> choices = new ArrayList<>();
-    CDialogue parent = null;
     CStringUTF8 paragraph = new CStringUTF8();
 
     public CDialogueBranch()
     {
+        System.out.println(sessionID.value);
+        Tools.printStackTrace();
     }
 
-    public CDialogueBranch(String paragraph, CDialogueChoice... choices)
+    public CDialogueBranch(String paragraph)
     {
+        System.out.println(sessionID.value);
+        Tools.printStackTrace();
         this.paragraph.set(paragraph);
-        this.choices.addAll(Arrays.asList(choices));
     }
 
     public CDialogueBranch setParent(CDialogue parent)
@@ -55,6 +60,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch save(OutputStream stream) throws IOException
     {
+        parent.permanentID.save(stream);
         paragraph.save(stream);
 
         new CInt().set(choices.size()).save(stream);
@@ -66,6 +72,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch load(InputStream stream) throws IOException
     {
+        setParent(CDialogues.getByPermanentID(new CUUID().load(stream).value));
         paragraph.load(stream);
 
         choices.clear();
@@ -77,6 +84,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch writeObf(ByteBuf buf)
     {
+        if (parentSessionID.value == null) System.out.println(sessionID.value);
         parentSessionID.write(buf);
         sessionID.write(buf);
         paragraph.write(buf);
