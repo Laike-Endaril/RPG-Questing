@@ -1,12 +1,14 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.rpgquesting.RPGQuesting;
+import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -20,6 +22,44 @@ public class CQuests extends Component
     public static CQuest get(UUID id)
     {
         return QUESTS.mainQuestData.get(id);
+    }
+
+
+    public static void start(EntityPlayerMP player, UUID id)
+    {
+        CQuest quest = get(id);
+        if (quest == null) return;
+
+        CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
+        ArrayList<CObjective> objectives = data.inProgressQuests.computeIfAbsent(id, o -> new ArrayList<>());
+        objectives.clear();
+        for (CObjective objective : quest.objectives)
+        {
+            try
+            {
+                objectives.add((CObjective) objective.copy());
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void abandon(EntityPlayerMP player, UUID id)
+    {
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
+        if (data == null) return;
+
+        data.inProgressQuests.remove(id);
+    }
+
+    public static void complete(EntityPlayerMP player, UUID id)
+    {
+        CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
+
+        data.inProgressQuests.remove(id);
+        if (!data.completedQuests.contains(id)) data.completedQuests.add(id);
     }
 
 
@@ -60,7 +100,7 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        return data.inProgressQuests.contains(questID);
+        return data.inProgressQuests.containsKey(questID);
     }
 
 

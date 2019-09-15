@@ -2,6 +2,7 @@ package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.RPGQuesting;
+import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
@@ -11,18 +12,19 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class CPlayerQuestData extends Component
 {
     public final EntityPlayerMP player;
     public ArrayList<UUID> completedQuests = new ArrayList<>();
-    public ArrayList<UUID> inProgressQuests = new ArrayList<>();
+    public LinkedHashMap<UUID, ArrayList<CObjective>> inProgressQuests = new LinkedHashMap<>();
 
-    public CPlayerQuestData(EntityPlayerMP player) throws IOException
+    public CPlayerQuestData(EntityPlayerMP player)
     {
         this.player = player;
-        load();
     }
 
     public CPlayerQuestData save() throws IOException
@@ -58,8 +60,16 @@ public class CPlayerQuestData extends Component
     {
         buf.writeInt(completedQuests.size());
         for (UUID id : completedQuests) new CUUID().set(id).write(buf);
+
         buf.writeInt(inProgressQuests.size());
-        for (UUID id : inProgressQuests) new CUUID().set(id).write(buf);
+        for (Map.Entry<UUID, ArrayList<CObjective>> entry : inProgressQuests.entrySet())
+        {
+            new CUUID().set(entry.getKey()).write(buf);
+
+            ArrayList<CObjective> objectives = entry.getValue();
+            buf.writeInt(objectives.size());
+            for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+        }
 
         return this;
     }
@@ -67,8 +77,20 @@ public class CPlayerQuestData extends Component
     @Override
     public CPlayerQuestData read(ByteBuf buf)
     {
+        completedQuests.clear();
         for (int i = new CInt().read(buf).value; i > 0; i--) completedQuests.add(new CUUID().read(buf).value);
-        for (int i = new CInt().read(buf).value; i > 0; i--) inProgressQuests.add(new CUUID().read(buf).value);
+
+        inProgressQuests.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--)
+        {
+            ArrayList<CObjective> objectives = new ArrayList<>();
+            inProgressQuests.put(new CUUID().read(buf).value, objectives);
+
+            for (int i2 = new CInt().read(buf).value; i2 > 0; i2--)
+            {
+                objectives.add((CObjective) Component.readMarked(buf));
+            }
+        }
 
         return this;
     }
@@ -78,8 +100,16 @@ public class CPlayerQuestData extends Component
     {
         new CInt().set(completedQuests.size()).save(stream);
         for (UUID id : completedQuests) new CUUID().set(id).save(stream);
+
         new CInt().set(inProgressQuests.size()).save(stream);
-        for (UUID id : inProgressQuests) new CUUID().set(id).save(stream);
+        for (Map.Entry<UUID, ArrayList<CObjective>> entry : inProgressQuests.entrySet())
+        {
+            new CUUID().set(entry.getKey()).save(stream);
+
+            ArrayList<CObjective> objectives = entry.getValue();
+            new CInt().set(objectives.size()).save(stream);
+            for (CObjective objective : objectives) Component.saveMarked(stream, objective);
+        }
 
         return this;
     }
@@ -87,8 +117,20 @@ public class CPlayerQuestData extends Component
     @Override
     public CPlayerQuestData load(InputStream stream) throws IOException
     {
+        completedQuests.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) completedQuests.add(new CUUID().load(stream).value);
-        for (int i = new CInt().load(stream).value; i > 0; i--) inProgressQuests.add(new CUUID().load(stream).value);
+
+        inProgressQuests.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--)
+        {
+            ArrayList<CObjective> objectives = new ArrayList<>();
+            inProgressQuests.put(new CUUID().load(stream).value, objectives);
+
+            for (int i2 = new CInt().load(stream).value; i2 > 0; i2--)
+            {
+                objectives.add((CObjective) Component.loadMarked(stream));
+            }
+        }
 
         return this;
     }
