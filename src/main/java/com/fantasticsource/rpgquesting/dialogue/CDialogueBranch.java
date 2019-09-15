@@ -1,9 +1,6 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.tools.component.CStringUTF8;
-import com.fantasticsource.tools.component.CUUID;
-import com.fantasticsource.tools.component.Component;
-import com.fantasticsource.tools.component.IObfuscatedComponent;
+import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
@@ -56,14 +53,28 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueBranch save(OutputStream fileOutputStream) throws IOException
+    public CDialogueBranch save(OutputStream stream) throws IOException
     {
+        parentID.save(stream);
+        parent.save(stream);
+        paragraph.save(stream);
+
+        new CInt().set(choices.size()).save(stream);
+        for (CDialogueChoice choice : choices) choice.save(stream);
+
         return this;
     }
 
     @Override
-    public CDialogueBranch load(InputStream fileInputStream) throws IOException
+    public CDialogueBranch load(InputStream stream) throws IOException
     {
+        parentID.load(stream);
+        parent.load(stream);
+        paragraph.load(stream);
+
+        choices.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) choices.add(new CDialogueChoice().load(stream));
+
         return this;
     }
 

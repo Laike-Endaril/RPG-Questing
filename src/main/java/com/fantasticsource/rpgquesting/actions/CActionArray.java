@@ -3,7 +3,7 @@ package com.fantasticsource.rpgquesting.actions;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.Entity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,9 +15,9 @@ public class CActionArray extends CAction
     public ArrayList<CAction> actions = new ArrayList<>();
 
     @Override
-    protected void execute(EntityPlayerMP player)
+    protected void execute(Entity entity)
     {
-        for (CAction action : actions) action.execute(player);
+        for (CAction action : actions) action.execute(entity);
     }
 
     @Override

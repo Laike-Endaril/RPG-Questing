@@ -5,6 +5,7 @@ import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.tools.component.CBoolean;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.IOException;
@@ -29,9 +30,10 @@ public class CActionBranch extends CAction
     }
 
     @Override
-    public void execute(EntityPlayerMP player)
+    public void execute(Entity entity)
     {
-        Network.WRAPPER.sendTo(new DialogueBranchPacket(clear.value, targetBranch), player);
+        if (!(entity instanceof EntityPlayerMP)) return;
+        Network.WRAPPER.sendTo(new DialogueBranchPacket(clear.value, targetBranch), (EntityPlayerMP) entity);
     }
 
     @Override
@@ -47,14 +49,18 @@ public class CActionBranch extends CAction
     }
 
     @Override
-    public CActionBranch save(OutputStream fileOutputStream) throws IOException
+    public CActionBranch save(OutputStream stream) throws IOException
     {
+        clear.save(stream);
+        targetBranch.save(stream);
         return this;
     }
 
     @Override
-    public CActionBranch load(InputStream fileInputStream) throws IOException
+    public CActionBranch load(InputStream stream) throws IOException
     {
+        clear.load(stream);
+        targetBranch.load(stream);
         return this;
     }
 }

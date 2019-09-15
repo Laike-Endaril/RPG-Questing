@@ -13,6 +13,21 @@ public class CConditionNameIs extends CCondition
 {
     public CStringUTF8 name = new CStringUTF8();
 
+    public CConditionNameIs()
+    {
+    }
+
+    public CConditionNameIs(String name)
+    {
+        set(name);
+    }
+
+    public CConditionNameIs set(String name)
+    {
+        this.name.set(name);
+        return this;
+    }
+
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
     {

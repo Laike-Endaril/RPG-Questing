@@ -3,10 +3,15 @@ package com.fantasticsource.rpgquesting;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
-import com.fantasticsource.rpgquesting.dialogue.*;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.conditions.CConditionEntityEntryIs;
+import com.fantasticsource.rpgquesting.conditions.CConditionNameIs;
+import com.fantasticsource.rpgquesting.dialogue.CDialogue;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
+import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -64,7 +69,8 @@ public class RPGQuesting
 
 
         //TODO test code here
-        CDialogueFilter filter = new CDialogueFilter().add(new ResourceLocation("wolf"));
+        CCondition wolfCondition = new CConditionEntityEntryIs("wolf");
+        CCondition chickenNameCondition = new CConditionNameIs("chicken");
 
         CDialogueChoice choiceEndDialogue = new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue());
         CDialogueChoice choiceNo = new CDialogueChoice().setText("No").setAction(new CActionEndDialogue());
@@ -76,8 +82,9 @@ public class RPGQuesting
 
         branch.add(choiceYes, choiceNo);
 
-        CDialogues.add(new CDialogue().setName("Fishin'").add(filter).add(branch).add(branch2));
-        CDialogues.add(new CDialogue().setName("The Depths of Waterdeep").add(filter).add(branch).add(branch2));
+        CDialogue dialogue = new CDialogue().setName("Fishin'").add(wolfCondition, chickenNameCondition).add(branch).add(branch2);
+        CDialogues.add(dialogue);
+        CDialogues.add(((CDialogue) dialogue.copy()).setName("The Depths of Waterdeep"));
     }
 
     @Mod.EventHandler

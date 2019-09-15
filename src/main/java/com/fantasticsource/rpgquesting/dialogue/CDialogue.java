@@ -1,11 +1,13 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +19,10 @@ public class CDialogue extends Component
 {
     public CUUID permanentID = new CUUID();
     public CStringUTF8 name = new CStringUTF8();
+
     public ArrayList<CCondition> dialogueConditions = new ArrayList<>();
     public ArrayList<CDialogueBranch> branches = new ArrayList<>();
+
     public CUUID sessionID = new CUUID().set(UUID.randomUUID());
 
     public CDialogue setName(String name)
@@ -27,15 +31,18 @@ public class CDialogue extends Component
         return this;
     }
 
-    public CDialogue add(CCondition condition)
+    public CDialogue add(CCondition... conditions)
     {
-        dialogueConditions.add(condition);
+        dialogueConditions.addAll(Arrays.asList(conditions));
         return this;
     }
 
-    public CDialogue add(CDialogueBranch branch)
+    public CDialogue add(CDialogueBranch... branches)
     {
-        branches.add(branch.setParent(this));
+        for (CDialogueBranch branch : branches)
+        {
+            this.branches.add(branch.setParent(this));
+        }
         return this;
     }
 
@@ -43,9 +50,9 @@ public class CDialogue extends Component
     {
         for (CCondition condition : dialogueConditions)
         {
-            if (condition.check(entity)) return true;
+            if (condition.unmetConditions(entity).size() > 0) return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -61,14 +68,32 @@ public class CDialogue extends Component
     }
 
     @Override
-    public CDialogue save(OutputStream fileOutputStream) throws IOException
+    public CDialogue save(OutputStream stream) throws IOException
     {
+        permanentID.save(stream);
+        name.save(stream);
+
+        new CInt().set(dialogueConditions.size()).save(stream);
+        for (CCondition condition : dialogueConditions) Component.saveMarked(stream, condition);
+
+        new CInt().set(branches.size()).save(stream);
+        for (CDialogueBranch branch : branches) branch.save(stream);
+
         return this;
     }
 
     @Override
-    public CDialogue load(InputStream fileInputStream) throws IOException
+    public CDialogue load(InputStream stream) throws IOException
     {
+        permanentID.load(stream);
+        name.load(stream);
+
+        dialogueConditions.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) dialogueConditions.add((CCondition) Component.loadMarked(stream));
+
+        branches.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) branches.add(new CDialogueBranch().load(stream));
+
         return this;
     }
 }
