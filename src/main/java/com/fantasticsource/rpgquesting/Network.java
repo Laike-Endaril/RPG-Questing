@@ -1,7 +1,11 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.*;
+import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
+import com.fantasticsource.rpgquesting.quest.CQuests;
+import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
 import io.netty.buffer.ByteBuf;
@@ -33,6 +37,8 @@ public class Network
         WRAPPER.registerMessage(CloseDialoguePacketHandler.class, CloseDialoguePacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(MakeChoicePacketHandler.class, MakeChoicePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(ActionErrorPacketHandler.class, ActionErrorPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(RequestJournalDataPacketHandler.class, RequestJournalDataPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(JournalPacketHandler.class, JournalPacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -312,6 +318,81 @@ public class Network
         public IMessage onMessage(ActionErrorPacket packet, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() -> DialogueGUI.showChoiceActionError(packet));
+            return null;
+        }
+    }
+
+
+    public static class RequestJournalDataPacket implements IMessage
+    {
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+        }
+    }
+
+    public static class RequestJournalDataPacketHandler implements IMessageHandler<RequestJournalDataPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestJournalDataPacket packet, MessageContext ctx)
+        {
+            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+            server.addScheduledTask(() ->
+            {
+                EntityPlayerMP player = ctx.getServerHandler().player;
+                if (MCTools.isOP(player))
+                {
+                    //TODO
+                }
+                else
+                {
+                    WRAPPER.sendTo(new JournalPacket(CQuests.playerQuestData.get(player.getPersistentID())), player);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class JournalPacket implements IMessage
+    {
+        public CPlayerQuestData data = new CPlayerQuestData();
+
+        public JournalPacket()
+        {
+            //Required
+        }
+
+        public JournalPacket(CPlayerQuestData playerQuestData)
+        {
+            this.data = playerQuestData;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            data.write(buf);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            data.read(buf);
+        }
+    }
+
+    public static class JournalPacketHandler implements IMessageHandler<JournalPacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(JournalPacket packet, MessageContext ctx)
+        {
+            Minecraft.getMinecraft().addScheduledTask(() -> JournalGUI.show(packet));
             return null;
         }
     }

@@ -16,9 +16,14 @@ import java.util.UUID;
 
 public class CPlayerQuestData extends Component
 {
-    public final EntityPlayerMP player;
+    public EntityPlayerMP player;
     public ArrayList<UUID> completedQuests = new ArrayList<>();
     public LinkedHashMap<UUID, ArrayList<CObjective>> inProgressQuests = new LinkedHashMap<>();
+
+
+    public CPlayerQuestData()
+    {
+    }
 
     public CPlayerQuestData(EntityPlayerMP player)
     {

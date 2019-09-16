@@ -4,6 +4,7 @@ import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.Network.JournalPacket;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
@@ -20,9 +21,12 @@ public class JournalGUI extends GUIScreen
     {
     }
 
-    public static void show()
+    public static void show(JournalPacket packet)
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
+
+        CPlayerQuestData data = packet.data;
+        //TODO
     }
 
     @Override
