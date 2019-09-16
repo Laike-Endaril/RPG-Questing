@@ -41,6 +41,7 @@ public class CPlayerQuestData extends Component
         file = new File(filename);
         File file2 = new File(file.getAbsolutePath() + ".new");
 
+        if (file2.exists()) file2.delete();
         FileOutputStream fos = new FileOutputStream(file2);
         save(fos);
         fos.close();
