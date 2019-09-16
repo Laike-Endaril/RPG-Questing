@@ -1,7 +1,9 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.rpgquesting.Network.RequestJournalDataPacket;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -18,6 +20,7 @@ public class Keys
     public static void init(FMLPreInitializationEvent event)
     {
         ClientRegistry.registerKeyBinding(JOURNAL_KEY);
+        MinecraftForge.EVENT_BUS.register(Keys.class);
     }
 
     @SubscribeEvent
@@ -25,7 +28,7 @@ public class Keys
     {
         if (JOURNAL_KEY.isPressed() && JOURNAL_KEY.getKeyConflictContext().isActive())
         {
-            //TODO
+            Network.WRAPPER.sendToServer(new RequestJournalDataPacket());
         }
     }
 }

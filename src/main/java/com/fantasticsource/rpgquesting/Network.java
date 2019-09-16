@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.*;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
@@ -13,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -345,7 +345,7 @@ public class Network
             server.addScheduledTask(() ->
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
-                if (MCTools.isOP(player))
+                if (player.interactionManager.getGameType() == GameType.CREATIVE)
                 {
                     //TODO
                 }
@@ -370,7 +370,7 @@ public class Network
 
         public JournalPacket(CPlayerQuestData playerQuestData)
         {
-            this.data = playerQuestData;
+            if (playerQuestData != null) data = playerQuestData;
         }
 
         @Override
