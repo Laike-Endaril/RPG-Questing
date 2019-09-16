@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.quest.objective;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
+import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.CInt;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -105,6 +106,7 @@ public class CObjectiveKill extends CObjective
     @Override
     public CObjectiveKill save(OutputStream stream) throws IOException
     {
+        new CBoolean().set(owner.value != null).save(stream);
         owner.save(stream);
         text.save(stream);
         current.save(stream);
@@ -115,7 +117,7 @@ public class CObjectiveKill extends CObjective
     @Override
     public CObjectiveKill load(InputStream stream) throws IOException
     {
-        owner.load(stream);
+        if (new CBoolean().load(stream).value) owner.load(stream);
         text.load(stream);
         current.load(stream);
         required.load(stream);
