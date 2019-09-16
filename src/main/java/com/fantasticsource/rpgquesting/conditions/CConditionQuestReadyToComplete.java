@@ -53,7 +53,9 @@ public class CConditionQuestReadyToComplete extends CCondition
         if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
         else
         {
-            if (!CQuests.isReadyToComplete((EntityPlayerMP) entity, permanentQuestID.value)) result.add("Quest must be ready to be completed: \"" + CQuests.get(permanentQuestID.value).name.value + '"');
+            CQuest quest = CQuests.get(permanentQuestID.value);
+            if (quest == null) result.add("Quest must be ready to be completed (quest does not exist!): \"" + permanentQuestID + '"');
+            else if (!quest.isReadyToComplete((EntityPlayerMP) entity)) result.add("Quest must be ready to be completed: \"" + quest.name.value + '"');
         }
         return result;
     }

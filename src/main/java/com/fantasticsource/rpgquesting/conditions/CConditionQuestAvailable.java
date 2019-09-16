@@ -53,7 +53,9 @@ public class CConditionQuestAvailable extends CCondition
         if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
         else
         {
-            if (!CQuests.isAvailable((EntityPlayerMP) entity, permanentQuestID.value)) result.add("Quest must be available: \"" + CQuests.get(permanentQuestID.value).name.value + '"');
+            CQuest quest = CQuests.get(permanentQuestID.value);
+            if (quest == null) result.add("Quest must be available (quest does not exist!): \"" + permanentQuestID.value + '"');
+            else if (!quest.isAvailable((EntityPlayerMP) entity)) result.add("Quest must be available: \"" + quest.name.value + '"');
         }
         return result;
     }

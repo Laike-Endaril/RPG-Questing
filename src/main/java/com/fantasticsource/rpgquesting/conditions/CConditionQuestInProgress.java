@@ -53,7 +53,9 @@ public class CConditionQuestInProgress extends CCondition
         if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
         else
         {
-            if (!CQuests.isInProgress((EntityPlayerMP) entity, permanentQuestID.value)) result.add("Quest must be in progress: \"" + CQuests.get(permanentQuestID.value).name.value + '"');
+            CQuest quest = CQuests.get(permanentQuestID.value);
+            if (quest == null) result.add("Quest must be in progress (quest does not exist!): \"" + permanentQuestID.value + '"');
+            else if (!quest.isInProgress((EntityPlayerMP) entity)) result.add("Quest must be in progress: \"" + quest.name.value + '"');
         }
         return result;
     }

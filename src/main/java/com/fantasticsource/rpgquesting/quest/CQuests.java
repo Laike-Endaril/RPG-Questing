@@ -8,8 +8,10 @@ import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -17,18 +19,37 @@ public class CQuests extends Component
 {
     public static final CQuests QUESTS = new CQuests();
     public static LinkedHashMap<UUID, CPlayerQuestData> playerQuestData = new LinkedHashMap<>();
-    public LinkedHashMap<UUID, CQuest> mainQuestData = new LinkedHashMap<>();
+    public LinkedHashMap<UUID, CQuest> worldQuestData = new LinkedHashMap<>();
+    public LinkedHashMap<String, LinkedHashMap<UUID, CQuest>> worldQuestDataByGroup = new LinkedHashMap<>();
 
 
     public static void add(CQuest quest)
     {
-        QUESTS.mainQuestData.put(quest.permanentID.value, quest);
+        QUESTS.worldQuestData.put(quest.permanentID.value, quest);
+        QUESTS.worldQuestDataByGroup.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>()).put(quest.permanentID.value, quest);
     }
 
 
+    public static boolean exists(CQuest quest)
+    {
+        Collection<CQuest> group = get(quest.group.value);
+        if (group == null) return false;
+
+        return group.contains(quest);
+    }
+
+    @Nullable
+    public static Collection<CQuest> get(String group)
+    {
+        LinkedHashMap<UUID, CQuest> quests = QUESTS.worldQuestDataByGroup.get(group);
+        if (quests == null) return null;
+
+        return quests.values();
+    }
+
     public static CQuest get(UUID id)
     {
-        return QUESTS.mainQuestData.get(id);
+        return QUESTS.worldQuestData.get(id);
     }
 
 
@@ -108,7 +129,7 @@ public class CQuests extends Component
 
     public static boolean isAvailable(EntityPlayerMP player, UUID questID)
     {
-        CQuest quest = QUESTS.mainQuestData.get(questID);
+        CQuest quest = QUESTS.worldQuestData.get(questID);
         if (quest == null) return false;
 
         return quest.isAvailable(player);
@@ -192,7 +213,8 @@ public class CQuests extends Component
             return true;
         });
 
-        mainQuestData.clear();
+        worldQuestData.clear();
+        worldQuestDataByGroup.clear();
 
         return this;
     }
@@ -200,7 +222,8 @@ public class CQuests extends Component
     public CQuests load() throws IOException
     {
         playerQuestData.clear();
-        mainQuestData.clear();
+        worldQuestData.clear();
+        worldQuestDataByGroup.clear();
 
         File file = RPGQuesting.worldDataFolder;
         if (!file.exists()) return this;
@@ -230,19 +253,21 @@ public class CQuests extends Component
     @Override
     public CQuests save(OutputStream stream) throws IOException
     {
-        new CInt().set(mainQuestData.size()).save(stream);
-        for (CQuest quest : mainQuestData.values()) quest.save(stream);
+        new CInt().set(worldQuestData.size()).save(stream);
+        for (CQuest quest : worldQuestData.values()) quest.save(stream);
         return this;
     }
 
     @Override
     public CQuests load(InputStream stream) throws IOException
     {
-        mainQuestData.clear();
+        worldQuestData.clear();
+        worldQuestDataByGroup.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
         {
             CQuest quest = new CQuest().load(stream);
-            mainQuestData.put(quest.permanentID.value, quest);
+            worldQuestData.put(quest.permanentID.value, quest);
+            QUESTS.worldQuestDataByGroup.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>()).put(quest.permanentID.value, quest);
         }
         return this;
     }

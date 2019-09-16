@@ -24,7 +24,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
     public CStringUTF8 name = new CStringUTF8();
-    public CStringUTF8 group = new CStringUTF8().set("");
+    public CStringUTF8 group = new CStringUTF8();
     public CInt level = new CInt();
     public CBoolean repeatable = new CBoolean();
     public ArrayList<CObjective> objectives = new ArrayList<>();
@@ -72,7 +72,7 @@ public class CQuest extends Component implements IObfuscatedComponent
 
     public final boolean isAvailable(EntityPlayerMP player)
     {
-        if (QUESTS.mainQuestData.get(permanentID.value) != this) return false;
+        if (QUESTS.worldQuestData.get(permanentID.value) != this) return false;
 
         if (isInProgress(player)) return false;
 
