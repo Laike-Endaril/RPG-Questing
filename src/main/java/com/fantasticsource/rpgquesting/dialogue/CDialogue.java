@@ -7,6 +7,7 @@ import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class CDialogue extends Component
     public CUUID permanentID = new CUUID().set(UUID.randomUUID());
     public CStringUTF8 name = new CStringUTF8();
 
-    public ArrayList<CCondition> dialogueConditions = new ArrayList<>();
+    public ArrayList<CCondition> playerConditions = new ArrayList<>();
+    public ArrayList<CCondition> entityConditions = new ArrayList<>();
     public ArrayList<CDialogueBranch> branches = new ArrayList<>();
 
     public CUUID sessionID = new CUUID().set(UUID.randomUUID());
@@ -31,9 +33,15 @@ public class CDialogue extends Component
         return this;
     }
 
-    public CDialogue add(CCondition... conditions)
+    public CDialogue addPlayerConditions(CCondition... conditions)
     {
-        dialogueConditions.addAll(Arrays.asList(conditions));
+        playerConditions.addAll(Arrays.asList(conditions));
+        return this;
+    }
+
+    public CDialogue addEntityConditions(CCondition... conditions)
+    {
+        entityConditions.addAll(Arrays.asList(conditions));
         return this;
     }
 
@@ -46,9 +54,13 @@ public class CDialogue extends Component
         return this;
     }
 
-    public boolean entityHas(Entity entity)
+    public boolean isAvailable(EntityPlayerMP player, Entity entity)
     {
-        for (CCondition condition : dialogueConditions)
+        for (CCondition condition : playerConditions)
+        {
+            if (condition.unmetConditions(player).size() > 0) return false;
+        }
+        for (CCondition condition : entityConditions)
         {
             if (condition.unmetConditions(entity).size() > 0) return false;
         }
@@ -73,8 +85,11 @@ public class CDialogue extends Component
         permanentID.save(stream);
         name.save(stream);
 
-        new CInt().set(dialogueConditions.size()).save(stream);
-        for (CCondition condition : dialogueConditions) Component.saveMarked(stream, condition);
+        new CInt().set(playerConditions.size()).save(stream);
+        for (CCondition condition : playerConditions) Component.saveMarked(stream, condition);
+
+        new CInt().set(entityConditions.size()).save(stream);
+        for (CCondition condition : entityConditions) Component.saveMarked(stream, condition);
 
         new CInt().set(branches.size()).save(stream);
         for (CDialogueBranch branch : branches) branch.save(stream);
@@ -89,8 +104,11 @@ public class CDialogue extends Component
         CDialogues.add(this);
         name.load(stream);
 
-        dialogueConditions.clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) dialogueConditions.add((CCondition) Component.loadMarked(stream));
+        playerConditions.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) playerConditions.add((CCondition) Component.loadMarked(stream));
+
+        entityConditions.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) entityConditions.add((CCondition) Component.loadMarked(stream));
 
         branches.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) branches.add(new CDialogueBranch());

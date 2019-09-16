@@ -27,7 +27,7 @@ public class CDialogues extends Component
         ArrayList<CDialogue> found = new ArrayList<>();
         for (CDialogue dialogue : dialoguesByPermanentID.values())
         {
-            if (dialogue.entityHas(entity)) found.add(dialogue);
+            if (dialogue.isAvailable(player, entity)) found.add(dialogue);
         }
 
         if (found.size() == 0) return false;

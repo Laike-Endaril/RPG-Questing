@@ -88,7 +88,8 @@ public class RPGQuesting
             CDialogue dialogue = new CDialogue().setName("The Wolf named Chicken");
             CDialogues.add(dialogue);
 
-            dialogue.add(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"), new CConditionQuestAvailable(quest));
+            dialogue.addPlayerConditions(new CConditionQuestAvailable(quest));
+            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 
             CDialogueBranch branch = new CDialogueBranch("Ugh...yes...despite being a wolf, my name is \"Chicken\".  Freaking...you know what?  Go kill 5 chickens for me and maybe I'll tell you how I got the name");
             dialogue.add(branch);
@@ -99,7 +100,8 @@ public class RPGQuesting
             dialogue = new CDialogue().setName("The Wolf named Chicken");
             CDialogues.add(dialogue);
 
-            dialogue.add(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"), new CConditionQuestInProgress(quest));
+            dialogue.addPlayerConditions(new CConditionQuestInProgress(quest));
+            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 
             branch = new CDialogueBranch("You killed those chickens yet?");
             dialogue.add(branch);
@@ -109,7 +111,8 @@ public class RPGQuesting
             dialogue = new CDialogue().setName("The Wolf named Chicken (complete)");
             CDialogues.add(dialogue);
 
-            dialogue.add(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"), new CConditionQuestReadyToComplete(quest));
+            dialogue.addPlayerConditions(new CConditionQuestReadyToComplete(quest));
+            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 
             branch = new CDialogueBranch("Hey, grats, you killed some helpless chickens.  Slow clap.");
             CDialogueBranch branch2 = new CDialogueBranch("...None of your business.  Now take this corpse and scram.");
