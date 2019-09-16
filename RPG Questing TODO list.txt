@@ -1,3 +1,8 @@
+Finish quest rewards
+Check if player quest data is disposed of when a quest is removed
+
+
+
 Quest indicator symbols
 * ! for available quests that can't be reapated
 * Circular arrow for available quests that can be repeated
@@ -11,44 +16,8 @@ Based on BlueRPG level
 
 Quest attributes
 * Group (string; the quest group that the quest belongs to; this will often be the name of the area where it's started; a blank quest group is replaced with "General")
-* Suggested level (if BlueRPG is installed)
 * Shareable (boolean; allows you to invite other players, giving them the option to start the quest, bypassing the normal quest start trigger)
 * Hidden (boolean; does not display marker when status or appear in journal when "available")
-* Quest start triggers
-* Quest start conditions
-* Quest start actions
-* Quest objectives
-* Quest completion actions
-* Rewarded exp
-* Rewarded items
-
-
-Triggers
-* Dialogue choice
-* Entity killed
-* Item obtained
-* Item broken
-* Entity damaged
-* Entity healed
-* Area entered
-* Area left
-
-
-Conditions
-* Space in inventory
-* Items in inventory
-* Quest progression point reached
-* HP level of entity
-* Entity within area
-
-
-Actions
-* Kill entities
-* Deal damage to entities
-* Heal entities
-* Teleport entities
-* Remove items from inventory
-* Give items
 
 
 Objectives types
