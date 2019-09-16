@@ -69,7 +69,7 @@ public class DialogueGUI extends GUIScreen
         clearErrors();
         if (packet.error.size() > 0)
         {
-            GUIText text = new GUIText(GUI, "\n The following conditions must be met:\n", Color.RED, Color.RED, Color.RED);
+            GUIText text = new GUIText(GUI, "\nThe following conditions must be met:\n", Color.RED, Color.RED, Color.RED);
 
             scrollView.add(text);
             errorLines.add(text);
