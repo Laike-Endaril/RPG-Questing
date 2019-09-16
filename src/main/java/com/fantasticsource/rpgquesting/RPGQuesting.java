@@ -13,6 +13,7 @@ import com.fantasticsource.rpgquesting.quest.objective.CObjectiveKill;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -55,7 +56,7 @@ public class RPGQuesting
     @SubscribeEvent
     public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
     {
-        if (event.getSide() == Side.SERVER)
+        if (event.getSide() == Side.SERVER && event.getHand() == EnumHand.MAIN_HAND)
         {
             if (CDialogues.handle((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
         }
