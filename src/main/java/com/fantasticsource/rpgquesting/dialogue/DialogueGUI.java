@@ -69,13 +69,26 @@ public class DialogueGUI extends GUIScreen
         clearErrors();
         if (packet.error.size() > 0)
         {
-            GUIText text = new GUIText(GUI, "\nThe following conditions must be met:\n", Color.RED, Color.RED, Color.RED);
+            GUIText text = new GUIText(GUI, "\n\nThe following conditions must be met:\n\n", Color.RED, Color.RED, Color.RED);
 
             scrollView.add(text);
             errorLines.add(text);
-            for (String line : packet.error)
+
+            ArrayList<String> lines = packet.error;
+            if (lines.get(0).equals("ALL OF:"))
             {
-                text = new GUIText(GUI, processString(line + "\n"), Color.RED, Color.RED, Color.RED);
+                lines.remove(lines.size() - 1);
+                lines.remove(0);
+                lines.remove(0);
+
+                for (int i = 0; i < lines.size(); i++)
+                {
+                    lines.set(i, lines.get(i).substring(1));
+                }
+            }
+            for (String line : lines)
+            {
+                text = new GUIText(GUI, processString("* " + line + "\n"), Color.RED, Color.RED, Color.RED);
                 scrollView.add(text);
                 errorLines.add(text);
             }
