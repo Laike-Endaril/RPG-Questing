@@ -1,8 +1,3 @@
-Finish quest rewards
-Check if player quest data is disposed of when a quest is removed
-
-
-
 Quest indicator symbols
 * ! for available quests that can't be reapated
 * Circular arrow for available quests that can be repeated

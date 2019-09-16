@@ -144,6 +144,9 @@ public class CPlayerQuestData extends Component
             }
         }
 
+        completedQuests.removeIf(e -> CQuests.get(e) == null);
+        inProgressQuests.entrySet().removeIf(e -> CQuests.get(e.getKey()) == null);
+
         return this;
     }
 }
