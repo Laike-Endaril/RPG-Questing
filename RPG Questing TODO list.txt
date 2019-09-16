@@ -1,15 +1,28 @@
-Quest attributes
-* Shareable (boolean; allows you to invite other players, giving them the option to start the quest, bypassing the normal quest start trigger)
-* Hidden (boolean; does not display marker when status or appear in journal when "available")
-
-
-
 Objectives types
 * Dialogue
 * Gather items
 * Enter area
 * Leave area
-* Survive
+
+
+
+Quest Editor
+
+
+
+Dialogue Editor
+
+
+
+Journal
+* Tabview navigator on left; tabs are "In progress", "Available", "Completed"
+* "Available" tab can be disabled in global config (still shows for OPs in creative mode)
+* Each navigator view is a scrollview containing multiple spoilerviews (each of which is a quest group)
+* Scrollview on right; shows info for currently selected quest
+
+
+
+Quest Tracker
 
 
 
@@ -25,12 +38,15 @@ Based on BlueRPG level
 
 
 
-Journal
-* Tabview navigator on left; tabs are "In progress", "Available", "Completed"
-* "Available" tab can be disabled in global config (still shows for OPs in creative mode)
-* Each navigator view is a scrollview containing multiple spoilerviews (each of which is a quest group)
-* Scrollview on right; shows info for currently selected quest
-
-
-
 Show player and NPC models during dialogue
+
+
+
+Quest attributes
+* Shareable (boolean; allows you to invite other players, giving them the option to start the quest, bypassing the normal quest start trigger)
+* Hidden (boolean; does not display marker when status or appear in journal when "available")
+
+
+
+Objectives types
+* Survive
