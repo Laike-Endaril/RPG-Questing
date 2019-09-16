@@ -39,13 +39,17 @@ public class JournalGUI extends GUIScreen
         navigator = new GUITabView(this, 0, 0, 0.5, 1, "In Progress", "Completed");
         guiElements.add(navigator);
 
+
+        //In progress quests
         GUIScrollView scrollView = new GUIScrollView(this, 0.96, 1);
         navigator.tabViews[0].add(scrollView);
-        navigator.tabViews[0].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.4, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
+        navigator.tabViews[0].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
 
+
+        //Completed quests
         scrollView = new GUIScrollView(this, 0.96, 1);
         navigator.tabViews[1].add(scrollView);
-        navigator.tabViews[1].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.4, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
+        navigator.tabViews[1].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
 
 
         scrollView = new GUIScrollView(this, 0.5, 0, 0.48, 1);
