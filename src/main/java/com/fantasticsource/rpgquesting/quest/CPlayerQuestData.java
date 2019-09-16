@@ -29,10 +29,18 @@ public class CPlayerQuestData extends Component
 
     public CPlayerQuestData save() throws IOException
     {
-        File file = new File(MCTools.getPlayerDataDir(FMLCommonHandler.instance().getMinecraftServerInstance()) + RPGQuesting.MODID + File.separator + player.getPersistentID() + ".dat");
+        String filename = MCTools.getPlayerDataDir(FMLCommonHandler.instance().getMinecraftServerInstance());
+        File file = new File(filename);
+        if (!file.exists()) file.mkdir();
+
+        filename += RPGQuesting.MODID + File.separator;
+        file = new File(filename);
+        if (!file.exists()) file.mkdir();
+
+        filename += player.getPersistentID() + ".dat";
+        file = new File(filename);
         File file2 = new File(file.getAbsolutePath() + ".new");
 
-        if (file2.exists()) file2.delete();
         FileOutputStream fos = new FileOutputStream(file2);
         save(fos);
         fos.close();
