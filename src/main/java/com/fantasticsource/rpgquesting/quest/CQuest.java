@@ -24,6 +24,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
     public CStringUTF8 name = new CStringUTF8();
+    public CStringUTF8 group = new CStringUTF8().set("");
     public CInt level = new CInt();
     public CBoolean repeatable = new CBoolean();
     public ArrayList<CObjective> objectives = new ArrayList<>();
@@ -36,9 +37,10 @@ public class CQuest extends Component implements IObfuscatedComponent
     {
     }
 
-    public CQuest(String name, int level, boolean repeatable)
+    public CQuest(String name, String group, int level, boolean repeatable)
     {
         this.name.set(name);
+        this.group.set(group);
         this.level.set(level);
         this.repeatable.set(repeatable);
     }
@@ -113,10 +115,12 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CQuest save(OutputStream stream) throws IOException
     {
         permanentID.save(stream);
-        name.save(stream);
-        level.save(stream);
 
+        name.save(stream);
+        group.save(stream);
+        level.save(stream);
         repeatable.save(stream);
+
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
 
@@ -134,10 +138,12 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CQuest load(InputStream stream) throws IOException
     {
         permanentID.load(stream);
-        name.load(stream);
-        level.load(stream);
 
+        name.load(stream);
+        group.load(stream);
+        level.load(stream);
         repeatable.load(stream);
+
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
 
@@ -155,6 +161,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CQuest writeObf(ByteBuf buf)
     {
         name.write(buf);
+        group.write(buf);
         level.write(buf);
         repeatable.write(buf);
 
@@ -168,6 +175,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CQuest readObf(ByteBuf buf)
     {
         name.read(buf);
+        group.read(buf);
         level.read(buf);
         repeatable.read(buf);
 
