@@ -107,7 +107,7 @@ public class CObjectiveKill extends CObjective
     public CObjectiveKill save(OutputStream stream) throws IOException
     {
         new CBoolean().set(owner.value != null).save(stream);
-        owner.save(stream);
+        if (owner.value != null) owner.save(stream);
         text.save(stream);
         current.save(stream);
         required.save(stream);
