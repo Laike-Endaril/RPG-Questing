@@ -1,18 +1,9 @@
 package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.mctools.MCTools;
-import com.fantasticsource.rpgquesting.actions.*;
-import com.fantasticsource.rpgquesting.conditions.*;
-import com.fantasticsource.rpgquesting.dialogue.CDialogue;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
-import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.rpgquesting.quest.objective.CObjectiveKill;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -103,7 +94,7 @@ public class RPGQuesting
 //            dialogue.addPlayerConditions(new CConditionQuestInProgress(quest));
 //            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 //
-//            branch = new CDialogueBranch("You killed those chickens yet?");
+//            branch = new CDialogueBranch("You kill those chickens yet?");
 //            dialogue.add(branch);
 //            branch.add(new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue()));
 //
@@ -141,7 +132,7 @@ public class RPGQuesting
     }
 
     @SubscribeEvent
-    public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) throws IOException
+    public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event)
     {
         if (event.player instanceof EntityPlayerMP) CQuests.unloadPlayerQuestData((EntityPlayerMP) event.player);
     }

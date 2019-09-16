@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 public class CObjectiveKill extends CObjective
 {
-    CInt current = new CInt(), required = new CInt();
-    ArrayList<CCondition> conditions = new ArrayList<>();
-
     static
     {
         MinecraftForge.EVENT_BUS.register(CObjectiveKill.class);
     }
+
+    CInt current = new CInt(), required = new CInt();
+    ArrayList<CCondition> conditions = new ArrayList<>();
 
     public CObjectiveKill()
     {
@@ -72,8 +72,7 @@ public class CObjectiveKill extends CObjective
                         if (doit)
                         {
                             objectiveKill.current.value++;
-                            //TODO debug message
-                            System.out.println(objectiveKill.current.value + "/" + objectiveKill.required.value);
+                            data.save();
                         }
                     }
                 }

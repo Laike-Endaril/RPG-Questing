@@ -50,6 +50,8 @@ public class CQuests extends Component
                 e.printStackTrace();
             }
         }
+
+        data.save();
     }
 
     public static void abandon(EntityPlayerMP player, UUID id)
@@ -58,6 +60,8 @@ public class CQuests extends Component
         if (data == null) return;
 
         data.inProgressQuests.remove(id);
+
+        data.save();
     }
 
     public static boolean complete(EntityPlayerMP player, UUID id)
@@ -72,6 +76,9 @@ public class CQuests extends Component
         if (quest == null) return true;
 
         //TODO give exp/rewards
+
+        data.save();
+
         return true;
     }
 
@@ -82,7 +89,7 @@ public class CQuests extends Component
         if (data != null) playerQuestData.put(player.getPersistentID(), data);
     }
 
-    public static void unloadPlayerQuestData(EntityPlayerMP player) throws IOException
+    public static void unloadPlayerQuestData(EntityPlayerMP player)
     {
         CPlayerQuestData data = playerQuestData.remove(player.getPersistentID());
         if (data != null) data.save();
@@ -176,14 +183,7 @@ public class CQuests extends Component
     {
         playerQuestData.entrySet().removeIf(e ->
         {
-            try
-            {
-                e.getValue().save();
-            }
-            catch (IOException e1)
-            {
-                e1.printStackTrace();
-            }
+            e.getValue().save();
             return true;
         });
 

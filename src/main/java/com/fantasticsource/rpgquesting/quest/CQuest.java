@@ -74,6 +74,8 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         if (isInProgress(player)) return false;
 
+        if (isReadyToComplete(player)) return false;
+
         if (!repeatable.value && isCompleted(player)) return false;
 
         for (CCondition condition : conditions) if (condition.unmetConditions(player).size() > 0) return false;
@@ -83,6 +85,11 @@ public class CQuest extends Component implements IObfuscatedComponent
     public final boolean isInProgress(EntityPlayerMP player)
     {
         return CQuests.isInProgress(player, this);
+    }
+
+    public final boolean isReadyToComplete(EntityPlayerMP player)
+    {
+        return CQuests.isReadyToComplete(player, this);
     }
 
     public final boolean isCompleted(EntityPlayerMP player)

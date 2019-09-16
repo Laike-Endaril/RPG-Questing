@@ -25,7 +25,7 @@ public class CPlayerQuestData extends Component
         this.player = player;
     }
 
-    public CPlayerQuestData save() throws IOException
+    public CPlayerQuestData save()
     {
         File file = RPGQuesting.playerDataFolder;
         if (!file.exists()) file.mkdir();
@@ -37,9 +37,17 @@ public class CPlayerQuestData extends Component
         File file2 = new File(file.getAbsolutePath() + ".new");
 
         if (file2.exists()) file2.delete();
-        FileOutputStream fos = new FileOutputStream(file2);
-        save(fos);
-        fos.close();
+        FileOutputStream fos = null;
+        try
+        {
+            fos = new FileOutputStream(file2);
+            save(fos);
+            fos.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
         if (file.exists()) file.delete();
         file2.renameTo(file);

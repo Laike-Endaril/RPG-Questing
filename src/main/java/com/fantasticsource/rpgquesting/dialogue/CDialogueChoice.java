@@ -19,7 +19,7 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
 {
     public CStringUTF8 text = new CStringUTF8();
     public ArrayList<CCondition> availabilityConditions = new ArrayList<>();
-    CAction action;
+    public CAction action;
 
     public boolean isAvailable(EntityPlayerMP player)
     {

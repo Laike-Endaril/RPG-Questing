@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.*;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
@@ -253,7 +254,7 @@ public class Network
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
                 CDialogue dialogue = CDialogues.getBySessionID(packet.currentBranch.parentSessionID.value);
-                if (target != null && target.getDistanceSq(player) < 25 && dialogue.isAvailable(player, target))
+                if (target != null && target.getDistanceSq(player) < 25)
                 {
                     for (CDialogueBranch branch : dialogue.branches)
                     {
@@ -263,7 +264,7 @@ public class Network
                             {
                                 if (choice.text.value.equals(packet.choice.value))
                                 {
-                                    choice.execute(player);
+                                    if (dialogue.isAvailable(player, target) || choice.action.getClass() == CActionEndDialogue.class) choice.execute(player);
                                 }
                             }
                         }
