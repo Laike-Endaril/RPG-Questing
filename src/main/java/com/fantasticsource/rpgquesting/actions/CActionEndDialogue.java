@@ -2,6 +2,9 @@ package com.fantasticsource.rpgquesting.actions;
 
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.CloseDialoguePacket;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.tools.component.CInt;
+import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,12 +37,18 @@ public class CActionEndDialogue extends CAction
     @Override
     public CActionEndDialogue save(OutputStream stream) throws IOException
     {
+        new CInt().set(conditions.size()).save(stream);
+        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
+
         return this;
     }
 
     @Override
     public CActionEndDialogue load(InputStream stream) throws IOException
     {
+        conditions.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
+
         return this;
     }
 }

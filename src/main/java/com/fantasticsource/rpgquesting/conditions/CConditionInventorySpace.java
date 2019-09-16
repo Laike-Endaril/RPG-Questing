@@ -44,7 +44,7 @@ public class CConditionInventorySpace extends CCondition
             {
                 if (stack.isEmpty() && ++i >= slotCount.value) return result;
             }
-            result.add("You need at least " + slotCount.value + " inventory spaces available");
+            result.add("You need at least " + slotCount.value + " inventory space" + (slotCount.value == 1 ? "" : "s") + " available");
         }
         return result;
     }

@@ -2,12 +2,14 @@ package com.fantasticsource.rpgquesting.actions;
 
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -84,6 +86,9 @@ public class CActionBranch extends CAction
         dialogueID.save(stream);
         branchIndex.save(stream);
 
+        new CInt().set(conditions.size()).save(stream);
+        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
+
         return this;
     }
 
@@ -93,6 +98,9 @@ public class CActionBranch extends CAction
         clear.load(stream);
         dialogueID.load(stream);
         branchIndex.load(stream);
+
+        conditions.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
 
         return this;
     }

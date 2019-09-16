@@ -67,11 +67,18 @@ public class DialogueGUI extends GUIScreen
     public static void showChoiceActionError(ActionErrorPacket packet)
     {
         clearErrors();
-        for (String line : packet.error)
+        if (packet.error.size() > 0)
         {
-            GUIText text = new GUIText(GUI, processString(line), Color.RED, Color.RED, Color.RED);
+            GUIText text = new GUIText(GUI, "\n The following conditions must be met:\n", Color.RED, Color.RED, Color.RED);
+
             scrollView.add(text);
             errorLines.add(text);
+            for (String line : packet.error)
+            {
+                text = new GUIText(GUI, processString(line + "\n"), Color.RED, Color.RED, Color.RED);
+                scrollView.add(text);
+                errorLines.add(text);
+            }
         }
     }
 

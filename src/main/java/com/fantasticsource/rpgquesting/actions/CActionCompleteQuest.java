@@ -1,8 +1,11 @@
 package com.fantasticsource.rpgquesting.actions;
 
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
+import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -68,6 +71,9 @@ public class CActionCompleteQuest extends CAction
     {
         questID.save(stream);
 
+        new CInt().set(conditions.size()).save(stream);
+        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
+
         return this;
     }
 
@@ -75,6 +81,9 @@ public class CActionCompleteQuest extends CAction
     public CActionCompleteQuest load(InputStream stream) throws IOException
     {
         questID.load(stream);
+
+        conditions.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
 
         return this;
     }
