@@ -6,15 +6,18 @@ import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class CQuest extends Component implements IObfuscatedComponent
 {
-    public CUUID permanentID = new CUUID();
+    public CUUID permanentID = new CUUID().set(UUID.randomUUID());
 
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
@@ -26,6 +29,42 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CInt experience = new CInt();
     public ArrayList<CItemStack> rewards = new ArrayList<>();
 
+
+    public CQuest()
+    {
+    }
+
+    public CQuest(String name, int level, boolean repeatable)
+    {
+        this.name.set(name);
+        this.level.set(level);
+        this.repeatable.set(repeatable);
+    }
+
+
+    public CQuest add(CCondition... conditions)
+    {
+        this.conditions.addAll(Arrays.asList(conditions));
+        return this;
+    }
+
+    public CQuest add(CObjective... objectives)
+    {
+        this.objectives.addAll(Arrays.asList(objectives));
+        return this;
+    }
+
+    public CQuest add(ItemStack... rewards)
+    {
+        for (ItemStack stack : rewards) this.rewards.add(new CItemStack(stack));
+        return this;
+    }
+
+    public CQuest setExp(int exp)
+    {
+        experience.set(exp);
+        return this;
+    }
 
     public final boolean isAvailable(EntityPlayerMP player)
     {
@@ -102,7 +141,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public Component writeObf(ByteBuf buf)
+    public CQuest writeObf(ByteBuf buf)
     {
         name.write(buf);
         level.write(buf);
@@ -115,7 +154,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public Component readObf(ByteBuf buf)
+    public CQuest readObf(ByteBuf buf)
     {
         name.read(buf);
         level.read(buf);

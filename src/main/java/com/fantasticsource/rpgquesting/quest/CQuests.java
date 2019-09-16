@@ -15,8 +15,14 @@ import java.util.UUID;
 public class CQuests extends Component
 {
     public static final CQuests QUESTS = new CQuests();
-    private static LinkedHashMap<UUID, CPlayerQuestData> playerQuestData = new LinkedHashMap<>();
+    public static LinkedHashMap<UUID, CPlayerQuestData> playerQuestData = new LinkedHashMap<>();
     private LinkedHashMap<UUID, CQuest> mainQuestData = new LinkedHashMap<>();
+
+
+    public static void add(CQuest quest)
+    {
+        QUESTS.mainQuestData.put(quest.permanentID.value, quest);
+    }
 
 
     public static CQuest get(UUID id)
@@ -54,12 +60,19 @@ public class CQuests extends Component
         data.inProgressQuests.remove(id);
     }
 
-    public static void complete(EntityPlayerMP player, UUID id)
+    public static boolean complete(EntityPlayerMP player, UUID id)
     {
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
+        if (!data.inProgressQuests.containsKey(id)) return false;
 
         data.inProgressQuests.remove(id);
         if (!data.completedQuests.contains(id)) data.completedQuests.add(id);
+
+        CQuest quest = get(id);
+        if (quest == null) return true;
+
+        //TODO give exp/rewards
+        return true;
     }
 
 
@@ -100,7 +113,30 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        return data.inProgressQuests.containsKey(questID);
+        ArrayList<CObjective> objectives = data.inProgressQuests.get(questID);
+        if (objectives == null) return false;
+
+        boolean done = true;
+        for (CObjective objective : objectives) if (!objective.isDone()) done = false;
+        return !done;
+    }
+
+
+    public static boolean isReadyToComplete(EntityPlayerMP player, CQuest quest)
+    {
+        return isReadyToComplete(player, quest.permanentID.value);
+    }
+
+    public static boolean isReadyToComplete(EntityPlayerMP player, UUID questID)
+    {
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
+        if (data == null) return false;
+
+        ArrayList<CObjective> objectives = data.inProgressQuests.get(questID);
+        if (objectives == null) return false;
+
+        for (CObjective objective : objectives) if (!objective.isDone()) return false;
+        return true;
     }
 
 
@@ -116,6 +152,7 @@ public class CQuests extends Component
 
         return data.completedQuests.contains(questID);
     }
+
 
     public CQuests save() throws IOException
     {

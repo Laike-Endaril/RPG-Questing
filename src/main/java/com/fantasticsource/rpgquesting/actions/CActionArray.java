@@ -4,6 +4,7 @@ import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,21 @@ import java.util.ArrayList;
 public class CActionArray extends CAction
 {
     public ArrayList<CAction> actions = new ArrayList<>();
+
+    public CActionArray()
+    {
+    }
+
+    public CActionArray(CAction... actions)
+    {
+        add(actions);
+    }
+
+    public CActionArray add(CAction... actions)
+    {
+        this.actions.addAll(Arrays.asList(actions));
+        return this;
+    }
 
     @Override
     protected void execute(Entity entity)

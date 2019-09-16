@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 
@@ -21,14 +20,10 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
 
     public CDialogueBranch()
     {
-        System.out.println(sessionID.value);
-        Tools.printStackTrace();
     }
 
     public CDialogueBranch(String paragraph)
     {
-        System.out.println(sessionID.value);
-        Tools.printStackTrace();
         this.paragraph.set(paragraph);
     }
 
@@ -84,7 +79,6 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch writeObf(ByteBuf buf)
     {
-        if (parentSessionID.value == null) System.out.println(sessionID.value);
         parentSessionID.write(buf);
         sessionID.write(buf);
         paragraph.write(buf);

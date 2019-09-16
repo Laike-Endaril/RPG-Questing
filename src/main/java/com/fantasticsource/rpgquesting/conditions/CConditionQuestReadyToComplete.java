@@ -13,32 +13,32 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class CConditionQuestInProgress extends CCondition
+public class CConditionQuestReadyToComplete extends CCondition
 {
     public CUUID permanentQuestID = new CUUID();
 
 
-    public CConditionQuestInProgress()
+    public CConditionQuestReadyToComplete()
     {
     }
 
-    public CConditionQuestInProgress(CQuest quest)
+    public CConditionQuestReadyToComplete(CQuest quest)
     {
         this(quest.permanentID.value);
     }
 
-    public CConditionQuestInProgress(UUID questID)
+    public CConditionQuestReadyToComplete(UUID questID)
     {
         set(questID);
     }
 
 
-    public CConditionQuestInProgress set(CQuest quest)
+    public CConditionQuestReadyToComplete set(CQuest quest)
     {
         return set(quest.permanentID.value);
     }
 
-    public CConditionQuestInProgress set(UUID questID)
+    public CConditionQuestReadyToComplete set(UUID questID)
     {
         permanentQuestID.set(questID);
         return this;
@@ -53,32 +53,32 @@ public class CConditionQuestInProgress extends CCondition
         if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
         else
         {
-            if (!CQuests.isInProgress((EntityPlayerMP) entity, permanentQuestID.value)) result.add("Quest must be in progress: \"" + CQuests.get(permanentQuestID.value).name.value + '"');
+            if (!CQuests.isReadyToComplete((EntityPlayerMP) entity, permanentQuestID.value)) result.add("Quest must be ready to be completed: \"" + CQuests.get(permanentQuestID.value).name.value + '"');
         }
         return result;
     }
 
     @Override
-    public CConditionQuestInProgress write(ByteBuf byteBuf)
+    public CConditionQuestReadyToComplete write(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CConditionQuestInProgress read(ByteBuf byteBuf)
+    public CConditionQuestReadyToComplete read(ByteBuf byteBuf)
     {
         return this;
     }
 
     @Override
-    public CConditionQuestInProgress save(OutputStream stream) throws IOException
+    public CConditionQuestReadyToComplete save(OutputStream stream) throws IOException
     {
         permanentQuestID.save(stream);
         return this;
     }
 
     @Override
-    public CConditionQuestInProgress load(InputStream stream) throws IOException
+    public CConditionQuestReadyToComplete load(InputStream stream) throws IOException
     {
         permanentQuestID.load(stream);
         return this;

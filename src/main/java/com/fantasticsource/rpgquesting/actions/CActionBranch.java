@@ -22,6 +22,17 @@ public class CActionBranch extends CAction
     CUUID dialogueID = new CUUID();
     CInt branchIndex = new CInt();
 
+
+    public CActionBranch()
+    {
+    }
+
+    public CActionBranch(CDialogueBranch targetBranch)
+    {
+        set(targetBranch);
+    }
+
+
     public CActionBranch set(CDialogueBranch targetBranch)
     {
         return set(false, targetBranch);

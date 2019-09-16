@@ -12,31 +12,31 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-public class CActionStartQuest extends CAction
+public class CActionCompleteQuest extends CAction
 {
     CUUID questID = new CUUID();
 
-    public CActionStartQuest()
+    public CActionCompleteQuest()
     {
     }
 
-    public CActionStartQuest(CQuest quest)
+    public CActionCompleteQuest(CQuest quest)
     {
         this(quest.permanentID.value);
     }
 
-    public CActionStartQuest(UUID questID)
+    public CActionCompleteQuest(UUID questID)
     {
         set(questID);
     }
 
 
-    public CActionStartQuest set(CQuest quest)
+    public CActionCompleteQuest set(CQuest quest)
     {
         return set(quest.permanentID.value);
     }
 
-    public CActionStartQuest set(UUID id)
+    public CActionCompleteQuest set(UUID id)
     {
         this.questID.set(id);
 
@@ -48,23 +48,23 @@ public class CActionStartQuest extends CAction
     public void execute(Entity entity)
     {
         if (!(entity instanceof EntityPlayerMP)) return;
-        CQuests.start((EntityPlayerMP) entity, questID.value);
+        CQuests.complete((EntityPlayerMP) entity, questID.value);
     }
 
     @Override
-    public CActionStartQuest write(ByteBuf buf)
+    public CActionCompleteQuest write(ByteBuf buf)
     {
         return this;
     }
 
     @Override
-    public CActionStartQuest read(ByteBuf buf)
+    public CActionCompleteQuest read(ByteBuf buf)
     {
         return this;
     }
 
     @Override
-    public CActionStartQuest save(OutputStream stream) throws IOException
+    public CActionCompleteQuest save(OutputStream stream) throws IOException
     {
         questID.save(stream);
 
@@ -72,7 +72,7 @@ public class CActionStartQuest extends CAction
     }
 
     @Override
-    public CActionStartQuest load(InputStream stream) throws IOException
+    public CActionCompleteQuest load(InputStream stream) throws IOException
     {
         questID.load(stream);
 
