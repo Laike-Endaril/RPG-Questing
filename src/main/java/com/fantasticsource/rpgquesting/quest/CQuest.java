@@ -15,6 +15,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static com.fantasticsource.rpgquesting.quest.CQuests.QUESTS;
+
 public class CQuest extends Component implements IObfuscatedComponent
 {
     public CUUID permanentID = new CUUID().set(UUID.randomUUID());
@@ -68,6 +70,8 @@ public class CQuest extends Component implements IObfuscatedComponent
 
     public final boolean isAvailable(EntityPlayerMP player)
     {
+        if (QUESTS.mainQuestData.get(permanentID.value) != this) return false;
+
         if (isInProgress(player)) return false;
 
         if (!repeatable.value && isCompleted(player)) return false;

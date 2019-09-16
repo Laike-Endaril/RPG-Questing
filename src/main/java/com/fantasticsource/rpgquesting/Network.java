@@ -173,7 +173,7 @@ public class Network
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
                 CDialogue dialogue = CDialogues.getBySessionID(packet.dialogueSessionID.value);
-                if (target != null && target.getDistanceSq(player) < 25 && dialogue.isAvailable(target))
+                if (target != null && target.getDistanceSq(player) < 25 && dialogue.isAvailable(player, target))
                 {
                     WRAPPER.sendTo(new DialogueBranchPacket(true, dialogue.branches.get(0)), player);
                 }
@@ -253,7 +253,7 @@ public class Network
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 Entity target = player.world.getEntityByID(packet.targetID);
                 CDialogue dialogue = CDialogues.getBySessionID(packet.currentBranch.parentSessionID.value);
-                if (target != null && target.getDistanceSq(player) < 25 && dialogue.isAvailable(target))
+                if (target != null && target.getDistanceSq(player) < 25 && dialogue.isAvailable(player, target))
                 {
                     for (CDialogueBranch branch : dialogue.branches)
                     {

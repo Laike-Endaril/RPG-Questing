@@ -79,7 +79,6 @@ public class RPGQuesting
             CQuest quest = new CQuest("The Wolf named Chicken", 1, false);
             CQuests.add(quest);
 
-            quest.add(new CConditionQuestAvailable(quest));
             quest.add(new CObjectiveKill("chickens killed", 5, new CConditionEntityEntryIs("chicken")));
             quest.add(new ItemStack(Items.CHICKEN));
             quest.setExp(5);

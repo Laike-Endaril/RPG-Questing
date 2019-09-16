@@ -16,7 +16,7 @@ public class CQuests extends Component
 {
     public static final CQuests QUESTS = new CQuests();
     public static LinkedHashMap<UUID, CPlayerQuestData> playerQuestData = new LinkedHashMap<>();
-    private LinkedHashMap<UUID, CQuest> mainQuestData = new LinkedHashMap<>();
+    public LinkedHashMap<UUID, CQuest> mainQuestData = new LinkedHashMap<>();
 
 
     public static void add(CQuest quest)
