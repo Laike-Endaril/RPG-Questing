@@ -25,8 +25,9 @@ public class CObjectiveKill extends CObjective
     {
     }
 
-    public CObjectiveKill(int killsRequired, CCondition... conditions)
+    public CObjectiveKill(String text, int killsRequired, CCondition... conditions)
     {
+        this.text.set(text);
         this.required.set(killsRequired);
         this.conditions.addAll(Arrays.asList(conditions));
     }

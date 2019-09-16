@@ -79,7 +79,7 @@ public class RPGQuesting
             CQuests.add(quest);
 
             quest.add(new CConditionQuestAvailable(quest));
-            quest.add(new CObjectiveKill(5, new CConditionEntityEntryIs("chicken")));
+            quest.add(new CObjectiveKill("chickens killed", 5, new CConditionEntityEntryIs("chicken")));
             quest.add(new ItemStack(Items.CHICKEN));
             quest.setExp(5);
 
