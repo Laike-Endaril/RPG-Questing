@@ -43,7 +43,7 @@ public class CQuests extends Component
         {
             try
             {
-                objectives.add((CObjective) objective.copy());
+                objectives.add(((CObjective) objective.copy()).setOwner(player));
             }
             catch (IOException e)
             {

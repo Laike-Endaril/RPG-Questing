@@ -7,6 +7,8 @@ import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.CInt;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import scala.actors.threadpool.Arrays;
@@ -20,6 +22,11 @@ public class CObjectiveKill extends CObjective
 {
     CInt current = new CInt(), required = new CInt();
     ArrayList<CCondition> conditions = new ArrayList<>();
+
+    static
+    {
+        MinecraftForge.EVENT_BUS.register(CObjectiveKill.class);
+    }
 
     public CObjectiveKill()
     {
@@ -35,34 +42,38 @@ public class CObjectiveKill extends CObjective
     @SubscribeEvent
     public static void onKill(LivingDeathEvent event)
     {
-        Entity entity = event.getEntity();
-        for (CPlayerQuestData data : CQuests.playerQuestData.values())
-        {
-            for (ArrayList<CObjective> objectives : data.inProgressQuests.values())
-            {
-                for (CObjective objective : objectives)
-                {
-                    if (objective.getClass() == CObjectiveKill.class)
-                    {
-                        CObjectiveKill objectiveKill = (CObjectiveKill) objective;
-                        if (objectiveKill.current.value < objectiveKill.required.value)
-                        {
-                            boolean doit = true;
-                            for (CCondition condition : objectiveKill.conditions)
-                            {
-                                if (condition.unmetConditions(entity).size() > 0)
-                                {
-                                    doit = false;
-                                    break;
-                                }
-                            }
+        Entity killer = event.getSource().getTrueSource();
+        if (!(killer instanceof EntityPlayerMP)) return;
 
-                            if (doit)
+        EntityPlayerMP player = (EntityPlayerMP) killer;
+        Entity entity = event.getEntity();
+        CPlayerQuestData data = CQuests.playerQuestData.get(player.getPersistentID());
+        if (data == null) return;
+
+        for (ArrayList<CObjective> objectives : data.inProgressQuests.values())
+        {
+            for (CObjective objective : objectives)
+            {
+                if (objective.getClass() == CObjectiveKill.class)
+                {
+                    CObjectiveKill objectiveKill = (CObjectiveKill) objective;
+                    if (objectiveKill.current.value < objectiveKill.required.value)
+                    {
+                        boolean doit = true;
+                        for (CCondition condition : objectiveKill.conditions)
+                        {
+                            if (condition.unmetConditions(entity).size() > 0)
                             {
-                                objectiveKill.current.value++;
-                                //TODO debug message
-                                System.out.println(objectiveKill.current.value + "/" + objectiveKill.required.value);
+                                doit = false;
+                                break;
                             }
+                        }
+
+                        if (doit)
+                        {
+                            objectiveKill.current.value++;
+                            //TODO debug message
+                            System.out.println(objectiveKill.current.value + "/" + objectiveKill.required.value);
                         }
                     }
                 }
