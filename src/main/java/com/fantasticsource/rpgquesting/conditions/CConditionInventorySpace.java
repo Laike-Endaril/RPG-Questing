@@ -13,7 +13,22 @@ import java.util.ArrayList;
 
 public class CConditionInventorySpace extends CCondition
 {
-    public CInt count = new CInt();
+    public CInt slotCount = new CInt();
+
+    public CConditionInventorySpace()
+    {
+    }
+
+    public CConditionInventorySpace(int slotCount)
+    {
+        set(slotCount);
+    }
+
+    public CConditionInventorySpace set(int slotCount)
+    {
+        this.slotCount.set(slotCount);
+        return this;
+    }
 
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
@@ -27,9 +42,9 @@ public class CConditionInventorySpace extends CCondition
             int i = 0;
             for (ItemStack stack : player.inventory.mainInventory)
             {
-                if (stack.isEmpty() && ++i >= count.value) return result;
+                if (stack.isEmpty() && ++i >= slotCount.value) return result;
             }
-            result.add("You need at least " + count.value + " inventory spaces available");
+            result.add("You need at least " + slotCount.value + " inventory spaces available");
         }
         return result;
     }
@@ -49,14 +64,14 @@ public class CConditionInventorySpace extends CCondition
     @Override
     public CConditionInventorySpace save(OutputStream stream) throws IOException
     {
-        count.save(stream);
+        slotCount.save(stream);
         return this;
     }
 
     @Override
     public CConditionInventorySpace load(InputStream stream) throws IOException
     {
-        count.load(stream);
+        slotCount.load(stream);
         return this;
     }
 }

@@ -21,6 +21,17 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
     public ArrayList<CCondition> availabilityConditions = new ArrayList<>();
     public CAction action;
 
+
+    public CDialogueChoice()
+    {
+    }
+
+    public CDialogueChoice(String text)
+    {
+        setText(text);
+    }
+
+
     public boolean isAvailable(EntityPlayerMP player)
     {
         for (CCondition condition : availabilityConditions) if (condition.unmetConditions(player).size() > 0) return false;

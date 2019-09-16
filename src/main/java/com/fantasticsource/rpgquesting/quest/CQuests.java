@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting.quest;
 
+import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
@@ -75,7 +76,11 @@ public class CQuests extends Component
         CQuest quest = get(id);
         if (quest == null) return true;
 
-        //TODO give exp/rewards
+        player.addExperience(quest.experience.value);
+        for (CItemStack stack : quest.rewards)
+        {
+            player.addItemStackToInventory(stack.stack);
+        }
 
         data.save();
 
