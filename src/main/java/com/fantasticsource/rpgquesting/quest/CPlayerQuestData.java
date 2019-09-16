@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.quest;
 
-import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
@@ -8,7 +7,6 @@ import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -29,16 +27,13 @@ public class CPlayerQuestData extends Component
 
     public CPlayerQuestData save() throws IOException
     {
-        String filename = MCTools.getPlayerDataDir(FMLCommonHandler.instance().getMinecraftServerInstance());
-        File file = new File(filename);
+        File file = RPGQuesting.playerDataFolder;
         if (!file.exists()) file.mkdir();
 
-        filename += RPGQuesting.MODID + File.separator;
-        file = new File(filename);
+        file = new File(file.getAbsolutePath() + File.separator + RPGQuesting.MODID);
         if (!file.exists()) file.mkdir();
 
-        filename += player.getPersistentID() + ".dat";
-        file = new File(filename);
+        file = new File(file.getAbsolutePath() + File.separator + player.getPersistentID() + ".dat");
         File file2 = new File(file.getAbsolutePath() + ".new");
 
         if (file2.exists()) file2.delete();
@@ -54,7 +49,7 @@ public class CPlayerQuestData extends Component
 
     public CPlayerQuestData load() throws IOException
     {
-        File file = new File(MCTools.getPlayerDataDir(FMLCommonHandler.instance().getMinecraftServerInstance()) + RPGQuesting.MODID + File.separator + player.getPersistentID() + ".dat");
+        File file = new File(RPGQuesting.playerDataFolder.getAbsolutePath() + File.separator + RPGQuesting.MODID + File.separator + player.getPersistentID() + ".dat");
         if (!file.exists()) return null;
 
         FileInputStream fis = new FileInputStream(file);

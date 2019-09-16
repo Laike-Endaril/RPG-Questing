@@ -37,7 +37,7 @@ public class RPGQuesting
     public static final String NAME = "RPG Questing";
     public static final String VERSION = "1.12.2.000";
 
-    public static File dataFolder;
+    public static File worldDataFolder, playerDataFolder;
     public static boolean addedNewStuff = false;
 
     @Mod.EventHandler
@@ -66,7 +66,8 @@ public class RPGQuesting
     @Mod.EventHandler
     public static void serverStart(FMLServerStartingEvent event) throws IOException
     {
-        dataFolder = new File(MCTools.getWorldSaveDir(event.getServer()) + MODID + File.separator);
+        worldDataFolder = new File(MCTools.getWorldSaveDir(event.getServer()) + MODID + File.separator);
+        playerDataFolder = new File(MCTools.getPlayerDataDir(event.getServer()));
         CQuests.QUESTS.load();
         CDialogues.DIALOGUES.load();
 
@@ -76,51 +77,51 @@ public class RPGQuesting
         {
             addedNewStuff = true;
 
-            CQuest quest = new CQuest("The Wolf named Chicken", 1, false);
-            CQuests.add(quest);
-
-            quest.add(new CObjectiveKill("chickens killed", 5, new CConditionEntityEntryIs("chicken")));
-            quest.add(new ItemStack(Items.CHICKEN));
-            quest.setExp(5);
-
-
-            CDialogue dialogue = new CDialogue().setName("The Wolf named Chicken");
-            CDialogues.add(dialogue);
-
-            dialogue.addPlayerConditions(new CConditionQuestAvailable(quest));
-            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
-
-            CDialogueBranch branch = new CDialogueBranch("Ugh...yes...despite being a wolf, my name is \"Chicken\".  Freaking...you know what?  Go kill 5 chickens for me and maybe I'll tell you how I got the name");
-            dialogue.add(branch);
-            branch.add(new CDialogueChoice().setText("Accept").setAction(new CActionArray(new CActionStartQuest(quest), new CActionEndDialogue())));
-            branch.add(new CDialogueChoice().setText("Decline").setAction(new CActionEndDialogue()));
-
-
-            dialogue = new CDialogue().setName("The Wolf named Chicken");
-            CDialogues.add(dialogue);
-
-            dialogue.addPlayerConditions(new CConditionQuestInProgress(quest));
-            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
-
-            branch = new CDialogueBranch("You killed those chickens yet?");
-            dialogue.add(branch);
-            branch.add(new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue()));
-
-
-            dialogue = new CDialogue().setName("The Wolf named Chicken (complete)");
-            CDialogues.add(dialogue);
-
-            dialogue.addPlayerConditions(new CConditionQuestReadyToComplete(quest));
-            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
-
-            branch = new CDialogueBranch("Hey, grats, you killed some helpless chickens.  Slow clap.");
-            CDialogueBranch branch2 = new CDialogueBranch("...None of your business.  Now take this corpse and scram.");
-            dialogue.add(branch, branch2);
-
-            branch.add(new CDialogueChoice().setText("Right...so how did you get your name?").setAction(new CActionArray(new CActionBranch(branch2), new CActionCompleteQuest(quest))));
-            branch.add(new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue()));
-
-            branch2.add(new CDialogueChoice().setText("Ugh").setAction(new CActionEndDialogue()));
+//            CQuest quest = new CQuest("The Wolf named Chicken", 1, false);
+//            CQuests.add(quest);
+//
+//            quest.add(new CObjectiveKill("chickens killed", 5, new CConditionEntityEntryIs("chicken")));
+//            quest.add(new ItemStack(Items.CHICKEN));
+//            quest.setExp(5);
+//
+//
+//            CDialogue dialogue = new CDialogue().setName("The Wolf named Chicken");
+//            CDialogues.add(dialogue);
+//
+//            dialogue.addPlayerConditions(new CConditionQuestAvailable(quest));
+//            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
+//
+//            CDialogueBranch branch = new CDialogueBranch("Ugh...yes...despite being a wolf, my name is \"Chicken\".  Freaking...you know what?  Go kill 5 chickens for me and maybe I'll tell you how I got the name");
+//            dialogue.add(branch);
+//            branch.add(new CDialogueChoice().setText("Accept").setAction(new CActionArray(new CActionStartQuest(quest), new CActionEndDialogue())));
+//            branch.add(new CDialogueChoice().setText("Decline").setAction(new CActionEndDialogue()));
+//
+//
+//            dialogue = new CDialogue().setName("The Wolf named Chicken");
+//            CDialogues.add(dialogue);
+//
+//            dialogue.addPlayerConditions(new CConditionQuestInProgress(quest));
+//            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
+//
+//            branch = new CDialogueBranch("You killed those chickens yet?");
+//            dialogue.add(branch);
+//            branch.add(new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue()));
+//
+//
+//            dialogue = new CDialogue().setName("The Wolf named Chicken (complete)");
+//            CDialogues.add(dialogue);
+//
+//            dialogue.addPlayerConditions(new CConditionQuestReadyToComplete(quest));
+//            dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
+//
+//            branch = new CDialogueBranch("Hey, grats, you killed some helpless chickens.  Slow clap.");
+//            CDialogueBranch branch2 = new CDialogueBranch("...None of your business.  Now take this corpse and scram.");
+//            dialogue.add(branch, branch2);
+//
+//            branch.add(new CDialogueChoice().setText("Right...so how did you get your name?").setAction(new CActionArray(new CActionBranch(branch2), new CActionCompleteQuest(quest))));
+//            branch.add(new CDialogueChoice().setText("End Dialogue").setAction(new CActionEndDialogue()));
+//
+//            branch2.add(new CDialogueChoice().setText("Ugh").setAction(new CActionEndDialogue()));
         }
     }
 
@@ -129,7 +130,8 @@ public class RPGQuesting
     {
         CDialogues.DIALOGUES.save().clear();
         CQuests.QUESTS.save().clear();
-        dataFolder = null;
+        worldDataFolder = null;
+        playerDataFolder = null;
     }
 
     @SubscribeEvent

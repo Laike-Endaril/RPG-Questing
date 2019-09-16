@@ -156,7 +156,7 @@ public class CQuests extends Component
 
     public CQuests save() throws IOException
     {
-        File file = RPGQuesting.dataFolder;
+        File file = RPGQuesting.worldDataFolder;
         if (!file.exists()) file.mkdir();
 
         file = new File(file.getAbsolutePath() + File.separator + "Quests.dat");
@@ -197,7 +197,7 @@ public class CQuests extends Component
         playerQuestData.clear();
         mainQuestData.clear();
 
-        File file = RPGQuesting.dataFolder;
+        File file = RPGQuesting.worldDataFolder;
         if (!file.exists()) return this;
 
         file = new File(file.getAbsolutePath() + File.separator + "Quests.dat");
