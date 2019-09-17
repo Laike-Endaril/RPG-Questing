@@ -119,28 +119,30 @@ public class JournalGUI extends GUIScreen
                     ArrayList<CObjective> objectives = entry.getValue().get(selectedQuestName);
                     if (objectives != null)
                     {
-                        questView.clear();
-
                         currentQuestname = selectedQuestName;
                         currentObjectives = objectives;
-
-                        boolean done = true, started = false;
-                        for (CObjective objective : objectives)
-                        {
-                            if (!objective.isDone()) done = false;
-                            if (objective.isStarted()) started = true;
-                            if (started && !done) break;
-                        }
-
-                        questView.add(new GUIText(GUI, selectedQuestName + "\n\n", done ? Color.GREEN : started ? Color.YELLOW : Color.RED));
-                        for (CObjective objective : objectives)
-                        {
-                            questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? Color.GREEN : objective.isStarted() ? Color.YELLOW : Color.RED));
-                        }
-
                         break;
                     }
                 }
+            }
+        }
+
+        if (currentQuestname != null && !currentQuestname.equals(""))
+        {
+            questView.clear();
+
+            boolean done = true, started = false;
+            for (CObjective objective : currentObjectives)
+            {
+                if (!objective.isDone()) done = false;
+                if (objective.isStarted()) started = true;
+                if (started && !done) break;
+            }
+
+            questView.add(new GUIText(GUI, selectedQuestName + "\n\n", done ? Color.GREEN : started ? Color.YELLOW : Color.RED));
+            for (CObjective objective : currentObjectives)
+            {
+                questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? Color.GREEN : objective.isStarted() ? Color.YELLOW : Color.RED));
             }
         }
     }
