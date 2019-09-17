@@ -6,6 +6,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
+import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network.ObfJournalPacket;
@@ -33,6 +34,9 @@ public class JournalGUI extends GUIScreen
     public static ArrayList<CObjective> currentObjectives = new ArrayList<>();
     private static GUITabView navigator;
     private static GUIScrollView inProgress, completed, questView;
+
+    private static LinkedHashMap<String, GUITextSpoiler> inProgressGroups = new LinkedHashMap<>();
+    private static LinkedHashMap<String, GUITextSpoiler> completedGroups = new LinkedHashMap<>();
 
     static
     {
@@ -63,12 +67,14 @@ public class JournalGUI extends GUIScreen
 
         //Quests in progress
         inProgress.clear();
+        inProgressGroups.clear();
         for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry2 : data.inProgressQuests.entrySet())
         {
             boolean groupDone = true;
 
-            GUIText groupText = new GUIText(GUI, entry2.getKey().toUpperCase() + "\n");
-            inProgress.add(groupText);
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry2.getKey().toUpperCase() + "\n");
+            inProgress.add(groupSpoiler);
+            inProgressGroups.put(groupSpoiler.toString(), groupSpoiler);
 
             for (Map.Entry<String, ArrayList<CObjective>> entry : entry2.getValue().entrySet())
             {
@@ -82,12 +88,12 @@ public class JournalGUI extends GUIScreen
                 if (!done) groupDone = false;
 
                 Color c = done ? GREEN : started ? YELLOW : RED;
-                inProgress.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c, c.copy().setVF(0.75f), Color.WHITE));
+                groupSpoiler.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c, c.copy().setVF(0.75f), Color.WHITE));
             }
 
             knownQuestGroupCompletion.put(entry2.getKey(), groupDone);
 
-            groupText.setColor(groupDone ? GREEN : YELLOW);
+            groupSpoiler.setColor(groupDone ? GREEN : YELLOW);
             inProgress.add(new GUIText(GUI, "\n"));
         }
         if (inProgress.size() > 0) inProgress.remove(inProgress.size() - 1);
@@ -95,17 +101,21 @@ public class JournalGUI extends GUIScreen
 
         //Complated quests
         completed.clear();
+        completedGroups.clear();
         for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
             Color c = (groupDone == null || groupDone) ? GREEN : YELLOW;
 
-            completed.add(new GUIText(GUI, entry.getKey().toUpperCase() + "\n", c, c.copy().setVF(0.75f), Color.WHITE));
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey().toUpperCase() + "\n", c, c.copy().setVF(0.75f), Color.WHITE);
+            completed.add(groupSpoiler);
+            completedGroups.put(groupSpoiler.toString(), groupSpoiler);
+
             for (String s : entry.getValue())
             {
                 completed.add(new GUIText(GUI, "* " + s + "\n", BLUE));
             }
-            inProgress.add(new GUIText(GUI, "\n"));
+            groupSpoiler.add(new GUIText(GUI, "\n"));
         }
         if (completed.size() > 0) completed.remove(completed.size() - 1);
 
@@ -169,7 +179,39 @@ public class JournalGUI extends GUIScreen
         GUIElement element = event.getElement();
         if (element.getClass() != GUIText.class) return;
 
-        //TODO
+
+        if (inProgressGroups.values().contains(element))
+        {
+            GUIText target = completedGroups.get(element.toString());
+            if (target != null)
+            {
+                navigator.setActiveTab(1);
+            }
+        }
+        else if (completedGroups.values().contains(element))
+        {
+            GUIText target = inProgressGroups.get(element.toString());
+            if (target != null)
+            {
+
+            }
+        }
+        else
+        {
+            //Quest
+            if (inProgress.children.contains(element))
+            {
+                //TODO
+            }
+            else if (completed.children.contains(element))
+            {
+                //TODO
+            }
+            else if (questView.indexOf(element) == 0)
+            {
+                //TODO
+            }
+        }
     }
 
     @Override
