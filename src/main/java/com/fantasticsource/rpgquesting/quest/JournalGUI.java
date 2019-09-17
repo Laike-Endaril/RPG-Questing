@@ -93,7 +93,8 @@ public class JournalGUI extends GUIScreen
 
             knownQuestGroupCompletion.put(entry2.getKey(), groupDone);
 
-            groupSpoiler.setColor(groupDone ? GREEN : YELLOW);
+            Color c = groupDone ? GREEN : YELLOW;
+            groupSpoiler.setColor(c, c.copy().setVF(0.75f), Color.WHITE);
             inProgress.add(new GUIText(GUI, "\n"));
         }
         if (inProgress.size() > 0) inProgress.remove(inProgress.size() - 1);
