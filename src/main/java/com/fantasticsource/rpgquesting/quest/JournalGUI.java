@@ -1,6 +1,8 @@
 package com.fantasticsource.rpgquesting.quest;
 
+import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
@@ -10,6 +12,8 @@ import com.fantasticsource.rpgquesting.Network.ObfJournalPacket;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,16 +28,16 @@ public class JournalGUI extends GUIScreen
             BLUE = Color.BLUE.copy().setVF(0.5f);
 
     public static JournalGUI GUI;
-    private static GUITabView navigator;
-    private static GUIScrollView inProgress, completed, questView;
-
     public static boolean editable = false;
     public static String currentQuestname = "";
     public static ArrayList<CObjective> currentObjectives = new ArrayList<>();
+    private static GUITabView navigator;
+    private static GUIScrollView inProgress, completed, questView;
 
     static
     {
         GUI = new JournalGUI();
+        MinecraftForge.EVENT_BUS.register(JournalGUI.class);
     }
 
     private JournalGUI()
@@ -155,6 +159,17 @@ public class JournalGUI extends GUIScreen
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void click(GUILeftClickEvent event)
+    {
+        if (event.getScreen() != GUI) return;
+
+        GUIElement element = event.getElement();
+        if (element.getClass() != GUIText.class) return;
+
+        //TODO
     }
 
     @Override

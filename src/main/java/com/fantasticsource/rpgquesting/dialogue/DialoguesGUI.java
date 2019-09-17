@@ -52,6 +52,8 @@ public class DialoguesGUI extends GUIScreen
     @SubscribeEvent
     public static void click(GUILeftClickEvent event)
     {
+        if (event.getScreen() != GUI) return;
+
         CUUID dialogueSessionID = buttonToDialogueSessionID.get(event.getElement());
         if (dialogueSessionID != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(dialogueSessionID));
     }

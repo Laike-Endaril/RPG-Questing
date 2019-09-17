@@ -2,6 +2,7 @@ package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
@@ -109,6 +110,11 @@ public class DialogueGUI extends GUIScreen
     @SubscribeEvent
     public static void click(GUILeftClickEvent event)
     {
+        if (event.getScreen() != GUI) return;
+
+        GUIElement element = event.getElement();
+        if (element.getClass() != GUIText.class) return;
+
         String s = event.getElement().toString();
         s = s.substring(0, s.length() - 1);
         for (CDialogueChoice choice : current.choices)
