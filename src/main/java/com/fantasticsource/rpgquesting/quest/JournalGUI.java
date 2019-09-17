@@ -12,6 +12,7 @@ import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JournalGUI extends GUIScreen
@@ -20,6 +21,7 @@ public class JournalGUI extends GUIScreen
     private static GUITabView navigator;
     private static GUIScrollView inProgress, completed, questView;
 
+    public static boolean editable = false;
     public static String currentQuestname = "";
     public static ArrayList<CObjective> currentObjectives = new ArrayList<>();
 
@@ -42,59 +44,101 @@ public class JournalGUI extends GUIScreen
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
+        editable = false;
+
         CPlayerQuestData data = packet.data;
 
+        LinkedHashMap<String, Boolean> knownQuestGroupCompletion = new LinkedHashMap<>();
+
         inProgress.clear();
-        for (Map.Entry<String, ArrayList<CObjective>> entry : data.inProgressQuests.entrySet())
+        for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry2 : data.inProgressQuests.entrySet())
         {
-            boolean done = true, started = false;
-            for (CObjective objective : entry.getValue())
+            boolean groupDone = true;
+
+            GUIText groupText = new GUIText(GUI, entry2.getKey().toUpperCase() + "\n");
+            inProgress.add(groupText);
+
+            for (Map.Entry<String, ArrayList<CObjective>> entry : entry2.getValue().entrySet())
             {
-                if (!objective.isDone()) done = false;
-                if (objective.isStarted()) started = true;
-                if (started && !done) break;
+                boolean done = true, started = false;
+                for (CObjective objective : entry.getValue())
+                {
+                    if (!objective.isDone()) done = false;
+                    if (objective.isStarted()) started = true;
+                    if (started && !done) break;
+                }
+                if (!done) groupDone = false;
+
+                Color c = done ? Color.GREEN : started ? Color.YELLOW : Color.RED;
+                inProgress.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c.copy().setVF(0.5f * c.vf()), c, Color.WHITE));
             }
 
-            Color c = done ? Color.GREEN : started ? Color.YELLOW : Color.RED;
-            inProgress.add(new GUIText(GUI, entry.getKey() + "\n", c.copy().setVF(0.5f * c.vf()), c, Color.WHITE));
+            knownQuestGroupCompletion.put(entry2.getKey(), groupDone);
+
+            groupText.setColor(groupDone ? Color.GREEN : Color.YELLOW);
+            inProgress.add(new GUIText(GUI, "\n"));
         }
+        if (inProgress.size() > 0) inProgress.remove(inProgress.size() - 1);
+
 
         completed.clear();
-        for (String s : data.completedQuests)
+        for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
-            completed.add(new GUIText(GUI, s + "\n", Color.BLUE));
+            Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
+            Color c = (groupDone == null || groupDone) ? Color.GREEN : Color.YELLOW;
+
+            completed.add(new GUIText(GUI, entry.getKey().toUpperCase() + "\n", c.copy().setVF(0.5f * c.vf()), c, Color.WHITE));
+            for (String s : entry.getValue())
+            {
+                completed.add(new GUIText(GUI, "* " + s + "\n", Color.BLUE));
+            }
+            inProgress.add(new GUIText(GUI, "\n"));
         }
+        if (completed.size() > 0) completed.remove(completed.size() - 1);
+
 
         String selectedQuestName = packet.selectedQuest.value;
         if (selectedQuestName != null && !selectedQuestName.equals(""))
         {
-            if (data.completedQuests.contains(selectedQuestName))
+            boolean questDone = false;
+            for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
             {
-                questView.clear();
-                questView.add(new GUIText(GUI, selectedQuestName + "\n\n* QUEST COMPLETED *", Color.BLUE));
-            }
-            else
-            {
-                ArrayList<CObjective> objectives = data.inProgressQuests.get(selectedQuestName);
-                if (objectives != null)
+                if (entry.getValue().contains(selectedQuestName))
                 {
                     questView.clear();
+                    questView.add(new GUIText(GUI, selectedQuestName + "\n\n* QUEST COMPLETED *", Color.BLUE));
+                    questDone = true;
+                    break;
+                }
+            }
 
-                    currentQuestname = selectedQuestName;
-                    currentObjectives = objectives;
-
-                    boolean done = true, started = false;
-                    for (CObjective objective : objectives)
+            if (!questDone)
+            {
+                for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : data.inProgressQuests.entrySet())
+                {
+                    ArrayList<CObjective> objectives = entry.getValue().get(selectedQuestName);
+                    if (objectives != null)
                     {
-                        if (!objective.isDone()) done = false;
-                        if (objective.isStarted()) started = true;
-                        if (started && !done) break;
-                    }
+                        questView.clear();
 
-                    questView.add(new GUIText(GUI, selectedQuestName + "\n\n", done ? Color.GREEN : started ? Color.YELLOW : Color.RED));
-                    for (CObjective objective : objectives)
-                    {
-                        questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? Color.GREEN : objective.isStarted() ? Color.YELLOW : Color.RED));
+                        currentQuestname = selectedQuestName;
+                        currentObjectives = objectives;
+
+                        boolean done = true, started = false;
+                        for (CObjective objective : objectives)
+                        {
+                            if (!objective.isDone()) done = false;
+                            if (objective.isStarted()) started = true;
+                            if (started && !done) break;
+                        }
+
+                        questView.add(new GUIText(GUI, selectedQuestName + "\n\n", done ? Color.GREEN : started ? Color.YELLOW : Color.RED));
+                        for (CObjective objective : objectives)
+                        {
+                            questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? Color.GREEN : objective.isStarted() ? Color.YELLOW : Color.RED));
+                        }
+
+                        break;
                     }
                 }
             }
