@@ -17,6 +17,12 @@ import java.util.Map;
 
 public class JournalGUI extends GUIScreen
 {
+    private static final Color
+            RED = Color.RED.copy().setVF(0.5f),
+            YELLOW = Color.YELLOW.copy().setVF(0.5f),
+            GREEN = Color.GREEN.copy().setVF(0.5f),
+            BLUE = Color.BLUE.copy().setVF(0.5f);
+
     public static JournalGUI GUI;
     private static GUITabView navigator;
     private static GUIScrollView inProgress, completed, questView;
@@ -71,13 +77,13 @@ public class JournalGUI extends GUIScreen
                 }
                 if (!done) groupDone = false;
 
-                Color c = done ? Color.GREEN : started ? Color.YELLOW : Color.RED;
-                inProgress.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c.copy().setVF(0.6f * c.vf()), c, Color.WHITE));
+                Color c = done ? GREEN : started ? YELLOW : RED;
+                inProgress.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c, c.copy().setVF(0.75f), Color.WHITE));
             }
 
             knownQuestGroupCompletion.put(entry2.getKey(), groupDone);
 
-            groupText.setColor(groupDone ? Color.GREEN : Color.YELLOW);
+            groupText.setColor(groupDone ? GREEN : YELLOW);
             inProgress.add(new GUIText(GUI, "\n"));
         }
         if (inProgress.size() > 0) inProgress.remove(inProgress.size() - 1);
@@ -88,12 +94,12 @@ public class JournalGUI extends GUIScreen
         for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
-            Color c = (groupDone == null || groupDone) ? Color.GREEN : Color.YELLOW;
+            Color c = (groupDone == null || groupDone) ? GREEN : YELLOW;
 
-            completed.add(new GUIText(GUI, entry.getKey().toUpperCase() + "\n", c.copy().setVF(0.6f * c.vf()), c, Color.WHITE));
+            completed.add(new GUIText(GUI, entry.getKey().toUpperCase() + "\n", c, c.copy().setVF(0.75f), Color.WHITE));
             for (String s : entry.getValue())
             {
-                completed.add(new GUIText(GUI, "* " + s + "\n", Color.BLUE));
+                completed.add(new GUIText(GUI, "* " + s + "\n", BLUE));
             }
             inProgress.add(new GUIText(GUI, "\n"));
         }
@@ -113,7 +119,7 @@ public class JournalGUI extends GUIScreen
                 if (entry.getValue().contains(currentQuestname))
                 {
                     questView.clear();
-                    questView.add(new GUIText(GUI, currentQuestname.toUpperCase() + "\n\n* Quest Completed! *", Color.BLUE));
+                    questView.add(new GUIText(GUI, currentQuestname.toUpperCase() + "\n\n* Quest Completed! *", BLUE));
                     questDone = true;
                     break;
                 }
@@ -138,10 +144,10 @@ public class JournalGUI extends GUIScreen
                             if (started && !done) break;
                         }
 
-                        questView.add(new GUIText(GUI, currentQuestname.toUpperCase() + "\n\n", done ? Color.GREEN : started ? Color.YELLOW : Color.RED));
+                        questView.add(new GUIText(GUI, currentQuestname.toUpperCase() + "\n\n", done ? GREEN : started ? YELLOW : RED));
                         for (CObjective objective : currentObjectives)
                         {
-                            questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? Color.GREEN : objective.isStarted() ? Color.YELLOW : Color.RED));
+                            questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED));
                         }
 
                         break;
