@@ -19,47 +19,47 @@ public class CQuests extends Component
 {
     public static final CQuests QUESTS = new CQuests();
     public static LinkedHashMap<UUID, CPlayerQuestData> playerQuestData = new LinkedHashMap<>();
-    public LinkedHashMap<UUID, CQuest> worldQuestData = new LinkedHashMap<>();
-    public LinkedHashMap<String, LinkedHashMap<UUID, CQuest>> worldQuestDataByGroup = new LinkedHashMap<>();
+    public LinkedHashMap<String, CQuest> worldQuestData = new LinkedHashMap<>();
+    public LinkedHashMap<String, LinkedHashMap<String, CQuest>> worldQuestDataByGroup = new LinkedHashMap<>();
 
 
     public static void add(CQuest quest)
     {
-        QUESTS.worldQuestData.put(quest.permanentID.value, quest);
-        QUESTS.worldQuestDataByGroup.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>()).put(quest.permanentID.value, quest);
+        QUESTS.worldQuestData.put(quest.name.value, quest);
+        QUESTS.worldQuestDataByGroup.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>()).put(quest.name.value, quest);
     }
 
 
     public static boolean exists(CQuest quest)
     {
-        Collection<CQuest> group = get(quest.group.value);
+        Collection<CQuest> group = getGroup(quest.group.value);
         if (group == null) return false;
 
         return group.contains(quest);
     }
 
     @Nullable
-    public static Collection<CQuest> get(String group)
+    public static Collection<CQuest> getGroup(String group)
     {
-        LinkedHashMap<UUID, CQuest> quests = QUESTS.worldQuestDataByGroup.get(group);
+        LinkedHashMap<String, CQuest> quests = QUESTS.worldQuestDataByGroup.get(group);
         if (quests == null) return null;
 
         return quests.values();
     }
 
-    public static CQuest get(UUID id)
+    public static CQuest get(String name)
     {
-        return QUESTS.worldQuestData.get(id);
+        return QUESTS.worldQuestData.get(name);
     }
 
 
-    public static void start(EntityPlayerMP player, UUID id)
+    public static void start(EntityPlayerMP player, String name)
     {
-        CQuest quest = get(id);
+        CQuest quest = get(name);
         if (quest == null) return;
 
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
-        ArrayList<CObjective> objectives = data.inProgressQuests.computeIfAbsent(id, o -> new ArrayList<>());
+        ArrayList<CObjective> objectives = data.inProgressQuests.computeIfAbsent(name, o -> new ArrayList<>());
         objectives.clear();
         for (CObjective objective : quest.objectives)
         {
@@ -76,25 +76,25 @@ public class CQuests extends Component
         data.save();
     }
 
-    public static void abandon(EntityPlayerMP player, UUID id)
+    public static void abandon(EntityPlayerMP player, String name)
     {
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return;
 
-        data.inProgressQuests.remove(id);
+        data.inProgressQuests.remove(name);
 
         data.save();
     }
 
-    public static boolean complete(EntityPlayerMP player, UUID id)
+    public static boolean complete(EntityPlayerMP player, String name)
     {
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
-        if (!data.inProgressQuests.containsKey(id)) return false;
+        if (!data.inProgressQuests.containsKey(name)) return false;
 
-        data.inProgressQuests.remove(id);
-        if (!data.completedQuests.contains(id)) data.completedQuests.add(id);
+        data.inProgressQuests.remove(name);
+        if (!data.completedQuests.contains(name)) data.completedQuests.add(name);
 
-        CQuest quest = get(id);
+        CQuest quest = get(name);
         if (quest == null) return true;
 
         player.addExperience(quest.experience.value);
@@ -124,12 +124,12 @@ public class CQuests extends Component
 
     public static boolean isAvailable(EntityPlayerMP player, CQuest quest)
     {
-        return isAvailable(player, quest.permanentID.value);
+        return isAvailable(player, quest.name.value);
     }
 
-    public static boolean isAvailable(EntityPlayerMP player, UUID questID)
+    public static boolean isAvailable(EntityPlayerMP player, String name)
     {
-        CQuest quest = QUESTS.worldQuestData.get(questID);
+        CQuest quest = QUESTS.worldQuestData.get(name);
         if (quest == null) return false;
 
         return quest.isAvailable(player);
@@ -138,15 +138,15 @@ public class CQuests extends Component
 
     public static boolean isInProgress(EntityPlayerMP player, CQuest quest)
     {
-        return isInProgress(player, quest.permanentID.value);
+        return isInProgress(player, quest.name.value);
     }
 
-    public static boolean isInProgress(EntityPlayerMP player, UUID questID)
+    public static boolean isInProgress(EntityPlayerMP player, String name)
     {
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        ArrayList<CObjective> objectives = data.inProgressQuests.get(questID);
+        ArrayList<CObjective> objectives = data.inProgressQuests.get(name);
         if (objectives == null) return false;
 
         boolean done = true;
@@ -157,15 +157,15 @@ public class CQuests extends Component
 
     public static boolean isReadyToComplete(EntityPlayerMP player, CQuest quest)
     {
-        return isReadyToComplete(player, quest.permanentID.value);
+        return isReadyToComplete(player, quest.name.value);
     }
 
-    public static boolean isReadyToComplete(EntityPlayerMP player, UUID questID)
+    public static boolean isReadyToComplete(EntityPlayerMP player, String name)
     {
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        ArrayList<CObjective> objectives = data.inProgressQuests.get(questID);
+        ArrayList<CObjective> objectives = data.inProgressQuests.get(name);
         if (objectives == null) return false;
 
         for (CObjective objective : objectives) if (!objective.isDone()) return false;
@@ -175,15 +175,15 @@ public class CQuests extends Component
 
     public static boolean isCompleted(EntityPlayerMP player, CQuest quest)
     {
-        return isCompleted(player, quest.permanentID.value);
+        return isCompleted(player, quest.name.value);
     }
 
-    public static boolean isCompleted(EntityPlayerMP player, UUID questID)
+    public static boolean isCompleted(EntityPlayerMP player, String name)
     {
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        return data.completedQuests.contains(questID);
+        return data.completedQuests.contains(name);
     }
 
 
@@ -266,8 +266,8 @@ public class CQuests extends Component
         for (int i = new CInt().load(stream).value; i > 0; i--)
         {
             CQuest quest = new CQuest().load(stream);
-            worldQuestData.put(quest.permanentID.value, quest);
-            QUESTS.worldQuestDataByGroup.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>()).put(quest.permanentID.value, quest);
+            worldQuestData.put(quest.name.value, quest);
+            QUESTS.worldQuestDataByGroup.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>()).put(quest.name.value, quest);
         }
         return this;
     }

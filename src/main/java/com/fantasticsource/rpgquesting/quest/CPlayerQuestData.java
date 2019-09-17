@@ -3,7 +3,7 @@ package com.fantasticsource.rpgquesting.quest;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,13 +12,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class CPlayerQuestData extends Component
 {
     public EntityPlayerMP player;
-    public ArrayList<UUID> completedQuests = new ArrayList<>();
-    public LinkedHashMap<UUID, ArrayList<CObjective>> inProgressQuests = new LinkedHashMap<>();
+    public ArrayList<String> completedQuests = new ArrayList<>();
+    public LinkedHashMap<String, ArrayList<CObjective>> inProgressQuests = new LinkedHashMap<>();
 
 
     public CPlayerQuestData()
@@ -42,7 +41,7 @@ public class CPlayerQuestData extends Component
         File file2 = new File(file.getAbsolutePath() + ".new");
 
         if (file2.exists()) file2.delete();
-        FileOutputStream fos = null;
+        FileOutputStream fos;
         try
         {
             fos = new FileOutputStream(file2);
@@ -76,12 +75,12 @@ public class CPlayerQuestData extends Component
     public CPlayerQuestData write(ByteBuf buf)
     {
         buf.writeInt(completedQuests.size());
-        for (UUID id : completedQuests) new CUUID().set(id).write(buf);
+        for (String name : completedQuests) new CStringUTF8().set(name).write(buf);
 
         buf.writeInt(inProgressQuests.size());
-        for (Map.Entry<UUID, ArrayList<CObjective>> entry : inProgressQuests.entrySet())
+        for (Map.Entry<String, ArrayList<CObjective>> entry : inProgressQuests.entrySet())
         {
-            new CUUID().set(entry.getKey()).write(buf);
+            new CStringUTF8().set(entry.getKey()).write(buf);
 
             ArrayList<CObjective> objectives = entry.getValue();
             buf.writeInt(objectives.size());
@@ -95,13 +94,13 @@ public class CPlayerQuestData extends Component
     public CPlayerQuestData read(ByteBuf buf)
     {
         completedQuests.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) completedQuests.add(new CUUID().read(buf).value);
+        for (int i = new CInt().read(buf).value; i > 0; i--) completedQuests.add(new CStringUTF8().read(buf).value);
 
         inProgressQuests.clear();
         for (int i = new CInt().read(buf).value; i > 0; i--)
         {
             ArrayList<CObjective> objectives = new ArrayList<>();
-            inProgressQuests.put(new CUUID().read(buf).value, objectives);
+            inProgressQuests.put(new CStringUTF8().read(buf).value, objectives);
 
             for (int i2 = new CInt().read(buf).value; i2 > 0; i2--)
             {
@@ -116,12 +115,12 @@ public class CPlayerQuestData extends Component
     public CPlayerQuestData save(OutputStream stream) throws IOException
     {
         new CInt().set(completedQuests.size()).save(stream);
-        for (UUID id : completedQuests) new CUUID().set(id).save(stream);
+        for (String name : completedQuests) new CStringUTF8().set(name).save(stream);
 
         new CInt().set(inProgressQuests.size()).save(stream);
-        for (Map.Entry<UUID, ArrayList<CObjective>> entry : inProgressQuests.entrySet())
+        for (Map.Entry<String, ArrayList<CObjective>> entry : inProgressQuests.entrySet())
         {
-            new CUUID().set(entry.getKey()).save(stream);
+            new CStringUTF8().set(entry.getKey()).save(stream);
 
             ArrayList<CObjective> objectives = entry.getValue();
             new CInt().set(objectives.size()).save(stream);
@@ -135,13 +134,13 @@ public class CPlayerQuestData extends Component
     public CPlayerQuestData load(InputStream stream) throws IOException
     {
         completedQuests.clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) completedQuests.add(new CUUID().load(stream).value);
+        for (int i = new CInt().load(stream).value; i > 0; i--) completedQuests.add(new CStringUTF8().load(stream).value);
 
         inProgressQuests.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
         {
             ArrayList<CObjective> objectives = new ArrayList<>();
-            inProgressQuests.put(new CUUID().load(stream).value, objectives);
+            inProgressQuests.put(new CStringUTF8().load(stream).value, objectives);
 
             for (int i2 = new CInt().load(stream).value; i2 > 0; i2--)
             {

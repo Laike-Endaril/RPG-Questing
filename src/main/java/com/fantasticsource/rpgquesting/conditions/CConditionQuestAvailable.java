@@ -2,7 +2,7 @@ package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class CConditionQuestAvailable extends CCondition
 {
-    public CUUID permanentQuestID = new CUUID();
+    public CStringUTF8 questName = new CStringUTF8();
 
 
     public CConditionQuestAvailable()
@@ -24,23 +23,23 @@ public class CConditionQuestAvailable extends CCondition
 
     public CConditionQuestAvailable(CQuest quest)
     {
-        this(quest.permanentID.value);
+        this(quest.name.value);
     }
 
-    public CConditionQuestAvailable(UUID questID)
+    public CConditionQuestAvailable(String name)
     {
-        set(questID);
+        set(name);
     }
 
 
     public CConditionQuestAvailable set(CQuest quest)
     {
-        return set(quest.permanentID.value);
+        return set(quest.name.value);
     }
 
-    public CConditionQuestAvailable set(UUID questID)
+    public CConditionQuestAvailable set(String name)
     {
-        permanentQuestID.set(questID);
+        questName.set(name);
         return this;
     }
 
@@ -53,8 +52,8 @@ public class CConditionQuestAvailable extends CCondition
         if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
         else
         {
-            CQuest quest = CQuests.get(permanentQuestID.value);
-            if (quest == null) result.add("Quest must be available (quest does not exist!): \"" + permanentQuestID.value + '"');
+            CQuest quest = CQuests.get(questName.value);
+            if (quest == null) result.add("Quest must be available (quest does not exist!): \"" + questName.value + '"');
             else if (!quest.isAvailable((EntityPlayerMP) entity)) result.add("Quest must be available: \"" + quest.name.value + '"');
         }
         return result;
@@ -75,14 +74,14 @@ public class CConditionQuestAvailable extends CCondition
     @Override
     public CConditionQuestAvailable save(OutputStream stream) throws IOException
     {
-        permanentQuestID.save(stream);
+        questName.save(stream);
         return this;
     }
 
     @Override
     public CConditionQuestAvailable load(InputStream stream) throws IOException
     {
-        permanentQuestID.load(stream);
+        questName.load(stream);
         return this;
     }
 }

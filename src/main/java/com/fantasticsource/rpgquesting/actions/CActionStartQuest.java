@@ -4,7 +4,7 @@ import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -13,11 +13,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
 
 public class CActionStartQuest extends CAction
 {
-    CUUID questID = new CUUID();
+    CStringUTF8 name = new CStringUTF8();
 
     public CActionStartQuest()
     {
@@ -25,23 +24,23 @@ public class CActionStartQuest extends CAction
 
     public CActionStartQuest(CQuest quest)
     {
-        this(quest.permanentID.value);
+        this(quest.name.value);
     }
 
-    public CActionStartQuest(UUID questID)
+    public CActionStartQuest(String name)
     {
-        set(questID);
+        set(name);
     }
 
 
     public CActionStartQuest set(CQuest quest)
     {
-        return set(quest.permanentID.value);
+        return set(quest.name.value);
     }
 
-    public CActionStartQuest set(UUID id)
+    public CActionStartQuest set(String name)
     {
-        this.questID.set(id);
+        this.name.set(name);
 
         return this;
     }
@@ -51,7 +50,7 @@ public class CActionStartQuest extends CAction
     public void execute(Entity entity)
     {
         if (!(entity instanceof EntityPlayerMP)) return;
-        CQuests.start((EntityPlayerMP) entity, questID.value);
+        CQuests.start((EntityPlayerMP) entity, name.value);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class CActionStartQuest extends CAction
     @Override
     public CActionStartQuest save(OutputStream stream) throws IOException
     {
-        questID.save(stream);
+        name.save(stream);
 
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -80,7 +79,7 @@ public class CActionStartQuest extends CAction
     @Override
     public CActionStartQuest load(InputStream stream) throws IOException
     {
-        questID.load(stream);
+        name.load(stream);
 
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));

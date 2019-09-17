@@ -13,14 +13,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import static com.fantasticsource.rpgquesting.quest.CQuests.QUESTS;
 
 public class CQuest extends Component implements IObfuscatedComponent
 {
-    public CUUID permanentID = new CUUID().set(UUID.randomUUID());
-
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
     public CStringUTF8 name = new CStringUTF8();
@@ -72,7 +69,7 @@ public class CQuest extends Component implements IObfuscatedComponent
 
     public final boolean isAvailable(EntityPlayerMP player)
     {
-        if (QUESTS.worldQuestData.get(permanentID.value) != this) return false;
+        if (QUESTS.worldQuestData.get(name.value) != this) return false;
 
         if (isInProgress(player)) return false;
 
@@ -114,8 +111,6 @@ public class CQuest extends Component implements IObfuscatedComponent
     @Override
     public CQuest save(OutputStream stream) throws IOException
     {
-        permanentID.save(stream);
-
         name.save(stream);
         group.save(stream);
         level.save(stream);
@@ -137,8 +132,6 @@ public class CQuest extends Component implements IObfuscatedComponent
     @Override
     public CQuest load(InputStream stream) throws IOException
     {
-        permanentID.load(stream);
-
         name.load(stream);
         group.load(stream);
         level.load(stream);

@@ -5,7 +5,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
-import com.fantasticsource.rpgquesting.Network.JournalPacket;
+import com.fantasticsource.rpgquesting.Network.ObfJournalPacket;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
@@ -13,6 +13,7 @@ public class JournalGUI extends GUIScreen
 {
     public static JournalGUI GUI;
     private static GUITabView navigator;
+    private static GUIScrollView inProgress, completed, questData;
 
     static
     {
@@ -23,12 +24,17 @@ public class JournalGUI extends GUIScreen
     {
     }
 
-    public static void show(JournalPacket packet)
+    public static void show(ObfJournalPacket packet)
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         CPlayerQuestData data = packet.data;
-        //TODO
+
+        inProgress.clear();
+
+        completed.clear();
+
+        questData.clear();
     }
 
     @Override
@@ -40,20 +46,18 @@ public class JournalGUI extends GUIScreen
         guiElements.add(navigator);
 
 
-        //In progress quests
-        GUIScrollView scrollView = new GUIScrollView(this, 0.96, 1);
-        navigator.tabViews[0].add(scrollView);
-        navigator.tabViews[0].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
+        inProgress = new GUIScrollView(this, 0.96, 1);
+        navigator.tabViews[0].add(inProgress);
+        navigator.tabViews[0].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgress));
 
 
-        //Completed quests
-        scrollView = new GUIScrollView(this, 0.96, 1);
-        navigator.tabViews[1].add(scrollView);
-        navigator.tabViews[1].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
+        completed = new GUIScrollView(this, 0.96, 1);
+        navigator.tabViews[1].add(completed);
+        navigator.tabViews[1].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completed));
 
 
-        scrollView = new GUIScrollView(this, 0.5, 0, 0.48, 1);
-        guiElements.add(scrollView);
-        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
+        questData = new GUIScrollView(this, 0.5, 0, 0.48, 1);
+        guiElements.add(questData);
+        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, questData));
     }
 }

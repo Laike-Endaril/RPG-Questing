@@ -2,7 +2,7 @@ package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class CConditionQuestReadyToComplete extends CCondition
 {
-    public CUUID permanentQuestID = new CUUID();
+    public CStringUTF8 questName = new CStringUTF8();
 
 
     public CConditionQuestReadyToComplete()
@@ -24,23 +23,23 @@ public class CConditionQuestReadyToComplete extends CCondition
 
     public CConditionQuestReadyToComplete(CQuest quest)
     {
-        this(quest.permanentID.value);
+        this(quest.name.value);
     }
 
-    public CConditionQuestReadyToComplete(UUID questID)
+    public CConditionQuestReadyToComplete(String name)
     {
-        set(questID);
+        set(name);
     }
 
 
     public CConditionQuestReadyToComplete set(CQuest quest)
     {
-        return set(quest.permanentID.value);
+        return set(quest.name.value);
     }
 
-    public CConditionQuestReadyToComplete set(UUID questID)
+    public CConditionQuestReadyToComplete set(String name)
     {
-        permanentQuestID.set(questID);
+        questName.set(name);
         return this;
     }
 
@@ -53,8 +52,8 @@ public class CConditionQuestReadyToComplete extends CCondition
         if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
         else
         {
-            CQuest quest = CQuests.get(permanentQuestID.value);
-            if (quest == null) result.add("Quest must be ready to be completed (quest does not exist!): \"" + permanentQuestID + '"');
+            CQuest quest = CQuests.get(questName.value);
+            if (quest == null) result.add("Quest must be ready to be completed (quest does not exist!): \"" + questName + '"');
             else if (!quest.isReadyToComplete((EntityPlayerMP) entity)) result.add("Quest must be ready to be completed: \"" + quest.name.value + '"');
         }
         return result;
@@ -75,14 +74,14 @@ public class CConditionQuestReadyToComplete extends CCondition
     @Override
     public CConditionQuestReadyToComplete save(OutputStream stream) throws IOException
     {
-        permanentQuestID.save(stream);
+        questName.save(stream);
         return this;
     }
 
     @Override
     public CConditionQuestReadyToComplete load(InputStream stream) throws IOException
     {
-        permanentQuestID.load(stream);
+        questName.load(stream);
         return this;
     }
 }

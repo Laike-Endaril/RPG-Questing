@@ -38,7 +38,7 @@ public class Network
         WRAPPER.registerMessage(MakeChoicePacketHandler.class, MakeChoicePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(ActionErrorPacketHandler.class, ActionErrorPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestJournalDataPacketHandler.class, RequestJournalDataPacket.class, discriminator++, Side.SERVER);
-        WRAPPER.registerMessage(JournalPacketHandler.class, JournalPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(ObfJournalPacketHandler.class, ObfJournalPacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -351,7 +351,7 @@ public class Network
                 }
                 else
                 {
-                    WRAPPER.sendTo(new JournalPacket(CQuests.playerQuestData.get(player.getPersistentID())), player);
+                    WRAPPER.sendTo(new ObfJournalPacket(CQuests.playerQuestData.get(player.getPersistentID())), player);
                 }
             });
             return null;
@@ -359,16 +359,16 @@ public class Network
     }
 
 
-    public static class JournalPacket implements IMessage
+    public static class ObfJournalPacket implements IMessage
     {
         public CPlayerQuestData data = new CPlayerQuestData();
 
-        public JournalPacket()
+        public ObfJournalPacket()
         {
             //Required
         }
 
-        public JournalPacket(CPlayerQuestData playerQuestData)
+        public ObfJournalPacket(CPlayerQuestData playerQuestData)
         {
             if (playerQuestData != null) data = playerQuestData;
         }
@@ -376,6 +376,7 @@ public class Network
         @Override
         public void toBytes(ByteBuf buf)
         {
+
             data.write(buf);
         }
 
@@ -386,11 +387,11 @@ public class Network
         }
     }
 
-    public static class JournalPacketHandler implements IMessageHandler<JournalPacket, IMessage>
+    public static class ObfJournalPacketHandler implements IMessageHandler<ObfJournalPacket, IMessage>
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(JournalPacket packet, MessageContext ctx)
+        public IMessage onMessage(ObfJournalPacket packet, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() -> JournalGUI.show(packet));
             return null;

@@ -4,7 +4,7 @@ import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -13,11 +13,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
 
 public class CActionCompleteQuest extends CAction
 {
-    CUUID questID = new CUUID();
+    CStringUTF8 questName = new CStringUTF8();
 
     public CActionCompleteQuest()
     {
@@ -25,23 +24,23 @@ public class CActionCompleteQuest extends CAction
 
     public CActionCompleteQuest(CQuest quest)
     {
-        this(quest.permanentID.value);
+        this(quest.name.value);
     }
 
-    public CActionCompleteQuest(UUID questID)
+    public CActionCompleteQuest(String name)
     {
-        set(questID);
+        set(name);
     }
 
 
     public CActionCompleteQuest set(CQuest quest)
     {
-        return set(quest.permanentID.value);
+        return set(quest.name.value);
     }
 
-    public CActionCompleteQuest set(UUID id)
+    public CActionCompleteQuest set(String name)
     {
-        this.questID.set(id);
+        this.questName.set(name);
 
         return this;
     }
@@ -51,7 +50,7 @@ public class CActionCompleteQuest extends CAction
     public void execute(Entity entity)
     {
         if (!(entity instanceof EntityPlayerMP)) return;
-        CQuests.complete((EntityPlayerMP) entity, questID.value);
+        CQuests.complete((EntityPlayerMP) entity, questName.value);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class CActionCompleteQuest extends CAction
     @Override
     public CActionCompleteQuest save(OutputStream stream) throws IOException
     {
-        questID.save(stream);
+        questName.save(stream);
 
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -80,7 +79,7 @@ public class CActionCompleteQuest extends CAction
     @Override
     public CActionCompleteQuest load(InputStream stream) throws IOException
     {
-        questID.load(stream);
+        questName.load(stream);
 
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
