@@ -20,9 +20,9 @@ public abstract class CObjective extends Component
 
     public final String getFullText()
     {
-        if (progressIsPrefix.value) return progressText() + " " + text;
+        if (progressIsPrefix.value) return progressText() + " " + text.value;
 
-        return text + " " + progressText();
+        return text.value + " " + progressText();
     }
 
     protected abstract String progressText();
