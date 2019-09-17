@@ -60,7 +60,8 @@ public class CQuests extends Component
         if (quest == null) return;
 
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
-        ArrayList<CObjective> objectives = data.inProgressQuests.computeIfAbsent(name, o -> new ArrayList<>());
+        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>());
+        ArrayList<CObjective> objectives = map.computeIfAbsent(name, o -> new ArrayList<>());
         objectives.clear();
         for (CObjective objective : quest.objectives)
         {
@@ -93,14 +94,20 @@ public class CQuests extends Component
 
     public static boolean complete(EntityPlayerMP player, String name)
     {
-        CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
-        if (!data.inProgressQuests.containsKey(name)) return false;
-
-        data.inProgressQuests.remove(name);
-        if (!data.completedQuests.contains(name)) data.completedQuests.add(name);
-
         CQuest quest = get(name);
-        if (quest == null) return true;
+        if (quest == null) return false;
+
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
+        if (data == null) return false;
+
+        String group = quest.group.value;
+        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.get(group);
+        if (map == null || map.remove(name) == null) return false;
+
+        if (map.size() == 0) data.inProgressQuests.remove(group);
+
+        ArrayList<String> list = data.completedQuests.computeIfAbsent(group, o -> new ArrayList<>());
+        if (!list.contains(name)) list.add(name);
 
         player.addExperience(quest.experience.value);
         for (CItemStack stack : quest.rewards)
@@ -136,7 +143,7 @@ public class CQuests extends Component
 
     public static boolean isAvailable(EntityPlayerMP player, String name)
     {
-        CQuest quest = QUESTS.worldQuestData.get(name);
+        CQuest quest = get(name);
         if (quest == null) return false;
 
         return quest.isAvailable(player);
@@ -150,10 +157,16 @@ public class CQuests extends Component
 
     public static boolean isInProgress(EntityPlayerMP player, String name)
     {
+        CQuest quest = get(name);
+        if (quest == null) return false;
+
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        ArrayList<CObjective> objectives = data.inProgressQuests.get(name);
+        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.get(quest.group.value);
+        if (map == null) return false;
+
+        ArrayList<CObjective> objectives = map.get(quest.name.value);
         if (objectives == null) return false;
 
         boolean done = true;
@@ -169,10 +182,16 @@ public class CQuests extends Component
 
     public static boolean isReadyToComplete(EntityPlayerMP player, String name)
     {
+        CQuest quest = get(name);
+        if (quest == null) return false;
+
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        ArrayList<CObjective> objectives = data.inProgressQuests.get(name);
+        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.get(quest.group.value);
+        if (map == null) return false;
+
+        ArrayList<CObjective> objectives = map.get(quest.name.value);
         if (objectives == null) return false;
 
         for (CObjective objective : objectives) if (!objective.isDone()) return false;
@@ -187,10 +206,16 @@ public class CQuests extends Component
 
     public static boolean isCompleted(EntityPlayerMP player, String name)
     {
+        CQuest quest = get(name);
+        if (quest == null) return false;
+
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        return data.completedQuests.contains(name);
+        ArrayList<String> list = data.completedQuests.get(quest.group.value);
+        if (list == null) return false;
+
+        return list.contains(name);
     }
 
 

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class CObjectiveKill extends CObjective
 {
@@ -50,29 +51,32 @@ public class CObjectiveKill extends CObjective
         CPlayerQuestData data = CQuests.playerQuestData.get(player.getPersistentID());
         if (data == null) return;
 
-        for (ArrayList<CObjective> objectives : data.inProgressQuests.values())
+        for (LinkedHashMap<String, ArrayList<CObjective>> map : data.inProgressQuests.values())
         {
-            for (CObjective objective : objectives)
+            for (ArrayList<CObjective> objectives : map.values())
             {
-                if (objective.getClass() == CObjectiveKill.class)
+                for (CObjective objective : objectives)
                 {
-                    CObjectiveKill objectiveKill = (CObjectiveKill) objective;
-                    if (objectiveKill.current.value < objectiveKill.required.value)
+                    if (objective.getClass() == CObjectiveKill.class)
                     {
-                        boolean doit = true;
-                        for (CCondition condition : objectiveKill.conditions)
+                        CObjectiveKill objectiveKill = (CObjectiveKill) objective;
+                        if (objectiveKill.current.value < objectiveKill.required.value)
                         {
-                            if (condition.unmetConditions(entity).size() > 0)
+                            boolean doit = true;
+                            for (CCondition condition : objectiveKill.conditions)
                             {
-                                doit = false;
-                                break;
+                                if (condition.unmetConditions(entity).size() > 0)
+                                {
+                                    doit = false;
+                                    break;
+                                }
                             }
-                        }
 
-                        if (doit)
-                        {
-                            objectiveKill.current.value++;
-                            data.save();
+                            if (doit)
+                            {
+                                objectiveKill.current.value++;
+                                data.save();
+                            }
                         }
                     }
                 }
