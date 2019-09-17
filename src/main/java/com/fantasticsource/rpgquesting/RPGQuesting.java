@@ -148,7 +148,7 @@ public class RPGQuesting
         if (event.player instanceof EntityPlayerMP) CQuests.unloadPlayerQuestData((EntityPlayerMP) event.player);
     }
 
-    @Mod.EventHandler
+    @SubscribeEvent
     public static void clientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
         JournalGUI.clear();

@@ -454,7 +454,7 @@ public class Network
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
                 QuestTracker.startTracking(packet.questName.value, packet.objectives);
-                JournalGUI.setCurrentJournalQuest(packet.questName.value);
+                JournalGUI.setViewedQuest(packet.questName.value);
             });
             return null;
         }
