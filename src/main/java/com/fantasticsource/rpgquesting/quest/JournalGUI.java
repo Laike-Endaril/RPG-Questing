@@ -70,7 +70,7 @@ public class JournalGUI extends GUIScreen
                 if (!done) groupDone = false;
 
                 Color c = done ? Color.GREEN : started ? Color.YELLOW : Color.RED;
-                inProgress.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c.copy().setVF(0.5f * c.vf()), c, Color.WHITE));
+                inProgress.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c.copy().setVF(0.6f * c.vf()), c, Color.WHITE));
             }
 
             knownQuestGroupCompletion.put(entry2.getKey(), groupDone);
@@ -87,7 +87,7 @@ public class JournalGUI extends GUIScreen
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
             Color c = (groupDone == null || groupDone) ? Color.GREEN : Color.YELLOW;
 
-            completed.add(new GUIText(GUI, entry.getKey().toUpperCase() + "\n", c.copy().setVF(0.5f * c.vf()), c, Color.WHITE));
+            completed.add(new GUIText(GUI, entry.getKey().toUpperCase() + "\n", c.copy().setVF(0.6f * c.vf()), c, Color.WHITE));
             for (String s : entry.getValue())
             {
                 completed.add(new GUIText(GUI, "* " + s + "\n", Color.BLUE));
