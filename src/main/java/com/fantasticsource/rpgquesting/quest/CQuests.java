@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
+import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
@@ -74,6 +75,8 @@ public class CQuests extends Component
         }
 
         data.save();
+
+        Network.WRAPPER.sendTo(new Network.StartTrackingQuestPacket(name, objectives), player);
     }
 
     public static void abandon(EntityPlayerMP player, String name)
@@ -84,6 +87,8 @@ public class CQuests extends Component
         data.inProgressQuests.remove(name);
 
         data.save();
+
+        Network.WRAPPER.sendTo(new Network.StopTrackingQuestPacket(name), player);
     }
 
     public static boolean complete(EntityPlayerMP player, String name)
@@ -104,6 +109,8 @@ public class CQuests extends Component
         }
 
         data.save();
+
+        Network.WRAPPER.sendTo(new Network.StopTrackingQuestPacket(name), player);
 
         return true;
     }

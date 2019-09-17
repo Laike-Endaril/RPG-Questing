@@ -5,8 +5,10 @@ import com.fantasticsource.rpgquesting.dialogue.*;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.JournalGUI;
+import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -39,6 +41,7 @@ public class Network
         WRAPPER.registerMessage(ActionErrorPacketHandler.class, ActionErrorPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestJournalDataPacketHandler.class, RequestJournalDataPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(ObfJournalPacketHandler.class, ObfJournalPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(StartTrackingQuestPacketHandler.class, StartTrackingQuestPacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -362,6 +365,7 @@ public class Network
     public static class ObfJournalPacket implements IMessage
     {
         public CPlayerQuestData data = new CPlayerQuestData();
+        public CStringUTF8 selectedQuest = new CStringUTF8().set("");
 
         public ObfJournalPacket()
         {
@@ -370,20 +374,27 @@ public class Network
 
         public ObfJournalPacket(CPlayerQuestData playerQuestData)
         {
+            this(playerQuestData, "");
+        }
+
+        public ObfJournalPacket(CPlayerQuestData playerQuestData, String selectedQuest)
+        {
             if (playerQuestData != null) data = playerQuestData;
+            this.selectedQuest.set(selectedQuest);
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
-
             data.write(buf);
+            selectedQuest.write(buf);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
             data.read(buf);
+            selectedQuest.read(buf);
         }
     }
 
@@ -394,6 +405,101 @@ public class Network
         public IMessage onMessage(ObfJournalPacket packet, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() -> JournalGUI.show(packet));
+            return null;
+        }
+    }
+
+
+    public static class StartTrackingQuestPacket implements IMessage
+    {
+        public CStringUTF8 questName = new CStringUTF8();
+        public ArrayList<CObjective> objectives = new ArrayList<>();
+
+        public StartTrackingQuestPacket()
+        {
+            //Required
+        }
+
+        public StartTrackingQuestPacket(String questName, ArrayList<CObjective> objectives)
+        {
+            this.questName.set(questName);
+            this.objectives = objectives;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            questName.write(buf);
+
+            buf.writeInt(objectives.size());
+            for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            questName.read(buf);
+
+            for (int i = buf.readInt(); i > 0; i--) objectives.add((CObjective) Component.readMarked(buf));
+        }
+    }
+
+    public static class StartTrackingQuestPacketHandler implements IMessageHandler<StartTrackingQuestPacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(StartTrackingQuestPacket packet, MessageContext ctx)
+        {
+            Minecraft.getMinecraft().addScheduledTask(() ->
+            {
+                JournalGUI.currentQuestname = packet.questName.value;
+                JournalGUI.currentObjectives = packet.objectives;
+            });
+            return null;
+        }
+    }
+
+
+    public static class StopTrackingQuestPacket implements IMessage
+    {
+        public CStringUTF8 questName = new CStringUTF8();
+
+        public StopTrackingQuestPacket()
+        {
+            //Required
+        }
+
+        public StopTrackingQuestPacket(String questName)
+        {
+            this.questName.set(questName);
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            questName.write(buf);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            questName.read(buf);
+        }
+    }
+
+    public static class StopTrackingQuestPacketHandler implements IMessageHandler<StopTrackingQuestPacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(StopTrackingQuestPacket packet, MessageContext ctx)
+        {
+            Minecraft.getMinecraft().addScheduledTask(() ->
+            {
+                if (JournalGUI.currentQuestname.equals(packet.questName.value))
+                {
+                    JournalGUI.stopTrackingCurrent();
+                }
+            });
             return null;
         }
     }

@@ -83,9 +83,15 @@ public class CObjectiveKill extends CObjective
     @Override
     protected String progressText()
     {
-        if (required.value > 1) return current.value + "/" + required.value;
+        if (required.value > 1) return "(" + current.value + "/" + required.value + ")";
         else if (current.value == 1) return "[x]";
         else return "[ ]";
+    }
+
+    @Override
+    public boolean isStarted()
+    {
+        return isDone() || current.value > 0;
     }
 
     @Override

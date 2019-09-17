@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.quest.CQuests;
+import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
@@ -134,14 +136,20 @@ public class RPGQuesting
     }
 
     @SubscribeEvent
-    public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) throws IOException
+    public static void serverLogin(PlayerEvent.PlayerLoggedInEvent event) throws IOException
     {
         if (event.player instanceof EntityPlayerMP) CQuests.loadPlayerQuestData((EntityPlayerMP) event.player);
     }
 
     @SubscribeEvent
-    public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event)
+    public static void serverLogout(PlayerEvent.PlayerLoggedOutEvent event)
     {
         if (event.player instanceof EntityPlayerMP) CQuests.unloadPlayerQuestData((EntityPlayerMP) event.player);
+    }
+
+    @Mod.EventHandler
+    public static void clientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
+    {
+        JournalGUI.stopTrackingCurrent();
     }
 }

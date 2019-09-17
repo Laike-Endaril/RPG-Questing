@@ -27,5 +27,7 @@ public abstract class CObjective extends Component
 
     protected abstract String progressText();
 
+    public abstract boolean isStarted();
+
     public abstract boolean isDone();
 }
