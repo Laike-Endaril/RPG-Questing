@@ -5,6 +5,7 @@ import com.fantasticsource.rpgquesting.dialogue.*;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.JournalGUI;
+import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
@@ -452,8 +453,8 @@ public class Network
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
-                JournalGUI.currentQuestname = packet.questName.value;
-                JournalGUI.currentObjectives = packet.objectives;
+                QuestTracker.startTracking(packet.questName.value, packet.objectives);
+                JournalGUI.setCurrentJournalQuest(packet.questName.value);
             });
             return null;
         }
@@ -493,13 +494,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(StopTrackingQuestPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() ->
-            {
-                if (JournalGUI.currentQuestname.equals(packet.questName.value))
-                {
-                    JournalGUI.stopTrackingCurrent();
-                }
-            });
+            Minecraft.getMinecraft().addScheduledTask(() -> QuestTracker.stopTracking(packet.questName.value));
             return null;
         }
     }

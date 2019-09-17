@@ -4,6 +4,7 @@ import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.JournalGUI;
+import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
@@ -150,6 +151,7 @@ public class RPGQuesting
     @Mod.EventHandler
     public static void clientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
-        JournalGUI.stopTrackingCurrent();
+        JournalGUI.clear();
+        QuestTracker.stopTracking();
     }
 }

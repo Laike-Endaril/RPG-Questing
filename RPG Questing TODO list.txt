@@ -1,12 +1,18 @@
+Quest Tracker
+
+Add "Start tracking" / "Stop tracking" option in journal questview
+
+
+
+Add current tracker quest and current journal quest to player quest data, and sync from client to server with check?
+
+
+
 Quest Editor
 
 
 
 Dialogue Editor
-
-
-
-Quest Tracker
 
 
 

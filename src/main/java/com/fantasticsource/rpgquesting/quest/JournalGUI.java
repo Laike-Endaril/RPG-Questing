@@ -30,13 +30,12 @@ public class JournalGUI extends GUIScreen
 
     public static JournalGUI GUI;
     public static boolean editable = false;
-    public static String currentQuestname = "";
-    public static ArrayList<CObjective> currentObjectives = new ArrayList<>();
+    private static CPlayerQuestData data;
     private static GUITabView navigator;
     private static GUIScrollView inProgress, completed, questView;
 
-    private static LinkedHashMap<String, GUITextSpoiler> inProgressGroups = new LinkedHashMap<>();
-    private static LinkedHashMap<String, GUITextSpoiler> completedGroups = new LinkedHashMap<>();
+    private static LinkedHashMap<GUIText, String> inProgressQuestMap = new LinkedHashMap<>();
+    private static LinkedHashMap<GUIText, String> completedQuestMap = new LinkedHashMap<>();
 
     static
     {
@@ -48,33 +47,26 @@ public class JournalGUI extends GUIScreen
     {
     }
 
-    public static void stopTrackingCurrent()
-    {
-        currentQuestname = "";
-        currentObjectives.clear();
-    }
-
     public static void show(ObfJournalPacket packet)
     {
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         editable = false;
 
-        CPlayerQuestData data = packet.data;
+        data = packet.data;
 
         LinkedHashMap<String, Boolean> knownQuestGroupCompletion = new LinkedHashMap<>();
 
 
         //Quests in progress
         inProgress.clear();
-        inProgressGroups.clear();
+        inProgressQuestMap.clear();
         for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry2 : data.inProgressQuests.entrySet())
         {
             boolean groupDone = true;
 
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry2.getKey().toUpperCase() + "\n");
             inProgress.add(groupSpoiler);
-            inProgressGroups.put(groupSpoiler.toString(), groupSpoiler);
 
             for (Map.Entry<String, ArrayList<CObjective>> entry : entry2.getValue().entrySet())
             {
@@ -88,7 +80,9 @@ public class JournalGUI extends GUIScreen
                 if (!done) groupDone = false;
 
                 Color c = done ? GREEN : started ? YELLOW : RED;
-                groupSpoiler.add(new GUIText(GUI, "* " + entry.getKey() + "\n", c, c.copy().setVF(0.75f), Color.WHITE));
+                GUIText quest = new GUIText(GUI, "* " + entry.getKey() + "\n", c, c.copy().setVF(0.75f), Color.WHITE);
+                groupSpoiler.add(quest);
+                inProgressQuestMap.put(quest, entry.getKey());
             }
 
             knownQuestGroupCompletion.put(entry2.getKey(), groupDone);
@@ -102,7 +96,7 @@ public class JournalGUI extends GUIScreen
 
         //Complated quests
         completed.clear();
-        completedGroups.clear();
+        completedQuestMap.clear();
         for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
@@ -110,11 +104,12 @@ public class JournalGUI extends GUIScreen
 
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey().toUpperCase() + "\n", c, c.copy().setVF(0.75f), Color.WHITE);
             completed.add(groupSpoiler);
-            completedGroups.put(groupSpoiler.toString(), groupSpoiler);
 
             for (String s : entry.getValue())
             {
-                completed.add(new GUIText(GUI, "* " + s + "\n", BLUE));
+                GUIText quest = new GUIText(GUI, "* " + s + "\n", BLUE);
+                completed.add(quest);
+                completedQuestMap.put(quest, s);
             }
             groupSpoiler.add(new GUIText(GUI, "\n"));
         }
@@ -122,52 +117,66 @@ public class JournalGUI extends GUIScreen
 
 
         //Currently selected quest
-        String selectedQuestName = packet.selectedQuest.value;
-        if (selectedQuestName != null && !selectedQuestName.equals("")) currentQuestname = selectedQuestName;
+        setCurrentJournalQuest(packet.selectedQuest.value);
+    }
+
+    public static void clear()
+    {
+        editable = false;
+        data = null;
+        inProgressQuestMap.clear();
+        completedQuestMap.clear();
+
+        inProgress.clear();
+        completed.clear();
+        questView.clear();
+    }
+
+    public static void setCurrentJournalQuest(String questName)
+    {
+        if (questName == null || questName.equals("")) return;
 
 
-        if (currentQuestname != null && !currentQuestname.equals(""))
+        for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
-            boolean questDone = false;
-            for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
+            if (entry.getValue().contains(questName))
             {
-                if (entry.getValue().contains(currentQuestname))
-                {
-                    questView.clear();
-                    questView.add(new GUIText(GUI, currentQuestname.toUpperCase() + "\n\n* Quest Completed! *", BLUE));
-                    questDone = true;
-                    break;
-                }
+                questView.clear();
+
+                Color c = BLUE;
+                questView.add(new GUIText(GUI, questName.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
+
+                questView.add(new GUIText(GUI, "* Quest Completed! *", BLUE));
+
+                return;
             }
+        }
 
-            if (!questDone)
+
+        for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : data.inProgressQuests.entrySet())
+        {
+            ArrayList<CObjective> objectives = entry.getValue().get(questName);
+            if (objectives != null)
             {
-                for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : data.inProgressQuests.entrySet())
+                questView.clear();
+
+                boolean done = true, started = false;
+                for (CObjective objective : objectives)
                 {
-                    ArrayList<CObjective> objectives = entry.getValue().get(currentQuestname);
-                    if (objectives != null)
-                    {
-                        currentObjectives = objectives;
-
-                        questView.clear();
-
-                        boolean done = true, started = false;
-                        for (CObjective objective : currentObjectives)
-                        {
-                            if (!objective.isDone()) done = false;
-                            if (objective.isStarted()) started = true;
-                            if (started && !done) break;
-                        }
-
-                        questView.add(new GUIText(GUI, currentQuestname.toUpperCase() + "\n\n", done ? GREEN : started ? YELLOW : RED));
-                        for (CObjective objective : currentObjectives)
-                        {
-                            questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED));
-                        }
-
-                        break;
-                    }
+                    if (!objective.isDone()) done = false;
+                    if (objective.isStarted()) started = true;
+                    if (started && !done) break;
                 }
+
+                Color c = done ? GREEN : started ? YELLOW : RED;
+                questView.add(new GUIText(GUI, questName.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
+
+                for (CObjective objective : objectives)
+                {
+                    questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED));
+                }
+
+                return;
             }
         }
     }
@@ -181,37 +190,28 @@ public class JournalGUI extends GUIScreen
         if (element.getClass() != GUIText.class) return;
 
 
-        if (inProgressGroups.values().contains(element))
+        int index = questView.indexOf(element);
+        if (index != -1)
         {
-            GUIText target = completedGroups.get(element.toString());
-            if (target != null)
+            if (index == 0)
             {
-                navigator.setActiveTab(1);
+                //TODO
             }
         }
-        else if (completedGroups.values().contains(element))
-        {
-            GUIText target = inProgressGroups.get(element.toString());
-            if (target != null)
-            {
 
-            }
-        }
-        else
+
+        String questName = inProgressQuestMap.get(element);
+        if (questName != null)
         {
-            //Quest
-            if (inProgress.children.contains(element))
-            {
-                //TODO
-            }
-            else if (completed.children.contains(element))
-            {
-                //TODO
-            }
-            else if (questView.indexOf(element) == 0)
-            {
-                //TODO
-            }
+            setCurrentJournalQuest(questName);
+            return;
+        }
+
+        questName = completedQuestMap.get(element);
+        if (questName != null)
+        {
+            setCurrentJournalQuest(questName);
+            return;
         }
     }
 
