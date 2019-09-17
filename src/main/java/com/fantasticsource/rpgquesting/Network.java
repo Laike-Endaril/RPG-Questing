@@ -43,6 +43,7 @@ public class Network
         WRAPPER.registerMessage(RequestJournalDataPacketHandler.class, RequestJournalDataPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(ObfJournalPacketHandler.class, ObfJournalPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(StartTrackingQuestPacketHandler.class, StartTrackingQuestPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(StopTrackingQuestPacketHandler.class, StopTrackingQuestPacket.class, discriminator++, Side.CLIENT);
     }
 
 
