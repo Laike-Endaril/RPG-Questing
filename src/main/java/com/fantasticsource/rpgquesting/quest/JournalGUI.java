@@ -37,6 +37,8 @@ public class JournalGUI extends GUIScreen
     private static LinkedHashMap<GUIText, String> inProgressQuestMap = new LinkedHashMap<>();
     private static LinkedHashMap<GUIText, String> completedQuestMap = new LinkedHashMap<>();
 
+    private static String viewedQuest;
+
     static
     {
         GUI = new JournalGUI();
@@ -134,19 +136,25 @@ public class JournalGUI extends GUIScreen
 
     public static void setCurrentJournalQuest(String questName)
     {
-        if (questName == null || questName.equals("")) return;
+        if (questName != null && !questName.equals("")) viewedQuest = questName;
+        updateQuestView();
+    }
 
-
+    public static void updateQuestView()
+    {
         for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
-            if (entry.getValue().contains(questName))
+            if (entry.getValue().contains(viewedQuest))
             {
                 questView.clear();
 
                 Color c = BLUE;
-                questView.add(new GUIText(GUI, questName.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
+                questView.add(new GUIText(GUI, viewedQuest.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
 
                 questView.add(new GUIText(GUI, "* Quest Completed! *", BLUE));
+
+
+                //TODO set navigator
 
                 return;
             }
@@ -155,7 +163,7 @@ public class JournalGUI extends GUIScreen
 
         for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : data.inProgressQuests.entrySet())
         {
-            ArrayList<CObjective> objectives = entry.getValue().get(questName);
+            ArrayList<CObjective> objectives = entry.getValue().get(viewedQuest);
             if (objectives != null)
             {
                 questView.clear();
@@ -169,12 +177,15 @@ public class JournalGUI extends GUIScreen
                 }
 
                 Color c = done ? GREEN : started ? YELLOW : RED;
-                questView.add(new GUIText(GUI, questName.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
+                questView.add(new GUIText(GUI, viewedQuest.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
 
                 for (CObjective objective : objectives)
                 {
                     questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED));
                 }
+
+
+                //TODO set navigator
 
                 return;
             }
