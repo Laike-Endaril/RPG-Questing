@@ -71,11 +71,14 @@ public class JournalGUI extends GUIScreen
         inProgressGroupToString.clear();
         inProgressQuestToString.clear();
         inProgressStringToQuest.clear();
+
+        inProgress.add(new GUIText(GUI, "\n"));
         for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry2 : data.inProgressQuests.entrySet())
         {
             boolean groupDone = true;
 
-            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry2.getKey() + "\n");
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry2.getKey() + "\n");
+            groupSpoiler.add(new GUIText(GUI, "\n"));
             inProgressGroupToString.put(groupSpoiler, entry2.getKey());
             inProgress.add(groupSpoiler);
 
@@ -91,10 +94,12 @@ public class JournalGUI extends GUIScreen
                 if (!done) groupDone = false;
 
                 Color[] c = done ? GREEN : started ? YELLOW : RED;
-                GUIText quest = new GUIText(GUI, "* " + entry.getKey() + "\n", c[0], c[1], c[2]);
+                GUIText quest = new GUIText(GUI, " * " + entry.getKey() + "\n", c[0], c[1], c[2]);
                 groupSpoiler.add(quest);
                 inProgressQuestToString.put(quest, entry.getKey());
                 inProgressStringToQuest.put(entry.getKey(), quest);
+
+                groupSpoiler.add(new GUIText(GUI, "\n"));
             }
 
             knownQuestGroupCompletion.put(entry2.getKey(), groupDone);
@@ -111,23 +116,29 @@ public class JournalGUI extends GUIScreen
         completedGroupToString.clear();
         completedQuestToString.clear();
         completedStringToQuest.clear();
+
+        completed.add(new GUIText(GUI, "\n"));
         for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
             Color[] c = groupDone == null ? BLUE : groupDone ? GREEN : YELLOW;
 
-            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey() + "\n", c[0], c[1], c[2]);
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry.getKey() + "\n", c[0], c[1], c[2]);
+            groupSpoiler.add(new GUIText(GUI, "\n"));
             completedGroupToString.put(groupSpoiler, entry.getKey());
             completed.add(groupSpoiler);
 
             for (String s : entry.getValue())
             {
                 c = inProgressStringToQuest.containsKey(s) ? GREEN : BLUE;
-                GUIText quest = new GUIText(GUI, "* " + s + "\n", c[0], c[1], c[2]);
+                GUIText quest = new GUIText(GUI, " * " + s + "\n", c[0], c[1], c[2]);
                 groupSpoiler.add(quest);
                 completedQuestToString.put(quest, s);
                 completedStringToQuest.put(s, quest);
+
+                groupSpoiler.add(new GUIText(GUI, "\n"));
             }
+
             completed.add(new GUIText(GUI, "\n"));
         }
         if (completed.size() > 0) completed.remove(completed.size() - 1);
@@ -188,6 +199,7 @@ public class JournalGUI extends GUIScreen
                 }
 
                 Color[] c = done ? GREEN : started ? YELLOW : RED;
+                questView.add(new GUIText(GUI, "\n"));
                 questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]));
                 questView.add(new GUIText(GUI, "\n\n"));
 
@@ -200,8 +212,11 @@ public class JournalGUI extends GUIScreen
 
 
                 //Active quest buttons
+                questView.add(new GUIText(GUI, "\n"));
                 questView.add(new GUITextButton(GUI, entry.getKey().equals(QuestTracker.questname) ? "Stop Tracking" : "Start Tracking"));
+                questView.add(new GUIText(GUI, "\n"));
                 questView.add(new GUITextButton(GUI, "Abandon"));
+                questView.add(new GUIText(GUI, "\n"));
 
 
                 //Set navigator focus
