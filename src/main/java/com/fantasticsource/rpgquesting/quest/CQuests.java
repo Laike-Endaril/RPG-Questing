@@ -144,9 +144,9 @@ public class CQuests extends Component
             player.addItemStackToInventory(stack.stack);
         }
 
-        data.save();
 
-        if (data.trackedQuest.value.equals(name)) track(player, "");
+        if (data.trackedQuest.value.equals(name)) data.trackedQuest.set("");
+        data.save();
 
         return true;
     }
@@ -155,11 +155,8 @@ public class CQuests extends Component
     public static void loadPlayerQuestData(EntityPlayerMP player) throws IOException
     {
         CPlayerQuestData data = new CPlayerQuestData(player).load();
-        if (data.inProgressQuests.size() > 0 || data.completedQuests.size() > 0)
-        {
-            playerQuestData.put(player.getPersistentID(), data);
-            track(player, data.trackedQuest.value);
-        }
+        playerQuestData.put(player.getPersistentID(), data);
+        track(player, data.trackedQuest.value);
     }
 
     public static void unloadPlayerQuestData(EntityPlayerMP player)
