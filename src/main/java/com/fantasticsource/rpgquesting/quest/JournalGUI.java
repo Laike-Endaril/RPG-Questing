@@ -122,11 +122,11 @@ public class JournalGUI extends GUIScreen
             for (String s : entry.getValue())
             {
                 GUIText quest = new GUIText(GUI, "* " + s + "\n", BLUE);
-                completed.add(quest);
+                groupSpoiler.add(quest);
                 completedQuestToString.put(quest, s);
                 completedStringToQuest.put(s, quest);
             }
-            groupSpoiler.add(new GUIText(GUI, "\n"));
+            completed.add(new GUIText(GUI, "\n"));
         }
         if (completed.size() > 0) completed.remove(completed.size() - 1);
 
