@@ -18,7 +18,7 @@ public class QuestTracker
     public static String questname = "";
     public static ArrayList<CObjective> objectives = new ArrayList<>();
     public static int padding = 5;
-    public static float alpha = 0.6f;
+    public static float backdropAlpha = 0.3f;
 
     public static void stopTracking(String name)
     {
@@ -91,7 +91,7 @@ public class QuestTracker
 
         //Draw backdrop
         GlStateManager.disableTexture2D();
-        GlStateManager.color(0, 0, 0, alpha);
+        GlStateManager.color(0, 0, 0, backdropAlpha);
 
         GlStateManager.glBegin(GL_QUADS);
         GlStateManager.glVertex3f(x1, y1, 0);
@@ -107,14 +107,7 @@ public class QuestTracker
         int xx = x1 + padding, yy = y1 + padding;
         for (int i = 0; i < elements.size(); i++)
         {
-            String element = elements.get(i);
-            Color color = colors.get(i);
-
-            int c = (int) (255 * alpha) << 24;
-            c |= color.color() >> 8;
-
-            fr.drawString(element, xx, yy, c);
-
+            fr.drawString(elements.get(i), xx, yy, colors.get(i).color() >> 8);
             yy += fr.FONT_HEIGHT + padding;
         }
 
