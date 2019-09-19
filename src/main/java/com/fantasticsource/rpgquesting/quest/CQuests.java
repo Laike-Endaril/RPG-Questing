@@ -77,7 +77,36 @@ public class CQuests extends Component
 
         data.save();
 
-        Network.WRAPPER.sendTo(new Network.StartTrackingQuestPacket(name, objectives), player);
+        track(player, name);
+    }
+
+    public static void track(EntityPlayerMP player, String name)
+    {
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
+
+
+        if (name == null || name.equals(""))
+        {
+            Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, new ArrayList<>()), player);
+            if (data != null) data.trackedQuest.set("");
+            return;
+        }
+
+
+        if (data == null) return;
+
+        CQuest quest = get(name);
+        if (quest == null) return;
+
+        LinkedHashMap<String, ArrayList<CObjective>> q = data.inProgressQuests.get(quest.group.value);
+        if (q == null) return;
+
+        ArrayList<CObjective> objectives = q.get(name);
+        if (objectives == null) return;
+
+
+        data.trackedQuest.set(name);
+        Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, objectives), player);
     }
 
     public static void abandon(EntityPlayerMP player, String name)
@@ -89,7 +118,7 @@ public class CQuests extends Component
 
         data.save();
 
-        Network.WRAPPER.sendTo(new Network.StopTrackingQuestPacket(name), player);
+        if (data.trackedQuest.value.equals(name)) track(player, "");
     }
 
     public static boolean complete(EntityPlayerMP player, String name)
@@ -117,7 +146,7 @@ public class CQuests extends Component
 
         data.save();
 
-        Network.WRAPPER.sendTo(new Network.StopTrackingQuestPacket(name), player);
+        if (data.trackedQuest.value.equals(name)) track(player, "");
 
         return true;
     }
@@ -126,7 +155,11 @@ public class CQuests extends Component
     public static void loadPlayerQuestData(EntityPlayerMP player) throws IOException
     {
         CPlayerQuestData data = new CPlayerQuestData(player).load();
-        if (data != null) playerQuestData.put(player.getPersistentID(), data);
+        if (data.inProgressQuests.size() > 0 || data.completedQuests.size() > 0)
+        {
+            playerQuestData.put(player.getPersistentID(), data);
+            track(player, data.trackedQuest.value);
+        }
     }
 
     public static void unloadPlayerQuestData(EntityPlayerMP player)

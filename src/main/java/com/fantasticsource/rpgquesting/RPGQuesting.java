@@ -138,9 +138,22 @@ public class RPGQuesting
     }
 
     @SubscribeEvent
-    public static void serverLogin(PlayerEvent.PlayerLoggedInEvent event) throws IOException
+    public static void serverLogin(PlayerEvent.PlayerLoggedInEvent event)
     {
-        if (event.player instanceof EntityPlayerMP) CQuests.loadPlayerQuestData((EntityPlayerMP) event.player);
+        if (event.player instanceof EntityPlayerMP)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                try
+                {
+                    CQuests.loadPlayerQuestData((EntityPlayerMP) event.player);
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     @SubscribeEvent

@@ -17,6 +17,7 @@ import java.util.Map;
 public class CPlayerQuestData extends Component
 {
     public EntityPlayerMP player;
+    public CStringUTF8 trackedQuest = new CStringUTF8().set("");
     public LinkedHashMap<String, ArrayList<String>> completedQuests = new LinkedHashMap<>();
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<CObjective>>> inProgressQuests = new LinkedHashMap<>();
 
@@ -75,6 +76,8 @@ public class CPlayerQuestData extends Component
     @Override
     public CPlayerQuestData write(ByteBuf buf)
     {
+        trackedQuest.write(buf);
+
         buf.writeInt(completedQuests.size());
         for (Map.Entry<String, ArrayList<String>> entry : completedQuests.entrySet())
         {
@@ -111,6 +114,8 @@ public class CPlayerQuestData extends Component
     @Override
     public CPlayerQuestData read(ByteBuf buf)
     {
+        trackedQuest.read(buf);
+
         completedQuests.clear();
         for (int i = buf.readInt(); i > 0; i--)
         {
@@ -147,6 +152,8 @@ public class CPlayerQuestData extends Component
     @Override
     public CPlayerQuestData save(OutputStream stream) throws IOException
     {
+        trackedQuest.save(stream);
+
         new CInt().set(completedQuests.size()).save(stream);
         for (Map.Entry<String, ArrayList<String>> entry : completedQuests.entrySet())
         {
@@ -183,6 +190,8 @@ public class CPlayerQuestData extends Component
     @Override
     public CPlayerQuestData load(InputStream stream) throws IOException
     {
+        trackedQuest.load(stream);
+
         completedQuests.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
         {

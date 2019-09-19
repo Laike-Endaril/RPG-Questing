@@ -42,8 +42,7 @@ public class Network
         WRAPPER.registerMessage(ActionErrorPacketHandler.class, ActionErrorPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestJournalDataPacketHandler.class, RequestJournalDataPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(ObfJournalPacketHandler.class, ObfJournalPacket.class, discriminator++, Side.CLIENT);
-        WRAPPER.registerMessage(StartTrackingQuestPacketHandler.class, StartTrackingQuestPacket.class, discriminator++, Side.CLIENT);
-        WRAPPER.registerMessage(StopTrackingQuestPacketHandler.class, StopTrackingQuestPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(QuestTrackerPacketHandler.class, QuestTrackerPacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -412,17 +411,17 @@ public class Network
     }
 
 
-    public static class StartTrackingQuestPacket implements IMessage
+    public static class QuestTrackerPacket implements IMessage
     {
         public CStringUTF8 questName = new CStringUTF8();
         public ArrayList<CObjective> objectives = new ArrayList<>();
 
-        public StartTrackingQuestPacket()
+        public QuestTrackerPacket()
         {
             //Required
         }
 
-        public StartTrackingQuestPacket(String questName, ArrayList<CObjective> objectives)
+        public QuestTrackerPacket(String questName, ArrayList<CObjective> objectives)
         {
             this.questName.set(questName);
             this.objectives = objectives;
@@ -446,56 +445,22 @@ public class Network
         }
     }
 
-    public static class StartTrackingQuestPacketHandler implements IMessageHandler<StartTrackingQuestPacket, IMessage>
+    public static class QuestTrackerPacketHandler implements IMessageHandler<QuestTrackerPacket, IMessage>
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(StartTrackingQuestPacket packet, MessageContext ctx)
+        public IMessage onMessage(QuestTrackerPacket packet, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
-                QuestTracker.startTracking(packet.questName.value, packet.objectives);
-                JournalGUI.setViewedQuest(packet.questName.value);
+                String name = packet.questName.value;
+                if (name != null && !name.equals(""))
+                {
+                    QuestTracker.startTracking(packet.questName.value, packet.objectives);
+                    JournalGUI.setViewedQuest(packet.questName.value);
+                }
+                else QuestTracker.stopTracking();
             });
-            return null;
-        }
-    }
-
-
-    public static class StopTrackingQuestPacket implements IMessage
-    {
-        public CStringUTF8 questName = new CStringUTF8();
-
-        public StopTrackingQuestPacket()
-        {
-            //Required
-        }
-
-        public StopTrackingQuestPacket(String questName)
-        {
-            this.questName.set(questName);
-        }
-
-        @Override
-        public void toBytes(ByteBuf buf)
-        {
-            questName.write(buf);
-        }
-
-        @Override
-        public void fromBytes(ByteBuf buf)
-        {
-            questName.read(buf);
-        }
-    }
-
-    public static class StopTrackingQuestPacketHandler implements IMessageHandler<StopTrackingQuestPacket, IMessage>
-    {
-        @Override
-        @SideOnly(Side.CLIENT)
-        public IMessage onMessage(StopTrackingQuestPacket packet, MessageContext ctx)
-        {
-            Minecraft.getMinecraft().addScheduledTask(() -> QuestTracker.stopTracking(packet.questName.value));
             return null;
         }
     }
