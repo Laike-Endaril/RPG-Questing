@@ -58,6 +58,13 @@ public class CPlayerQuestData extends Component
         if (file.exists()) file.delete();
         file2.renameTo(file);
 
+
+        if (player.world.playerEntities.contains(player))
+        {
+            CQuests.track(player, trackedQuest.value);
+        }
+
+
         return this;
     }
 
