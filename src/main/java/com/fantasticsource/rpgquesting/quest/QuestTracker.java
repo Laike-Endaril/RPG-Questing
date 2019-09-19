@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 
+import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 public class QuestTracker
@@ -71,8 +72,9 @@ public class QuestTracker
 
             elements.add(objective.getFullText());
         }
-        colors.add(0, questDone ? JournalGUI.GREEN[0] : questStarted ? JournalGUI.YELLOW[0] : JournalGUI.RED[0]);
-        elements.add(0, questname.toUpperCase());
+        Color c = questDone ? JournalGUI.GREEN[0] : questStarted ? JournalGUI.YELLOW[0] : JournalGUI.RED[0];
+        colors.add(0, c);
+        elements.add(0, questname);
 
 
         //Maths
@@ -81,7 +83,7 @@ public class QuestTracker
         int screenWidth = event.getWidth() << 1, screenHeight = event.getHeight() << 1;
 
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-        int boxWidth = 0, boxHeight = padding + (fr.FONT_HEIGHT + padding) * elements.size();
+        int boxWidth = 0, boxHeight = (padding << 1) + (fr.FONT_HEIGHT + padding) * elements.size();
         for (String element : elements) boxWidth = Tools.max(boxWidth, fr.getStringWidth(element));
         boxWidth += padding << 1;
 
@@ -101,11 +103,24 @@ public class QuestTracker
         GlStateManager.glEnd();
 
 
+        //Draw questname / objective separation line
+        c = colors.get(0);
+        int xx = x1 + padding, yy = y1 + padding + fr.FONT_HEIGHT + padding;
+
+        GlStateManager.color(c.rf(), c.gf(), c.bf(), 1);
+        GlStateManager.glBegin(GL_LINES);
+        GlStateManager.glVertex3f(xx, yy - 1, 0);
+        GlStateManager.glVertex3f(xx + boxWidth - (padding << 1), yy - 1, 0);
+        GlStateManager.glEnd();
+
+
         //Draw text
         GlStateManager.enableTexture2D();
 
-        int xx = x1 + padding, yy = y1 + padding;
-        for (int i = 0; i < elements.size(); i++)
+        fr.drawString(elements.get(0), x1 + ((boxWidth - fr.getStringWidth(elements.get(0))) >> 1), y1 + padding, c.color() >> 8);
+
+        yy += padding;
+        for (int i = 1; i < elements.size(); i++)
         {
             fr.drawString(elements.get(i), xx, yy, colors.get(i).color() >> 8);
             yy += fr.FONT_HEIGHT + padding;

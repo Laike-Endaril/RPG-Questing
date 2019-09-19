@@ -1,4 +1,5 @@
-Add "Start tracking" / "Stop tracking" option in journal questview
+"Start tracking" / "Stop tracking" button for in-progress questview
+"Abandon" button for in-progress questview
 
 
 

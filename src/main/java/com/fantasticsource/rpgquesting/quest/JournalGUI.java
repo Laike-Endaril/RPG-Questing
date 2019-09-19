@@ -6,6 +6,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
+import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
@@ -74,7 +75,7 @@ public class JournalGUI extends GUIScreen
         {
             boolean groupDone = true;
 
-            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry2.getKey().toUpperCase() + "\n");
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry2.getKey() + "\n");
             inProgressGroupToString.put(groupSpoiler, entry2.getKey());
             inProgress.add(groupSpoiler);
 
@@ -115,7 +116,7 @@ public class JournalGUI extends GUIScreen
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
             Color[] c = groupDone == null ? BLUE : groupDone ? GREEN : YELLOW;
 
-            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey().toUpperCase() + "\n", c[0], c[1], c[2]);
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey() + "\n", c[0], c[1], c[2]);
             completedGroupToString.put(groupSpoiler, entry.getKey());
             completed.add(groupSpoiler);
 
@@ -187,15 +188,23 @@ public class JournalGUI extends GUIScreen
                 }
 
                 Color[] c = done ? GREEN : started ? YELLOW : RED;
-                questView.add(new GUIText(GUI, viewedQuest.toUpperCase() + "\n\n", c[0], c[1], c[2]));
+                questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]));
+                questView.add(new GUIText(GUI, "\n\n"));
 
                 for (CObjective objective : objectives)
                 {
                     c = objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED;
-                    questView.add(new GUIText(GUI, "* " + objective.getFullText() + "\n", c[0], c[1], c[2]));
+                    questView.add(new GUIText(GUI, "* " + objective.getFullText(), c[0], c[1], c[2]));
+                    questView.add(new GUIText(GUI, "\n"));
                 }
 
 
+                //Active quest buttons
+                questView.add(new GUITextButton(GUI, entry.getKey().equals(QuestTracker.questname) ? "Stop Tracking" : "Start Tracking"));
+                questView.add(new GUITextButton(GUI, "Abandon"));
+
+
+                //Set navigator focus
                 navigator.setActiveTab(0);
 
                 GUIText questElement = inProgressStringToQuest.get(viewedQuest);
@@ -225,11 +234,14 @@ public class JournalGUI extends GUIScreen
                 questView.clear();
 
                 Color[] c = BLUE;
-                questView.add(new GUIText(GUI, viewedQuest.toUpperCase() + "\n\n", c[0], c[1], c[2]));
+                questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]));
+                questView.add(new GUIText(GUI, "\n\n"));
 
-                questView.add(new GUIText(GUI, "* Quest Completed! *", BLUE[0]));
+                questView.add(new GUIText(GUI, "Quest Completed!", BLUE[0]));
+                questView.add(new GUIText(GUI, "\n"));
 
 
+                //Set navigator focus
                 navigator.setActiveTab(1);
 
                 GUIText questElement = completedStringToQuest.get(viewedQuest);
@@ -302,6 +314,7 @@ public class JournalGUI extends GUIScreen
 
 
         questView = new GUIScrollView(this, 0.5, 0, 0.48, 1);
+        questView.setSubElementAutoplaceMethod(GUIElement.AP_CENTER_V_CENTER_H);
         guiElements.add(questView);
         guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, questView));
     }
