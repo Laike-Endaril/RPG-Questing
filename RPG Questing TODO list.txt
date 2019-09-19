@@ -1,10 +1,8 @@
-Quest Tracker
+Add current tracker quest to player quest data
+Sync to client on join
+Sync to client on objective / quest update
 
 Add "Start tracking" / "Stop tracking" option in journal questview
-
-
-
-Add current tracker quest to player quest data, and sync to client on join
 
 
 

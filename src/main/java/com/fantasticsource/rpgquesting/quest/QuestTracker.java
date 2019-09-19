@@ -43,6 +43,9 @@ public class QuestTracker
         if (questname == null || questname.equals("")) return;
 
 
+        GlStateManager.pushMatrix();
+
+
         //Populate string list to render
         ArrayList<Color> colors = new ArrayList<>();
         ArrayList<String> elements = new ArrayList<>();
@@ -72,13 +75,19 @@ public class QuestTracker
         elements.add(0, questname.toUpperCase());
 
 
+        //Maths
+        event.setScalingMode(Render.SCALING_MC_GUI);
+        GlStateManager.scale(0.5f, 0.5f, 1);
+        int screenWidth = event.getWidth() << 1, screenHeight = event.getHeight() << 1;
+
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
         int boxWidth = 0, boxHeight = padding + (fr.FONT_HEIGHT + padding) * elements.size();
         for (String element : elements) boxWidth = Tools.max(boxWidth, fr.getStringWidth(element));
         boxWidth += padding << 1;
 
-        int x2 = event.getWidth(), x1 = x2 - boxWidth;
-        int y1 = (event.getHeight() - boxHeight) >> 1, y2 = y1 + boxHeight;
+        int x2 = screenWidth, x1 = x2 - boxWidth;
+        int y1 = (screenHeight - boxHeight) >> 1, y2 = y1 + boxHeight;
+
 
         //Draw backdrop
         GlStateManager.disableTexture2D();
@@ -110,6 +119,7 @@ public class QuestTracker
         }
 
 
+        GlStateManager.popMatrix();
         GlStateManager.color(1, 1, 1, 1);
     }
 }
