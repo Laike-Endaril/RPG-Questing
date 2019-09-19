@@ -105,7 +105,7 @@ public class JournalGUI extends GUIScreen
         if (inProgress.size() > 0) inProgress.remove(inProgress.size() - 1);
 
 
-        //Complated quests
+        //Completed quests
         completed.clear();
         completedGroupToString.clear();
         completedQuestToString.clear();
