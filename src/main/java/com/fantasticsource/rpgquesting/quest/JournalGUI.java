@@ -169,39 +169,7 @@ public class JournalGUI extends GUIScreen
         if (data == null) return;
 
 
-        for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
-        {
-            if (entry.getValue().contains(viewedQuest))
-            {
-                questView.clear();
-
-                Color c = BLUE;
-                questView.add(new GUIText(GUI, viewedQuest.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
-
-                questView.add(new GUIText(GUI, "* Quest Completed! *", BLUE));
-
-
-                navigator.setActiveTab(1);
-
-                GUIText questElement = completedStringToQuest.get(viewedQuest);
-                GUITextSpoiler selectedGroup = null;
-                for (GUITextSpoiler group : completedGroupToString.keySet())
-                {
-                    if (group.indexOf(questElement) != -1)
-                    {
-                        selectedGroup = group;
-                        group.show();
-                    }
-                    else group.hide();
-                }
-
-                completed.focus(selectedGroup);
-
-                return;
-            }
-        }
-
-
+        //Search in-progress quests
         for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : data.inProgressQuests.entrySet())
         {
             ArrayList<CObjective> objectives = entry.getValue().get(viewedQuest);
@@ -241,6 +209,40 @@ public class JournalGUI extends GUIScreen
                 }
 
                 inProgress.focus(selectedGroup);
+
+                return;
+            }
+        }
+
+
+        //Search completed quests
+        for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
+        {
+            if (entry.getValue().contains(viewedQuest))
+            {
+                questView.clear();
+
+                Color c = BLUE;
+                questView.add(new GUIText(GUI, viewedQuest.toUpperCase() + "\n\n", c, c.copy().setVF(0.75f), Color.WHITE));
+
+                questView.add(new GUIText(GUI, "* Quest Completed! *", BLUE));
+
+
+                navigator.setActiveTab(1);
+
+                GUIText questElement = completedStringToQuest.get(viewedQuest);
+                GUITextSpoiler selectedGroup = null;
+                for (GUITextSpoiler group : completedGroupToString.keySet())
+                {
+                    if (group.indexOf(questElement) != -1)
+                    {
+                        selectedGroup = group;
+                        group.show();
+                    }
+                    else group.hide();
+                }
+
+                completed.focus(selectedGroup);
 
                 return;
             }
