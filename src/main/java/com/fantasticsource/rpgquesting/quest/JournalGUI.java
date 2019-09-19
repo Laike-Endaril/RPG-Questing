@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class JournalGUI extends GUIScreen
 {
-    private static final Color
+    public static final Color
             RED = Color.RED.copy().setVF(0.5f),
             YELLOW = Color.YELLOW.copy().setVF(0.5f),
             GREEN = Color.GREEN.copy().setVF(0.5f),
@@ -140,6 +140,10 @@ public class JournalGUI extends GUIScreen
         editable = false;
         data = null;
         viewedQuest = null;
+
+
+        if (GUI == null || !GUI.isInitialized()) return;
+
 
         inProgressGroupToString.clear();
         completedGroupToString.clear();

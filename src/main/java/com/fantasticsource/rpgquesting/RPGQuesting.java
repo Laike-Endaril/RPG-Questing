@@ -44,6 +44,7 @@ public class RPGQuesting
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
             Keys.init(event);
+            MinecraftForge.EVENT_BUS.register(QuestTracker.class);
         }
     }
 
