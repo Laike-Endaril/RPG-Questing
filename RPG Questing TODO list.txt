@@ -1,4 +1,12 @@
+Test collection quest
+
+
+
 Add "Start tracking" / "Stop tracking" option in journal questview
+
+
+
+Test repeatable quests
 
 
 
@@ -12,7 +20,6 @@ Dialogue Editor
 
 Objectives types
 * Dialogue
-* Gather items
 * Enter area
 * Leave area
 

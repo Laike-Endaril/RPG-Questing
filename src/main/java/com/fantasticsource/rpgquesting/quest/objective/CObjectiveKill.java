@@ -107,7 +107,6 @@ public class CObjectiveKill extends CObjective
     @Override
     public CObjectiveKill write(ByteBuf buf)
     {
-        owner.write(buf);
         text.write(buf);
         current.write(buf);
         required.write(buf);
@@ -117,7 +116,6 @@ public class CObjectiveKill extends CObjective
     @Override
     public CObjectiveKill read(ByteBuf buf)
     {
-        owner.read(buf);
         text.read(buf);
         current.read(buf);
         required.read(buf);

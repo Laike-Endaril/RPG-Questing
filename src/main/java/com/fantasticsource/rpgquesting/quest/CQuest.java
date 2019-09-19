@@ -43,19 +43,19 @@ public class CQuest extends Component implements IObfuscatedComponent
     }
 
 
-    public CQuest add(CCondition... conditions)
+    public CQuest addConditions(CCondition... conditions)
     {
         this.conditions.addAll(Arrays.asList(conditions));
         return this;
     }
 
-    public CQuest add(CObjective... objectives)
+    public CQuest addObjectives(CObjective... objectives)
     {
         this.objectives.addAll(Arrays.asList(objectives));
         return this;
     }
 
-    public CQuest add(ItemStack... rewards)
+    public CQuest addRewards(ItemStack... rewards)
     {
         for (ItemStack stack : rewards) this.rewards.add(new CItemStack(stack));
         return this;

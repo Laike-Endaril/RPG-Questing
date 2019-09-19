@@ -30,7 +30,7 @@ public class JournalGUI extends GUIScreen
 
     public static JournalGUI GUI;
     public static boolean editable = false;
-    private static CPlayerQuestData data;
+    public static CPlayerQuestData data;
     private static GUITabView navigator;
     private static GUIScrollView inProgress, completed, questView;
 
