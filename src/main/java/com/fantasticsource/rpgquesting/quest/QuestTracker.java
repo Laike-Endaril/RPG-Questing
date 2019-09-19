@@ -55,23 +55,23 @@ public class QuestTracker
             if (objective.isDone())
             {
                 questStarted = true;
-                colors.add(JournalGUI.GREEN);
+                colors.add(JournalGUI.GREEN[0]);
             }
             else if (objective.isStarted())
             {
                 questStarted = true;
                 questDone = false;
-                colors.add(JournalGUI.YELLOW);
+                colors.add(JournalGUI.YELLOW[0]);
             }
             else
             {
                 questDone = false;
-                colors.add(JournalGUI.RED);
+                colors.add(JournalGUI.RED[0]);
             }
 
             elements.add(objective.getFullText());
         }
-        colors.add(0, questDone ? JournalGUI.GREEN : questStarted ? JournalGUI.YELLOW : JournalGUI.RED);
+        colors.add(0, questDone ? JournalGUI.GREEN[0] : questStarted ? JournalGUI.YELLOW[0] : JournalGUI.RED[0]);
         elements.add(0, questname.toUpperCase());
 
 
