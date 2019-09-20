@@ -206,14 +206,14 @@ public class JournalGUI extends GUIScreen
                 for (CObjective objective : objectives)
                 {
                     c = objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED;
-                    questView.add(new GUIText(GUI, "* " + objective.getFullText(), c[0], c[1], c[2]));
+                    questView.add(new GUIText(GUI, objective.getFullText(), c[0], c[1], c[2]));
                     questView.add(new GUIText(GUI, "\n"));
                 }
 
 
                 //Active quest buttons
-                questView.add(new GUIText(GUI, "\n"));
-                questView.add(new GUITextButton(GUI, entry.getKey().equals(QuestTracker.questname) ? "Stop Tracking" : "Start Tracking"));
+                questView.add(new GUIText(GUI, "\n\n\n"));
+                questView.add(new GUITextButton(GUI, viewedQuest.equals(QuestTracker.questname) ? "Stop Tracking" : "Start Tracking"));
                 questView.add(new GUIText(GUI, "\n"));
                 questView.add(new GUITextButton(GUI, "Abandon"));
                 questView.add(new GUIText(GUI, "\n"));
@@ -329,7 +329,7 @@ public class JournalGUI extends GUIScreen
 
 
         questView = new GUIScrollView(this, 0.5, 0, 0.48, 1);
-        questView.setSubElementAutoplaceMethod(GUIElement.AP_CENTER_V_CENTER_H);
+        questView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
         guiElements.add(questView);
         guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, questView));
     }

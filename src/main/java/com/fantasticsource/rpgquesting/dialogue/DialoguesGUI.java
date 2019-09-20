@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.LinkedHashMap;
 
-import static com.fantasticsource.mctools.gui.element.GUIElement.AP_CENTER_V_CENTER_H;
+import static com.fantasticsource.mctools.gui.element.GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM;
 
 public class DialoguesGUI extends GUIScreen
 {
@@ -64,7 +64,7 @@ public class DialoguesGUI extends GUIScreen
         guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
 
         scrollView = new GUIScrollView(this, 0, 0, 0.98, 1);
-        scrollView.setSubElementAutoplaceMethod(AP_CENTER_V_CENTER_H);
+        scrollView.setSubElementAutoplaceMethod(AP_CENTERED_H_TOP_TO_BOTTOM);
         guiElements.add(scrollView);
         guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
     }
