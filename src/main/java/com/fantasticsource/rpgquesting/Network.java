@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -347,18 +346,7 @@ public class Network
         public IMessage onMessage(RequestJournalDataPacket packet, MessageContext ctx)
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            server.addScheduledTask(() ->
-            {
-                EntityPlayerMP player = ctx.getServerHandler().player;
-                if (player.interactionManager.getGameType() == GameType.CREATIVE)
-                {
-                    //TODO
-                }
-                else
-                {
-                    WRAPPER.sendTo(new ObfJournalPacket(CQuests.playerQuestData.get(player.getPersistentID())), player);
-                }
-            });
+            server.addScheduledTask(() -> CQuests.syncJournal(ctx.getServerHandler().player));
             return null;
         }
     }

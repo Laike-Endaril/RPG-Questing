@@ -8,6 +8,7 @@ import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.GameType;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -126,6 +127,18 @@ public class CQuests extends Component
         {
             if (group.size() == 0) data.inProgressQuests.remove(quest.group.value);
             data.saveAndSync();
+        }
+    }
+
+    public static void syncJournal(EntityPlayerMP player)
+    {
+        if (player.interactionManager.getGameType() == GameType.CREATIVE)
+        {
+            //TODO
+        }
+        else
+        {
+            Network.WRAPPER.sendTo(new Network.ObfJournalPacket(CQuests.playerQuestData.get(player.getPersistentID())), player);
         }
     }
 
