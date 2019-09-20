@@ -31,8 +31,9 @@ public class CPlayerQuestData extends Component
         this.player = player;
     }
 
-    public CPlayerQuestData save()
+    public CPlayerQuestData saveAndSync()
     {
+        //Save
         File file = RPGQuesting.playerDataFolder;
         if (!file.exists()) file.mkdir();
 
@@ -59,6 +60,7 @@ public class CPlayerQuestData extends Component
         file2.renameTo(file);
 
 
+        //Sync
         if (player.world.playerEntities.contains(player))
         {
             CQuests.track(player, trackedQuest.value);

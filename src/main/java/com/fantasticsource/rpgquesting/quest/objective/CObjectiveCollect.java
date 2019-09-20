@@ -68,7 +68,7 @@ public class CObjectiveCollect extends CObjective
             }
         }
 
-        if (changed) data.save();
+        if (changed) data.saveAndSync();
     }
 
     private boolean serverUpdate(EntityPlayerMP player)

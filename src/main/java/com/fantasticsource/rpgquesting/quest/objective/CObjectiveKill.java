@@ -75,7 +75,7 @@ public class CObjectiveKill extends CObjective
                             if (doit)
                             {
                                 objectiveKill.current.value++;
-                                data.save();
+                                data.saveAndSync();
                             }
                         }
                     }

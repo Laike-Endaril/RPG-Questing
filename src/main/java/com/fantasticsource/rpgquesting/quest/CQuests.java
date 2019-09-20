@@ -75,7 +75,7 @@ public class CQuests extends Component
             }
         }
 
-        data.save();
+        data.saveAndSync();
 
         track(player, name);
     }
@@ -109,16 +109,24 @@ public class CQuests extends Component
         Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, objectives), player);
     }
 
-    public static void abandon(EntityPlayerMP player, String name)
+    public static void abandon(EntityPlayerMP player, String questName)
     {
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return;
 
-        data.inProgressQuests.remove(name);
+        if (data.trackedQuest.value.equals(questName)) track(player, "");
 
-        data.save();
+        CQuest quest = get(questName);
+        if (quest == null) return;
 
-        if (data.trackedQuest.value.equals(name)) track(player, "");
+        LinkedHashMap<String, ArrayList<CObjective>> group = data.inProgressQuests.get(quest.group.value);
+        if (group == null) return;
+
+        if (group.remove(questName) != null)
+        {
+            if (group.size() == 0) data.inProgressQuests.remove(quest.group.value);
+            data.saveAndSync();
+        }
     }
 
     public static boolean complete(EntityPlayerMP player, String name)
@@ -146,7 +154,7 @@ public class CQuests extends Component
 
 
         if (data.trackedQuest.value.equals(name)) data.trackedQuest.set("");
-        data.save();
+        data.saveAndSync();
 
         return true;
     }
@@ -162,7 +170,7 @@ public class CQuests extends Component
     public static void unloadPlayerQuestData(EntityPlayerMP player)
     {
         CPlayerQuestData data = playerQuestData.remove(player.getPersistentID());
-        if (data != null) data.save();
+        if (data != null) data.saveAndSync();
     }
 
 
@@ -271,7 +279,7 @@ public class CQuests extends Component
     {
         playerQuestData.entrySet().removeIf(e ->
         {
-            e.getValue().save();
+            e.getValue().saveAndSync();
             return true;
         });
 
