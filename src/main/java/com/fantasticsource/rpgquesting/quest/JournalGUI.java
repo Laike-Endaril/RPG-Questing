@@ -179,13 +179,11 @@ public class JournalGUI extends GUIScreen
 
     public static void setViewedQuest(String questName)
     {
-        if (questName != null && !questName.equals("")) viewedQuest = questName;
-        updateQuestView();
-    }
+        System.out.println(questName);
+        if (questName == null || questName.equals("")) return;
+        viewedQuest = questName;
 
-    public static void updateQuestView()
-    {
-        if (data == null || viewedQuest == null || viewedQuest.equals("")) return;
+        if (data == null) return;
 
 
         //Search in-progress quests
@@ -339,6 +337,37 @@ public class JournalGUI extends GUIScreen
 
             questName = completedQuestToString.get(text);
             if (questName != null) setViewedQuest(questName);
+        }
+        else if (cls == GUITextSpoiler.class)
+        {
+            if (inProgress.indexOf(element) != -1 || completed.indexOf(element) != -1)
+            {
+                GUITextSpoiler spoiler = (GUITextSpoiler) element;
+
+                String group = inProgressGroupToString.get(spoiler);
+                if (group != null)
+                {
+                    LinkedHashMap<String, ArrayList<CObjective>> quests = data.inProgressQuests.get(group);
+                    if (quests != null && quests.size() > 0)
+                    {
+                        setViewedQuest(quests.keySet().toArray(new String[0])[0]);
+                        event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
+                    }
+                }
+                else
+                {
+                    group = completedGroupToString.get(spoiler);
+                    if (group != null)
+                    {
+                        ArrayList<String> quests = data.completedQuests.get(group);
+                        if (quests != null && quests.size() > 0)
+                        {
+                            setViewedQuest(quests.get(0));
+                            event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
+                        }
+                    }
+                }
+            }
         }
     }
 

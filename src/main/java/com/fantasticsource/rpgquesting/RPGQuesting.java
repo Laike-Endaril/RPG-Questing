@@ -79,6 +79,7 @@ public class RPGQuesting
             addedNewStuff = true;
 //            Temp.addKillQuest(false);
 //            Temp.addCollectionQuest(true);
+//            Temp.addCollectionQuest2(false);
         }
     }
 
