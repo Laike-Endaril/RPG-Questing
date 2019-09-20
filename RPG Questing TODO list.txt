@@ -2,15 +2,15 @@
 
 
 
-Test repeatable quests
-
-
-
 Quest Editor
 
 
 
 Dialogue Editor
+
+
+
+Improve kill crediting for kill objectives
 
 
 
@@ -49,3 +49,8 @@ Objectives types
 
 
 Dynamic objectives (eg. start out hidden)
+
+
+
+Configs for...
+...kill objective credit cylinder (radius, height)
