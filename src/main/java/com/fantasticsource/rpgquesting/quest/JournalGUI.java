@@ -179,7 +179,6 @@ public class JournalGUI extends GUIScreen
 
     public static void setViewedQuest(String questName)
     {
-        System.out.println(questName);
         if (questName == null || questName.equals("")) return;
         viewedQuest = questName;
 
