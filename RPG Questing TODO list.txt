@@ -1,4 +1,3 @@
-"Start tracking" / "Stop tracking" button for in-progress questview
 "Abandon" button for in-progress questview
 
 
@@ -46,3 +45,7 @@ Quest attributes
 
 Objectives types
 * Survive
+
+
+
+Dynamic objectives (eg. start out hidden)
