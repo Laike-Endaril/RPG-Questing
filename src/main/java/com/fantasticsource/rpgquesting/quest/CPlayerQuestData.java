@@ -33,6 +33,16 @@ public class CPlayerQuestData extends Component
 
     public CPlayerQuestData saveAndSync()
     {
+        //Clear tracked quest if invalid
+        CQuest q = CQuests.get(trackedQuest.value);
+        if (q == null) trackedQuest.set("");
+        else
+        {
+            LinkedHashMap<String, ArrayList<CObjective>> group = inProgressQuests.get(q.group.value);
+            if (group == null || group.get(trackedQuest.value) == null) trackedQuest.set("");
+        }
+
+
         //Save
         File file = RPGQuesting.playerDataFolder;
         if (!file.exists()) file.mkdir();

@@ -43,6 +43,7 @@ public class Network
         WRAPPER.registerMessage(ObfJournalPacketHandler.class, ObfJournalPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(QuestTrackerPacketHandler.class, QuestTrackerPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestTrackerChangePacketHandler.class, RequestTrackerChangePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(RequestAbandonQuestPacketHandler.class, RequestAbandonQuestPacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -440,15 +441,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(QuestTrackerPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() ->
-            {
-                String name = packet.questName.value;
-                if (name != null && !name.equals(""))
-                {
-                    QuestTracker.startTracking(packet.questName.value, packet.objectives);
-                }
-                else QuestTracker.stopTracking();
-            });
+            Minecraft.getMinecraft().addScheduledTask(() -> QuestTracker.startTracking(packet.questName.value, packet.objectives));
             return null;
         }
     }
@@ -488,6 +481,45 @@ public class Network
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
             server.addScheduledTask(() -> CQuests.track(ctx.getServerHandler().player, packet.questName));
+            return null;
+        }
+    }
+
+
+    public static class RequestAbandonQuestPacket implements IMessage
+    {
+        String questName;
+
+        public RequestAbandonQuestPacket()
+        {
+            //Required
+        }
+
+        public RequestAbandonQuestPacket(String questName)
+        {
+            this.questName = questName;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, questName);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            questName = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class RequestAbandonQuestPacketHandler implements IMessageHandler<RequestAbandonQuestPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestAbandonQuestPacket packet, MessageContext ctx)
+        {
+            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+            server.addScheduledTask(() -> CQuests.abandon(ctx.getServerHandler().player, packet.questName));
             return null;
         }
     }

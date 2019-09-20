@@ -43,7 +43,7 @@ public class JournalGUI extends GUIScreen
     private static LinkedHashMap<GUITextSpoiler, String> inProgressGroupToString = new LinkedHashMap<>();
     private static LinkedHashMap<GUITextSpoiler, String> completedGroupToString = new LinkedHashMap<>();
 
-    private static String viewedQuest = null;
+    private static String viewedQuest = "";
 
     static
     {
@@ -179,10 +179,15 @@ public class JournalGUI extends GUIScreen
 
     public static void setViewedQuest(String questName)
     {
-        if (questName == null || questName.equals("")) return;
+        if (questName == null) questName = "";
         viewedQuest = questName;
 
         if (data == null) return;
+
+
+        //Collapse all groups
+        for (GUITextSpoiler group : completedGroupToString.keySet()) group.hide();
+        for (GUITextSpoiler group : inProgressGroupToString.keySet()) group.hide();
 
 
         //Search in-progress quests
@@ -225,24 +230,16 @@ public class JournalGUI extends GUIScreen
                 //Set navigator focus
                 navigator.setActiveTab(0);
 
-                for (GUITextSpoiler group : completedGroupToString.keySet())
-                {
-                    group.hide();
-                }
-
                 GUIText questElement = inProgressStringToQuest.get(viewedQuest);
-                GUITextSpoiler selectedGroup = null;
                 for (GUITextSpoiler group : inProgressGroupToString.keySet())
                 {
                     if (group.indexOf(questElement) != -1)
                     {
-                        selectedGroup = group;
                         group.show();
+                        inProgress.focus(group);
+                        break;
                     }
-                    else group.hide();
                 }
-
-                inProgress.focus(selectedGroup);
 
                 return;
             }
@@ -267,24 +264,16 @@ public class JournalGUI extends GUIScreen
                 //Set navigator focus
                 navigator.setActiveTab(1);
 
-                for (GUITextSpoiler group : inProgressGroupToString.keySet())
-                {
-                    group.hide();
-                }
-
                 GUIText questElement = completedStringToQuest.get(viewedQuest);
-                GUITextSpoiler selectedGroup = null;
                 for (GUITextSpoiler group : completedGroupToString.keySet())
                 {
                     if (group.indexOf(questElement) != -1)
                     {
-                        selectedGroup = group;
                         group.show();
+                        completed.focus(group);
+                        break;
                     }
-                    else group.hide();
                 }
-
-                completed.focus(selectedGroup);
 
                 return;
             }
@@ -312,7 +301,7 @@ public class JournalGUI extends GUIScreen
                     break;
 
                 case "Abandon":
-                    //TODO make new abandon quest request packet
+                    Network.WRAPPER.sendToServer(new Network.RequestAbandonQuestPacket(viewedQuest));
                     break;
             }
         }
