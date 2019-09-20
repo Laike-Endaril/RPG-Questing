@@ -10,7 +10,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
-import com.fantasticsource.rpgquesting.Network.ObfJournalPacket;
+import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -55,13 +55,14 @@ public class JournalGUI extends GUIScreen
     {
     }
 
-    public static void show(ObfJournalPacket packet)
+    public static void show(CPlayerQuestData dataIn, String trackedQuest)
     {
+        if (dataIn != null) data = dataIn;
+        if (data == null) return;
+
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         editable = false;
-
-        data = packet.data;
 
         LinkedHashMap<String, Boolean> knownQuestGroupCompletion = new LinkedHashMap<>();
 
@@ -150,7 +151,7 @@ public class JournalGUI extends GUIScreen
 
 
         //Currently selected quest
-        setViewedQuest(packet.selectedQuest.value);
+        setViewedQuest(trackedQuest);
     }
 
     public static void clear()
@@ -184,7 +185,7 @@ public class JournalGUI extends GUIScreen
 
     public static void updateQuestView()
     {
-        if (data == null) return;
+        if (data == null || viewedQuest == null || viewedQuest.equals("")) return;
 
 
         //Search in-progress quests
@@ -303,14 +304,14 @@ public class JournalGUI extends GUIScreen
         Class cls = element.getClass();
         if (cls == GUITextButton.class)
         {
-            switch (cls.toString())
+            switch (element.toString())
             {
                 case "Start Tracking":
-                    //TODO make new tracker change request packet
+                    Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(viewedQuest));
                     break;
 
                 case "Stop Tracking":
-                    //TODO make new tracker change request packet
+                    Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(""));
                     break;
 
                 case "Abandon":

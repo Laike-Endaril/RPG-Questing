@@ -43,6 +43,7 @@ public class Network
         WRAPPER.registerMessage(RequestJournalDataPacketHandler.class, RequestJournalDataPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(ObfJournalPacketHandler.class, ObfJournalPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(QuestTrackerPacketHandler.class, QuestTrackerPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(RequestTrackerChangePacketHandler.class, RequestTrackerChangePacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -405,7 +406,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(ObfJournalPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> JournalGUI.show(packet));
+            Minecraft.getMinecraft().addScheduledTask(() -> JournalGUI.show(packet.data, packet.selectedQuest.value));
             return null;
         }
     }
@@ -457,10 +458,48 @@ public class Network
                 if (name != null && !name.equals(""))
                 {
                     QuestTracker.startTracking(packet.questName.value, packet.objectives);
-                    JournalGUI.setViewedQuest(packet.questName.value);
                 }
                 else QuestTracker.stopTracking();
             });
+            return null;
+        }
+    }
+
+
+    public static class RequestTrackerChangePacket implements IMessage
+    {
+        String questName;
+
+        public RequestTrackerChangePacket()
+        {
+            //Required
+        }
+
+        public RequestTrackerChangePacket(String questName)
+        {
+            this.questName = questName;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, questName);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            questName = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class RequestTrackerChangePacketHandler implements IMessageHandler<RequestTrackerChangePacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestTrackerChangePacket packet, MessageContext ctx)
+        {
+            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+            server.addScheduledTask(() -> CQuests.track(ctx.getServerHandler().player, packet.questName));
             return null;
         }
     }

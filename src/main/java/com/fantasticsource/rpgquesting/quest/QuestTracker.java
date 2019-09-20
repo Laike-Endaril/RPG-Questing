@@ -28,14 +28,16 @@ public class QuestTracker
 
     public static void stopTracking()
     {
-        questname = "";
-        objectives.clear();
+        startTracking("", new ArrayList<>());
     }
 
     public static void startTracking(String questName, ArrayList<CObjective> objectives)
     {
         QuestTracker.questname = questName;
         QuestTracker.objectives = objectives;
+
+        JournalGUI.setViewedQuest(questName);
+        if (JournalGUI.GUI.isVisible()) JournalGUI.show(null, questName);
     }
 
     @SubscribeEvent
