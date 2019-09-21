@@ -1,7 +1,3 @@
-Fix (start / stop tracking) button
-
-Set viewed quest to tracked quest if there is no viewed quest
-
 Add (Go To Tracked Quest) button in top of in-progress navigator, if a quest is tracked
 
 

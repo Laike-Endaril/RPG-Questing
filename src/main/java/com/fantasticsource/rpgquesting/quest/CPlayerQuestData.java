@@ -73,7 +73,7 @@ public class CPlayerQuestData extends Component
         //Sync
         if (player.world.playerEntities.contains(player))
         {
-            CQuests.syncJournal(player, false);
+            CQuests.syncJournal(player, "", false);
             CQuests.syncTracker(player);
         }
 

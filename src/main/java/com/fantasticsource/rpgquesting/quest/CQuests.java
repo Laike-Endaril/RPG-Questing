@@ -8,7 +8,6 @@ import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.GameType;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -116,16 +115,12 @@ public class CQuests extends Component
         }
     }
 
-    public static void syncJournal(EntityPlayerMP player, boolean openJournal)
+    public static void syncJournal(EntityPlayerMP player, String questToView, boolean openJournal)
     {
-        if (player.interactionManager.getGameType() == GameType.CREATIVE)
-        {
-            //TODO
-        }
-        else
-        {
-            Network.WRAPPER.sendTo(new Network.ObfJournalPacket(CQuests.playerQuestData.get(player.getPersistentID()), openJournal), player);
-        }
+        //For quest to view, an empty or null string leaves it on whatever is already viewed (or sets it to the tracked quest if none is viewed and a quest is currently tracked)
+        //To explicitly set it to the tracked quest, well...send the tracked quest name
+
+        Network.WRAPPER.sendTo(new Network.JournalPacket(CQuests.playerQuestData.get(player.getPersistentID()), questToView, openJournal), player);
     }
 
     public static void syncTracker(EntityPlayerMP player)

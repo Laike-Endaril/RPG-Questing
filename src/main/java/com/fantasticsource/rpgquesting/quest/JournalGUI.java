@@ -32,18 +32,15 @@ public class JournalGUI extends GUIScreen
     public static JournalGUI GUI;
     public static boolean editable = false;
     public static CPlayerQuestData data;
+    public static String viewedQuest = "";
     private static GUITabView navigator;
     private static GUIScrollView inProgress, completed, questView;
-
     private static LinkedHashMap<GUIText, String> inProgressQuestToString = new LinkedHashMap<>();
     private static LinkedHashMap<GUIText, String> completedQuestToString = new LinkedHashMap<>();
     private static LinkedHashMap<String, GUIText> inProgressStringToQuest = new LinkedHashMap<>();
     private static LinkedHashMap<String, GUIText> completedStringToQuest = new LinkedHashMap<>();
-
     private static LinkedHashMap<GUITextSpoiler, String> inProgressGroupToString = new LinkedHashMap<>();
     private static LinkedHashMap<GUITextSpoiler, String> completedGroupToString = new LinkedHashMap<>();
-
-    public static String viewedQuest = "";
 
     static
     {
@@ -55,7 +52,7 @@ public class JournalGUI extends GUIScreen
     {
     }
 
-    public static void show(CPlayerQuestData dataIn, String trackedQuest)
+    public static void show(CPlayerQuestData dataIn, String questToView)
     {
         if (dataIn != null) data = dataIn;
         if (data == null) return;
@@ -151,7 +148,8 @@ public class JournalGUI extends GUIScreen
 
 
         //Currently selected quest
-        setQuestView(trackedQuest);
+        if (questToView.equals("")) questToView = QuestTracker.questname;
+        setQuestView(questToView);
     }
 
     public static void clear()

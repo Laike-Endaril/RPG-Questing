@@ -40,7 +40,7 @@ public class Network
         WRAPPER.registerMessage(MakeChoicePacketHandler.class, MakeChoicePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(ActionErrorPacketHandler.class, ActionErrorPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestJournalDataPacketHandler.class, RequestJournalDataPacket.class, discriminator++, Side.SERVER);
-        WRAPPER.registerMessage(ObfJournalPacketHandler.class, ObfJournalPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(JournalPacketHandler.class, JournalPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(QuestTrackerPacketHandler.class, QuestTrackerPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestTrackerChangePacketHandler.class, RequestTrackerChangePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestAbandonQuestPacketHandler.class, RequestAbandonQuestPacket.class, discriminator++, Side.SERVER);
@@ -347,32 +347,27 @@ public class Network
         public IMessage onMessage(RequestJournalDataPacket packet, MessageContext ctx)
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            server.addScheduledTask(() -> CQuests.syncJournal(ctx.getServerHandler().player, true));
+            server.addScheduledTask(() -> CQuests.syncJournal(ctx.getServerHandler().player, "", true));
             return null;
         }
     }
 
 
-    public static class ObfJournalPacket implements IMessage
+    public static class JournalPacket implements IMessage
     {
         public CPlayerQuestData data = new CPlayerQuestData();
-        public CStringUTF8 selectedQuest = new CStringUTF8().set("");
+        public String questToView = null;
         public boolean openJournal = false;
 
-        public ObfJournalPacket()
+        public JournalPacket()
         {
             //Required
         }
 
-        public ObfJournalPacket(CPlayerQuestData playerQuestData, boolean openJournal)
-        {
-            this(playerQuestData, "", openJournal);
-        }
-
-        public ObfJournalPacket(CPlayerQuestData playerQuestData, String selectedQuest, boolean openJournal)
+        public JournalPacket(CPlayerQuestData playerQuestData, String questToView, boolean openJournal)
         {
             if (playerQuestData != null) data = playerQuestData;
-            this.selectedQuest.set(selectedQuest);
+            this.questToView = questToView == null ? "" : questToView;
             this.openJournal = openJournal;
         }
 
@@ -380,7 +375,7 @@ public class Network
         public void toBytes(ByteBuf buf)
         {
             data.write(buf);
-            selectedQuest.write(buf);
+            ByteBufUtils.writeUTF8String(buf, questToView);
             buf.writeBoolean(openJournal);
         }
 
@@ -388,22 +383,24 @@ public class Network
         public void fromBytes(ByteBuf buf)
         {
             data.read(buf);
-            selectedQuest.read(buf);
+            questToView = ByteBufUtils.readUTF8String(buf);
             openJournal = buf.readBoolean();
         }
     }
 
-    public static class ObfJournalPacketHandler implements IMessageHandler<ObfJournalPacket, IMessage>
+    public static class JournalPacketHandler implements IMessageHandler<JournalPacket, IMessage>
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(ObfJournalPacket packet, MessageContext ctx)
+        public IMessage onMessage(JournalPacket packet, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
                 if (packet.openJournal || JournalGUI.GUI.isVisible())
                 {
-                    JournalGUI.show(packet.data, packet.selectedQuest.value);
+                    String quest = packet.questToView;
+                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest);
+                    else JournalGUI.show(packet.data, quest);
                 }
             });
             return null;
@@ -489,8 +486,7 @@ public class Network
         @Override
         public IMessage onMessage(RequestTrackerChangePacket packet, MessageContext ctx)
         {
-            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            server.addScheduledTask(() -> CQuests.track(ctx.getServerHandler().player, packet.questName));
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> CQuests.track(ctx.getServerHandler().player, packet.questName));
             return null;
         }
     }
