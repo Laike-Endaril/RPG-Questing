@@ -36,7 +36,7 @@ public class QuestTracker
         QuestTracker.questname = questName;
         QuestTracker.objectives = objectives;
 
-        JournalGUI.setViewedQuest(questName);
+        JournalGUI.setQuestView(questName);
         if (JournalGUI.GUI.isVisible()) JournalGUI.show(null, questName);
     }
 

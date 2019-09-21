@@ -151,7 +151,7 @@ public class JournalGUI extends GUIScreen
 
 
         //Currently selected quest
-        setViewedQuest(trackedQuest);
+        setQuestView(trackedQuest);
     }
 
     public static void clear()
@@ -177,7 +177,7 @@ public class JournalGUI extends GUIScreen
         questView.clear();
     }
 
-    public static void setViewedQuest(String questName)
+    public static void setQuestView(String questName)
     {
         if (questName == null) questName = "";
         viewedQuest = questName;
@@ -312,47 +312,49 @@ public class JournalGUI extends GUIScreen
             int index = questView.indexOf(text);
             if (index != -1)
             {
-                if (index == 1) setViewedQuest(viewedQuest);
+                if (index == 1) setQuestView(viewedQuest);
                 return;
             }
 
             String questName = inProgressQuestToString.get(text);
             if (questName != null)
             {
-                setViewedQuest(questName);
+                setQuestView(questName);
                 return;
             }
 
             questName = completedQuestToString.get(text);
-            if (questName != null) setViewedQuest(questName);
+            if (questName != null) setQuestView(questName);
         }
         else if (cls == GUITextSpoiler.class)
         {
             if (inProgress.indexOf(element) != -1 || completed.indexOf(element) != -1)
             {
-                GUITextSpoiler spoiler = (GUITextSpoiler) element;
+                GUITextSpoiler group = (GUITextSpoiler) element;
 
-                String group = inProgressGroupToString.get(spoiler);
-                if (group != null)
+                String groupName = inProgressGroupToString.get(group);
+                if (groupName != null)
                 {
-                    LinkedHashMap<String, ArrayList<CObjective>> quests = data.inProgressQuests.get(group);
-                    if (quests != null && quests.size() > 0)
+                    for (GUITextSpoiler spoiler : inProgressGroupToString.keySet())
                     {
-                        setViewedQuest(quests.keySet().toArray(new String[0])[0]);
-                        event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
+                        if (spoiler != group) spoiler.hide();
                     }
+                    group.toggle();
+                    inProgress.focus(group);
+                    event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
                 }
                 else
                 {
-                    group = completedGroupToString.get(spoiler);
-                    if (group != null)
+                    groupName = completedGroupToString.get(group);
+                    if (groupName != null)
                     {
-                        ArrayList<String> quests = data.completedQuests.get(group);
-                        if (quests != null && quests.size() > 0)
+                        for (GUITextSpoiler spoiler : inProgressGroupToString.keySet())
                         {
-                            setViewedQuest(quests.get(0));
-                            event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
+                            if (spoiler != group) spoiler.hide();
                         }
+                        group.toggle();
+                        completed.focus(group);
+                        event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
                     }
                 }
             }
