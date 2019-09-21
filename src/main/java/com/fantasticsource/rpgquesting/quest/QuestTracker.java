@@ -33,6 +33,8 @@ public class QuestTracker
 
     public static void startTracking(String questName, ArrayList<CObjective> objectives)
     {
+        boolean changed = !questName.equals(QuestTracker.questname);
+
         QuestTracker.questname = questName;
         QuestTracker.objectives = objectives;
 

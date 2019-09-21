@@ -84,30 +84,16 @@ public class CQuests extends Component
     public static void track(EntityPlayerMP player, String name)
     {
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
-
-
-        if (name == null || name.equals(""))
+        if (data != null)
+        {
+            data.trackedQuest.set(name);
+            data.saveAndSync();
+        }
+        else if (name == null || name.equals(""))
         {
             Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, new ArrayList<>()), player);
-            if (data != null) data.trackedQuest.set("");
             return;
         }
-
-
-        if (data == null) return;
-
-        CQuest quest = get(name);
-        if (quest == null) return;
-
-        LinkedHashMap<String, ArrayList<CObjective>> q = data.inProgressQuests.get(quest.group.value);
-        if (q == null) return;
-
-        ArrayList<CObjective> objectives = q.get(name);
-        if (objectives == null) return;
-
-
-        data.trackedQuest.set(name);
-        Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, objectives), player);
     }
 
     public static void abandon(EntityPlayerMP player, String questName)
@@ -140,6 +126,41 @@ public class CQuests extends Component
         {
             Network.WRAPPER.sendTo(new Network.ObfJournalPacket(CQuests.playerQuestData.get(player.getPersistentID())), player);
         }
+    }
+
+    public static void syncTracker(EntityPlayerMP player)
+    {
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
+        if (data == null)
+        {
+            Network.WRAPPER.sendTo(new Network.QuestTrackerPacket("", new ArrayList<>()), player);
+            return;
+        }
+
+
+        String name = data.trackedQuest.value;
+        CQuest quest = get(name);
+        if (quest == null)
+        {
+            Network.WRAPPER.sendTo(new Network.QuestTrackerPacket("", new ArrayList<>()), player);
+            return;
+        }
+
+        LinkedHashMap<String, ArrayList<CObjective>> group = data.inProgressQuests.get(quest.group.value);
+        if (group == null)
+        {
+            Network.WRAPPER.sendTo(new Network.QuestTrackerPacket("", new ArrayList<>()), player);
+            return;
+        }
+
+        ArrayList<CObjective> objectives = group.get(name);
+        if (objectives == null)
+        {
+            Network.WRAPPER.sendTo(new Network.QuestTrackerPacket("", new ArrayList<>()), player);
+            return;
+        }
+
+        Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, objectives), player);
     }
 
     public static boolean complete(EntityPlayerMP player, String name)

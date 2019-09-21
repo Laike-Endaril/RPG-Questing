@@ -179,15 +179,17 @@ public class JournalGUI extends GUIScreen
 
     public static void setQuestView(String questName)
     {
-        if (questName == null) questName = "";
         viewedQuest = questName;
+        if (viewedQuest == null) viewedQuest = "";
+
+
+        if (questView == null) return;
+
+
+        questView.clear();
+
 
         if (data == null) return;
-
-
-        //Collapse all groups
-        for (GUITextSpoiler group : completedGroupToString.keySet()) group.hide();
-        for (GUITextSpoiler group : inProgressGroupToString.keySet()) group.hide();
 
 
         //Search in-progress quests
@@ -196,8 +198,10 @@ public class JournalGUI extends GUIScreen
             ArrayList<CObjective> objectives = entry.getValue().get(viewedQuest);
             if (objectives != null)
             {
-                questView.clear();
+                //Quest found
 
+
+                //Find color
                 boolean done = true, started = false;
                 for (CObjective objective : objectives)
                 {
@@ -205,12 +209,16 @@ public class JournalGUI extends GUIScreen
                     if (objective.isStarted()) started = true;
                     if (started && !done) break;
                 }
-
                 Color[] c = done ? GREEN : started ? YELLOW : RED;
+
+
+                //Add quest name
                 questView.add(new GUIText(GUI, "\n"));
                 questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]));
                 questView.add(new GUIText(GUI, "\n\n"));
 
+
+                //Add objectives
                 for (CObjective objective : objectives)
                 {
                     c = objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED;
@@ -219,27 +227,13 @@ public class JournalGUI extends GUIScreen
                 }
 
 
-                //Active quest buttons
+                //Add quest buttons
                 questView.add(new GUIText(GUI, "\n\n\n"));
                 questView.add(new GUITextButton(GUI, viewedQuest.equals(QuestTracker.questname) ? "Stop Tracking" : "Start Tracking"));
                 questView.add(new GUIText(GUI, "\n"));
                 questView.add(new GUITextButton(GUI, "Abandon"));
                 questView.add(new GUIText(GUI, "\n"));
 
-
-                //Set navigator focus
-                navigator.setActiveTab(0);
-
-                GUIText questElement = inProgressStringToQuest.get(viewedQuest);
-                for (GUITextSpoiler group : inProgressGroupToString.keySet())
-                {
-                    if (group.indexOf(questElement) != -1)
-                    {
-                        group.show();
-                        inProgress.focus(group);
-                        break;
-                    }
-                }
 
                 return;
             }
@@ -251,29 +245,23 @@ public class JournalGUI extends GUIScreen
         {
             if (entry.getValue().contains(viewedQuest))
             {
-                questView.clear();
+                //Quest found
 
+
+                //Set color
                 Color[] c = BLUE;
+
+
+                //Add quest name
+                questView.add(new GUIText(GUI, "\n"));
                 questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]));
                 questView.add(new GUIText(GUI, "\n\n"));
 
+
+                //Add completion note
                 questView.add(new GUIText(GUI, "Quest Completed!", BLUE[0]));
                 questView.add(new GUIText(GUI, "\n"));
 
-
-                //Set navigator focus
-                navigator.setActiveTab(1);
-
-                GUIText questElement = completedStringToQuest.get(viewedQuest);
-                for (GUITextSpoiler group : completedGroupToString.keySet())
-                {
-                    if (group.indexOf(questElement) != -1)
-                    {
-                        group.show();
-                        completed.focus(group);
-                        break;
-                    }
-                }
 
                 return;
             }
@@ -312,18 +300,37 @@ public class JournalGUI extends GUIScreen
             int index = questView.indexOf(text);
             if (index != -1)
             {
-                if (index == 1) setQuestView(viewedQuest);
+                if (index == 1)
+                {
+                    GUIText quest = inProgressStringToQuest.get(viewedQuest);
+                    if (quest != null)
+                    {
+                        for (GUITextSpoiler group : inProgressGroupToString.keySet())
+                        {
+                            if (group.indexOf(quest) != -1) group.show();
+                            else group.hide();
+                        }
+                        inProgress.focus(quest);
+                        navigator.setActiveTab(0);
+                    }
+
+                    quest = completedStringToQuest.get(viewedQuest);
+                    if (quest != null)
+                    {
+                        for (GUITextSpoiler group : completedGroupToString.keySet())
+                        {
+                            if (group.indexOf(quest) != -1) group.show();
+                            else group.hide();
+                        }
+                        completed.focus(quest);
+                        navigator.setActiveTab(1);
+                    }
+                }
                 return;
             }
 
             String questName = inProgressQuestToString.get(text);
-            if (questName != null)
-            {
-                setQuestView(questName);
-                return;
-            }
-
-            questName = completedQuestToString.get(text);
+            if (questName == null) questName = completedQuestToString.get(text);
             if (questName != null) setQuestView(questName);
         }
         else if (cls == GUITextSpoiler.class)
