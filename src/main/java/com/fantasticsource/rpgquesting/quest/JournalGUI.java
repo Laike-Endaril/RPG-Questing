@@ -27,7 +27,8 @@ public class JournalGUI extends GUIScreen
             RED = new Color[]{Color.RED.copy().setVF(0.5f), Color.RED.copy().setVF(0.75f), Color.WHITE},
             YELLOW = new Color[]{Color.YELLOW.copy().setVF(0.5f), Color.YELLOW.copy().setVF(0.75f), Color.WHITE},
             GREEN = new Color[]{Color.GREEN.copy().setVF(0.5f), Color.GREEN.copy().setVF(0.75f), Color.WHITE},
-            BLUE = new Color[]{Color.BLUE.copy().setVF(0.5f), Color.BLUE.copy().setVF(0.75f), Color.WHITE};
+            BLUE = new Color[]{Color.BLUE.copy().setVF(0.5f), Color.BLUE.copy().setVF(0.75f), Color.WHITE},
+            PURPLE = new Color[]{Color.PURPLE.copy().setVF(0.5f), Color.PURPLE.copy().setVF(0.75f), Color.WHITE};
 
     public static JournalGUI GUI;
     public static boolean editable = false;
@@ -41,6 +42,7 @@ public class JournalGUI extends GUIScreen
     private static LinkedHashMap<String, GUIText> completedStringToQuest = new LinkedHashMap<>();
     private static LinkedHashMap<GUITextSpoiler, String> inProgressGroupToString = new LinkedHashMap<>();
     private static LinkedHashMap<GUITextSpoiler, String> completedGroupToString = new LinkedHashMap<>();
+    private static GUIText viewTracked = null;
 
     static
     {
@@ -71,6 +73,16 @@ public class JournalGUI extends GUIScreen
         inProgressStringToQuest.clear();
 
         inProgress.add(new GUIText(GUI, "\n"));
+
+        //"Go to tracked quest" button, if there is a tracked quest
+        if (QuestTracker.questname.equals("")) viewTracked = null;
+        else
+        {
+            viewTracked = new GUIText(GUI, " (View Tracked Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
+            inProgress.add(viewTracked);
+            inProgress.add(new GUIText(GUI, "\n"));
+        }
+
         for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry2 : data.inProgressQuests.entrySet())
         {
             boolean groupDone = true;
@@ -324,12 +336,19 @@ public class JournalGUI extends GUIScreen
                         navigator.setActiveTab(1);
                     }
                 }
-                return;
             }
+            else
+            {
+                String questName;
+                if (element == viewTracked) questName = QuestTracker.questname;
+                else
+                {
+                    questName = inProgressQuestToString.get(text);
+                    if (questName == null) questName = completedQuestToString.get(text);
+                }
 
-            String questName = inProgressQuestToString.get(text);
-            if (questName == null) questName = completedQuestToString.get(text);
-            if (questName != null) setQuestView(questName);
+                if (questName != null) setQuestView(questName);
+            }
         }
         else if (cls == GUITextSpoiler.class)
         {
