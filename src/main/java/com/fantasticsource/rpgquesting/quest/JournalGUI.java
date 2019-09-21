@@ -108,7 +108,7 @@ public class JournalGUI extends GUIScreen
             groupSpoiler.setColor(c[0], c[1], c[2]);
 
             groupSpoiler.add(0, new GUIText(GUI, "\n==============================================================================================", c[0]));
-            groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n", c[0]));
+            groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n\n", c[0]));
 
             inProgress.add(new GUIText(GUI, "\n"));
         }
@@ -143,7 +143,7 @@ public class JournalGUI extends GUIScreen
             }
 
             groupSpoiler.add(0, new GUIText(GUI, "\n==============================================================================================", c[0]));
-            groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n", c[0]));
+            groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n\n", c[0]));
 
             completed.add(new GUIText(GUI, "\n"));
         }
