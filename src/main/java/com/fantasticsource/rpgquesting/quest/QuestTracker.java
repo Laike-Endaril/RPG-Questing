@@ -33,13 +33,10 @@ public class QuestTracker
 
     public static void startTracking(String questName, ArrayList<CObjective> objectives)
     {
-        boolean changed = !questName.equals(QuestTracker.questname);
-
         QuestTracker.questname = questName;
         QuestTracker.objectives = objectives;
 
-        JournalGUI.setQuestView(questName);
-        if (JournalGUI.GUI.isVisible()) JournalGUI.show(null, questName);
+        JournalGUI.setQuestView(JournalGUI.viewedQuest);
     }
 
     @SubscribeEvent

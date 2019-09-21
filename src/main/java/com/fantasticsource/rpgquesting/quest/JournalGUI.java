@@ -43,7 +43,7 @@ public class JournalGUI extends GUIScreen
     private static LinkedHashMap<GUITextSpoiler, String> inProgressGroupToString = new LinkedHashMap<>();
     private static LinkedHashMap<GUITextSpoiler, String> completedGroupToString = new LinkedHashMap<>();
 
-    private static String viewedQuest = "";
+    public static String viewedQuest = "";
 
     static
     {

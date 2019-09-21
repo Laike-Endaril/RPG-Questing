@@ -347,7 +347,7 @@ public class Network
         public IMessage onMessage(RequestJournalDataPacket packet, MessageContext ctx)
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            server.addScheduledTask(() -> CQuests.syncJournal(ctx.getServerHandler().player));
+            server.addScheduledTask(() -> CQuests.syncJournal(ctx.getServerHandler().player, true));
             return null;
         }
     }
@@ -357,21 +357,23 @@ public class Network
     {
         public CPlayerQuestData data = new CPlayerQuestData();
         public CStringUTF8 selectedQuest = new CStringUTF8().set("");
+        public boolean openJournal = false;
 
         public ObfJournalPacket()
         {
             //Required
         }
 
-        public ObfJournalPacket(CPlayerQuestData playerQuestData)
+        public ObfJournalPacket(CPlayerQuestData playerQuestData, boolean openJournal)
         {
-            this(playerQuestData, "");
+            this(playerQuestData, "", openJournal);
         }
 
-        public ObfJournalPacket(CPlayerQuestData playerQuestData, String selectedQuest)
+        public ObfJournalPacket(CPlayerQuestData playerQuestData, String selectedQuest, boolean openJournal)
         {
             if (playerQuestData != null) data = playerQuestData;
             this.selectedQuest.set(selectedQuest);
+            this.openJournal = openJournal;
         }
 
         @Override
@@ -379,6 +381,7 @@ public class Network
         {
             data.write(buf);
             selectedQuest.write(buf);
+            buf.writeBoolean(openJournal);
         }
 
         @Override
@@ -386,6 +389,7 @@ public class Network
         {
             data.read(buf);
             selectedQuest.read(buf);
+            openJournal = buf.readBoolean();
         }
     }
 
@@ -395,7 +399,13 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(ObfJournalPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> JournalGUI.show(packet.data, packet.selectedQuest.value));
+            Minecraft.getMinecraft().addScheduledTask(() ->
+            {
+                if (packet.openJournal || JournalGUI.GUI.isVisible())
+                {
+                    JournalGUI.show(packet.data, packet.selectedQuest.value);
+                }
+            });
             return null;
         }
     }

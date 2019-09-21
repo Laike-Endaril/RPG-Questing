@@ -116,7 +116,7 @@ public class CQuests extends Component
         }
     }
 
-    public static void syncJournal(EntityPlayerMP player)
+    public static void syncJournal(EntityPlayerMP player, boolean openJournal)
     {
         if (player.interactionManager.getGameType() == GameType.CREATIVE)
         {
@@ -124,7 +124,7 @@ public class CQuests extends Component
         }
         else
         {
-            Network.WRAPPER.sendTo(new Network.ObfJournalPacket(CQuests.playerQuestData.get(player.getPersistentID())), player);
+            Network.WRAPPER.sendTo(new Network.ObfJournalPacket(CQuests.playerQuestData.get(player.getPersistentID()), openJournal), player);
         }
     }
 
