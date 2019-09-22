@@ -69,7 +69,7 @@ public class Temp
     public static void addCollectionQuest(boolean repeatable)
     {
         String name = "The Wolves are Hungry";
-        CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("wolf")};
+        CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("wolf"), new CConditionNot(new CConditionNameIs("Chicken"))};
         ItemStack toCollect = new ItemStack(Items.CHICKEN, 5);
 
 
@@ -138,7 +138,7 @@ public class Temp
         dialogue.addPlayerConditions(new CConditionQuestAvailable(quest));
         dialogue.addEntityConditions(dialogueConditions);
 
-        CDialogueBranch branch = new CDialogueBranch("I say, now I say I am getting Kentucky FRIED out here, son!  You bring me a bathtub and I'll give you some prime feathers.");
+        CDialogueBranch branch = new CDialogueBranch("I say, now I say I am getting Kentucky FRIED out here, son!  You bring me a bathtub and I'll give you some priiiiime feathers.");
         dialogue.add(branch);
         branch.add(new CDialogueChoice("Alright.").setAction(new CActionArray(new CActionStartQuest(quest), new CActionEndDialogue())));
         branch.add(new CDialogueChoice("Not right now; I'm going swimming.").setAction(new CActionEndDialogue()));

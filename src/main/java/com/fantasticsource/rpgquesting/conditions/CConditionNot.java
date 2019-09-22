@@ -13,6 +13,15 @@ public class CConditionNot extends CCondition
 {
     public CCondition condition = null;
 
+    public CConditionNot()
+    {
+    }
+
+    public CConditionNot(CCondition notThis)
+    {
+        condition = notThis;
+    }
+
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
     {
