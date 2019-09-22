@@ -34,7 +34,7 @@ public class JournalGUI extends GUIScreen
     public static CPlayerQuestData data;
     public static String viewedQuest = "";
     private static GUITabView navigator;
-    private static GUIScrollView inProgress, completed, questView;
+    private static GUIScrollView inProgress, completed, all = null, questView;
     private static LinkedHashMap<GUIText, String> inProgressQuestToString = new LinkedHashMap<>();
     private static LinkedHashMap<GUIText, String> completedQuestToString = new LinkedHashMap<>();
     private static LinkedHashMap<String, GUIText> inProgressStringToQuest = new LinkedHashMap<>();
@@ -165,10 +165,17 @@ public class JournalGUI extends GUIScreen
         if (!editMode)
         {
             if (navigator.tabs.size() == 3) navigator.removeTab(2);
+            all = null;
         }
         else
         {
             if (navigator.tabs.size() == 2) navigator.addTab("All");
+
+            all = new GUIScrollView(GUI, 0.96, 1);
+            navigator.tabViews.get(2).add(all);
+            navigator.tabViews.get(2).add(new GUIVerticalScrollbar(GUI, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, all));
+
+            //TODO
         }
     }
 
@@ -193,6 +200,7 @@ public class JournalGUI extends GUIScreen
         completed.clear();
         questView.clear();
 
+        all = null;
         if (navigator.tabs.size() == 3) navigator.removeTab(2);
     }
 
