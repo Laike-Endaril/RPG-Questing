@@ -99,12 +99,14 @@ public class CQuest extends Component implements IObfuscatedComponent
     @Override
     public CQuest write(ByteBuf byteBuf)
     {
+        //TODO
         return this;
     }
 
     @Override
     public CQuest read(ByteBuf byteBuf)
     {
+        //TODO
         return this;
     }
 

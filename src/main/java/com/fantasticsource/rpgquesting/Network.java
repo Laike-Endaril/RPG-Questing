@@ -2,10 +2,7 @@ package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.*;
-import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
-import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.rpgquesting.quest.JournalGUI;
-import com.fantasticsource.rpgquesting.quest.QuestTracker;
+import com.fantasticsource.rpgquesting.quest.*;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
@@ -25,6 +22,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Network
 {
@@ -359,6 +358,7 @@ public class Network
         public String questToView = null;
         public boolean openJournal = false;
         public boolean editMode = false;
+        LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests = null;
 
         public JournalPacket()
         {
@@ -385,9 +385,24 @@ public class Network
             ByteBufUtils.writeUTF8String(buf, questToView);
             buf.writeBoolean(openJournal);
             buf.writeBoolean(editMode);
+
             if (editMode)
             {
-                //TODO
+                LinkedHashMap<String, LinkedHashMap<String, CQuest>> map = CQuests.QUESTS.worldQuestDataByGroup;
+
+                buf.writeInt(map.size());
+                for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : map.entrySet())
+                {
+                    ByteBufUtils.writeUTF8String(buf, entry.getKey());
+
+                    LinkedHashMap<String, CQuest> map2 = entry.getValue();
+                    buf.writeInt(map2.size());
+                    for (Map.Entry<String, CQuest> entry2 : map2.entrySet())
+                    {
+                        ByteBufUtils.writeUTF8String(buf, entry2.getKey());
+                        entry2.getValue().write(buf);
+                    }
+                }
             }
         }
 
@@ -398,9 +413,20 @@ public class Network
             questToView = ByteBufUtils.readUTF8String(buf);
             openJournal = buf.readBoolean();
             editMode = buf.readBoolean();
+
             if (editMode)
             {
-                //TODO
+                allQuests = new LinkedHashMap<>();
+                for (int i = buf.readInt(); i > 0; i--)
+                {
+                    LinkedHashMap<String, CQuest> map = new LinkedHashMap<>();
+                    allQuests.put(ByteBufUtils.readUTF8String(buf), map);
+
+                    for (int i2 = buf.readInt(); i2 > 0; i2--)
+                    {
+                        map.put(ByteBufUtils.readUTF8String(buf), new CQuest().read(buf));
+                    }
+                }
             }
         }
     }
@@ -416,8 +442,8 @@ public class Network
                 if (packet.openJournal || JournalGUI.GUI.isVisible())
                 {
                     String quest = packet.questToView;
-                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.editMode);
-                    else JournalGUI.show(packet.data, quest, packet.editMode);
+                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.allQuests);
+                    else JournalGUI.show(packet.data, quest, packet.allQuests);
                 }
             });
             return null;

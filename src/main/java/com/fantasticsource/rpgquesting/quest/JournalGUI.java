@@ -53,7 +53,7 @@ public class JournalGUI extends GUIScreen
     {
     }
 
-    public static void show(CPlayerQuestData dataIn, String questToView, boolean editMode)
+    public static void show(CPlayerQuestData dataIn, String questToView, LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests)
     {
         if (dataIn != null) data = dataIn;
         if (data == null) return;
@@ -162,7 +162,7 @@ public class JournalGUI extends GUIScreen
 
 
         //All quests (remove tab if not in edit mode; add tab and populate if in edit mode)
-        if (!editMode)
+        if (allQuests == null)
         {
             if (navigator.tabs.size() == 3) navigator.removeTab(2);
             all = null;
@@ -175,7 +175,7 @@ public class JournalGUI extends GUIScreen
             navigator.tabViews.get(2).add(all);
             navigator.tabViews.get(2).add(new GUIVerticalScrollbar(GUI, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, all));
 
-            //TODO
+            //TODO populate "all quests" nav view
         }
     }
 
