@@ -31,7 +31,6 @@ public class JournalGUI extends GUIScreen
             PURPLE = new Color[]{Color.PURPLE.copy().setVF(0.5f), Color.PURPLE.copy().setVF(0.75f), Color.WHITE};
 
     public static JournalGUI GUI;
-    public static boolean editable = false;
     public static CPlayerQuestData data;
     public static String viewedQuest = "";
     private static GUITabView navigator;
@@ -54,14 +53,12 @@ public class JournalGUI extends GUIScreen
     {
     }
 
-    public static void show(CPlayerQuestData dataIn, String questToView)
+    public static void show(CPlayerQuestData dataIn, String questToView, boolean editMode)
     {
         if (dataIn != null) data = dataIn;
         if (data == null) return;
 
         Minecraft.getMinecraft().displayGuiScreen(GUI);
-
-        editable = false;
 
         LinkedHashMap<String, Boolean> knownQuestGroupCompletion = new LinkedHashMap<>();
 
@@ -162,11 +159,21 @@ public class JournalGUI extends GUIScreen
         //Currently selected quest
         if (questToView.equals("")) questToView = QuestTracker.questname;
         setQuestView(questToView);
+
+
+        //All quests (remove tab if not in edit mode; add tab and populate if in edit mode)
+        if (!editMode)
+        {
+            if (navigator.tabs.size() == 3) navigator.removeTab(2);
+        }
+        else
+        {
+            if (navigator.tabs.size() == 2) navigator.addTab("All");
+        }
     }
 
     public static void clear()
     {
-        editable = false;
         data = null;
         viewedQuest = null;
 
@@ -185,6 +192,8 @@ public class JournalGUI extends GUIScreen
         inProgress.clear();
         completed.clear();
         questView.clear();
+
+        if (navigator.tabs.size() == 3) navigator.removeTab(2);
     }
 
     public static void setQuestView(String questName)
@@ -395,13 +404,13 @@ public class JournalGUI extends GUIScreen
 
 
         inProgress = new GUIScrollView(this, 0.96, 1);
-        navigator.tabViews[0].add(inProgress);
-        navigator.tabViews[0].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgress));
+        navigator.tabViews.get(0).add(inProgress);
+        navigator.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgress));
 
 
         completed = new GUIScrollView(this, 0.96, 1);
-        navigator.tabViews[1].add(completed);
-        navigator.tabViews[1].add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completed));
+        navigator.tabViews.get(1).add(completed);
+        navigator.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completed));
 
 
         questView = new GUIScrollView(this, 0.5, 0, 0.48, 1);

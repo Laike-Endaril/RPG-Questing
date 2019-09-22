@@ -358,6 +358,7 @@ public class Network
         public CPlayerQuestData data = new CPlayerQuestData();
         public String questToView = null;
         public boolean openJournal = false;
+        public boolean editMode = false;
 
         public JournalPacket()
         {
@@ -366,9 +367,15 @@ public class Network
 
         public JournalPacket(CPlayerQuestData playerQuestData, String questToView, boolean openJournal)
         {
+            this(playerQuestData, questToView, openJournal, false);
+        }
+
+        public JournalPacket(CPlayerQuestData playerQuestData, String questToView, boolean openJournal, boolean editMode)
+        {
             if (playerQuestData != null) data = playerQuestData;
             this.questToView = questToView == null ? "" : questToView;
             this.openJournal = openJournal;
+            this.editMode = editMode;
         }
 
         @Override
@@ -377,6 +384,11 @@ public class Network
             data.write(buf);
             ByteBufUtils.writeUTF8String(buf, questToView);
             buf.writeBoolean(openJournal);
+            buf.writeBoolean(editMode);
+            if (editMode)
+            {
+                //TODO
+            }
         }
 
         @Override
@@ -385,6 +397,11 @@ public class Network
             data.read(buf);
             questToView = ByteBufUtils.readUTF8String(buf);
             openJournal = buf.readBoolean();
+            editMode = buf.readBoolean();
+            if (editMode)
+            {
+                //TODO
+            }
         }
     }
 
@@ -399,8 +416,8 @@ public class Network
                 if (packet.openJournal || JournalGUI.GUI.isVisible())
                 {
                     String quest = packet.questToView;
-                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest);
-                    else JournalGUI.show(packet.data, quest);
+                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.editMode);
+                    else JournalGUI.show(packet.data, quest, packet.editMode);
                 }
             });
             return null;
