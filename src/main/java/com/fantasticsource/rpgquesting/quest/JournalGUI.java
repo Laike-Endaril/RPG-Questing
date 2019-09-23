@@ -369,6 +369,10 @@ public class JournalGUI extends GUIScreen
                 case "Abandon":
                     Network.WRAPPER.sendToServer(new Network.RequestAbandonQuestPacket(viewedQuest));
                     break;
+
+                case "Edit Quest":
+                    QuestEditorGUI.show(viewedEditable);
+                    break;
             }
         }
         else if (cls == GUIText.class)
