@@ -50,3 +50,7 @@ Dynamic objectives (eg. start out hidden)
 
 Configs for...
 ...kill objective credit cylinder (radius, height)
+
+
+
+Make edit-mode journal more efficient (don't send all quests upon opening journal)
