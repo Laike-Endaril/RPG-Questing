@@ -97,16 +97,44 @@ public class CQuest extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CQuest write(ByteBuf byteBuf)
+    public CQuest write(ByteBuf buf)
     {
-        //TODO
+        name.write(buf);
+        group.write(buf);
+        level.write(buf);
+        repeatable.write(buf);
+
+        new CInt().set(conditions.size()).write(buf);
+        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
+
+        new CInt().set(objectives.size()).write(buf);
+        for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+
+        experience.write(buf);
+        new CInt().set(rewards.size()).write(buf);
+        for (CItemStack reward : rewards) reward.write(buf);
+
         return this;
     }
 
     @Override
-    public CQuest read(ByteBuf byteBuf)
+    public CQuest read(ByteBuf buf)
     {
-        //TODO
+        name.read(buf);
+        group.read(buf);
+        level.read(buf);
+        repeatable.read(buf);
+
+        conditions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+
+        objectives.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) objectives.add((CObjective) Component.readMarked(buf));
+
+        experience.read(buf);
+        rewards.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) rewards.add(new CItemStack().read(buf));
+
         return this;
     }
 
