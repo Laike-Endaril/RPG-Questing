@@ -35,7 +35,7 @@ public class JournalGUI extends GUIScreen
     public static CPlayerQuestData data;
     public static String viewedQuest = "";
     private static GUITabView navigator;
-    private static GUIScrollView inProgress, completed, all = null, questView;
+    private static GUIScrollView inProgressTab, completedTab, allTab = null, questView;
     private static LinkedHashMap<GUIText, String> inProgressQuestElementToString = new LinkedHashMap<>();
     private static LinkedHashMap<GUIText, String> completedQuestElementToString = new LinkedHashMap<>();
     private static LinkedHashMap<String, GUIText> inProgressStringToQuestElement = new LinkedHashMap<>();
@@ -58,29 +58,31 @@ public class JournalGUI extends GUIScreen
 
     public static void show(CPlayerQuestData dataIn, String questToView, LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests)
     {
+        //Make sure GUI exists
+        Minecraft.getMinecraft().displayGuiScreen(GUI);
+
+
+        //Clear old data
+        clear();
+
+
+        //General pre-computation for new data
         if (dataIn != null) data = dataIn;
         if (data == null) return;
-
-        Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         LinkedHashMap<String, Boolean> knownQuestGroupCompletion = new LinkedHashMap<>();
 
 
         //Quests in progress
-        inProgress.clear();
-        inProgressGroupElementToString.clear();
-        inProgressQuestElementToString.clear();
-        inProgressStringToQuestElement.clear();
+        inProgressTab.add(new GUIText(GUI, "\n"));
 
-        inProgress.add(new GUIText(GUI, "\n"));
-
-        //"Go to tracked quest" button, if there is a tracked quest
+        //Add "Go to tracked quest" button, if there is a tracked quest
         if (QuestTracker.questname.equals("")) viewTracked = null;
         else
         {
             viewTracked = new GUIText(GUI, " (View Tracked Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
-            inProgress.add(viewTracked);
-            inProgress.add(new GUIText(GUI, "\n"));
+            inProgressTab.add(viewTracked);
+            inProgressTab.add(new GUIText(GUI, "\n"));
         }
 
         for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry2 : data.inProgressQuests.entrySet())
@@ -89,7 +91,7 @@ public class JournalGUI extends GUIScreen
 
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry2.getKey());
             inProgressGroupElementToString.put(groupSpoiler, entry2.getKey());
-            inProgress.add(groupSpoiler);
+            inProgressTab.add(groupSpoiler);
 
             for (Map.Entry<String, ArrayList<CObjective>> entry : entry2.getValue().entrySet())
             {
@@ -119,18 +121,13 @@ public class JournalGUI extends GUIScreen
             groupSpoiler.add(0, new GUIText(GUI, "\n==============================================================================================", c[0]));
             groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n\n", c[0]));
 
-            inProgress.add(new GUIText(GUI, "\n"));
+            inProgressTab.add(new GUIText(GUI, "\n"));
         }
-        if (inProgress.size() > 0) inProgress.remove(inProgress.size() - 1);
+        if (inProgressTab.size() > 0) inProgressTab.remove(inProgressTab.size() - 1);
 
 
         //Completed quests
-        completed.clear();
-        completedGroupElementToString.clear();
-        completedQuestElementToString.clear();
-        completedStringToQuestElement.clear();
-
-        completed.add(new GUIText(GUI, "\n"));
+        completedTab.add(new GUIText(GUI, "\n"));
         for (Map.Entry<String, ArrayList<String>> entry : data.completedQuests.entrySet())
         {
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
@@ -138,7 +135,7 @@ public class JournalGUI extends GUIScreen
 
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry.getKey(), c[0], c[1], c[2]);
             completedGroupElementToString.put(groupSpoiler, entry.getKey());
-            completed.add(groupSpoiler);
+            completedTab.add(groupSpoiler);
 
             for (String s : entry.getValue())
             {
@@ -154,9 +151,9 @@ public class JournalGUI extends GUIScreen
             groupSpoiler.add(0, new GUIText(GUI, "\n==============================================================================================", c[0]));
             groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n\n", c[0]));
 
-            completed.add(new GUIText(GUI, "\n"));
+            completedTab.add(new GUIText(GUI, "\n"));
         }
-        if (completed.size() > 0) completed.remove(completed.size() - 1);
+        if (completedTab.size() > 0) completedTab.remove(completedTab.size() - 1);
 
 
         //Currently selected quest
@@ -168,23 +165,20 @@ public class JournalGUI extends GUIScreen
         if (allQuests == null)
         {
             if (navigator.tabs.size() == 3) navigator.removeTab(2);
-            all = null;
-            allQuestElementToQuest.clear();
-            allGroupElements.clear();
         }
         else
         {
             if (navigator.tabs.size() == 2) navigator.addTab("All");
 
-            all = new GUIScrollView(GUI, 0.96, 1);
-            navigator.tabViews.get(2).add(all);
-            navigator.tabViews.get(2).add(new GUIVerticalScrollbar(GUI, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, all));
+            allTab = new GUIScrollView(GUI, 0.96, 1);
+            navigator.tabViews.get(2).add(allTab);
+            navigator.tabViews.get(2).add(new GUIVerticalScrollbar(GUI, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, allTab));
 
-            all.add(new GUIText(GUI, "\n"));
+            allTab.add(new GUIText(GUI, "\n"));
             for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
             {
                 GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
-                all.add(groupSpoiler);
+                allTab.add(groupSpoiler);
                 allGroupElements.add(groupSpoiler);
 
                 for (Map.Entry<String, CQuest> entry2 : entry.getValue().entrySet())
@@ -200,9 +194,9 @@ public class JournalGUI extends GUIScreen
                 groupSpoiler.add(0, new GUIText(GUI, "\n==============================================================================================", WHITE[0]));
                 groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n\n", WHITE[0]));
 
-                all.add(new GUIText(GUI, "\n"));
+                allTab.add(new GUIText(GUI, "\n"));
             }
-            if (all.size() > 0) all.remove(all.size() - 1);
+            if (allTab.size() > 0) allTab.remove(allTab.size() - 1);
         }
     }
 
@@ -223,14 +217,43 @@ public class JournalGUI extends GUIScreen
         inProgressStringToQuestElement.clear();
         completedStringToQuestElement.clear();
 
-        inProgress.clear();
-        completed.clear();
+        inProgressTab.clear();
+        completedTab.clear();
         questView.clear();
 
-        all = null;
+        allTab = null;
         allQuestElementToQuest.clear();
         allGroupElements.clear();
         if (navigator.tabs.size() == 3) navigator.removeTab(2);
+    }
+
+    public static void setQuestView(CQuest quest)
+    {
+        if (questView == null) return;
+
+
+        questView.clear();
+
+        //Add quest name
+        questView.add(new GUIText(GUI, "\n"));
+        questView.add(new GUIText(GUI, quest.name.value, WHITE[0], WHITE[1], WHITE[2]));
+        questView.add(new GUIText(GUI, "\n\n"));
+
+
+        //Add objectives
+        for (CObjective objective : quest.objectives)
+        {
+            questView.add(new GUIText(GUI, objective.getFullText(), WHITE[0]));
+            questView.add(new GUIText(GUI, "\n"));
+        }
+
+
+        //Add quest buttons
+        questView.add(new GUIText(GUI, "\n\n\n"));
+        questView.add(new GUITextButton(GUI, viewedQuest.equals(QuestTracker.questname) ? "Stop Tracking" : "Start Tracking"));
+        questView.add(new GUIText(GUI, "\n"));
+        questView.add(new GUITextButton(GUI, "Abandon"));
+        questView.add(new GUIText(GUI, "\n"));
     }
 
     public static void setQuestView(String questName)
@@ -366,7 +389,7 @@ public class JournalGUI extends GUIScreen
                             if (group.indexOf(quest) != -1) group.show();
                             else group.hide();
                         }
-                        inProgress.focus(quest);
+                        inProgressTab.focus(quest);
                         navigator.setActiveTab(0);
                     }
 
@@ -378,27 +401,31 @@ public class JournalGUI extends GUIScreen
                             if (group.indexOf(quest) != -1) group.show();
                             else group.hide();
                         }
-                        completed.focus(quest);
+                        completedTab.focus(quest);
                         navigator.setActiveTab(1);
                     }
                 }
             }
             else
             {
-                String questName;
-                if (element == viewTracked) questName = QuestTracker.questname;
+                if (allTab.indexOf(element) != -1) setQuestView(allQuestElementToQuest.get(element));
                 else
                 {
-                    questName = inProgressQuestElementToString.get(text);
-                    if (questName == null) questName = completedQuestElementToString.get(text);
-                }
+                    String questName;
+                    if (element == viewTracked) questName = QuestTracker.questname;
+                    else
+                    {
+                        questName = inProgressQuestElementToString.get(text);
+                        if (questName == null) questName = completedQuestElementToString.get(text);
+                    }
 
-                if (questName != null) setQuestView(questName);
+                    if (questName != null) setQuestView(questName);
+                }
             }
         }
         else if (cls == GUITextSpoiler.class)
         {
-            if (inProgress.indexOf(element) != -1 || completed.indexOf(element) != -1)
+            if (inProgressTab.indexOf(element) != -1 || completedTab.indexOf(element) != -1)
             {
                 GUITextSpoiler group = (GUITextSpoiler) element;
 
@@ -410,7 +437,7 @@ public class JournalGUI extends GUIScreen
                         if (spoiler != group) spoiler.hide();
                     }
                     group.toggle();
-                    inProgress.focus(group);
+                    inProgressTab.focus(group);
                     event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
                 }
                 else
@@ -423,12 +450,12 @@ public class JournalGUI extends GUIScreen
                             if (spoiler != group) spoiler.hide();
                         }
                         group.toggle();
-                        completed.focus(group);
+                        completedTab.focus(group);
                         event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
                     }
                 }
             }
-            else if (all.indexOf(element) != -1)
+            else if (allTab.indexOf(element) != -1)
             {
                 GUITextSpoiler group = (GUITextSpoiler) element;
 
@@ -437,7 +464,7 @@ public class JournalGUI extends GUIScreen
                     if (spoiler != group) spoiler.hide();
                 }
                 group.toggle();
-                inProgress.focus(group);
+                inProgressTab.focus(group);
                 event.setCanceled(true); //Because otherwise it will toggle the spoiler closed again
             }
         }
@@ -452,14 +479,14 @@ public class JournalGUI extends GUIScreen
         guiElements.add(navigator);
 
 
-        inProgress = new GUIScrollView(this, 0.96, 1);
-        navigator.tabViews.get(0).add(inProgress);
-        navigator.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgress));
+        inProgressTab = new GUIScrollView(this, 0.96, 1);
+        navigator.tabViews.get(0).add(inProgressTab);
+        navigator.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgressTab));
 
 
-        completed = new GUIScrollView(this, 0.96, 1);
-        navigator.tabViews.get(1).add(completed);
-        navigator.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completed));
+        completedTab = new GUIScrollView(this, 0.96, 1);
+        navigator.tabViews.get(1).add(completedTab);
+        navigator.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completedTab));
 
 
         questView = new GUIScrollView(this, 0.5, 0, 0.48, 1);
