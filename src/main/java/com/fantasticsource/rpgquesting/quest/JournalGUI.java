@@ -408,7 +408,11 @@ public class JournalGUI extends GUIScreen
             }
             else
             {
-                if (allTab.indexOf(element) != -1) setQuestView(allQuestElementToQuest.get(element));
+                if (allTab.indexOf(element) != -1)
+                {
+                    CQuest quest = allQuestElementToQuest.get(element);
+                    if (quest != null) setQuestView(quest);
+                }
                 else
                 {
                     String questName;
