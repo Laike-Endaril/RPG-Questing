@@ -24,11 +24,11 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CBoolean repeatable = new CBoolean();
     public CInt experience = new CInt();
 
-    public ArrayList<CCondition> conditions = new ArrayList<>();
-
     public ArrayList<CObjective> objectives = new ArrayList<>();
 
     public ArrayList<CItemStack> rewards = new ArrayList<>();
+
+    public ArrayList<CCondition> conditions = new ArrayList<>();
 
 
     public CQuest()
