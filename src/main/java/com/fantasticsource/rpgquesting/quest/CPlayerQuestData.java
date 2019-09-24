@@ -84,7 +84,7 @@ public class CPlayerQuestData extends Component
     public CPlayerQuestData load() throws IOException
     {
         File file = new File(RPGQuesting.playerDataFolder.getAbsolutePath() + File.separator + RPGQuesting.MODID + File.separator + player.getPersistentID() + ".dat");
-        if (!file.exists()) return null;
+        if (!file.exists()) return this;
 
         FileInputStream fis = new FileInputStream(file);
         load(fis);
