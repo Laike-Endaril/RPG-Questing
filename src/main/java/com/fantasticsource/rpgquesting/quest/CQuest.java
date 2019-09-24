@@ -18,15 +18,16 @@ import static com.fantasticsource.rpgquesting.quest.CQuests.QUESTS;
 
 public class CQuest extends Component implements IObfuscatedComponent
 {
-    public ArrayList<CCondition> conditions = new ArrayList<>();
-
     public CStringUTF8 name = new CStringUTF8();
     public CStringUTF8 group = new CStringUTF8();
     public CInt level = new CInt();
     public CBoolean repeatable = new CBoolean();
+    public CInt experience = new CInt();
+
+    public ArrayList<CCondition> conditions = new ArrayList<>();
+
     public ArrayList<CObjective> objectives = new ArrayList<>();
 
-    public CInt experience = new CInt();
     public ArrayList<CItemStack> rewards = new ArrayList<>();
 
 

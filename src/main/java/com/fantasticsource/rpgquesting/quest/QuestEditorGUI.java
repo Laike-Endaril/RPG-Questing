@@ -3,6 +3,11 @@ package com.fantasticsource.rpgquesting.quest;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
+import com.fantasticsource.mctools.gui.element.text.GUIText;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
@@ -14,6 +19,7 @@ public class QuestEditorGUI extends GUIScreen
 {
     public static QuestEditorGUI GUI;
 
+    private static CQuest quest = null;
     private static GUITabView tabView;
     private static GUIScrollView main, objectives, rewards, conditions;
 
@@ -23,9 +29,32 @@ public class QuestEditorGUI extends GUIScreen
         MinecraftForge.EVENT_BUS.register(QuestEditorGUI.class);
     }
 
-    public static void show(CQuest questToEdit)
+    public static void show(CQuest quest)
     {
+        if (quest == null) quest = new CQuest();
+        QuestEditorGUI.quest = quest;
+
         Minecraft.getMinecraft().displayGuiScreen(GUI);
+
+
+        //Main tab
+        main.clear();
+
+        //TODO improve filters; make them indicate validity differently (red backdrop?)
+        main.add(new GUIText(GUI, "\n"));
+        main.add(new GUILabeledTextInput(GUI, " Name: ", quest.name.value, FilterNotEmpty.INSTANCE));
+
+        main.add(new GUIText(GUI, "\n"));
+        main.add(new GUILabeledTextInput(GUI, " Group: ", quest.group.value, FilterNotEmpty.INSTANCE));
+
+        main.add(new GUIText(GUI, "\n"));
+        main.add(new GUILabeledTextInput(GUI, " Level: ", "" + quest.level.value, FilterInt.INSTANCE));
+
+        main.add(new GUIText(GUI, "\n"));
+        main.add(new GUILabeledTextInput(GUI, " Repeatable: ", "" + quest.repeatable.value, FilterBoolean.INSTANCE));
+
+        main.add(new GUIText(GUI, "\n"));
+        main.add(new GUILabeledTextInput(GUI, " Experience Awarded: ", "" + quest.experience.value, FilterInt.INSTANCE));
     }
 
     @Override
