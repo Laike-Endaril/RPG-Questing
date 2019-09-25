@@ -1,6 +1,11 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.rpgquesting.actions.*;
+import com.fantasticsource.rpgquesting.actions.CActionArray;
+import com.fantasticsource.rpgquesting.actions.CActionBranch;
+import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
+import com.fantasticsource.rpgquesting.actions.CActionTakeItems;
+import com.fantasticsource.rpgquesting.actions.quest.CActionCompleteQuest;
+import com.fantasticsource.rpgquesting.actions.quest.CActionStartQuest;
 import com.fantasticsource.rpgquesting.conditions.*;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
@@ -33,7 +38,7 @@ public class Temp
 
         CDialogueBranch branch = new CDialogueBranch("Yeah, that's right...despite being a wolf, my name is \"Chicken\".  Freaking...you know what?  Go kill 5 chickens for me and maybe I'll tell you how I got the name.");
         dialogue.add(branch);
-        branch.add(new CDialogueChoice("Sure.").setAction(new CActionArray(new CActionStartQuest(quest), new CActionEndDialogue())));
+        branch.add(new CDialogueChoice("Sure.").setAction(new CActionArray(new CActionStartQuest(quest, branch), new CActionEndDialogue())));
         branch.add(new CDialogueChoice("Nah.").setAction(new CActionEndDialogue()));
 
 
@@ -60,7 +65,7 @@ public class Temp
 
         CDialogueChoice choice = new CDialogueChoice("Right...so how did you get your name?");
         branch.add(choice);
-        choice.setAction(new CActionArray(new CActionBranch(branch2), new CActionCompleteQuest(quest)).addConditions(new CConditionInventorySpace(1)));
+        choice.setAction(new CActionArray(new CActionBranch(branch2), new CActionCompleteQuest(quest, branch)).addConditions(new CConditionInventorySpace(1)));
         branch.add(new CDialogueChoice("End Dialogue").setAction(new CActionEndDialogue()));
 
         branch2.add(new CDialogueChoice("Ugh...").setAction(new CActionEndDialogue()));
@@ -88,7 +93,7 @@ public class Temp
 
         CDialogueBranch branch = new CDialogueBranch("The pack hungers, two-legs...we hunger for the meat of the winged ones...");
         dialogue.add(branch);
-        branch.add(new CDialogueChoice("Then I hunt.").setAction(new CActionArray(new CActionStartQuest(quest), new CActionEndDialogue())));
+        branch.add(new CDialogueChoice("Then I hunt.").setAction(new CActionArray(new CActionStartQuest(quest, branch), new CActionEndDialogue())));
         branch.add(new CDialogueChoice("You'll have to fend for yourselves.").setAction(new CActionEndDialogue()));
 
 
@@ -114,7 +119,7 @@ public class Temp
 
         CDialogueChoice choice = new CDialogueChoice("I see...");
         branch.add(choice);
-        choice.setAction(new CActionArray(new CActionTakeItems(toCollect).addConditions(new CConditionHaveItems(toCollect)), new CActionEndDialogue(), new CActionCompleteQuest(quest)));
+        choice.setAction(new CActionArray(new CActionTakeItems(toCollect).addConditions(new CConditionHaveItems(toCollect)), new CActionEndDialogue(), new CActionCompleteQuest(quest, branch)));
         branch.add(new CDialogueChoice("End Dialogue").setAction(new CActionEndDialogue()));
     }
 
@@ -140,7 +145,7 @@ public class Temp
 
         CDialogueBranch branch = new CDialogueBranch("I say, now I say I am getting Kentucky FRIED out here, son!  You bring me a bathtub and I'll give you some priiiiime feathers.");
         dialogue.add(branch);
-        branch.add(new CDialogueChoice("Alright.").setAction(new CActionArray(new CActionStartQuest(quest), new CActionEndDialogue())));
+        branch.add(new CDialogueChoice("Alright.").setAction(new CActionArray(new CActionStartQuest(quest, branch), new CActionEndDialogue())));
         branch.add(new CDialogueChoice("Not right now; I'm going swimming.").setAction(new CActionEndDialogue()));
 
 
@@ -155,7 +160,7 @@ public class Temp
 
         CDialogueChoice choice = new CDialogueChoice("All yours!");
         branch.add(choice);
-        choice.setAction(new CActionArray(new CActionTakeItems(toCollect).addConditions(new CConditionHaveItems(toCollect)), new CActionEndDialogue(), new CActionCompleteQuest(quest)));
+        choice.setAction(new CActionArray(new CActionTakeItems(toCollect).addConditions(new CConditionHaveItems(toCollect)), new CActionEndDialogue(), new CActionCompleteQuest(quest, branch)));
         branch.add(new CDialogueChoice("End Dialogue").setAction(new CActionEndDialogue()));
     }
 }

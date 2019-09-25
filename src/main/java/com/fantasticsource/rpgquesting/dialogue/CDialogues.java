@@ -114,7 +114,7 @@ public class CDialogues extends Component
     }
 
     @Override
-    public CDialogues save(OutputStream stream) throws IOException
+    public CDialogues save(OutputStream stream)
     {
         new CInt().set(dialoguesByPermanentID.size()).save(stream);
         for (CDialogue dialogue : dialoguesByPermanentID.values()) dialogue.save(stream);
@@ -122,7 +122,7 @@ public class CDialogues extends Component
     }
 
     @Override
-    public CDialogues load(InputStream stream) throws IOException
+    public CDialogues load(InputStream stream)
     {
         clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) new CDialogue().load(stream);

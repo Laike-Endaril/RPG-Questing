@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import scala.actors.threadpool.Arrays;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CInt level = new CInt();
     public CBoolean repeatable = new CBoolean();
     public CInt experience = new CInt();
+    public ArrayList<CUUID> relatedDialogues = new ArrayList<>();
 
     public ArrayList<CObjective> objectives = new ArrayList<>();
 
@@ -105,15 +105,18 @@ public class CQuest extends Component implements IObfuscatedComponent
         level.write(buf);
         repeatable.write(buf);
 
-        new CInt().set(conditions.size()).write(buf);
+        buf.writeInt(conditions.size());
         for (CCondition condition : conditions) Component.writeMarked(buf, condition);
 
-        new CInt().set(objectives.size()).write(buf);
+        buf.writeInt(objectives.size());
         for (CObjective objective : objectives) Component.writeMarked(buf, objective);
 
         experience.write(buf);
-        new CInt().set(rewards.size()).write(buf);
+        buf.writeInt(rewards.size());
         for (CItemStack reward : rewards) reward.write(buf);
+
+        buf.writeInt(relatedDialogues.size());
+        for (CUUID id : relatedDialogues) id.write(buf);
 
         return this;
     }
@@ -127,20 +130,23 @@ public class CQuest extends Component implements IObfuscatedComponent
         repeatable.read(buf);
 
         conditions.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+        for (int i = buf.readInt(); i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
 
         objectives.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) objectives.add((CObjective) Component.readMarked(buf));
+        for (int i = buf.readInt(); i > 0; i--) objectives.add((CObjective) Component.readMarked(buf));
 
         experience.read(buf);
         rewards.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) rewards.add(new CItemStack().read(buf));
+        for (int i = buf.readInt(); i > 0; i--) rewards.add(new CItemStack().read(buf));
+
+        relatedDialogues.clear();
+        for (int i = buf.readInt(); i > 0; i--) relatedDialogues.add(new CUUID().read(buf));
 
         return this;
     }
 
     @Override
-    public CQuest save(OutputStream stream) throws IOException
+    public CQuest save(OutputStream stream)
     {
         name.save(stream);
         group.save(stream);
@@ -157,11 +163,14 @@ public class CQuest extends Component implements IObfuscatedComponent
         new CInt().set(rewards.size()).save(stream);
         for (CItemStack reward : rewards) reward.save(stream);
 
+        new CInt().set(relatedDialogues.size()).save(stream);
+        for (CUUID id : relatedDialogues) id.save(stream);
+
         return this;
     }
 
     @Override
-    public CQuest load(InputStream stream) throws IOException
+    public CQuest load(InputStream stream)
     {
         name.load(stream);
         group.load(stream);
@@ -177,6 +186,9 @@ public class CQuest extends Component implements IObfuscatedComponent
         experience.load(stream);
         rewards.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) rewards.add(new CItemStack().load(stream));
+
+        relatedDialogues.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) relatedDialogues.add(new CUUID().load(stream));
 
         return this;
     }

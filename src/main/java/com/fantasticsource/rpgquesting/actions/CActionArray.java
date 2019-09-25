@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import scala.actors.threadpool.Arrays;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class CActionArray extends CAction
     }
 
     @Override
-    public CActionArray save(OutputStream stream) throws IOException
+    public CActionArray save(OutputStream stream)
     {
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -62,7 +61,7 @@ public class CActionArray extends CAction
     }
 
     @Override
-    public CActionArray load(InputStream stream) throws IOException
+    public CActionArray load(InputStream stream)
     {
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));

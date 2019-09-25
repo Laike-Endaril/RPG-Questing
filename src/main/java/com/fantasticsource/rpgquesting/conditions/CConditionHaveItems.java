@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -64,14 +63,14 @@ public class CConditionHaveItems extends CCondition
     }
 
     @Override
-    public CConditionHaveItems save(OutputStream stream) throws IOException
+    public CConditionHaveItems save(OutputStream stream)
     {
         stackToMatch.save(stream);
         return this;
     }
 
     @Override
-    public CConditionHaveItems load(InputStream stream) throws IOException
+    public CConditionHaveItems load(InputStream stream)
     {
         stackToMatch.load(stream);
         return this;

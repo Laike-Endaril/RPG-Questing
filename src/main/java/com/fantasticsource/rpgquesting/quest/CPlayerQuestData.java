@@ -170,7 +170,7 @@ public class CPlayerQuestData extends Component
     }
 
     @Override
-    public CPlayerQuestData save(OutputStream stream) throws IOException
+    public CPlayerQuestData save(OutputStream stream)
     {
         trackedQuest.save(stream);
 
@@ -208,7 +208,7 @@ public class CPlayerQuestData extends Component
     }
 
     @Override
-    public CPlayerQuestData load(InputStream stream) throws IOException
+    public CPlayerQuestData load(InputStream stream)
     {
         trackedQuest.load(stream);
 

@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -143,7 +142,7 @@ public class CObjectiveCollect extends CObjective
     }
 
     @Override
-    public CObjectiveCollect save(OutputStream stream) throws IOException
+    public CObjectiveCollect save(OutputStream stream)
     {
         new CBoolean().set(owner.value != null).save(stream);
         if (owner.value != null) owner.save(stream);
@@ -154,7 +153,7 @@ public class CObjectiveCollect extends CObjective
     }
 
     @Override
-    public CObjectiveCollect load(InputStream stream) throws IOException
+    public CObjectiveCollect load(InputStream stream)
     {
         if (new CBoolean().load(stream).value) owner.load(stream);
         text.load(stream);

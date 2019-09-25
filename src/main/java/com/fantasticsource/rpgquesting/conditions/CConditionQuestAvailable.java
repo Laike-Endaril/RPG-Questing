@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -72,14 +71,14 @@ public class CConditionQuestAvailable extends CCondition
     }
 
     @Override
-    public CConditionQuestAvailable save(OutputStream stream) throws IOException
+    public CConditionQuestAvailable save(OutputStream stream)
     {
         questName.save(stream);
         return this;
     }
 
     @Override
-    public CConditionQuestAvailable load(InputStream stream) throws IOException
+    public CConditionQuestAvailable load(InputStream stream)
     {
         questName.load(stream);
         return this;

@@ -14,7 +14,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -42,7 +41,7 @@ public class CActionBranch extends CAction
 
     public CActionBranch set(boolean clear, CDialogueBranch targetBranch)
     {
-        return set(clear, targetBranch.parent, targetBranch.parent.branches.indexOf(targetBranch));
+        return set(clear, targetBranch.dialogue, targetBranch.dialogue.branches.indexOf(targetBranch));
     }
 
     public CActionBranch set(CDialogue dialogue, int branchIndex)
@@ -80,7 +79,7 @@ public class CActionBranch extends CAction
     }
 
     @Override
-    public CActionBranch save(OutputStream stream) throws IOException
+    public CActionBranch save(OutputStream stream)
     {
         clear.save(stream);
         dialogueID.save(stream);
@@ -93,7 +92,7 @@ public class CActionBranch extends CAction
     }
 
     @Override
-    public CActionBranch load(InputStream stream) throws IOException
+    public CActionBranch load(InputStream stream)
     {
         clear.load(stream);
         dialogueID.load(stream);

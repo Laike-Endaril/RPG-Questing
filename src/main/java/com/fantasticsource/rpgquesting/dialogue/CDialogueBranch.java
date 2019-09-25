@@ -3,7 +3,6 @@ package com.fantasticsource.rpgquesting.dialogue;
 import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -12,8 +11,8 @@ import java.util.UUID;
 
 public class CDialogueBranch extends Component implements IObfuscatedComponent
 {
-    public CUUID sessionID = new CUUID().set(UUID.randomUUID()), parentSessionID = new CUUID();
-    public CDialogue parent = null;
+    public CUUID sessionID = new CUUID().set(UUID.randomUUID()), dialogueSessionID = new CUUID();
+    public CDialogue dialogue = null;
 
     public ArrayList<CDialogueChoice> choices = new ArrayList<>();
     CStringUTF8 paragraph = new CStringUTF8();
@@ -27,10 +26,10 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
         this.paragraph.set(paragraph);
     }
 
-    public CDialogueBranch setParent(CDialogue parent)
+    public CDialogueBranch setDialogue(CDialogue dialogue)
     {
-        this.parent = parent;
-        parentSessionID = parent.sessionID;
+        this.dialogue = dialogue;
+        dialogueSessionID = dialogue.sessionID;
         return this;
     }
 
@@ -53,9 +52,9 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueBranch save(OutputStream stream) throws IOException
+    public CDialogueBranch save(OutputStream stream)
     {
-        parent.permanentID.save(stream);
+        dialogue.permanentID.save(stream);
         paragraph.save(stream);
 
         new CInt().set(choices.size()).save(stream);
@@ -65,9 +64,9 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueBranch load(InputStream stream) throws IOException
+    public CDialogueBranch load(InputStream stream)
     {
-        setParent(CDialogues.getByPermanentID(new CUUID().load(stream).value));
+        setDialogue(CDialogues.getByPermanentID(new CUUID().load(stream).value));
         paragraph.load(stream);
 
         choices.clear();
@@ -79,7 +78,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch writeObf(ByteBuf buf)
     {
-        parentSessionID.write(buf);
+        dialogueSessionID.write(buf);
         sessionID.write(buf);
         paragraph.write(buf);
 
@@ -91,7 +90,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     @Override
     public CDialogueBranch readObf(ByteBuf buf)
     {
-        parentSessionID.read(buf);
+        dialogueSessionID.read(buf);
 
         sessionID.read(buf);
         paragraph.read(buf);
@@ -99,10 +98,10 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
         for (int i = buf.readInt(); i > 0; i--) choices.add(new CDialogueChoice().readObf(buf));
 
         //This will only happen on server-side
-        parent = CDialogues.getBySessionID(parentSessionID.value);
-        if (parent != null)
+        dialogue = CDialogues.getBySessionID(dialogueSessionID.value);
+        if (dialogue != null)
         {
-            for (CDialogueBranch branch : parent.branches)
+            for (CDialogueBranch branch : dialogue.branches)
             {
                 if (branch.sessionID.equals(sessionID)) return branch;
             }

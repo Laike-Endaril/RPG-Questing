@@ -9,7 +9,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -35,7 +34,7 @@ public class CActionEndDialogue extends CAction
     }
 
     @Override
-    public CActionEndDialogue save(OutputStream stream) throws IOException
+    public CActionEndDialogue save(OutputStream stream)
     {
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -44,7 +43,7 @@ public class CActionEndDialogue extends CAction
     }
 
     @Override
-    public CActionEndDialogue load(InputStream stream) throws IOException
+    public CActionEndDialogue load(InputStream stream)
     {
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));

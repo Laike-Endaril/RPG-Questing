@@ -13,7 +13,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import scala.actors.threadpool.Arrays;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -123,7 +122,7 @@ public class CObjectiveKill extends CObjective
     }
 
     @Override
-    public CObjectiveKill save(OutputStream stream) throws IOException
+    public CObjectiveKill save(OutputStream stream)
     {
         new CBoolean().set(owner.value != null).save(stream);
         if (owner.value != null) owner.save(stream);
@@ -134,7 +133,7 @@ public class CObjectiveKill extends CObjective
     }
 
     @Override
-    public CObjectiveKill load(InputStream stream) throws IOException
+    public CObjectiveKill load(InputStream stream)
     {
         if (new CBoolean().load(stream).value) owner.load(stream);
         text.load(stream);

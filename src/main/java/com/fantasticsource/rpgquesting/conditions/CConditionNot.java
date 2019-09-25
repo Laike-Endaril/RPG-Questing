@@ -4,7 +4,6 @@ import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -52,14 +51,14 @@ public class CConditionNot extends CCondition
     }
 
     @Override
-    public CConditionNot save(OutputStream stream) throws IOException
+    public CConditionNot save(OutputStream stream)
     {
         Component.saveMarked(stream, condition);
         return this;
     }
 
     @Override
-    public CConditionNot load(InputStream stream) throws IOException
+    public CConditionNot load(InputStream stream)
     {
         condition = ((CCondition) Component.loadMarked(stream));
         return this;

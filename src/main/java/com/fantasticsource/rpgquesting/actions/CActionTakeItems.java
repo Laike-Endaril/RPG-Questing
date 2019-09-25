@@ -11,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -67,7 +66,7 @@ public class CActionTakeItems extends CAction
     }
 
     @Override
-    public CActionTakeItems save(OutputStream stream) throws IOException
+    public CActionTakeItems save(OutputStream stream)
     {
         stackToMatch.save(stream);
 
@@ -78,7 +77,7 @@ public class CActionTakeItems extends CAction
     }
 
     @Override
-    public CActionTakeItems load(InputStream stream) throws IOException
+    public CActionTakeItems load(InputStream stream)
     {
         stackToMatch.load(stream);
 

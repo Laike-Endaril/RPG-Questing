@@ -66,14 +66,7 @@ public class CQuests extends Component
         objectives.clear();
         for (CObjective objective : quest.objectives)
         {
-            try
-            {
-                objectives.add(((CObjective) objective.copy()).setOwner(player));
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            objectives.add(((CObjective) objective.copy()).setOwner(player));
         }
 
         data.saveAndSync();
@@ -358,7 +351,7 @@ public class CQuests extends Component
     }
 
     @Override
-    public CQuests save(OutputStream stream) throws IOException
+    public CQuests save(OutputStream stream)
     {
         new CInt().set(worldQuestData.size()).save(stream);
         for (CQuest quest : worldQuestData.values()) quest.save(stream);
@@ -366,7 +359,7 @@ public class CQuests extends Component
     }
 
     @Override
-    public CQuests load(InputStream stream) throws IOException
+    public CQuests load(InputStream stream)
     {
         worldQuestData.clear();
         worldQuestDataByGroup.clear();

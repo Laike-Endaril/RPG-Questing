@@ -4,7 +4,6 @@ import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -34,14 +33,14 @@ public class CConditionClassIs extends CCondition
     }
 
     @Override
-    public CConditionClassIs save(OutputStream stream) throws IOException
+    public CConditionClassIs save(OutputStream stream)
     {
         className.save(stream);
         return this;
     }
 
     @Override
-    public CConditionClassIs load(InputStream stream) throws IOException
+    public CConditionClassIs load(InputStream stream)
     {
         className.load(stream);
         return this;

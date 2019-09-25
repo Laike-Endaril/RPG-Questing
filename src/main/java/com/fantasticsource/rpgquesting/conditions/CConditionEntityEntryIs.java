@@ -7,7 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -53,14 +52,14 @@ public class CConditionEntityEntryIs extends CCondition
     }
 
     @Override
-    public CConditionEntityEntryIs save(OutputStream stream) throws IOException
+    public CConditionEntityEntryIs save(OutputStream stream)
     {
         entityEntryName.save(stream);
         return this;
     }
 
     @Override
-    public CConditionEntityEntryIs load(InputStream stream) throws IOException
+    public CConditionEntityEntryIs load(InputStream stream)
     {
         entityEntryName.load(stream);
         return this;

@@ -10,7 +10,6 @@ import com.fantasticsource.tools.component.IObfuscatedComponent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueChoice save(OutputStream stream) throws IOException
+    public CDialogueChoice save(OutputStream stream)
     {
         text.save(stream);
 
@@ -84,7 +83,7 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueChoice load(InputStream stream) throws IOException
+    public CDialogueChoice load(InputStream stream)
     {
         text.load(stream);
 

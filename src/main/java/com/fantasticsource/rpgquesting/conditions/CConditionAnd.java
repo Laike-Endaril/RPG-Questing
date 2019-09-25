@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import scala.actors.threadpool.Arrays;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class CConditionAnd extends CCondition
     }
 
     @Override
-    public CConditionAnd save(OutputStream stream) throws IOException
+    public CConditionAnd save(OutputStream stream)
     {
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -69,7 +68,7 @@ public class CConditionAnd extends CCondition
     }
 
     @Override
-    public CConditionAnd load(InputStream stream) throws IOException
+    public CConditionAnd load(InputStream stream)
     {
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
         return this;

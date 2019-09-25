@@ -10,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import scala.actors.threadpool.Arrays;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class CDialogue extends Component
     {
         for (CDialogueBranch branch : branches)
         {
-            this.branches.add(branch.setParent(this));
+            this.branches.add(branch.setDialogue(this));
         }
         return this;
     }
@@ -80,7 +79,7 @@ public class CDialogue extends Component
     }
 
     @Override
-    public CDialogue save(OutputStream stream) throws IOException
+    public CDialogue save(OutputStream stream)
     {
         permanentID.save(stream);
         name.save(stream);
@@ -98,7 +97,7 @@ public class CDialogue extends Component
     }
 
     @Override
-    public CDialogue load(InputStream stream) throws IOException
+    public CDialogue load(InputStream stream)
     {
         permanentID.load(stream);
         CDialogues.add(this);

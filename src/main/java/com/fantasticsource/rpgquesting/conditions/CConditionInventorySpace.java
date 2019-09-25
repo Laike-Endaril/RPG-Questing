@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -62,14 +61,14 @@ public class CConditionInventorySpace extends CCondition
     }
 
     @Override
-    public CConditionInventorySpace save(OutputStream stream) throws IOException
+    public CConditionInventorySpace save(OutputStream stream)
     {
         slotCount.save(stream);
         return this;
     }
 
     @Override
-    public CConditionInventorySpace load(InputStream stream) throws IOException
+    public CConditionInventorySpace load(InputStream stream)
     {
         slotCount.load(stream);
         return this;
