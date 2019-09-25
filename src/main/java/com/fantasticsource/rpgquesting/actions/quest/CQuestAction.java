@@ -15,12 +15,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 public abstract class CQuestAction extends CAction
 {
     public CStringUTF8 name = new CStringUTF8();
-    public CUUID dialogueID = new CUUID();
-    public CInt branchIndex = new CInt();
+    public CUUID dialogueID = new CUUID().set(UUID.randomUUID());
+    public CInt branchIndex = new CInt().set(-1);
 
 
     public CQuestAction()
@@ -30,10 +31,15 @@ public abstract class CQuestAction extends CAction
     public CQuestAction(CQuest quest, CDialogueBranch branch)
     {
         name.set(quest.name.value);
-        dialogueID.set(branch.dialogue.permanentID.value);
-        branchIndex.set(branch.dialogue.branches.indexOf(branch));
 
-        quest.relatedDialogues.add((CUUID) dialogueID.copy());
+
+        if (branch != null)
+        {
+            dialogueID.set(branch.dialogue.permanentID.value);
+            branchIndex.set(branch.dialogue.branches.indexOf(branch));
+
+            quest.relatedDialogues.add((CUUID) dialogueID.copy());
+        }
     }
 
 

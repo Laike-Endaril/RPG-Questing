@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting.conditions.quest;
 
+import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
@@ -14,9 +15,9 @@ public class CConditionQuestInProgress extends CQuestCondition
         super();
     }
 
-    public CConditionQuestInProgress(CQuest quest)
+    public CConditionQuestInProgress(CQuest quest, CDialogueBranch branch)
     {
-        super(quest);
+        super(quest, branch);
     }
 
 

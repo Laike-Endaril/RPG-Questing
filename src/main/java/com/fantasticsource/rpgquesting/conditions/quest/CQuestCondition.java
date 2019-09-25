@@ -10,12 +10,13 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 public abstract class CQuestCondition extends CCondition
 {
     public CStringUTF8 name = new CStringUTF8();
-    public CUUID dialogueID = new CUUID();
-    public CInt branchIndex = new CInt();
+    public CUUID dialogueID = new CUUID().set(UUID.randomUUID());
+    public CInt branchIndex = new CInt().set(-1);
 
 
     public CQuestCondition()
@@ -25,8 +26,12 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition(CQuest quest, CDialogueBranch branch)
     {
         name.set(quest.name.value);
-        dialogueID.set(branch.dialogue.permanentID.value);
-        branchIndex.set(branch.dialogue.branches.indexOf(branch));
+
+        if (branch != null)
+        {
+            dialogueID.set(branch.dialogue.permanentID.value);
+            branchIndex.set(branch.dialogue.branches.indexOf(branch));
+        }
     }
 
 
