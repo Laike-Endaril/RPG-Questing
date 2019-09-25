@@ -26,7 +26,7 @@ public class QuestEditorGUI extends GUIScreen
 
     private static CQuest quest = null;
     private static GUITabView tabView;
-    private static GUIScrollView main, objectives, rewards, conditions;
+    private static GUIScrollView main, objectives, rewards, conditions, dialogues;
 
     static
     {
@@ -101,7 +101,7 @@ public class QuestEditorGUI extends GUIScreen
     {
         guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
 
-        tabView = new GUITabView(this, 1, 1, "Main", "Objectives", "Rewards", "Availability Conditions");
+        tabView = new GUITabView(this, 1, 1, "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
         guiElements.add(tabView);
 
         main = new GUIScrollView(this, 0.98, 1);
@@ -119,6 +119,10 @@ public class QuestEditorGUI extends GUIScreen
         conditions = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(3).add(conditions);
         tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, WHITE, Color.BLANK, conditions));
+
+        dialogues = new GUIScrollView(this, 0.98, 1);
+        tabView.tabViews.get(4).add(dialogues);
+        tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, WHITE, Color.BLANK, dialogues));
     }
 
     @Override
