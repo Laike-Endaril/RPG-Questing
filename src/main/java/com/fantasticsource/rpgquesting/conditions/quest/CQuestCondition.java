@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.conditions.quest;
 
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
@@ -21,14 +22,11 @@ public abstract class CQuestCondition extends CCondition
     {
     }
 
-    public CQuestCondition(CQuest quest)
+    public CQuestCondition(CQuest quest, CDialogueBranch branch)
     {
-        this(quest.name.value);
-    }
-
-    public CQuestCondition(String name) //TODO Need to go through usages and add dialogue/branch ref
-    {
-        this.name.set(name);
+        name.set(quest.name.value);
+        dialogueID.set(branch.dialogue.permanentID.value);
+        branchIndex.set(branch.dialogue.branches.indexOf(branch));
     }
 
 

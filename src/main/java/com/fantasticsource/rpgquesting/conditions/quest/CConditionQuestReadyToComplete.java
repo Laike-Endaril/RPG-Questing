@@ -19,10 +19,6 @@ public class CConditionQuestReadyToComplete extends CQuestCondition
         super(quest);
     }
 
-    public CConditionQuestReadyToComplete(String name)
-    {
-        super(name);
-    }
 
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
