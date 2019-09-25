@@ -9,6 +9,21 @@ import java.util.ArrayList;
 
 public class CConditionQuestCompleted extends CQuestCondition
 {
+    public CConditionQuestCompleted()
+    {
+        super();
+    }
+
+    public CConditionQuestCompleted(CQuest quest)
+    {
+        super(quest);
+    }
+
+    public CConditionQuestCompleted(String name)
+    {
+        super(name);
+    }
+
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
     {
