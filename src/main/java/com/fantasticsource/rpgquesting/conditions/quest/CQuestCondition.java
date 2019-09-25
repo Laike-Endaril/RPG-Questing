@@ -26,21 +26,29 @@ public abstract class CQuestCondition extends CCondition
         this(quest.name.value);
     }
 
-    public CQuestCondition(String name)
+    public CQuestCondition(String name) //TODO Need to go through usages and add dialogue/branch ref
     {
         this.name.set(name);
     }
 
 
     @Override
-    public CQuestCondition write(ByteBuf byteBuf)
+    public CQuestCondition write(ByteBuf buf)
     {
+        name.write(buf);
+        dialogueID.write(buf);
+        branchIndex.write(buf);
+
         return this;
     }
 
     @Override
-    public CQuestCondition read(ByteBuf byteBuf)
+    public CQuestCondition read(ByteBuf buf)
     {
+        name.read(buf);
+        dialogueID.read(buf);
+        branchIndex.read(buf);
+
         return this;
     }
 
@@ -48,6 +56,9 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition save(OutputStream stream)
     {
         name.save(stream);
+        dialogueID.save(stream);
+        branchIndex.save(stream);
+
         return this;
     }
 
@@ -55,6 +66,9 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition load(InputStream stream)
     {
         name.load(stream);
+        dialogueID.load(stream);
+        branchIndex.load(stream);
+
         return this;
     }
 }
