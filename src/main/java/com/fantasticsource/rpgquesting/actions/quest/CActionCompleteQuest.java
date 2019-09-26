@@ -18,6 +18,6 @@ public class CActionCompleteQuest extends CQuestAction
     @Override
     public String relation()
     {
-        return "Completes quest:";
+        return "completes this quest";
     }
 }

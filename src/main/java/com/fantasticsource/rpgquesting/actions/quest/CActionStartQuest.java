@@ -18,6 +18,6 @@ public class CActionStartQuest extends CQuestAction
     @Override
     public String relation()
     {
-        return "Starts quest:";
+        return "starts this quest";
     }
 }

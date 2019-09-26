@@ -3,11 +3,10 @@ package com.fantasticsource.rpgquesting.quest;
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
-import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
-import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
@@ -20,7 +19,11 @@ import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
-import static com.fantasticsource.tools.datastructures.Color.WHITE;
+import java.util.LinkedHashMap;
+import java.util.UUID;
+
+import static com.fantasticsource.rpgquesting.quest.JournalGUI.BLUE;
+import static com.fantasticsource.rpgquesting.quest.JournalGUI.WHITE;
 
 public class QuestEditorGUI extends GUIScreen
 {
@@ -67,7 +70,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CObjective objective : quest.objectives)
         {
             objectives.add(new GUIText(GUI, "\n"));
-            objectives.add(new GUIText(GUI, " " + objective.getFullText(), getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
+            objectives.add(new GUIText(GUI, " " + objective.getFullText(), WHITE[0], WHITE[1], WHITE[2]));
         }
         objectives.add(new GUIText(GUI, "\n"));
 
@@ -78,7 +81,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CItemStack reward : quest.rewards)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            rewards.add(new GUIText(GUI, " " + reward.stack.getDisplayName(), getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
+            rewards.add(new GUIText(GUI, " " + reward.stack.getDisplayName(), WHITE[0], WHITE[1], WHITE[2]));
         }
         rewards.add(new GUIText(GUI, "\n"));
 
@@ -89,7 +92,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CCondition condition : quest.conditions)
         {
             conditions.add(new GUIText(GUI, "\n"));
-            conditions.add(new GUIText(GUI, " " + condition.getClass().getSimpleName(), getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
+            conditions.add(new GUIText(GUI, " " + condition.getClass().getSimpleName(), WHITE[0], WHITE[1], WHITE[2]));
         }
         conditions.add(new GUIText(GUI, "\n"));
 
@@ -97,12 +100,36 @@ public class QuestEditorGUI extends GUIScreen
         //Dialogues tab
         dialogues.clear();
 
-        dialogues.add(new GUIText(GUI, "\n"));
+        LinkedHashMap<UUID, GUITextSpoiler> dialogueSpoilers = new LinkedHashMap<>();
         for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
         {
-            GUITextButton button = new GUITextButton(GUI, " " + dialogueEntry.relation.value + "\n " + dialogueEntry.dialogueName.value + "\n Branch " + dialogueEntry.branchIndex.value + "\n (Dialogue ID = " + dialogueEntry.dialogueID.value + ")");
-            ((GUIGradientBorder) button.children.get(0)).
-            dialogues.add(button);
+            UUID id = dialogueEntry.dialogueID.value;
+            GUITextSpoiler spoiler = dialogueSpoilers.get(id);
+            if (spoiler == null)
+            {
+                spoiler = new GUITextSpoiler(GUI, " " + dialogueEntry.dialogueName.value, WHITE[0], WHITE[1], WHITE[2]);
+
+                dialogues.add(new GUIText(GUI, "\n"));
+                dialogues.add(spoiler);
+                dialogueSpoilers.put(id, spoiler);
+
+                spoiler.add(new GUIText(GUI, "\n"));
+                spoiler.add(new GUIText(GUI, "========================================================================================================================================================================================", WHITE[0]));
+                spoiler.add(new GUIText(GUI, "\n"));
+                spoiler.add(new GUIText(GUI, " * ", WHITE[0]));
+                spoiler.add(new GUIText(GUI, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
+                spoiler.add(new GUIText(GUI, " " + dialogueEntry.relation.value, WHITE[0]));
+                spoiler.add(new GUIText(GUI, "\n"));
+                spoiler.add(new GUIText(GUI, "========================================================================================================================================================================================", WHITE[0]));
+                spoiler.add(new GUIText(GUI, "\n"));
+            }
+            else
+            {
+                spoiler.add(spoiler.size() - 2, new GUIText(GUI, " * ", WHITE[0]));
+                spoiler.add(spoiler.size() - 2, new GUIText(GUI, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
+                spoiler.add(spoiler.size() - 2, new GUIText(GUI, " " + dialogueEntry.relation.value, WHITE[0]));
+                spoiler.add(spoiler.size() - 2, new GUIText(GUI, "\n"));
+            }
         }
         dialogues.add(new GUIText(GUI, "\n"));
     }
@@ -117,23 +144,23 @@ public class QuestEditorGUI extends GUIScreen
 
         main = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(0).add(main);
-        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, WHITE, Color.BLANK, main));
+        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
 
         objectives = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(1).add(objectives);
-        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, WHITE, Color.BLANK, objectives));
+        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectives));
 
         rewards = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(2).add(rewards);
-        tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, WHITE, Color.BLANK, rewards));
+        tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, rewards));
 
         conditions = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(3).add(conditions);
-        tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, WHITE, Color.BLANK, conditions));
+        tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditions));
 
         dialogues = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(4).add(dialogues);
-        tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, WHITE, Color.BLANK, dialogues));
+        tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
     }
 
     @Override

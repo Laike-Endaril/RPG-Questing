@@ -23,7 +23,7 @@ public class CConditionQuestInProgress extends CQuestCondition
     @Override
     public String relation()
     {
-        return "Requires quest be in progress (not ready to be completed)";
+        return "requires that this quest be in progress (not ready to be completed)";
     }
 
 

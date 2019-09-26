@@ -23,7 +23,7 @@ public class CConditionQuestCompleted extends CQuestCondition
     @Override
     public String relation()
     {
-        return "Requires quest be completed:";
+        return "requires that this quest be completed";
     }
 
 

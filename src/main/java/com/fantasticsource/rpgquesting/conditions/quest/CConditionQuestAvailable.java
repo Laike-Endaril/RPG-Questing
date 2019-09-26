@@ -23,7 +23,7 @@ public class CConditionQuestAvailable extends CQuestCondition
     @Override
     public String relation()
     {
-        return "Requires quest is available to start:";
+        return "requires that this quest be available to start";
     }
 
 
