@@ -3,9 +3,11 @@ package com.fantasticsource.rpgquesting.quest;
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
+import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
+import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
@@ -95,10 +97,12 @@ public class QuestEditorGUI extends GUIScreen
         //Dialogues tab
         dialogues.clear();
 
+        dialogues.add(new GUIText(GUI, "\n"));
         for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
         {
-            dialogues.add(new GUIText(GUI, "\n"));
-            dialogues.add(new GUIText(GUI, " " + dialogueEntry.relation.value + "\n " + dialogueEntry.dialogueName.value + "\n Branch " + dialogueEntry.branchIndex.value + "\n (Dialogue ID = " + dialogueEntry.dialogueID.value + ")", getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
+            GUITextButton button = new GUITextButton(GUI, " " + dialogueEntry.relation.value + "\n " + dialogueEntry.dialogueName.value + "\n Branch " + dialogueEntry.branchIndex.value + "\n (Dialogue ID = " + dialogueEntry.dialogueID.value + ")");
+            ((GUIGradientBorder) button.children.get(0)).
+            dialogues.add(button);
         }
         dialogues.add(new GUIText(GUI, "\n"));
     }
