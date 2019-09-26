@@ -103,7 +103,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CUUID id : quest.relatedDialogues)
         {
             dialogues.add(new GUIText(GUI, "\n"));
-            dialogues.add(new GUIText(GUI, " " + id, getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
+            dialogues.add(new GUIText(GUI, " " + id.value, getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
         }
         dialogues.add(new GUIText(GUI, "\n"));
     }

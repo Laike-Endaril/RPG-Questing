@@ -25,7 +25,9 @@ public class Temp
 {
     public static void addKillQuest(boolean repeatable)
     {
-        CQuest quest = new CQuest("The Wolf named Chicken", "The Wolves", 1, repeatable);
+        String name = "The Wolf named Chicken";
+
+        CQuest quest = new CQuest(name, "The Wolves", 1, repeatable);
         CQuests.add(quest);
 
         quest.addObjectives(new CObjectiveKill("chickens killed", 5, new CConditionEntityEntryIs("chicken")));
@@ -33,7 +35,7 @@ public class Temp
         quest.setExp(5);
 
 
-        CDialogue dialogue = new CDialogue().setName("The Wolf named Chicken");
+        CDialogue dialogue = new CDialogue().setName(name + " (quest)");
         CDialogues.add(dialogue);
 
         CDialogueBranch branch = new CDialogueBranch("Yeah, that's right...despite being a wolf, my name is \"Chicken\".  Freaking...you know what?  Go kill 5 chickens for me and maybe I'll tell you how I got the name.");
@@ -45,7 +47,7 @@ public class Temp
         dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 
 
-        dialogue = new CDialogue().setName("The Wolf named Chicken (in progress)");
+        dialogue = new CDialogue().setName(name + " (in progress)");
         CDialogues.add(dialogue);
 
         branch = new CDialogueBranch("You kill those chickens yet?  Doesn't look like it...");
@@ -56,7 +58,7 @@ public class Temp
         dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 
 
-        dialogue = new CDialogue().setName("The Wolf named Chicken (complete)");
+        dialogue = new CDialogue().setName(name + " (complete)");
         CDialogues.add(dialogue);
 
         branch = new CDialogueBranch("Hey, grats.  You killed some helpless chickens.  Slow clap.");
@@ -77,6 +79,7 @@ public class Temp
     public static void addCollectionQuest(boolean repeatable)
     {
         String name = "The Wolves are Hungry";
+
         CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("wolf"), new CConditionNot(new CConditionNameIs("Chicken"))};
         ItemStack toCollect = new ItemStack(Items.CHICKEN, 5);
 
@@ -129,6 +132,7 @@ public class Temp
     public static void addCollectionQuest2(boolean repeatable)
     {
         String name = "Bird Bath";
+
         CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("chicken")};
         ItemStack toCollect = new ItemStack(Items.WATER_BUCKET, 1);
 
