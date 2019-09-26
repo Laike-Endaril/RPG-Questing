@@ -20,6 +20,12 @@ public class CConditionQuestCompleted extends CQuestCondition
         super(quest, branch);
     }
 
+    @Override
+    public String relation()
+    {
+        return "Requires quest be completed:";
+    }
+
 
     @Override
     public ArrayList<String> unmetConditions(Entity entity)

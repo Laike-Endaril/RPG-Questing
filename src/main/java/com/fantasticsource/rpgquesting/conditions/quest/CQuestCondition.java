@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.conditions.quest;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
+import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
@@ -31,8 +32,13 @@ public abstract class CQuestCondition extends CCondition
         {
             dialogueID.set(branch.dialogue.permanentID.value);
             branchIndex.set(branch.dialogue.branches.indexOf(branch));
+
+            quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
         }
     }
+
+
+    public abstract String relation();
 
 
     @Override

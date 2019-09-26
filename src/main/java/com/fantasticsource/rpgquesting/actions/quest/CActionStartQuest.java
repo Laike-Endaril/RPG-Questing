@@ -14,4 +14,10 @@ public class CActionStartQuest extends CQuestAction
     {
         super(quest, branch);
     }
+
+    @Override
+    public String relation()
+    {
+        return "Starts quest:";
+    }
 }

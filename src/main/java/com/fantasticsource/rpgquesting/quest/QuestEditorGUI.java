@@ -14,7 +14,6 @@ import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
-import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,7 +24,6 @@ public class QuestEditorGUI extends GUIScreen
 {
     public static QuestEditorGUI GUI;
 
-    private static CQuest quest = new CQuest();
     private static GUITabView tabView;
     private static GUIScrollView main, objectives, rewards, conditions, dialogues;
 
@@ -37,9 +35,6 @@ public class QuestEditorGUI extends GUIScreen
 
     public static void show(CQuest quest)
     {
-        if (quest != null) QuestEditorGUI.quest = quest;
-
-
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
 
@@ -100,10 +95,10 @@ public class QuestEditorGUI extends GUIScreen
         //Dialogues tab
         dialogues.clear();
 
-        for (CUUID id : quest.relatedDialogues)
+        for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
         {
             dialogues.add(new GUIText(GUI, "\n"));
-            dialogues.add(new GUIText(GUI, " " + id.value, getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
+            dialogues.add(new GUIText(GUI, " " + dialogueEntry.relation.value + "\n " + dialogueEntry.dialogueName.value + "\n Branch " + dialogueEntry.branchIndex.value + "\n (Dialogue ID = " + dialogueEntry.dialogueID.value + ")", getIdleColor(WHITE), getHoverColor(WHITE), WHITE));
         }
         dialogues.add(new GUIText(GUI, "\n"));
     }

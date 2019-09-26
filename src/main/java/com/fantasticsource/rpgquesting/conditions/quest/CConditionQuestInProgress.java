@@ -20,6 +20,12 @@ public class CConditionQuestInProgress extends CQuestCondition
         super(quest, branch);
     }
 
+    @Override
+    public String relation()
+    {
+        return "Requires quest be in progress (not ready to be completed)";
+    }
+
 
     @Override
     public ArrayList<String> unmetConditions(Entity entity)

@@ -22,7 +22,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     public CInt level = new CInt();
     public CBoolean repeatable = new CBoolean();
     public CInt experience = new CInt();
-    public ArrayList<CUUID> relatedDialogues = new ArrayList<>();
+    public ArrayList<CRelatedDialogueEntry> relatedDialogues = new ArrayList<>();
 
     public ArrayList<CObjective> objectives = new ArrayList<>();
 
@@ -116,7 +116,7 @@ public class CQuest extends Component implements IObfuscatedComponent
         for (CItemStack reward : rewards) reward.write(buf);
 
         buf.writeInt(relatedDialogues.size());
-        for (CUUID id : relatedDialogues) id.write(buf);
+        for (CRelatedDialogueEntry dialogueEntry : relatedDialogues) dialogueEntry.write(buf);
 
         return this;
     }
@@ -140,7 +140,7 @@ public class CQuest extends Component implements IObfuscatedComponent
         for (int i = buf.readInt(); i > 0; i--) rewards.add(new CItemStack().read(buf));
 
         relatedDialogues.clear();
-        for (int i = buf.readInt(); i > 0; i--) relatedDialogues.add(new CUUID().read(buf));
+        for (int i = buf.readInt(); i > 0; i--) relatedDialogues.add(new CRelatedDialogueEntry().read(buf));
 
         return this;
     }
@@ -164,7 +164,7 @@ public class CQuest extends Component implements IObfuscatedComponent
         for (CItemStack reward : rewards) reward.save(stream);
 
         new CInt().set(relatedDialogues.size()).save(stream);
-        for (CUUID id : relatedDialogues) id.save(stream);
+        for (CRelatedDialogueEntry dialogueEntry : relatedDialogues) dialogueEntry.save(stream);
 
         return this;
     }
@@ -188,7 +188,7 @@ public class CQuest extends Component implements IObfuscatedComponent
         for (int i = new CInt().load(stream).value; i > 0; i--) rewards.add(new CItemStack().load(stream));
 
         relatedDialogues.clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) relatedDialogues.add(new CUUID().load(stream));
+        for (int i = new CInt().load(stream).value; i > 0; i--) relatedDialogues.add(new CRelatedDialogueEntry().load(stream));
 
         return this;
     }

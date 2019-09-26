@@ -20,6 +20,12 @@ public class CConditionQuestAvailable extends CQuestCondition
         super(quest, branch);
     }
 
+    @Override
+    public String relation()
+    {
+        return "Requires quest is available to start:";
+    }
+
 
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
