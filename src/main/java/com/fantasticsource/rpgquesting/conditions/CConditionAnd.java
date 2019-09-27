@@ -38,6 +38,22 @@ public class CConditionAnd extends CCondition
         return result;
     }
 
+    @Override
+    public String description()
+    {
+        if (conditions.size() == 0) return "Requires nothing";
+
+        if (conditions.size() == 1) return conditions.get(0).description();
+
+        StringBuilder s = new StringBuilder("Requires all of these:\n{");
+        for (CCondition condition : conditions)
+        {
+            s.append("\n ").append(condition.description());
+        }
+        s.append("\n}");
+        return s.toString();
+    }
+
     public CConditionAnd add(CCondition... conditions)
     {
         this.conditions.addAll(Arrays.asList(conditions));

@@ -37,6 +37,19 @@ public class CActionArray extends CAction
     }
 
     @Override
+    public String description()
+    {
+        if (actions.size() == 0) return "Does nothing";
+
+        if (actions.size() == 1) return actions.get(0).description();
+
+        StringBuilder s = new StringBuilder("Does all of these things:\n{");
+        for (CAction action : actions) s.append("\n").append(action.description());
+        s.append("\n}");
+        return s.toString();
+    }
+
+    @Override
     public CActionArray write(ByteBuf buf)
     {
         return this;

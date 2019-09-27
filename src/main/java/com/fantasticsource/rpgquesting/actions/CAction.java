@@ -26,4 +26,6 @@ public abstract class CAction extends Component
     }
 
     protected abstract void execute(Entity entity);
+
+    public abstract String description();
 }

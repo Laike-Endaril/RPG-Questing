@@ -23,7 +23,7 @@ public class CConditionQuestInProgress extends CQuestCondition
     @Override
     public String relation()
     {
-        return "requires that this quest be in progress (not ready to be completed)";
+        return "requires that this quest be in progress (not ready to turn in)";
     }
 
 
@@ -40,5 +40,11 @@ public class CConditionQuestInProgress extends CQuestCondition
             else if (!quest.isInProgress((EntityPlayerMP) entity)) result.add("Quest must be in progress: \"" + quest.name.value + '"');
         }
         return result;
+    }
+
+    @Override
+    public String description()
+    {
+        return "Requires quest be in progress (not ready to turn in): " + name.value;
     }
 }

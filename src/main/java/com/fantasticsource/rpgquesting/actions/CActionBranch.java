@@ -67,6 +67,12 @@ public class CActionBranch extends CAction
     }
 
     @Override
+    public String description()
+    {
+        return "Goes to branch " + branchIndex.value + " of dialogue: " + CDialogues.getByPermanentID(dialogueID.value).name.value;
+    }
+
+    @Override
     public CActionBranch write(ByteBuf buf)
     {
         return this;

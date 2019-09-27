@@ -8,4 +8,6 @@ import java.util.ArrayList;
 public abstract class CCondition extends Component
 {
     public abstract ArrayList<String> unmetConditions(Entity entity);
+
+    public abstract String description();
 }

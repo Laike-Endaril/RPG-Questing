@@ -51,6 +51,12 @@ public class CConditionHaveItems extends CCondition
     }
 
     @Override
+    public String description()
+    {
+        return "Requires player to have items: (" + stackToMatch.stack.getCount() + "x) " + stackToMatch.stack.getDisplayName();
+    }
+
+    @Override
     public CConditionHaveItems write(ByteBuf byteBuf)
     {
         return this;

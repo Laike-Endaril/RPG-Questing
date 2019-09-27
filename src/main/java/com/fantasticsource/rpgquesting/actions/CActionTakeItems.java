@@ -54,6 +54,12 @@ public class CActionTakeItems extends CAction
     }
 
     @Override
+    public String description()
+    {
+        return "Takes items from player: (" + stackToMatch.stack.getCount() + "x) " + stackToMatch.stack.getDisplayName();
+    }
+
+    @Override
     public CActionTakeItems write(ByteBuf buf)
     {
         return this;

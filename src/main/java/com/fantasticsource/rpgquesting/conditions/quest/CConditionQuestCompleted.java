@@ -41,4 +41,10 @@ public class CConditionQuestCompleted extends CQuestCondition
         }
         return result;
     }
+
+    @Override
+    public String description()
+    {
+        return "Requires quest be completed: " + name.value;
+    }
 }

@@ -49,6 +49,12 @@ public class CConditionInventorySpace extends CCondition
     }
 
     @Override
+    public String description()
+    {
+        return "Requires player have " + slotCount.value + " empty inventory spaces";
+    }
+
+    @Override
     public CConditionInventorySpace write(ByteBuf byteBuf)
     {
         return this;

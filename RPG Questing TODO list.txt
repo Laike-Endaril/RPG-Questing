@@ -6,7 +6,7 @@ Dialogue Editor
 
 
 
-Improve kill crediting for kill objectives
+Improve kill crediting for kill objectives; check combat tracker of killed entity
 
 
 

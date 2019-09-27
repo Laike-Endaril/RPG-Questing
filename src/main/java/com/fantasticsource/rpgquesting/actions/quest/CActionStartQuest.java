@@ -20,4 +20,10 @@ public class CActionStartQuest extends CQuestAction
     {
         return "starts this quest";
     }
+
+    @Override
+    public String description()
+    {
+        return "Starts quest: " + name.value;
+    }
 }

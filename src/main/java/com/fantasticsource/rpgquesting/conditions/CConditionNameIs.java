@@ -36,6 +36,12 @@ public class CConditionNameIs extends CCondition
     }
 
     @Override
+    public String description()
+    {
+        return "Requires entity name: " + name.value;
+    }
+
+    @Override
     public CConditionNameIs write(ByteBuf byteBuf)
     {
         return this;

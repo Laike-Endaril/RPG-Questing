@@ -23,7 +23,7 @@ public class CConditionQuestReadyToComplete extends CQuestCondition
     @Override
     public String relation()
     {
-        return "requires that this quest be ready to be completed";
+        return "requires that this quest be ready to turn in";
     }
 
 
@@ -40,5 +40,11 @@ public class CConditionQuestReadyToComplete extends CQuestCondition
             else if (!quest.isReadyToComplete((EntityPlayerMP) entity)) result.add("Quest must be ready to be completed: \"" + quest.name.value + '"');
         }
         return result;
+    }
+
+    @Override
+    public String description()
+    {
+        return "Requires quest be ready to turn in: " + name.value;
     }
 }

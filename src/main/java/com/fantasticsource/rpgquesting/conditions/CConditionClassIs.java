@@ -21,6 +21,12 @@ public class CConditionClassIs extends CCondition
     }
 
     @Override
+    public String description()
+    {
+        return "Requires entity class: " + className.value;
+    }
+
+    @Override
     public CConditionClassIs write(ByteBuf byteBuf)
     {
         return this;

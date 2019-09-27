@@ -37,6 +37,12 @@ public class CConditionNot extends CCondition
     }
 
     @Override
+    public String description()
+    {
+        return "Requires that this NOT be true: " + condition;
+    }
+
+    @Override
     public CConditionNot write(ByteBuf buf)
     {
         Component.writeMarked(buf, condition);

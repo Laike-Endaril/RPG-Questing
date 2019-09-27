@@ -41,4 +41,10 @@ public class CConditionQuestAvailable extends CQuestCondition
         }
         return result;
     }
+
+    @Override
+    public String description()
+    {
+        return "Requires quest be available: " + name.value;
+    }
 }

@@ -20,4 +20,10 @@ public class CActionCompleteQuest extends CQuestAction
     {
         return "completes this quest";
     }
+
+    @Override
+    public String description()
+    {
+        return "Completes quest: " + name.value;
+    }
 }

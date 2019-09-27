@@ -22,6 +22,12 @@ public class CActionEndDialogue extends CAction
     }
 
     @Override
+    public String description()
+    {
+        return "Ends / closes the current dialogue";
+    }
+
+    @Override
     public CActionEndDialogue write(ByteBuf buf)
     {
         return this;

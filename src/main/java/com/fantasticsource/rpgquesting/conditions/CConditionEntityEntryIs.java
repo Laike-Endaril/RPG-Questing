@@ -40,6 +40,12 @@ public class CConditionEntityEntryIs extends CCondition
     }
 
     @Override
+    public String description()
+    {
+        return "Requires entity entry: " + entityEntryName.value;
+    }
+
+    @Override
     public CConditionEntityEntryIs write(ByteBuf byteBuf)
     {
         return this;
