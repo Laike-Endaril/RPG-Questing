@@ -2,10 +2,12 @@ package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
+import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
@@ -29,6 +31,7 @@ public class QuestEditorGUI extends GUIScreen
 {
     public static QuestEditorGUI GUI;
 
+    private static GUITextButton save, cancel, delete;
     private static GUITabView tabView;
     private static GUIScrollView main, objectives, rewards, conditions, dialogues;
 
@@ -140,12 +143,32 @@ public class QuestEditorGUI extends GUIScreen
     }
 
     @Override
+    public void onResize(Minecraft mcIn, int w, int h)
+    {
+        super.onResize(mcIn, w, h);
+        double yy = delete.y + delete.height;
+        tabView.y = yy;
+        tabView.height = 1 - yy;
+        tabView.recalc();
+    }
+
+    @Override
     protected void init()
     {
-        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        GUIElement root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
+        guiElements.add(root);
 
-        tabView = new GUITabView(this, 1, 1, "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
-        guiElements.add(tabView);
+        save = new GUITextButton(GUI, "Save Quest", JournalGUI.GREEN[0]);
+        root.add(save);
+        cancel = new GUITextButton(GUI, "Cancel");
+        root.add(cancel);
+        delete = new GUITextButton(GUI, "Delete Quest", JournalGUI.RED[0]);
+        root.add(delete);
+
+        double yy = delete.y + delete.height;
+
+        tabView = new GUITabView(this, 0, yy, 1, 1 - yy, "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
+        root.add(tabView);
 
         main = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(0).add(main);
