@@ -81,7 +81,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CItemStack reward : quest.rewards)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            rewards.add(new GUIText(GUI, " " + reward.stack.getDisplayName(), WHITE[0], WHITE[1], WHITE[2]));
+            rewards.add(new GUIText(GUI, " (" + reward.stack.getCount() + "x) " + reward.stack.getDisplayName(), WHITE[0], WHITE[1], WHITE[2]));
         }
         rewards.add(new GUIText(GUI, "\n"));
 
@@ -89,10 +89,15 @@ public class QuestEditorGUI extends GUIScreen
         //Conditions tab
         conditions.clear();
 
-        for (CCondition condition : quest.conditions)
+        if (conditions.size() == 0)
         {
             conditions.add(new GUIText(GUI, "\n"));
-            conditions.add(new GUIText(GUI, " " + condition.getClass().getSimpleName(), WHITE[0], WHITE[1], WHITE[2]));
+            conditions.add(new GUIText(GUI, " (None)", WHITE[0]));
+        }
+        else for (CCondition condition : quest.conditions)
+        {
+            conditions.add(new GUIText(GUI, "\n"));
+            conditions.add(new GUIText(GUI, " " + condition.description(), WHITE[0], WHITE[1], WHITE[2]));
         }
         conditions.add(new GUIText(GUI, "\n"));
 
