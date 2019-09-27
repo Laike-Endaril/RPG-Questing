@@ -1,9 +1,11 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
+import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
+import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
@@ -20,6 +22,7 @@ import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.LinkedHashMap;
 import java.util.UUID;
@@ -32,6 +35,7 @@ public class QuestEditorGUI extends GUIScreen
     public static QuestEditorGUI GUI;
 
     private static GUITextButton save, cancel, delete;
+    private static GUIGradientBorder separator;
     private static GUITabView tabView;
     private static GUIScrollView main, objectives, rewards, conditions, dialogues;
 
@@ -146,9 +150,7 @@ public class QuestEditorGUI extends GUIScreen
     public void onResize(Minecraft mcIn, int w, int h)
     {
         super.onResize(mcIn, w, h);
-        double yy = delete.y + delete.height;
-        tabView.y = yy;
-        tabView.height = 1 - yy;
+        tabView.height = 1 - (separator.y + separator.height);
         tabView.recalc();
     }
 
@@ -158,16 +160,17 @@ public class QuestEditorGUI extends GUIScreen
         GUIElement root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
         guiElements.add(root);
 
-        save = new GUITextButton(GUI, "Save Quest", JournalGUI.GREEN[0]);
+        save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
         root.add(save);
-        cancel = new GUITextButton(GUI, "Cancel");
+        cancel = new GUITextButton(this, "Close Without Saving");
         root.add(cancel);
-        delete = new GUITextButton(GUI, "Delete Quest", JournalGUI.RED[0]);
+        delete = new GUITextButton(this, "Delete Quest and Close", JournalGUI.RED[0]);
         root.add(delete);
 
-        double yy = delete.y + delete.height;
+        separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.WHITE.copy().setAF(0.3f));
+        root.add(separator);
 
-        tabView = new GUITabView(this, 0, yy, 1, 1 - yy, "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
+        tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
         root.add(tabView);
 
         main = new GUIScrollView(this, 0.98, 1);
@@ -194,6 +197,29 @@ public class QuestEditorGUI extends GUIScreen
     @Override
     public void onGuiClosed()
     {
+        //Need to request journal data in case things have changed
         Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
+    }
+
+    @SubscribeEvent
+    public static void click(GUILeftClickEvent event)
+    {
+        GUIElement element = event.getElement();
+        if (element == save)
+        {
+
+        }
+        else if (element == cancel)
+        {
+            GUI.close();
+        }
+        else if (element == delete)
+        {
+
+        }
+        else
+        {
+
+        }
     }
 }
