@@ -46,7 +46,8 @@ public class QuestEditorGUI extends GUIScreen
 
     public static void show(CQuest quest)
     {
-        Minecraft.getMinecraft().displayGuiScreen(GUI);
+        if (Minecraft.getMinecraft().currentScreen == JournalGUI.GUI) GUIScreen.showStacked(GUI);
+        else Minecraft.getMinecraft().displayGuiScreen(GUI);
 
 
         //Main tab
