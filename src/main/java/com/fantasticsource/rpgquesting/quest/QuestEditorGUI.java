@@ -7,10 +7,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
-import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
-import com.fantasticsource.mctools.gui.element.text.GUIText;
-import com.fantasticsource.mctools.gui.element.text.GUITextButton;
-import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
+import com.fantasticsource.mctools.gui.element.text.*;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
@@ -93,7 +90,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CItemStack reward : quest.rewards)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            rewards.add(new GUIText(GUI, " (" + reward.stack.getCount() + "x) " + reward.stack.getDisplayName(), WHITE[0], WHITE[1], WHITE[2]));
+            rewards.add(new GUIItemStack(GUI, reward.stack));
         }
         rewards.add(new GUIText(GUI, "\n"));
 
