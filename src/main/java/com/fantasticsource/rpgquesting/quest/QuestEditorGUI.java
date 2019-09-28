@@ -16,7 +16,6 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
-import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
@@ -194,16 +193,11 @@ public class QuestEditorGUI extends GUIScreen
         tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
     }
 
-    @Override
-    public void onGuiClosed()
-    {
-        //Need to request journal data in case things have changed
-        Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
-    }
-
     @SubscribeEvent
     public static void click(GUILeftClickEvent event)
     {
+        if (event.getScreen() != GUI) return;
+
         GUIElement element = event.getElement();
         if (element == save)
         {
