@@ -13,6 +13,7 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.conditions.ConditionPickerGUI;
@@ -224,6 +225,11 @@ public class QuestEditorGUI extends GUIScreen
         if (element == delete)
         {
             return;
+        }
+
+        if (element instanceof GUIItemStack)
+        {
+            ItemSelectionGUI.show((GUIItemStack) element);
         }
 
         if (element instanceof GUICondition)
