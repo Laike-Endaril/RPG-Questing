@@ -4,7 +4,6 @@ import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
-import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
 import io.netty.buffer.ByteBuf;
@@ -17,7 +16,6 @@ public abstract class CQuestCondition extends CCondition
 {
     public CStringUTF8 name = new CStringUTF8();
     public CUUID dialogueID = new CUUID().set(UUID.randomUUID());
-    public CInt branchIndex = new CInt().set(-1);
 
 
     public CQuestCondition()
@@ -31,7 +29,6 @@ public abstract class CQuestCondition extends CCondition
         if (branch != null)
         {
             dialogueID.set(branch.dialogue.permanentID.value);
-            branchIndex.set(branch.dialogue.branches.indexOf(branch));
 
             quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
         }
@@ -46,7 +43,6 @@ public abstract class CQuestCondition extends CCondition
     {
         name.write(buf);
         dialogueID.write(buf);
-        branchIndex.write(buf);
 
         return this;
     }
@@ -56,7 +52,6 @@ public abstract class CQuestCondition extends CCondition
     {
         name.read(buf);
         dialogueID.read(buf);
-        branchIndex.read(buf);
 
         return this;
     }
@@ -66,7 +61,6 @@ public abstract class CQuestCondition extends CCondition
     {
         name.save(stream);
         dialogueID.save(stream);
-        branchIndex.save(stream);
 
         return this;
     }
@@ -76,7 +70,6 @@ public abstract class CQuestCondition extends CCondition
     {
         name.load(stream);
         dialogueID.load(stream);
-        branchIndex.load(stream);
 
         return this;
     }

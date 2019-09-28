@@ -22,7 +22,6 @@ public abstract class CQuestAction extends CAction
 {
     public CStringUTF8 name = new CStringUTF8();
     public CUUID dialogueID = new CUUID().set(UUID.randomUUID());
-    public CInt branchIndex = new CInt().set(-1);
 
 
     public CQuestAction()
@@ -37,7 +36,6 @@ public abstract class CQuestAction extends CAction
         if (branch != null)
         {
             dialogueID.set(branch.dialogue.permanentID.value);
-            branchIndex.set(branch.dialogue.branches.indexOf(branch));
 
             quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
         }
@@ -59,7 +57,6 @@ public abstract class CQuestAction extends CAction
     {
         name.write(buf);
         dialogueID.write(buf);
-        branchIndex.write(buf);
 
         buf.writeInt(conditions.size());
         for (CCondition condition : conditions) Component.writeMarked(buf, condition);
@@ -72,7 +69,6 @@ public abstract class CQuestAction extends CAction
     {
         name.read(buf);
         dialogueID.read(buf);
-        branchIndex.read(buf);
 
         conditions.clear();
         for (int i = buf.readInt(); i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
@@ -85,7 +81,6 @@ public abstract class CQuestAction extends CAction
     {
         name.save(stream);
         dialogueID.save(stream);
-        branchIndex.save(stream);
 
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -98,7 +93,6 @@ public abstract class CQuestAction extends CAction
     {
         name.load(stream);
         dialogueID.load(stream);
-        branchIndex.load(stream);
 
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
