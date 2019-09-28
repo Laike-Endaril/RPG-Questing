@@ -168,7 +168,7 @@ public class QuestEditorGUI extends GUIScreen
         delete = new GUITextButton(this, "Delete Quest and Close", JournalGUI.RED[0]);
         root.add(delete);
 
-        separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.WHITE.copy().setAF(0.3f));
+        separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
         root.add(separator);
 
         tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
