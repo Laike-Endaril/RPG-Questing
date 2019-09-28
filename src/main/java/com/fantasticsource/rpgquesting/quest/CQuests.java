@@ -179,7 +179,7 @@ public class CQuests extends Component
         player.addExperience(quest.experience.value);
         for (CItemStack stack : quest.rewards)
         {
-            player.addItemStackToInventory(stack.stack);
+            player.addItemStackToInventory(stack.stack.copy());
         }
 
 
