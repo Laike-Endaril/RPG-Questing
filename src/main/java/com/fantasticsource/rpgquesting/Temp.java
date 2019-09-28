@@ -80,7 +80,7 @@ public class Temp
     {
         String name = "The Wolves are Hungry";
 
-        CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("wolf"), new CConditionNot(new CConditionNameIs("Chicken"))};
+        CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("wolf")};
         ItemStack toCollect = new ItemStack(Items.CHICKEN, 5);
 
 
