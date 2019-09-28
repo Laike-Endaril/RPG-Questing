@@ -4,15 +4,12 @@ import com.fantasticsource.rpgquesting.actions.CAction;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
-import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,13 +41,6 @@ public abstract class CQuestAction extends CAction
 
     public abstract String relation();
 
-
-    @Override
-    public void execute(Entity entity)
-    {
-        if (!(entity instanceof EntityPlayerMP)) return;
-        CQuests.complete((EntityPlayerMP) entity, name.value);
-    }
 
     @Override
     public CQuestAction write(ByteBuf buf)

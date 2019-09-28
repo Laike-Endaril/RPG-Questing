@@ -274,7 +274,11 @@ public class Network
                             {
                                 if (choice.text.value.equals(packet.choice.value))
                                 {
-                                    if (dialogue.isAvailable(player, target) || choice.action.getClass() == CActionEndDialogue.class) choice.execute(player);
+                                    if (dialogue.isAvailable(player, target) || choice.action.getClass() == CActionEndDialogue.class)
+                                    {
+                                        choice.execute(player);
+                                    }
+                                    return;
                                 }
                             }
                         }
