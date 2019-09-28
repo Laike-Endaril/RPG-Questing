@@ -18,12 +18,15 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.conditions.ConditionPickerGUI;
+import com.fantasticsource.rpgquesting.conditions.element.GUICondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -38,6 +41,8 @@ public class QuestEditorGUI extends GUIScreen
     private static GUIGradientBorder separator;
     private static GUITabView tabView;
     private static GUIScrollView main, objectives, rewards, conditions, dialogues;
+
+    private static ArrayList<GUICondition> guiConditions = new ArrayList<>();
 
     static
     {
@@ -96,16 +101,15 @@ public class QuestEditorGUI extends GUIScreen
         //Conditions tab
         conditions.clear();
 
-        if (conditions.size() == 0)
+        for (CCondition condition : quest.conditions)
         {
             conditions.add(new GUIText(GUI, "\n"));
-            conditions.add(new GUIText(GUI, " (None)", WHITE[0]));
+            conditions.add(new GUICondition(GUI, condition));
         }
-        else for (CCondition condition : quest.conditions)
-        {
-            conditions.add(new GUIText(GUI, "\n"));
-            conditions.add(new GUIText(GUI, " " + condition.description(), WHITE[0], WHITE[1], WHITE[2]));
-        }
+
+        conditions.add(new GUIText(GUI, "\n"));
+        conditions.add(new GUICondition(GUI, null));
+
         conditions.add(new GUIText(GUI, "\n"));
 
 
@@ -206,22 +210,29 @@ public class QuestEditorGUI extends GUIScreen
     {
         if (event.getScreen() != GUI) return;
 
+
         GUIElement element = event.getElement();
+
         if (element == save)
         {
-
+            return;
         }
-        else if (element == cancel)
+
+        if (element == cancel)
         {
             GUI.close();
+            return;
         }
-        else if (element == delete)
-        {
 
+        if (element == delete)
+        {
+            return;
         }
-        else
-        {
 
+        if (element instanceof GUICondition)
+        {
+            ConditionPickerGUI.show((GUICondition) element);
+            return;
         }
     }
 }
