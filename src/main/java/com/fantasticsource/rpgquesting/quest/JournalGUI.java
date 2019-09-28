@@ -81,7 +81,7 @@ public class JournalGUI extends GUIScreen
         if (QuestTracker.questname.equals("")) viewTracked = null;
         else
         {
-            viewTracked = new GUIText(GUI, " (View Tracked Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
+            viewTracked = new GUIText(GUI, "(View Tracked Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
             inProgressTab.add(viewTracked);
             inProgressTab.add(new GUIText(GUI, "\n"));
         }
@@ -90,7 +90,7 @@ public class JournalGUI extends GUIScreen
         {
             boolean groupDone = true;
 
-            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry2.getKey());
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry2.getKey());
             inProgressGroupElementToName.put(groupSpoiler, entry2.getKey());
             inProgressTab.add(groupSpoiler);
 
@@ -108,7 +108,7 @@ public class JournalGUI extends GUIScreen
                 if (!done) groupDone = false;
 
                 Color[] c = done ? GREEN : started ? YELLOW : RED;
-                GUIText quest = new GUIText(GUI, " * " + entry.getKey() + "\n", c[0], c[1], c[2]);
+                GUIText quest = new GUIText(GUI, "* " + entry.getKey() + "\n", c[0], c[1], c[2]);
                 groupSpoiler.add(quest);
                 inProgressQuestElementToName.put(quest, entry.getKey());
                 inProgressStringToQuestElement.put(entry.getKey(), quest);
@@ -133,7 +133,7 @@ public class JournalGUI extends GUIScreen
             Boolean groupDone = knownQuestGroupCompletion.get(entry.getKey());
             Color[] c = groupDone == null ? BLUE : groupDone ? GREEN : YELLOW;
 
-            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry.getKey(), c[0], c[1], c[2]);
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey(), c[0], c[1], c[2]);
             completedGroupElementToName.put(groupSpoiler, entry.getKey());
             completedTab.add(groupSpoiler);
 
@@ -142,7 +142,7 @@ public class JournalGUI extends GUIScreen
                 groupSpoiler.add(new GUIText(GUI, "\n"));
 
                 Color[] c1 = inProgressStringToQuestElement.containsKey(s) ? GREEN : BLUE;
-                GUIText quest = new GUIText(GUI, " * " + s + "\n", c1[0], c1[1], c1[2]);
+                GUIText quest = new GUIText(GUI, "* " + s + "\n", c1[0], c1[1], c1[2]);
                 groupSpoiler.add(quest);
                 completedQuestElementToName.put(quest, s);
                 completedStringToQuestElement.put(s, quest);
@@ -169,14 +169,14 @@ public class JournalGUI extends GUIScreen
         {
             if (navigator.tabs.size() == 2) navigator.addTab("All");
 
-            allTab = new GUIScrollView(GUI, 0.96, 1);
+            allTab = new GUIScrollView(GUI, 0.04, 0, 0.88, 1);
             navigator.tabViews.get(2).add(allTab);
             navigator.tabViews.get(2).add(new GUIVerticalScrollbar(GUI, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, allTab));
 
             allTab.add(new GUIText(GUI, "\n"));
             for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
             {
-                GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, " " + entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
+                GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
                 allTab.add(groupSpoiler);
                 allNameToGroupElement.put(entry.getKey(), groupSpoiler);
 
@@ -184,7 +184,7 @@ public class JournalGUI extends GUIScreen
                 {
                     groupSpoiler.add(new GUIText(GUI, "\n"));
 
-                    GUIText quest = new GUIText(GUI, " * " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
+                    GUIText quest = new GUIText(GUI, "* " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
                     groupSpoiler.add(quest);
 
                     allQuestElementToQuest.put(quest, entry2.getValue());
@@ -502,12 +502,12 @@ public class JournalGUI extends GUIScreen
         guiElements.add(navigator);
 
 
-        inProgressTab = new GUIScrollView(this, 0.96, 1);
+        inProgressTab = new GUIScrollView(this, 0.04, 0, 0.88, 1);
         navigator.tabViews.get(0).add(inProgressTab);
         navigator.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgressTab));
 
 
-        completedTab = new GUIScrollView(this, 0.96, 1);
+        completedTab = new GUIScrollView(this, 0.04, 0, 0.88, 1);
         navigator.tabViews.get(1).add(completedTab);
         navigator.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completedTab));
 

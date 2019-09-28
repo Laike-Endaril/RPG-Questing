@@ -56,19 +56,19 @@ public class QuestEditorGUI extends GUIScreen
         main.clear();
 
         main.add(new GUIText(GUI, "\n"));
-        main.add(new GUILabeledTextInput(GUI, " Name: ", quest.name.value, FilterNotEmpty.INSTANCE));
+        main.add(new GUILabeledTextInput(GUI, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE));
 
         main.add(new GUIText(GUI, "\n"));
-        main.add(new GUILabeledTextInput(GUI, " Group: ", quest.group.value, FilterNotEmpty.INSTANCE));
+        main.add(new GUILabeledTextInput(GUI, "Group: ", quest.group.value, FilterNotEmpty.INSTANCE));
 
         main.add(new GUIText(GUI, "\n"));
-        main.add(new GUILabeledTextInput(GUI, " Level: ", "" + quest.level.value, FilterInt.INSTANCE));
+        main.add(new GUILabeledTextInput(GUI, "Level: ", "" + quest.level.value, FilterInt.INSTANCE));
 
         main.add(new GUIText(GUI, "\n"));
-        main.add(new GUILabeledTextInput(GUI, " Repeatable: ", "" + quest.repeatable.value, FilterBoolean.INSTANCE));
+        main.add(new GUILabeledTextInput(GUI, "Repeatable: ", "" + quest.repeatable.value, FilterBoolean.INSTANCE));
 
         main.add(new GUIText(GUI, "\n"));
-        main.add(new GUILabeledTextInput(GUI, " Experience Awarded: ", "" + quest.experience.value, FilterInt.INSTANCE));
+        main.add(new GUILabeledTextInput(GUI, "Experience Awarded: ", "" + quest.experience.value, FilterInt.INSTANCE));
 
         main.add(new GUIText(GUI, "\n"));
 
@@ -79,7 +79,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CObjective objective : quest.objectives)
         {
             objectives.add(new GUIText(GUI, "\n"));
-            objectives.add(new GUIText(GUI, " " + objective.getFullText(), WHITE[0], WHITE[1], WHITE[2]));
+            objectives.add(new GUIText(GUI, objective.getFullText(), WHITE[0], WHITE[1], WHITE[2]));
         }
         objectives.add(new GUIText(GUI, "\n"));
 
@@ -120,7 +120,7 @@ public class QuestEditorGUI extends GUIScreen
             GUITextSpoiler spoiler = dialogueSpoilers.get(id);
             if (spoiler == null)
             {
-                spoiler = new GUITextSpoiler(GUI, " " + dialogueEntry.dialogueName.value, WHITE[0], WHITE[1], WHITE[2]);
+                spoiler = new GUITextSpoiler(GUI, dialogueEntry.dialogueName.value, WHITE[0], WHITE[1], WHITE[2]);
 
                 dialogues.add(new GUIText(GUI, "\n"));
                 dialogues.add(spoiler);
@@ -129,7 +129,7 @@ public class QuestEditorGUI extends GUIScreen
                 spoiler.add(new GUIText(GUI, "\n"));
                 spoiler.add(new GUIText(GUI, "========================================================================================================================================================================================", WHITE[0]));
                 spoiler.add(new GUIText(GUI, "\n"));
-                spoiler.add(new GUIText(GUI, " * ", WHITE[0]));
+                spoiler.add(new GUIText(GUI, "* ", WHITE[0]));
                 spoiler.add(new GUIText(GUI, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
                 spoiler.add(new GUIText(GUI, " " + dialogueEntry.relation.value, WHITE[0]));
                 spoiler.add(new GUIText(GUI, "\n"));
@@ -138,7 +138,7 @@ public class QuestEditorGUI extends GUIScreen
             }
             else
             {
-                spoiler.add(spoiler.size() - 2, new GUIText(GUI, " * ", WHITE[0]));
+                spoiler.add(spoiler.size() - 2, new GUIText(GUI, "* ", WHITE[0]));
                 spoiler.add(spoiler.size() - 2, new GUIText(GUI, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
                 spoiler.add(spoiler.size() - 2, new GUIText(GUI, " " + dialogueEntry.relation.value, WHITE[0]));
                 spoiler.add(spoiler.size() - 2, new GUIText(GUI, "\n"));
@@ -174,23 +174,23 @@ public class QuestEditorGUI extends GUIScreen
         tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
         root.add(tabView);
 
-        main = new GUIScrollView(this, 0.98, 1);
+        main = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(0).add(main);
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
 
-        objectives = new GUIScrollView(this, 0.98, 1);
+        objectives = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(1).add(objectives);
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectives));
 
-        rewards = new GUIScrollView(this, 0.98, 1);
+        rewards = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(2).add(rewards);
         tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, rewards));
 
-        conditions = new GUIScrollView(this, 0.98, 1);
+        conditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(3).add(conditions);
         tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditions));
 
-        dialogues = new GUIScrollView(this, 0.98, 1);
+        dialogues = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(4).add(dialogues);
         tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
     }
