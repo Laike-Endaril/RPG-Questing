@@ -16,6 +16,7 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
@@ -46,8 +47,7 @@ public class QuestEditorGUI extends GUIScreen
 
     public static void show(CQuest quest)
     {
-        if (Minecraft.getMinecraft().currentScreen == JournalGUI.GUI) GUIScreen.showStacked(GUI);
-        else Minecraft.getMinecraft().displayGuiScreen(GUI);
+        Minecraft.getMinecraft().displayGuiScreen(GUI);
 
 
         //Main tab
@@ -192,6 +192,13 @@ public class QuestEditorGUI extends GUIScreen
         dialogues = new GUIScrollView(this, 0.98, 1);
         tabView.tabViews.get(4).add(dialogues);
         tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
+    }
+
+    @Override
+    public void onClosed()
+    {
+        super.onClosed();
+        Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
     }
 
     @SubscribeEvent
