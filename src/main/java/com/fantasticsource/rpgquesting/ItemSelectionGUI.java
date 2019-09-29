@@ -57,8 +57,12 @@ public class ItemSelectionGUI extends GUIScreen
         EntityPlayer player = Minecraft.getMinecraft().player;
         for (int i = 0; i < player.inventory.getSizeInventory(); i++)
         {
-            scrollView.add(new GUIItemStack(GUI, player.inventory.getStackInSlot(i).copy()));
-            scrollView.add(new GUIText(GUI, "\n"));
+            ItemStack stack = player.inventory.getStackInSlot(i);
+            if (!stack.isEmpty())
+            {
+                scrollView.add(new GUIItemStack(GUI, stack.copy()));
+                scrollView.add(new GUIText(GUI, "\n"));
+            }
         }
     }
 
@@ -86,20 +90,41 @@ public class ItemSelectionGUI extends GUIScreen
             ItemStack stack = ((GUIItemStack) element).getStack();
             if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
             {
+                //Started with empty slot
                 if (!stack.isEmpty())
                 {
+                    //Added new reward
                     int index = QuestEditorGUI.rewards.indexOf(clickedElement);
                     QuestEditorGUI.rewards.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
                     QuestEditorGUI.rewards.add(index, new GUIItemStack(QuestEditorGUI.GUI, stack.copy()));
 
-                    if (index == 1) //Rewards were empty, but no longer are
+                    if (index == 1)
                     {
+                        //Rewards were empty, but no longer are
                         QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
                         QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "\n"));
                     }
                 }
             }
-            else clickedElement.setStack(stack.copy());
+            else
+            {
+                //Started with non-empty slot, or at least one that should not be empty
+                if (!stack.isEmpty()) clickedElement.setStack(stack.copy());
+                else
+                {
+                    //Removing a reward
+                    int index = QuestEditorGUI.rewards.indexOf(clickedElement);
+                    QuestEditorGUI.rewards.remove(index);
+                    QuestEditorGUI.rewards.remove(index);
+
+                    if (QuestEditorGUI.rewards.size() == 5)
+                    {
+                        //Had one reward, and now have 0 (remove the "clear all" option)
+                        QuestEditorGUI.rewards.remove(3);
+                        QuestEditorGUI.rewards.remove(3);
+                    }
+                }
+            }
 
             GUI.close();
         }
