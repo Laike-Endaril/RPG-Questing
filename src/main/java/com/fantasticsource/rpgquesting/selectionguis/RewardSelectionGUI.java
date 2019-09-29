@@ -1,4 +1,4 @@
-package com.fantasticsource.rpgquesting;
+package com.fantasticsource.rpgquesting.selectionguis;
 
 import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
@@ -19,17 +19,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
-public class ItemSelectionGUI extends GUIScreen
+public class RewardSelectionGUI extends GUIScreen
 {
-    public static ItemSelectionGUI GUI;
+    public static RewardSelectionGUI GUI;
 
     private static GUIScrollView scrollView;
     private static GUIItemStack clickedElement;
 
     static
     {
-        GUI = new ItemSelectionGUI();
-        MinecraftForge.EVENT_BUS.register(ItemSelectionGUI.class);
+        GUI = new RewardSelectionGUI();
+        MinecraftForge.EVENT_BUS.register(RewardSelectionGUI.class);
     }
 
     public static void show(GUIItemStack clickedElement)
@@ -37,7 +37,7 @@ public class ItemSelectionGUI extends GUIScreen
         if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(GUI);
         else Minecraft.getMinecraft().displayGuiScreen(GUI);
 
-        ItemSelectionGUI.clickedElement = clickedElement;
+        RewardSelectionGUI.clickedElement = clickedElement;
 
 
         scrollView.clear();

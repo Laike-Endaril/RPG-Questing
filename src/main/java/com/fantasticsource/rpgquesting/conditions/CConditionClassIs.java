@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.conditions;
 import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.text.TextFormatting;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,6 +12,15 @@ import java.util.ArrayList;
 public class CConditionClassIs extends CCondition
 {
     public CStringUTF8 className = new CStringUTF8();
+
+    public CConditionClassIs()
+    {
+    }
+
+    public CConditionClassIs(String className)
+    {
+        this.className.set(className);
+    }
 
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
@@ -23,7 +33,7 @@ public class CConditionClassIs extends CCondition
     @Override
     public String description()
     {
-        return "Requires entity class: " + className.value;
+        return "Requires entity class: " + TextFormatting.GOLD + className.value;
     }
 
     @Override

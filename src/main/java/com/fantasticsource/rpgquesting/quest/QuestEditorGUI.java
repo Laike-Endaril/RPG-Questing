@@ -13,12 +13,12 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
-import com.fantasticsource.rpgquesting.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
-import com.fantasticsource.rpgquesting.conditions.ConditionPickerGUI;
-import com.fantasticsource.rpgquesting.conditions.element.GUICondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
+import com.fantasticsource.rpgquesting.selectionguis.ConditionSelectionGUI;
+import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
+import com.fantasticsource.rpgquesting.selectionguis.RewardSelectionGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -119,7 +119,15 @@ public class QuestEditorGUI extends GUIScreen
         }
 
         conditions.add(new GUIText(GUI, "\n"));
-        conditions.add(new GUICondition(GUI, null));
+        GUICondition conditionElement = new GUICondition(GUI, null);
+        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+        conditions.add(conditionElement);
+
+        if (quest.conditions.size() > 0)
+        {
+            conditions.add(new GUIText(GUI, "\n"));
+            conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]));
+        }
 
         conditions.add(new GUIText(GUI, "\n"));
 
@@ -224,6 +232,8 @@ public class QuestEditorGUI extends GUIScreen
 
         GUIElement element = event.getElement();
 
+
+        //Management
         if (element == save)
         {
             return;
@@ -240,6 +250,8 @@ public class QuestEditorGUI extends GUIScreen
             return;
         }
 
+
+        //Rewards
         if (element.getClass() == GUIText.class)
         {
             if (element.toString().equals("(Clear all rewards)\n"))
@@ -258,13 +270,15 @@ public class QuestEditorGUI extends GUIScreen
 
         if (element.getClass() == GUIItemStack.class)
         {
-            ItemSelectionGUI.show((GUIItemStack) element);
+            RewardSelectionGUI.show((GUIItemStack) element);
             return;
         }
 
+
+        //Conditions
         if (element.getClass() == GUICondition.class)
         {
-            ConditionPickerGUI.show((GUICondition) element);
+            ConditionSelectionGUI.show((GUICondition) element);
             return;
         }
     }

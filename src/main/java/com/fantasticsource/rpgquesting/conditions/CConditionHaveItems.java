@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,7 +54,7 @@ public class CConditionHaveItems extends CCondition
     @Override
     public String description()
     {
-        return "Requires player to have items: (" + stackToMatch.stack.getCount() + "x) " + stackToMatch.stack.getDisplayName();
+        return "Requires player to have items: " + TextFormatting.GOLD + "(" + stackToMatch.stack.getCount() + "x) " + stackToMatch.stack.getDisplayName();
     }
 
     @Override

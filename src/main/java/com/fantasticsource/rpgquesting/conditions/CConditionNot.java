@@ -39,7 +39,8 @@ public class CConditionNot extends CCondition
     @Override
     public String description()
     {
-        return "Requires that this NOT be true: " + condition;
+        if (condition == null) return "Requires nothing";
+        return "Requires that this NOT be true: " + condition.description();
     }
 
     @Override

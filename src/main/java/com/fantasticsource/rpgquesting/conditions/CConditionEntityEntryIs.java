@@ -4,6 +4,7 @@ import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
@@ -42,7 +43,7 @@ public class CConditionEntityEntryIs extends CCondition
     @Override
     public String description()
     {
-        return "Requires entity entry: " + entityEntryName.value;
+        return "Requires entity entry: " + TextFormatting.GOLD + entityEntryName.value;
     }
 
     @Override

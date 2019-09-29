@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.conditions;
 import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.text.TextFormatting;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,7 +39,7 @@ public class CConditionNameIs extends CCondition
     @Override
     public String description()
     {
-        return "Requires entity name: " + name.value;
+        return "Requires entity name: " + TextFormatting.GOLD + name.value;
     }
 
     @Override
