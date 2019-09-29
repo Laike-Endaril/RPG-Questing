@@ -11,21 +11,22 @@ public class GUICondition extends GUIText
 
     public GUICondition(GUIScreen screen, CCondition condition)
     {
-        super(screen, condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description());
+        super(screen, condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description().replace("Requires", "Require"));
 
         this.condition = condition;
     }
 
     public GUICondition(GUIScreen screen, double x, double y, CCondition condition)
     {
-        super(screen, x, y, condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description());
+        super(screen, x, y, condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description().replace("Requires", "Require"));
 
         this.condition = condition;
     }
 
     public GUICondition setCondition(CCondition condition)
     {
-        text = condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description();
+        text = condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description().replace("Requires", "Require");
+
         this.condition = condition;
 
         return this;

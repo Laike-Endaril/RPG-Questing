@@ -1,5 +1,8 @@
 package com.fantasticsource.rpgquesting.conditions;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
+import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
@@ -55,6 +58,21 @@ public class CConditionOr extends CCondition
         }
         s.append("\n}");
         return s.toString();
+    }
+
+    @Override
+    public GUICondition getChoosableElement(GUIScreen screen)
+    {
+        GUICondition conditionElement = new GUICondition(screen, new CConditionOr());
+        conditionElement.text = conditionElement.text.replace("nothing", "at least one of multiple conditions (OR)...");
+        return conditionElement;
+    }
+
+    @Override
+    public GUIElement getEditableElement(GUIScreen screen)
+    {
+        //TODO
+        return null;
     }
 
     public CConditionOr add(CCondition... conditions)

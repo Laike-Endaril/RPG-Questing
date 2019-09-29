@@ -1,5 +1,8 @@
 package com.fantasticsource.rpgquesting.conditions;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
+import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
@@ -52,6 +55,21 @@ public class CConditionAnd extends CCondition
         }
         s.append("\n}");
         return s.toString();
+    }
+
+    @Override
+    public GUICondition getChoosableElement(GUIScreen screen)
+    {
+        GUICondition conditionElement = new GUICondition(screen, new CConditionAnd());
+        conditionElement.text = conditionElement.text.replace("nothing", "all of multiple conditions (AND)...");
+        return conditionElement;
+    }
+
+    @Override
+    public GUIElement getEditableElement(GUIScreen screen)
+    {
+        //TODO
+        return null;
     }
 
     public CConditionAnd add(CCondition... conditions)

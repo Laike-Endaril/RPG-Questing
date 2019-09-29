@@ -1,5 +1,8 @@
 package com.fantasticsource.rpgquesting.conditions;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
+import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -41,6 +44,21 @@ public class CConditionNot extends CCondition
     {
         if (condition == null) return "Requires nothing";
         return "Requires that this NOT be true: " + condition.description();
+    }
+
+    @Override
+    public GUICondition getChoosableElement(GUIScreen screen)
+    {
+        GUICondition conditionElement = new GUICondition(screen, new CConditionNot());
+        conditionElement.text = conditionElement.text.replace("nothing", "the opposite of a condition (NOT)...");
+        return conditionElement;
+    }
+
+    @Override
+    public GUIElement getEditableElement(GUIScreen screen)
+    {
+        //TODO
+        return null;
     }
 
     @Override

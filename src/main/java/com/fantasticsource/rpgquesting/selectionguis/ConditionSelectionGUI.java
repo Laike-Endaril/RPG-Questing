@@ -8,10 +8,13 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.conditions.*;
+import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestAvailable;
+import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestCompleted;
+import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestInProgress;
+import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestReadyToComplete;
 import com.fantasticsource.rpgquesting.quest.QuestEditorGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,56 +44,63 @@ public class ConditionSelectionGUI extends GUIScreen
 
         scrollView.clear();
 
+        //Current
         scrollView.add(new GUIText(GUI, "\n"));
-
         GUICondition conditionElement = new GUICondition(GUI, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
         conditionElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
         scrollView.add(conditionElement);
         scrollView.add(new GUIText(GUI, "\n\n"));
 
+        //Remove
+        scrollView.add(new GUIText(GUI, "\n"));
         conditionElement = new GUICondition(GUI, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Remove condition)";
         scrollView.add(conditionElement);
-        scrollView.add(new GUIText(GUI, "\n\n\n"));
+        scrollView.add(new GUIText(GUI, "\n\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionNameIs("Name"));
-        conditionElement.text = conditionElement.text.replace("Requires", "Require");
-        scrollView.add(conditionElement);
+        //Quest conditions
         scrollView.add(new GUIText(GUI, "\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionEntityEntryIs("domain:name"));
-        conditionElement.text = conditionElement.text.replace("Requires", "Require");
-        scrollView.add(conditionElement);
+        scrollView.add(new CConditionQuestAvailable().getChoosableElement(GUI));
         scrollView.add(new GUIText(GUI, "\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionClassIs("packages.Classname"));
-        conditionElement.text = conditionElement.text.replace("Requires", "Require");
-        scrollView.add(conditionElement);
+        scrollView.add(new CConditionQuestInProgress().getChoosableElement(GUI));
         scrollView.add(new GUIText(GUI, "\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionInventorySpace(2));
-        conditionElement.text = conditionElement.text.replace("Requires", "Require").replace("2", "x");
-        scrollView.add(conditionElement);
+        scrollView.add(new CConditionQuestReadyToComplete().getChoosableElement(GUI));
         scrollView.add(new GUIText(GUI, "\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionHaveItems(ItemStack.EMPTY));
-        conditionElement.text = conditionElement.text.replace("Requires", "Require");
-        scrollView.add(conditionElement);
+        scrollView.add(new CConditionQuestCompleted().getChoosableElement(GUI));
         scrollView.add(new GUIText(GUI, "\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionAnd());
-        conditionElement.text = conditionElement.text.replace("Requires", "Require").replace("nothing", "all of multiple conditions (AND)...");
-        scrollView.add(conditionElement);
+        //Normal conditions
         scrollView.add(new GUIText(GUI, "\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionNot());
-        conditionElement.text = conditionElement.text.replace("Requires", "Require").replace("nothing", "the opposite of a condition (NOT)...");
-        scrollView.add(conditionElement);
+        scrollView.add(new CConditionNameIs().getChoosableElement(GUI));
         scrollView.add(new GUIText(GUI, "\n"));
 
-        conditionElement = new GUICondition(GUI, new CConditionOr());
-        conditionElement.text = conditionElement.text.replace("Requires", "Require").replace("nothing", "at least one of multiple conditions (OR)...");
-        scrollView.add(conditionElement);
+        scrollView.add(new CConditionEntityEntryIs().getChoosableElement(GUI));
+        scrollView.add(new GUIText(GUI, "\n"));
+
+        scrollView.add(new CConditionClassIs().getChoosableElement(GUI));
+        scrollView.add(new GUIText(GUI, "\n"));
+
+        scrollView.add(new CConditionInventorySpace().getChoosableElement(GUI));
+        scrollView.add(new GUIText(GUI, "\n"));
+
+        scrollView.add(new CConditionHaveItems().getChoosableElement(GUI));
+        scrollView.add(new GUIText(GUI, "\n"));
+
+        //Meta conditions
+        scrollView.add(new GUIText(GUI, "\n"));
+
+        scrollView.add(new CConditionAnd().getChoosableElement(GUI));
+        scrollView.add(new GUIText(GUI, "\n"));
+
+        scrollView.add(new CConditionNot().getChoosableElement(GUI));
+        scrollView.add(new GUIText(GUI, "\n"));
+
+        scrollView.add(new CConditionOr().getChoosableElement(GUI));
         scrollView.add(new GUIText(GUI, "\n"));
     }
 

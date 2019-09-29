@@ -1,10 +1,14 @@
 package com.fantasticsource.rpgquesting.conditions.quest;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
+import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 
@@ -45,6 +49,21 @@ public class CConditionQuestCompleted extends CQuestCondition
     @Override
     public String description()
     {
-        return "Requires quest be completed: " + name.value;
+        return "Requires quest be completed: " + TextFormatting.GOLD + name.value;
+    }
+
+    @Override
+    public GUICondition getChoosableElement(GUIScreen screen)
+    {
+        CQuest quest = new CQuest();
+        quest.name.set("Quest Name");
+        return new GUICondition(screen, new CConditionQuestCompleted(quest, null));
+    }
+
+    @Override
+    public GUIElement getEditableElement(GUIScreen screen)
+    {
+        //TODO
+        return null;
     }
 }
