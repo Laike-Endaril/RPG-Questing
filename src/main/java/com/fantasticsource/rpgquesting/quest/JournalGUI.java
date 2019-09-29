@@ -393,31 +393,6 @@ public class JournalGUI extends GUIScreen
         }
     }
 
-    @Override
-    protected void init()
-    {
-        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
-
-        navigator = new GUITabView(this, 0, 0, 0.5, 1, "In Progress", "Completed");
-        guiElements.add(navigator);
-
-
-        inProgressTab = new GUIScrollView(this, 0.04, 0, 0.88, 1);
-        navigator.tabViews.get(0).add(inProgressTab);
-        navigator.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgressTab));
-
-
-        completedTab = new GUIScrollView(this, 0.04, 0, 0.88, 1);
-        navigator.tabViews.get(1).add(completedTab);
-        navigator.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completedTab));
-
-
-        questView = new GUIScrollView(this, 0.5, 0, 0.48, 1);
-        questView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
-        guiElements.add(questView);
-        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, questView));
-    }
-
     private static void ownedQuestAction(GUIText text)
     {
         String questName;
@@ -456,5 +431,30 @@ public class JournalGUI extends GUIScreen
                 completedTab.focus(spoiler);
             }
         }
+    }
+
+    @Override
+    protected void init()
+    {
+        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+
+        navigator = new GUITabView(this, 0, 0, 0.5, 1, "In Progress", "Completed");
+        guiElements.add(navigator);
+
+
+        inProgressTab = new GUIScrollView(this, 0.04, 0, 0.88, 1);
+        navigator.tabViews.get(0).add(inProgressTab);
+        navigator.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, inProgressTab));
+
+
+        completedTab = new GUIScrollView(this, 0.04, 0, 0.88, 1);
+        navigator.tabViews.get(1).add(completedTab);
+        navigator.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, completedTab));
+
+
+        questView = new GUIScrollView(this, 0.5, 0, 0.48, 1);
+        questView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
+        guiElements.add(questView);
+        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, questView));
     }
 }

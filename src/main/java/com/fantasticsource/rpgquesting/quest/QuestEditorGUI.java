@@ -32,12 +32,10 @@ import static com.fantasticsource.rpgquesting.quest.JournalGUI.*;
 public class QuestEditorGUI extends GUIScreen
 {
     public static final QuestEditorGUI GUI = new QuestEditorGUI();
-
+    public static GUIScrollView main, objectives, rewards, conditions, dialogues;
     private static GUITextButton save, cancel, delete;
     private static GUIGradientBorder separator;
     private static GUITabView tabView;
-    public static GUIScrollView main, objectives, rewards, conditions, dialogues;
-
     private static ArrayList<GUICondition> guiConditions = new ArrayList<>();
 
     public static void show(CQuest quest)

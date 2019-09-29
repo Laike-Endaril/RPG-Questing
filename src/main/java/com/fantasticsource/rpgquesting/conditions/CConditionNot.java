@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
@@ -52,13 +51,6 @@ public class CConditionNot extends CCondition
         GUICondition conditionElement = new GUICondition(screen, new CConditionNot());
         conditionElement.text = conditionElement.text.replace("nothing", "the opposite of a condition (NOT)...");
         return conditionElement;
-    }
-
-    @Override
-    public GUIElement getEditableElement(GUIScreen screen)
-    {
-        //TODO
-        return null;
     }
 
     @Override

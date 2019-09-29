@@ -66,18 +66,6 @@ public class RewardSelectionGUI extends GUIScreen
         }
     }
 
-    @Override
-    protected void init()
-    {
-        drawStack = false;
-
-        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
-
-        scrollView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        guiElements.add(scrollView);
-        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
-    }
-
     public static void doIt(ItemStack stack)
     {
         if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
@@ -130,5 +118,17 @@ public class RewardSelectionGUI extends GUIScreen
         }
 
         GUI.close();
+    }
+
+    @Override
+    protected void init()
+    {
+        drawStack = false;
+
+        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+
+        scrollView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        guiElements.add(scrollView);
+        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
     }
 }

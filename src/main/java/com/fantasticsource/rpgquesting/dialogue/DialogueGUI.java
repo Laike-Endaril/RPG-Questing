@@ -16,13 +16,11 @@ import java.util.ArrayList;
 
 public class DialogueGUI extends GUIScreen
 {
+    public static final DialogueGUI GUI = new DialogueGUI();
     private static final Color C_CHOICE = Color.GREEN.copy().setRF(0.2f).setBF(0.2f);
     private static final TextFormatting
             TF_OLD_CHOICE = TextFormatting.DARK_GREEN,
             TF_OLD_DIALOGUE = TextFormatting.GRAY;
-
-    public static final DialogueGUI GUI = new DialogueGUI();
-
     private static GUIScrollView scrollView;
 
     private static CDialogueBranch current = null;

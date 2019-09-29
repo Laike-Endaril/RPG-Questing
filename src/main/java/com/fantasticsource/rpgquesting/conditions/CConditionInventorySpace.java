@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import com.fantasticsource.tools.component.CInt;
 import io.netty.buffer.ByteBuf;
@@ -64,13 +63,6 @@ public class CConditionInventorySpace extends CCondition
         GUICondition conditionElement = new GUICondition(screen, new CConditionInventorySpace(2));
         conditionElement.text = conditionElement.text.replace("2", "x");
         return conditionElement;
-    }
-
-    @Override
-    public GUIElement getEditableElement(GUIScreen screen)
-    {
-        //TODO
-        return null;
     }
 
     @Override

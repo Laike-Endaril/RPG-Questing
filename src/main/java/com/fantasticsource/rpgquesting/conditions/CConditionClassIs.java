@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
@@ -43,13 +42,6 @@ public class CConditionClassIs extends CCondition
     public GUICondition getChoosableElement(GUIScreen screen)
     {
         return new GUICondition(screen, new CConditionClassIs("packages.Classname"));
-    }
-
-    @Override
-    public GUIElement getEditableElement(GUIScreen screen)
-    {
-        //TODO
-        return null;
     }
 
     @Override

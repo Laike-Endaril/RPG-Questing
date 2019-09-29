@@ -106,18 +106,6 @@ public class ConditionSelectionGUI extends GUIScreen
         }
     }
 
-    @Override
-    protected void init()
-    {
-        drawStack = false;
-
-        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
-
-        scrollView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        guiElements.add(scrollView);
-        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
-    }
-
     private static void doIt(CCondition condition)
     {
         if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
@@ -170,5 +158,17 @@ public class ConditionSelectionGUI extends GUIScreen
         }
 
         GUI.close();
+    }
+
+    @Override
+    protected void init()
+    {
+        drawStack = false;
+
+        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+
+        scrollView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        guiElements.add(scrollView);
+        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
     }
 }

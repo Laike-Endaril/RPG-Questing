@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.conditions.quest;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
@@ -58,12 +57,5 @@ public class CConditionQuestAvailable extends CQuestCondition
         CQuest quest = new CQuest();
         quest.name.set("Quest Name");
         return new GUICondition(screen, new CConditionQuestAvailable(quest, null));
-    }
-
-    @Override
-    public GUIElement getEditableElement(GUIScreen screen)
-    {
-        //TODO
-        return null;
     }
 }

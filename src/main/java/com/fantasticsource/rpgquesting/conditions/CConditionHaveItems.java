@@ -2,7 +2,6 @@ package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.items.ItemMatcher;
 import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import io.netty.buffer.ByteBuf;
@@ -64,13 +63,6 @@ public class CConditionHaveItems extends CCondition
     public GUICondition getChoosableElement(GUIScreen screen)
     {
         return new GUICondition(screen, new CConditionHaveItems(ItemStack.EMPTY));
-    }
-
-    @Override
-    public GUIElement getEditableElement(GUIScreen screen)
-    {
-        //TODO
-        return null;
     }
 
     @Override
