@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
-import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
@@ -23,8 +22,6 @@ import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -34,7 +31,7 @@ import static com.fantasticsource.rpgquesting.quest.JournalGUI.*;
 
 public class QuestEditorGUI extends GUIScreen
 {
-    public static QuestEditorGUI GUI;
+    public static final QuestEditorGUI GUI = new QuestEditorGUI();
 
     private static GUITextButton save, cancel, delete;
     private static GUIGradientBorder separator;
@@ -42,12 +39,6 @@ public class QuestEditorGUI extends GUIScreen
     public static GUIScrollView main, objectives, rewards, conditions, dialogues;
 
     private static ArrayList<GUICondition> guiConditions = new ArrayList<>();
-
-    static
-    {
-        GUI = new QuestEditorGUI();
-        MinecraftForge.EVENT_BUS.register(QuestEditorGUI.class);
-    }
 
     public static void show(CQuest quest)
     {
@@ -92,18 +83,29 @@ public class QuestEditorGUI extends GUIScreen
         for (CItemStack reward : quest.rewards)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            rewards.add(new GUIItemStack(GUI, reward.stack));
+            GUIItemStack stackElement = new GUIItemStack(GUI, reward.stack);
+            rewards.add(stackElement.setAction(() -> RewardSelectionGUI.show(stackElement)));
         }
 
         rewards.add(new GUIText(GUI, "\n"));
         GUIItemStack stackElement = new GUIItemStack(GUI, ItemStack.EMPTY);
         stackElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-        rewards.add(stackElement);
+        rewards.add(stackElement.setAction(() -> RewardSelectionGUI.show(stackElement)));
 
         if (quest.rewards.size() > 0)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
+            rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).setAction(() ->
+            {
+                rewards.clear();
+
+                rewards.add(new GUIText(GUI, "\n"));
+                GUIItemStack stackElement2 = new GUIItemStack(GUI, ItemStack.EMPTY);
+                stackElement2.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+                rewards.add(stackElement2.setAction(() -> RewardSelectionGUI.show(stackElement2)));
+
+                rewards.add(new GUIText(GUI, "\n"));
+            }));
         }
 
         rewards.add(new GUIText(GUI, "\n"));
@@ -115,18 +117,29 @@ public class QuestEditorGUI extends GUIScreen
         for (CCondition condition : quest.conditions)
         {
             conditions.add(new GUIText(GUI, "\n"));
-            conditions.add(new GUICondition(GUI, condition));
+            GUICondition conditionElement = new GUICondition(GUI, condition);
+            conditions.add(conditionElement.setAction(() -> ConditionSelectionGUI.show(conditionElement)));
         }
 
         conditions.add(new GUIText(GUI, "\n"));
         GUICondition conditionElement = new GUICondition(GUI, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-        conditions.add(conditionElement);
+        conditions.add(conditionElement.setAction(() -> ConditionSelectionGUI.show(conditionElement)));
 
         if (quest.conditions.size() > 0)
         {
             conditions.add(new GUIText(GUI, "\n"));
-            conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]));
+            conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).setAction(() ->
+            {
+                conditions.clear();
+
+                conditions.add(new GUIText(GUI, "\n"));
+                GUICondition conditionElement2 = new GUICondition(GUI, null);
+                conditionElement2.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                conditions.add(conditionElement2.setAction(() -> ConditionSelectionGUI.show(conditionElement2)));
+
+                conditions.add(new GUIText(GUI, "\n"));
+            }));
         }
 
         conditions.add(new GUIText(GUI, "\n"));
@@ -186,7 +199,7 @@ public class QuestEditorGUI extends GUIScreen
         save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
         root.add(save);
         cancel = new GUITextButton(this, "Close Without Saving");
-        root.add(cancel);
+        root.add(cancel.setAction(() -> GUI.close()));
         delete = new GUITextButton(this, "Delete Quest and Close", RED[0]);
         root.add(delete);
 
@@ -222,64 +235,5 @@ public class QuestEditorGUI extends GUIScreen
     {
         super.onClosed();
         Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
-    }
-
-    @SubscribeEvent
-    public static void click(GUILeftClickEvent event)
-    {
-        if (event.getScreen() != GUI) return;
-
-
-        GUIElement element = event.getElement();
-
-
-        //Management
-        if (element == save)
-        {
-            return;
-        }
-
-        if (element == cancel)
-        {
-            GUI.close();
-            return;
-        }
-
-        if (element == delete)
-        {
-            return;
-        }
-
-
-        //Rewards
-        if (element.getClass() == GUIText.class)
-        {
-            if (element.toString().equals("(Clear all rewards)\n"))
-            {
-                rewards.clear();
-
-                rewards.add(new GUIText(GUI, "\n"));
-                GUIItemStack stackElement = new GUIItemStack(GUI, ItemStack.EMPTY);
-                stackElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                rewards.add(stackElement);
-
-                rewards.add(new GUIText(GUI, "\n"));
-            }
-            return;
-        }
-
-        if (element.getClass() == GUIItemStack.class)
-        {
-            RewardSelectionGUI.show((GUIItemStack) element);
-            return;
-        }
-
-
-        //Conditions
-        if (element.getClass() == GUICondition.class)
-        {
-            ConditionSelectionGUI.show((GUICondition) element);
-            return;
-        }
     }
 }

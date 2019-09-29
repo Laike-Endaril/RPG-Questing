@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.selectionguis;
 
-import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
@@ -16,23 +15,15 @@ import com.fantasticsource.rpgquesting.quest.QuestEditorGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
 public class ConditionSelectionGUI extends GUIScreen
 {
-    public static ConditionSelectionGUI GUI;
+    public static final ConditionSelectionGUI GUI = new ConditionSelectionGUI();
 
     private static GUIScrollView scrollView;
     private static GUICondition clickedElement;
-
-    static
-    {
-        GUI = new ConditionSelectionGUI();
-        MinecraftForge.EVENT_BUS.register(ConditionSelectionGUI.class);
-    }
 
     public static void show(GUICondition clickedElement)
     {
@@ -44,19 +35,21 @@ public class ConditionSelectionGUI extends GUIScreen
 
         scrollView.clear();
 
-        //Current
-        scrollView.add(new GUIText(GUI, "\n"));
-        GUICondition conditionElement = new GUICondition(GUI, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
-        conditionElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
-        scrollView.add(conditionElement);
-        scrollView.add(new GUIText(GUI, "\n\n"));
+        {
+            //Current
+            scrollView.add(new GUIText(GUI, "\n"));
+            GUICondition conditionElement = new GUICondition(GUI, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
+            conditionElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
+            scrollView.add(conditionElement);
+            scrollView.add(new GUIText(GUI, "\n\n"));
 
-        //Remove
-        scrollView.add(new GUIText(GUI, "\n"));
-        conditionElement = new GUICondition(GUI, null);
-        conditionElement.text = TextFormatting.DARK_PURPLE + "(Remove condition)";
-        scrollView.add(conditionElement);
-        scrollView.add(new GUIText(GUI, "\n\n"));
+            //Remove
+            scrollView.add(new GUIText(GUI, "\n"));
+            conditionElement = new GUICondition(GUI, null);
+            conditionElement.text = TextFormatting.DARK_PURPLE + "(Remove condition)";
+            scrollView.add(conditionElement);
+            scrollView.add(new GUIText(GUI, "\n\n"));
+        }
 
         //Quest conditions
         scrollView.add(new GUIText(GUI, "\n"));
@@ -102,6 +95,15 @@ public class ConditionSelectionGUI extends GUIScreen
 
         scrollView.add(new CConditionOr().getChoosableElement(GUI));
         scrollView.add(new GUIText(GUI, "\n"));
+
+        for (int i = scrollView.size() - 1; i >= 0; i--)
+        {
+            GUIElement element = scrollView.get(i);
+            if (element instanceof GUICondition)
+            {
+                element.setAction(() -> doIt(((GUICondition) element).condition));
+            }
+        }
     }
 
     @Override
@@ -116,55 +118,57 @@ public class ConditionSelectionGUI extends GUIScreen
         guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
     }
 
-    @SubscribeEvent
-    public static void click(GUILeftClickEvent event)
+    private static void doIt(CCondition condition)
     {
-        if (event.getScreen() != GUI) return;
-
-
-        GUIElement element = event.getElement();
-        if (element instanceof GUICondition)
+        if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
         {
-            CCondition condition = ((GUICondition) element).condition;
-            if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+            //Started with empty slot
+            if (condition != null)
             {
-                //Started with empty slot
-                if (condition != null)
-                {
-                    //Added new condition
-                    int index = QuestEditorGUI.conditions.indexOf(clickedElement);
-                    QuestEditorGUI.conditions.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
-                    QuestEditorGUI.conditions.add(index, new GUICondition(QuestEditorGUI.GUI, (CCondition) condition.copy()));
+                //Added new condition
+                int index = QuestEditorGUI.conditions.indexOf(clickedElement);
+                QuestEditorGUI.conditions.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
+                GUICondition conditionElement = new GUICondition(QuestEditorGUI.GUI, (CCondition) condition.copy());
+                QuestEditorGUI.conditions.add(index, conditionElement.setAction(() -> ConditionSelectionGUI.show(conditionElement)));
 
-                    if (index == 1)
+                if (index == 1)
+                {
+                    //Conditions were empty, but no longer are
+                    QuestEditorGUI.conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).setAction(() ->
                     {
-                        //Conditions were empty, but no longer are
-                        QuestEditorGUI.conditions.add(new GUIText(QuestEditorGUI.GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]));
-                        QuestEditorGUI.conditions.add(new GUIText(QuestEditorGUI.GUI, "\n"));
-                    }
+                        QuestEditorGUI.conditions.clear();
+
+                        QuestEditorGUI.conditions.add(new GUIText(GUI, "\n"));
+                        GUICondition conditionElement2 = new GUICondition(GUI, null);
+                        conditionElement2.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                        QuestEditorGUI.conditions.add(conditionElement2.setAction(() -> ConditionSelectionGUI.show(conditionElement2)));
+
+                        QuestEditorGUI.conditions.add(new GUIText(GUI, "\n"));
+                    }));
+                    QuestEditorGUI.conditions.add(new GUIText(QuestEditorGUI.GUI, "\n"));
                 }
             }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (condition != null) clickedElement.setCondition((CCondition) condition.copy());
             else
             {
-                //Started with non-empty slot, or at least one that should not be empty
-                if (condition != null) clickedElement.setCondition((CCondition) condition.copy());
-                else
-                {
-                    //Removing a condition
-                    int index = QuestEditorGUI.conditions.indexOf(clickedElement);
-                    QuestEditorGUI.conditions.remove(index);
-                    QuestEditorGUI.conditions.remove(index);
+                //Removing a condition
+                int index = QuestEditorGUI.conditions.indexOf(clickedElement);
+                QuestEditorGUI.conditions.remove(index);
+                QuestEditorGUI.conditions.remove(index);
 
-                    if (QuestEditorGUI.conditions.size() == 5)
-                    {
-                        //Had one condition, and now have 0 (remove the "clear all" option)
-                        QuestEditorGUI.conditions.remove(3);
-                        QuestEditorGUI.conditions.remove(3);
-                    }
+                if (QuestEditorGUI.conditions.size() == 5)
+                {
+                    //Had one condition, and now have 0 (remove the "clear all" option)
+                    QuestEditorGUI.conditions.remove(3);
+                    QuestEditorGUI.conditions.remove(3);
                 }
             }
-
-            GUI.close();
         }
+
+        GUI.close();
     }
 }
