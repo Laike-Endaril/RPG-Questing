@@ -42,12 +42,12 @@ public class ItemSelectionGUI extends GUIScreen
         scrollView.add(new GUIText(GUI, "\n"));
 
         GUIItemStack stackElement = new GUIItemStack(GUI, clickedElement.getStack().copy());
-        stackElement.text += TextFormatting.RESET + " (currently selected)";
+        stackElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
         scrollView.add(stackElement);
         scrollView.add(new GUIText(GUI, "\n\n"));
 
         stackElement = new GUIItemStack(GUI, ItemStack.EMPTY);
-        stackElement.text = "(Remove item)";
+        stackElement.text = TextFormatting.DARK_PURPLE + "(Remove item)";
         scrollView.add(stackElement);
         scrollView.add(new GUIText(GUI, "\n\n\n"));
 

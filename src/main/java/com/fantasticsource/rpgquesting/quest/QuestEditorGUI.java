@@ -21,6 +21,8 @@ import com.fantasticsource.rpgquesting.conditions.element.GUICondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -28,8 +30,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-import static com.fantasticsource.rpgquesting.quest.JournalGUI.BLUE;
-import static com.fantasticsource.rpgquesting.quest.JournalGUI.WHITE;
+import static com.fantasticsource.rpgquesting.quest.JournalGUI.*;
 
 public class QuestEditorGUI extends GUIScreen
 {
@@ -93,6 +94,18 @@ public class QuestEditorGUI extends GUIScreen
             rewards.add(new GUIText(GUI, "\n"));
             rewards.add(new GUIItemStack(GUI, reward.stack));
         }
+
+        rewards.add(new GUIText(GUI, "\n"));
+        GUIItemStack stackElement = new GUIItemStack(GUI, ItemStack.EMPTY);
+        stackElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+        rewards.add(stackElement);
+
+        if (quest.rewards.size() > 0)
+        {
+            rewards.add(new GUIText(GUI, "\n"));
+            rewards.add(new GUIText(GUI, TextFormatting.RED + "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
+        }
+
         rewards.add(new GUIText(GUI, "\n"));
 
 
@@ -166,7 +179,7 @@ public class QuestEditorGUI extends GUIScreen
         root.add(save);
         cancel = new GUITextButton(this, "Close Without Saving");
         root.add(cancel);
-        delete = new GUITextButton(this, "Delete Quest and Close", JournalGUI.RED[0]);
+        delete = new GUITextButton(this, "Delete Quest and Close", RED[0]);
         root.add(delete);
 
         separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
@@ -227,12 +240,29 @@ public class QuestEditorGUI extends GUIScreen
             return;
         }
 
-        if (element instanceof GUIItemStack)
+        if (element.getClass() == GUIText.class)
         {
-            ItemSelectionGUI.show((GUIItemStack) element);
+            if (element.toString().equals(TextFormatting.RED + "(Clear all rewards)\n"))
+            {
+                rewards.clear();
+
+                rewards.add(new GUIText(GUI, "\n"));
+                GUIItemStack stackElement = new GUIItemStack(GUI, ItemStack.EMPTY);
+                stackElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+                rewards.add(stackElement);
+
+                rewards.add(new GUIText(GUI, "\n"));
+            }
+            return;
         }
 
-        if (element instanceof GUICondition)
+        if (element.getClass() == GUIItemStack.class)
+        {
+            ItemSelectionGUI.show((GUIItemStack) element);
+            return;
+        }
+
+        if (element.getClass() == GUICondition.class)
         {
             ConditionPickerGUI.show((GUICondition) element);
             return;
