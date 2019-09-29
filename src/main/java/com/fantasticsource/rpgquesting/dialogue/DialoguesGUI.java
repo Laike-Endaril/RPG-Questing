@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
@@ -12,24 +11,13 @@ import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
 import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.LinkedHashMap;
 
 import static com.fantasticsource.mctools.gui.element.GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM;
 
 public class DialoguesGUI extends GUIScreen
 {
-    public static DialoguesGUI GUI;
-    private static LinkedHashMap<GUITextButton, CUUID> buttonToDialogueSessionID = new LinkedHashMap<>();
+    public static final DialoguesGUI GUI = new DialoguesGUI();
     private static GUIScrollView scrollView;
-
-    static
-    {
-        MinecraftForge.EVENT_BUS.register(DialoguesGUI.class);
-        GUI = new DialoguesGUI();
-    }
 
     private DialoguesGUI()
     {
@@ -40,22 +28,16 @@ public class DialoguesGUI extends GUIScreen
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         scrollView.clear();
-        buttonToDialogueSessionID.clear();
         for (int i = 0; i < packet.dialogueDisplayNames.size(); i++)
         {
             GUITextButton button = new GUITextButton(GUI, packet.dialogueDisplayNames.get(i).value);
-            buttonToDialogueSessionID.put(button, packet.dialogueSessionIDs.get(i));
-            scrollView.add(button);
+            int i2 = i;
+            scrollView.add(button.setAction(() ->
+            {
+                CUUID dialogueSessionID = packet.dialogueSessionIDs.get(i2);
+                if (dialogueSessionID != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(dialogueSessionID));
+            }));
         }
-    }
-
-    @SubscribeEvent
-    public static void click(GUILeftClickEvent event)
-    {
-        if (event.getScreen() != GUI) return;
-
-        CUUID dialogueSessionID = buttonToDialogueSessionID.get(event.getElement());
-        if (dialogueSessionID != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(dialogueSessionID));
     }
 
     @Override
