@@ -36,7 +36,7 @@ public class QuestTracker
         QuestTracker.questname = questName;
         QuestTracker.objectives = objectives;
 
-        JournalGUI.setQuestView(JournalGUI.viewedQuest);
+        JournalGUI.setQuestViewProgressMode(JournalGUI.viewedQuest);
     }
 
     @SubscribeEvent
