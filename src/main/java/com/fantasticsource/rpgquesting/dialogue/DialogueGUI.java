@@ -1,8 +1,6 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
-import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
@@ -13,8 +11,6 @@ import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 
@@ -25,19 +21,13 @@ public class DialogueGUI extends GUIScreen
             TF_OLD_CHOICE = TextFormatting.DARK_GREEN,
             TF_OLD_DIALOGUE = TextFormatting.GRAY;
 
-    public static DialogueGUI GUI;
+    public static final DialogueGUI GUI = new DialogueGUI();
 
     private static GUIScrollView scrollView;
 
     private static CDialogueBranch current = null;
     private static ArrayList<String> lines = new ArrayList<>();
     private static ArrayList<GUIText> errorLines = new ArrayList<>();
-
-    static
-    {
-        GUI = new DialogueGUI();
-        MinecraftForge.EVENT_BUS.register(DialogueGUI.class);
-    }
 
     private DialogueGUI()
     {
@@ -61,7 +51,19 @@ public class DialogueGUI extends GUIScreen
 
         for (CDialogueChoice choice : current.choices)
         {
-            scrollView.add(new GUIText(GUI, processString(choice.text.value) + '\n', C_CHOICE, Color.AQUA, Color.YELLOW));
+            GUIText choiceElement = new GUIText(GUI, processString(choice.text.value) + '\n', C_CHOICE, Color.AQUA, Color.YELLOW);
+            scrollView.add(choiceElement.setAction(() ->
+            {
+                for (int i = 0; i < lines.size(); i++)
+                {
+                    String line = lines.get(i);
+                    if (!line.contains(TF_OLD_DIALOGUE.toString()) && !line.contains(TF_OLD_CHOICE.toString())) lines.set(i, TF_OLD_DIALOGUE + line);
+                }
+                String s = choiceElement.toString();
+                s = s.substring(0, s.length() - 1);
+                lines.add(TF_OLD_CHOICE + s + "\n\n\n");
+                Network.WRAPPER.sendToServer(new Network.MakeChoicePacket(current, s));
+            }));
         }
     }
 
@@ -105,32 +107,6 @@ public class DialogueGUI extends GUIScreen
     public static String processString(String string)
     {
         return string.replaceAll("@p|@P", Minecraft.getMinecraft().player.getName());
-    }
-
-    @SubscribeEvent
-    public static void click(GUILeftClickEvent event)
-    {
-        if (event.getScreen() != GUI) return;
-
-        GUIElement element = event.getElement();
-        if (element.getClass() != GUIText.class) return;
-
-        String s = event.getElement().toString();
-        s = s.substring(0, s.length() - 1);
-        for (CDialogueChoice choice : current.choices)
-        {
-            if (choice.text.value.equals(s))
-            {
-                for (int i = 0; i < lines.size(); i++)
-                {
-                    String line = lines.get(i);
-                    if (!line.contains(TF_OLD_CHOICE.toString())) lines.set(i, TF_OLD_DIALOGUE + line);
-                }
-                lines.add(TF_OLD_CHOICE + s + "\n\n\n");
-                Network.WRAPPER.sendToServer(new Network.MakeChoicePacket(current, s));
-                break;
-            }
-        }
     }
 
     @Override
