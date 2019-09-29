@@ -77,7 +77,8 @@ public class ItemSelectionGUI extends GUIScreen
     @SubscribeEvent
     public static void click(GUILeftClickEvent event)
     {
-        if (Minecraft.getMinecraft().currentScreen != GUI) return;
+        if (event.getScreen() != GUI) return;
+
 
         GUIElement element = event.getElement();
         if (element instanceof GUIItemStack)
