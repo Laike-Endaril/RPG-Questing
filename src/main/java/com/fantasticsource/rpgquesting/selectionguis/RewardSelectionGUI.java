@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.selectionguis;
 
-import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
@@ -14,23 +13,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
 public class RewardSelectionGUI extends GUIScreen
 {
-    public static RewardSelectionGUI GUI;
+    public static final RewardSelectionGUI GUI = new RewardSelectionGUI();
 
     private static GUIScrollView scrollView;
     private static GUIItemStack clickedElement;
-
-    static
-    {
-        GUI = new RewardSelectionGUI();
-        MinecraftForge.EVENT_BUS.register(RewardSelectionGUI.class);
-    }
 
     public static void show(GUIItemStack clickedElement)
     {
@@ -64,6 +55,15 @@ public class RewardSelectionGUI extends GUIScreen
                 scrollView.add(new GUIText(GUI, "\n"));
             }
         }
+
+        for (int i = scrollView.size() - 1; i >= 0; i--)
+        {
+            GUIElement element = scrollView.get(i);
+            if (element instanceof GUIItemStack)
+            {
+                element.setAction(() -> doIt(((GUIItemStack) element).getStack()));
+            }
+        }
     }
 
     @Override
@@ -78,55 +78,57 @@ public class RewardSelectionGUI extends GUIScreen
         guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
     }
 
-    @SubscribeEvent
-    public static void click(GUILeftClickEvent event)
+    public static void doIt(ItemStack stack)
     {
-        if (event.getScreen() != GUI) return;
-
-
-        GUIElement element = event.getElement();
-        if (element instanceof GUIItemStack)
+        if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
         {
-            ItemStack stack = ((GUIItemStack) element).getStack();
-            if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
+            //Started with empty slot
+            if (!stack.isEmpty())
             {
-                //Started with empty slot
-                if (!stack.isEmpty())
-                {
-                    //Added new reward
-                    int index = QuestEditorGUI.rewards.indexOf(clickedElement);
-                    QuestEditorGUI.rewards.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
-                    QuestEditorGUI.rewards.add(index, new GUIItemStack(QuestEditorGUI.GUI, stack.copy()));
+                //Added new reward
+                int index = QuestEditorGUI.rewards.indexOf(clickedElement);
+                QuestEditorGUI.rewards.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
+                GUIItemStack rewardElement = new GUIItemStack(QuestEditorGUI.GUI, stack.copy());
+                QuestEditorGUI.rewards.add(index, rewardElement.setAction(() -> RewardSelectionGUI.show(rewardElement)));
 
-                    if (index == 1)
+                if (index == 1)
+                {
+                    //Rewards were empty, but no longer are
+                    QuestEditorGUI.rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).setAction(() ->
                     {
-                        //Rewards were empty, but no longer are
-                        QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
-                        QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "\n"));
-                    }
+                        QuestEditorGUI.rewards.clear();
+
+                        QuestEditorGUI.rewards.add(new GUIText(GUI, "\n"));
+                        GUIItemStack rewardElement2 = new GUIItemStack(GUI, ItemStack.EMPTY);
+                        rewardElement2.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+                        QuestEditorGUI.rewards.add(rewardElement2.setAction(() -> RewardSelectionGUI.show(rewardElement2)));
+
+                        QuestEditorGUI.rewards.add(new GUIText(GUI, "\n"));
+                    }));
+                    QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "\n"));
                 }
             }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (!stack.isEmpty()) clickedElement.setStack(stack.copy());
             else
             {
-                //Started with non-empty slot, or at least one that should not be empty
-                if (!stack.isEmpty()) clickedElement.setStack(stack.copy());
-                else
-                {
-                    //Removing a reward
-                    int index = QuestEditorGUI.rewards.indexOf(clickedElement);
-                    QuestEditorGUI.rewards.remove(index);
-                    QuestEditorGUI.rewards.remove(index);
+                //Removing a reward
+                int index = QuestEditorGUI.rewards.indexOf(clickedElement);
+                QuestEditorGUI.rewards.remove(index);
+                QuestEditorGUI.rewards.remove(index);
 
-                    if (QuestEditorGUI.rewards.size() == 5)
-                    {
-                        //Had one reward, and now have 0 (remove the "clear all" option)
-                        QuestEditorGUI.rewards.remove(3);
-                        QuestEditorGUI.rewards.remove(3);
-                    }
+                if (QuestEditorGUI.rewards.size() == 5)
+                {
+                    //Had one reward, and now have 0 (remove the "clear all" option)
+                    QuestEditorGUI.rewards.remove(3);
+                    QuestEditorGUI.rewards.remove(3);
                 }
             }
-
-            GUI.close();
         }
+
+        GUI.close();
     }
 }

@@ -83,14 +83,14 @@ public class QuestEditorGUI extends GUIScreen
         for (CItemStack reward : quest.rewards)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            GUIItemStack stackElement = new GUIItemStack(GUI, reward.stack);
-            rewards.add(stackElement.setAction(() -> RewardSelectionGUI.show(stackElement)));
+            GUIItemStack rewardElement = new GUIItemStack(GUI, reward.stack);
+            rewards.add(rewardElement.setAction(() -> RewardSelectionGUI.show(rewardElement)));
         }
 
         rewards.add(new GUIText(GUI, "\n"));
-        GUIItemStack stackElement = new GUIItemStack(GUI, ItemStack.EMPTY);
-        stackElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-        rewards.add(stackElement.setAction(() -> RewardSelectionGUI.show(stackElement)));
+        GUIItemStack rewardElement = new GUIItemStack(GUI, ItemStack.EMPTY);
+        rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+        rewards.add(rewardElement.setAction(() -> RewardSelectionGUI.show(rewardElement)));
 
         if (quest.rewards.size() > 0)
         {
@@ -100,9 +100,9 @@ public class QuestEditorGUI extends GUIScreen
                 rewards.clear();
 
                 rewards.add(new GUIText(GUI, "\n"));
-                GUIItemStack stackElement2 = new GUIItemStack(GUI, ItemStack.EMPTY);
-                stackElement2.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                rewards.add(stackElement2.setAction(() -> RewardSelectionGUI.show(stackElement2)));
+                GUIItemStack rewardElement2 = new GUIItemStack(GUI, ItemStack.EMPTY);
+                rewardElement2.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+                rewards.add(rewardElement2.setAction(() -> RewardSelectionGUI.show(rewardElement2)));
 
                 rewards.add(new GUIText(GUI, "\n"));
             }));
