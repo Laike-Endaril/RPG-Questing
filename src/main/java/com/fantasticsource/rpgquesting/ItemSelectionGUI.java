@@ -8,6 +8,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
+import com.fantasticsource.rpgquesting.quest.QuestEditorGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
 public class ItemSelectionGUI extends GUIScreen
 {
@@ -79,7 +82,24 @@ public class ItemSelectionGUI extends GUIScreen
         GUIElement element = event.getElement();
         if (element instanceof GUIItemStack)
         {
-            clickedElement.setStack(((GUIItemStack) element).getStack().copy());
+            ItemStack stack = ((GUIItemStack) element).getStack();
+            if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
+            {
+                if (!stack.isEmpty())
+                {
+                    int index = QuestEditorGUI.rewards.indexOf(clickedElement);
+                    QuestEditorGUI.rewards.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
+                    QuestEditorGUI.rewards.add(index, new GUIItemStack(QuestEditorGUI.GUI, stack.copy()));
+
+                    if (index == 1) //Rewards were empty, but no longer are
+                    {
+                        QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
+                        QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "\n"));
+                    }
+                }
+            }
+            else clickedElement.setStack(stack.copy());
+
             GUI.close();
         }
     }

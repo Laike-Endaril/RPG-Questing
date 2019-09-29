@@ -39,7 +39,7 @@ public class QuestEditorGUI extends GUIScreen
     private static GUITextButton save, cancel, delete;
     private static GUIGradientBorder separator;
     private static GUITabView tabView;
-    private static GUIScrollView main, objectives, rewards, conditions, dialogues;
+    public static GUIScrollView main, objectives, rewards, conditions, dialogues;
 
     private static ArrayList<GUICondition> guiConditions = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class QuestEditorGUI extends GUIScreen
         if (quest.rewards.size() > 0)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            rewards.add(new GUIText(GUI, TextFormatting.RED + "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
+            rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
         }
 
         rewards.add(new GUIText(GUI, "\n"));
@@ -242,7 +242,7 @@ public class QuestEditorGUI extends GUIScreen
 
         if (element.getClass() == GUIText.class)
         {
-            if (element.toString().equals(TextFormatting.RED + "(Clear all rewards)\n"))
+            if (element.toString().equals("(Clear all rewards)\n"))
             {
                 rewards.clear();
 
