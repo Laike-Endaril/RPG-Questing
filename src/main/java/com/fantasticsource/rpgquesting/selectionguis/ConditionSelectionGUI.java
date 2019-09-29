@@ -8,12 +8,15 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.conditions.*;
+import com.fantasticsource.rpgquesting.quest.QuestEditorGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
 public class ConditionSelectionGUI extends GUIScreen
 {
@@ -112,46 +115,46 @@ public class ConditionSelectionGUI extends GUIScreen
         GUIElement element = event.getElement();
         if (element instanceof GUICondition)
         {
-//            CCondition condition = ((GUICondition) element).condition;
-//            if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
-//            {
-//                //Started with empty slot
-//                if (!stack.isEmpty())
-//                {
-//                    //Added new reward
-//                    int index = QuestEditorGUI.rewards.indexOf(clickedElement);
-//                    QuestEditorGUI.rewards.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
-//                    QuestEditorGUI.rewards.add(index, new GUICondition(QuestEditorGUI.GUI, stack.copy()));
-//
-//                    if (index == 1)
-//                    {
-//                        //Rewards were empty, but no longer are
-//                        QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]));
-//                        QuestEditorGUI.rewards.add(new GUIText(QuestEditorGUI.GUI, "\n"));
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                //Started with non-empty slot, or at least one that should not be empty
-//                if (!stack.isEmpty()) clickedElement.setStack(stack.copy());
-//                else
-//                {
-//                    //Removing a reward
-//                    int index = QuestEditorGUI.rewards.indexOf(clickedElement);
-//                    QuestEditorGUI.rewards.remove(index);
-//                    QuestEditorGUI.rewards.remove(index);
-//
-//                    if (QuestEditorGUI.rewards.size() == 5)
-//                    {
-//                        //Had one reward, and now have 0 (remove the "clear all" option)
-//                        QuestEditorGUI.rewards.remove(3);
-//                        QuestEditorGUI.rewards.remove(3);
-//                    }
-//                }
-//            }
-//
-//            GUI.close();
+            CCondition condition = ((GUICondition) element).condition;
+            if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+            {
+                //Started with empty slot
+                if (condition != null)
+                {
+                    //Added new condition
+                    int index = QuestEditorGUI.conditions.indexOf(clickedElement);
+                    QuestEditorGUI.conditions.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
+                    QuestEditorGUI.conditions.add(index, new GUICondition(QuestEditorGUI.GUI, (CCondition) condition.copy()));
+
+                    if (index == 1)
+                    {
+                        //Conditions were empty, but no longer are
+                        QuestEditorGUI.conditions.add(new GUIText(QuestEditorGUI.GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]));
+                        QuestEditorGUI.conditions.add(new GUIText(QuestEditorGUI.GUI, "\n"));
+                    }
+                }
+            }
+            else
+            {
+                //Started with non-empty slot, or at least one that should not be empty
+                if (condition != null) clickedElement.setCondition((CCondition) condition.copy());
+                else
+                {
+                    //Removing a condition
+                    int index = QuestEditorGUI.conditions.indexOf(clickedElement);
+                    QuestEditorGUI.conditions.remove(index);
+                    QuestEditorGUI.conditions.remove(index);
+
+                    if (QuestEditorGUI.conditions.size() == 5)
+                    {
+                        //Had one condition, and now have 0 (remove the "clear all" option)
+                        QuestEditorGUI.conditions.remove(3);
+                        QuestEditorGUI.conditions.remove(3);
+                    }
+                }
+            }
+
+            GUI.close();
         }
     }
 }

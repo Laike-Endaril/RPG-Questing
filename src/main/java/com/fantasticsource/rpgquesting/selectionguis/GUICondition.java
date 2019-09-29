@@ -22,4 +22,12 @@ public class GUICondition extends GUIText
 
         this.condition = condition;
     }
+
+    public GUICondition setCondition(CCondition condition)
+    {
+        text = condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description();
+        this.condition = condition;
+
+        return this;
+    }
 }
