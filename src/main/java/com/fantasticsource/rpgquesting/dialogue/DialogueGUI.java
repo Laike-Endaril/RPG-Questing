@@ -50,7 +50,7 @@ public class DialogueGUI extends GUIScreen
         for (CDialogueChoice choice : current.choices)
         {
             GUIText choiceElement = new GUIText(GUI, processString(choice.text.value) + '\n', C_CHOICE, Color.AQUA, Color.YELLOW);
-            scrollView.add(choiceElement.setAction(() ->
+            scrollView.add(choiceElement.addClickActions(() ->
             {
                 for (int i = 0; i < lines.size(); i++)
                 {

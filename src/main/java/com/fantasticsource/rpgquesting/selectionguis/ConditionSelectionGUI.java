@@ -101,7 +101,7 @@ public class ConditionSelectionGUI extends GUIScreen
             GUIElement element = scrollView.get(i);
             if (element instanceof GUICondition)
             {
-                element.setAction(() -> doIt(((GUICondition) element).condition));
+                element.addClickActions(() -> doIt(((GUICondition) element).condition));
             }
         }
     }
@@ -117,19 +117,19 @@ public class ConditionSelectionGUI extends GUIScreen
                 int index = QuestEditorGUI.conditions.indexOf(clickedElement);
                 QuestEditorGUI.conditions.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
                 GUICondition conditionElement = new GUICondition(QuestEditorGUI.GUI, (CCondition) condition.copy());
-                QuestEditorGUI.conditions.add(index, conditionElement.setAction(() -> ConditionSelectionGUI.show(conditionElement)));
+                QuestEditorGUI.conditions.add(index, conditionElement.addClickActions(() -> ConditionSelectionGUI.show(conditionElement)));
 
                 if (index == 1)
                 {
                     //Conditions were empty, but no longer are
-                    QuestEditorGUI.conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).setAction(() ->
+                    QuestEditorGUI.conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
                     {
                         QuestEditorGUI.conditions.clear();
 
                         QuestEditorGUI.conditions.add(new GUIText(GUI, "\n"));
                         GUICondition conditionElement2 = new GUICondition(GUI, null);
                         conditionElement2.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                        QuestEditorGUI.conditions.add(conditionElement2.setAction(() -> ConditionSelectionGUI.show(conditionElement2)));
+                        QuestEditorGUI.conditions.add(conditionElement2.addClickActions(() -> ConditionSelectionGUI.show(conditionElement2)));
 
                         QuestEditorGUI.conditions.add(new GUIText(GUI, "\n"));
                     }));

@@ -83,7 +83,7 @@ public class JournalGUI extends GUIScreen
 
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry2.getKey());
             inProgressGroupElementToName.put(groupSpoiler, entry2.getKey());
-            inProgressTab.add(groupSpoiler.setAction(() -> ownedGroupAction(groupSpoiler)));
+            inProgressTab.add(groupSpoiler.addClickActions(() -> ownedGroupAction(groupSpoiler)));
 
             for (Map.Entry<String, ArrayList<CObjective>> entry : entry2.getValue().entrySet())
             {
@@ -100,7 +100,7 @@ public class JournalGUI extends GUIScreen
 
                 Color[] c = done ? GREEN : started ? YELLOW : RED;
                 GUIText questElement = new GUIText(GUI, "* " + entry.getKey() + "\n", c[0], c[1], c[2]);
-                groupSpoiler.add(questElement.setAction(() -> ownedQuestAction(questElement)));
+                groupSpoiler.add(questElement.addClickActions(() -> ownedQuestAction(questElement)));
                 inProgressQuestElementToName.put(questElement, entry.getKey());
                 inProgressStringToQuestElement.put(entry.getKey(), questElement);
             }
@@ -126,7 +126,7 @@ public class JournalGUI extends GUIScreen
 
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey(), c[0], c[1], c[2]);
             completedGroupElementToName.put(groupSpoiler, entry.getKey());
-            completedTab.add(groupSpoiler.setAction(() -> ownedGroupAction(groupSpoiler)));
+            completedTab.add(groupSpoiler.addClickActions(() -> ownedGroupAction(groupSpoiler)));
 
             for (String s : entry.getValue())
             {
@@ -134,7 +134,7 @@ public class JournalGUI extends GUIScreen
 
                 Color[] c1 = inProgressStringToQuestElement.containsKey(s) ? GREEN : BLUE;
                 GUIText questElement = new GUIText(GUI, "* " + s + "\n", c1[0], c1[1], c1[2]);
-                groupSpoiler.add(questElement.setAction(() -> ownedQuestAction(questElement)));
+                groupSpoiler.add(questElement.addClickActions(() -> ownedQuestAction(questElement)));
                 completedQuestElementToName.put(questElement, s);
                 completedStringToQuestElement.put(s, questElement);
             }
@@ -168,7 +168,7 @@ public class JournalGUI extends GUIScreen
             for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
             {
                 GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
-                allTab.add(groupSpoiler.setAction(() ->
+                allTab.add(groupSpoiler.addClickActions(() ->
                 {
                     for (GUITextSpoiler spoiler : allNameToGroupElement.values())
                     {
@@ -184,7 +184,7 @@ public class JournalGUI extends GUIScreen
                     groupSpoiler.add(new GUIText(GUI, "\n"));
 
                     GUIText questElement = new GUIText(GUI, "* " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
-                    groupSpoiler.add(questElement.setAction(() ->
+                    groupSpoiler.add(questElement.addClickActions(() ->
                     {
                         CQuest quest = allQuestElementToQuest.get(questElement);
                         if (quest != null) setQuestViewEditMode(quest);
@@ -240,7 +240,7 @@ public class JournalGUI extends GUIScreen
 
         //Add quest name
         questView.add(new GUIText(GUI, "\n"));
-        questView.add(new GUIText(GUI, quest.name.value, WHITE[0], WHITE[1], WHITE[2])).setAction(() ->
+        questView.add(new GUIText(GUI, quest.name.value, WHITE[0], WHITE[1], WHITE[2])).addClickActions(() ->
         {
             GUITextSpoiler group = allNameToGroupElement.get(viewedEditable.group.value);
 
@@ -266,7 +266,7 @@ public class JournalGUI extends GUIScreen
 
         //Add quest buttons
         questView.add(new GUIText(GUI, "\n\n\n"));
-        questView.add(new GUITextButton(GUI, "Edit Quest").setAction(() -> QuestEditorGUI.show(viewedEditable)));
+        questView.add(new GUITextButton(GUI, "Edit Quest").addClickActions(() -> QuestEditorGUI.show(viewedEditable)));
         questView.add(new GUIText(GUI, "\n"));
     }
 
@@ -307,7 +307,7 @@ public class JournalGUI extends GUIScreen
 
                 //Add quest name
                 questView.add(new GUIText(GUI, "\n"));
-                questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]).setAction(() ->
+                questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]).addClickActions(() ->
                 {
                     GUIText quest = inProgressStringToQuestElement.get(viewedQuest);
                     if (quest != null)
@@ -349,14 +349,14 @@ public class JournalGUI extends GUIScreen
                 questView.add(new GUIText(GUI, "\n\n\n"));
                 if (viewedQuest.equals(QuestTracker.questname))
                 {
-                    questView.add(new GUITextButton(GUI, "Stop Tracking").setAction(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(""))));
+                    questView.add(new GUITextButton(GUI, "Stop Tracking").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(""))));
                 }
                 else
                 {
-                    questView.add(new GUITextButton(GUI, "Start Tracking").setAction(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(viewedQuest))));
+                    questView.add(new GUITextButton(GUI, "Start Tracking").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(viewedQuest))));
                 }
                 questView.add(new GUIText(GUI, "\n"));
-                questView.add(new GUITextButton(GUI, "Abandon").setAction(() -> Network.WRAPPER.sendToServer(new Network.RequestAbandonQuestPacket(viewedQuest))));
+                questView.add(new GUITextButton(GUI, "Abandon").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestAbandonQuestPacket(viewedQuest))));
                 questView.add(new GUIText(GUI, "\n"));
 
 

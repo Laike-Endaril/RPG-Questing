@@ -32,7 +32,7 @@ public class DialoguesGUI extends GUIScreen
         {
             GUITextButton button = new GUITextButton(GUI, packet.dialogueDisplayNames.get(i).value);
             int i2 = i;
-            scrollView.add(button.setAction(() ->
+            scrollView.add(button.addClickActions(() ->
             {
                 CUUID dialogueSessionID = packet.dialogueSessionIDs.get(i2);
                 if (dialogueSessionID != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(dialogueSessionID));

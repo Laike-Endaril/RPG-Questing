@@ -82,25 +82,25 @@ public class QuestEditorGUI extends GUIScreen
         {
             rewards.add(new GUIText(GUI, "\n"));
             GUIItemStack rewardElement = new GUIItemStack(GUI, reward.stack);
-            rewards.add(rewardElement.setAction(() -> RewardSelectionGUI.show(rewardElement)));
+            rewards.add(rewardElement.addClickActions(() -> RewardSelectionGUI.show(rewardElement)));
         }
 
         rewards.add(new GUIText(GUI, "\n"));
         GUIItemStack rewardElement = new GUIItemStack(GUI, ItemStack.EMPTY);
         rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-        rewards.add(rewardElement.setAction(() -> RewardSelectionGUI.show(rewardElement)));
+        rewards.add(rewardElement.addClickActions(() -> RewardSelectionGUI.show(rewardElement)));
 
         if (quest.rewards.size() > 0)
         {
             rewards.add(new GUIText(GUI, "\n"));
-            rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).setAction(() ->
+            rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
             {
                 rewards.clear();
 
                 rewards.add(new GUIText(GUI, "\n"));
                 GUIItemStack rewardElement2 = new GUIItemStack(GUI, ItemStack.EMPTY);
                 rewardElement2.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                rewards.add(rewardElement2.setAction(() -> RewardSelectionGUI.show(rewardElement2)));
+                rewards.add(rewardElement2.addClickActions(() -> RewardSelectionGUI.show(rewardElement2)));
 
                 rewards.add(new GUIText(GUI, "\n"));
             }));
@@ -116,25 +116,25 @@ public class QuestEditorGUI extends GUIScreen
         {
             conditions.add(new GUIText(GUI, "\n"));
             GUICondition conditionElement = new GUICondition(GUI, condition);
-            conditions.add(conditionElement.setAction(() -> ConditionSelectionGUI.show(conditionElement)));
+            conditions.add(conditionElement.addClickActions(() -> ConditionSelectionGUI.show(conditionElement)));
         }
 
         conditions.add(new GUIText(GUI, "\n"));
         GUICondition conditionElement = new GUICondition(GUI, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-        conditions.add(conditionElement.setAction(() -> ConditionSelectionGUI.show(conditionElement)));
+        conditions.add(conditionElement.addClickActions(() -> ConditionSelectionGUI.show(conditionElement)));
 
         if (quest.conditions.size() > 0)
         {
             conditions.add(new GUIText(GUI, "\n"));
-            conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).setAction(() ->
+            conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
             {
                 conditions.clear();
 
                 conditions.add(new GUIText(GUI, "\n"));
                 GUICondition conditionElement2 = new GUICondition(GUI, null);
                 conditionElement2.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                conditions.add(conditionElement2.setAction(() -> ConditionSelectionGUI.show(conditionElement2)));
+                conditions.add(conditionElement2.addClickActions(() -> ConditionSelectionGUI.show(conditionElement2)));
 
                 conditions.add(new GUIText(GUI, "\n"));
             }));
@@ -197,7 +197,7 @@ public class QuestEditorGUI extends GUIScreen
         save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
         root.add(save);
         cancel = new GUITextButton(this, "Close Without Saving");
-        root.add(cancel.setAction(() -> GUI.close()));
+        root.add(cancel.addClickActions(() -> GUI.close()));
         delete = new GUITextButton(this, "Delete Quest and Close", RED[0]);
         root.add(delete);
 

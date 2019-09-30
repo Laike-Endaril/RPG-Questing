@@ -61,7 +61,7 @@ public class RewardSelectionGUI extends GUIScreen
             GUIElement element = scrollView.get(i);
             if (element instanceof GUIItemStack)
             {
-                element.setAction(() -> doIt(((GUIItemStack) element).getStack()));
+                element.addClickActions(() -> doIt(((GUIItemStack) element).getStack()));
             }
         }
     }
@@ -77,19 +77,19 @@ public class RewardSelectionGUI extends GUIScreen
                 int index = QuestEditorGUI.rewards.indexOf(clickedElement);
                 QuestEditorGUI.rewards.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
                 GUIItemStack rewardElement = new GUIItemStack(QuestEditorGUI.GUI, stack.copy());
-                QuestEditorGUI.rewards.add(index, rewardElement.setAction(() -> RewardSelectionGUI.show(rewardElement)));
+                QuestEditorGUI.rewards.add(index, rewardElement.addClickActions(() -> RewardSelectionGUI.show(rewardElement)));
 
                 if (index == 1)
                 {
                     //Rewards were empty, but no longer are
-                    QuestEditorGUI.rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).setAction(() ->
+                    QuestEditorGUI.rewards.add(new GUIText(GUI, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
                     {
                         QuestEditorGUI.rewards.clear();
 
                         QuestEditorGUI.rewards.add(new GUIText(GUI, "\n"));
                         GUIItemStack rewardElement2 = new GUIItemStack(GUI, ItemStack.EMPTY);
                         rewardElement2.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                        QuestEditorGUI.rewards.add(rewardElement2.setAction(() -> RewardSelectionGUI.show(rewardElement2)));
+                        QuestEditorGUI.rewards.add(rewardElement2.addClickActions(() -> RewardSelectionGUI.show(rewardElement2)));
 
                         QuestEditorGUI.rewards.add(new GUIText(GUI, "\n"));
                     }));
