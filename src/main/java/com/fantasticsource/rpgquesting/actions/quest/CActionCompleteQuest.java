@@ -6,6 +6,8 @@ import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import java.util.ArrayList;
+
 public class CActionCompleteQuest extends CQuestAction
 {
     public CActionCompleteQuest()
@@ -32,8 +34,10 @@ public class CActionCompleteQuest extends CQuestAction
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Completes quest: " + name.value;
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Complete quest: " + name.value);
+        return result;
     }
 }

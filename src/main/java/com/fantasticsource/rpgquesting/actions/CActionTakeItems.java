@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CActionTakeItems extends CAction
 {
@@ -54,9 +55,11 @@ public class CActionTakeItems extends CAction
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Takes items from player: (" + stackToMatch.stack.getCount() + "x) " + stackToMatch.stack.getDisplayName();
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Take items: " + stackToMatch.stack.getCount() + " " + stackToMatch.stack.getDisplayName());
+        return result;
     }
 
     @Override

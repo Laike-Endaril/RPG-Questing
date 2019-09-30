@@ -7,7 +7,6 @@ import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 
@@ -46,9 +45,11 @@ public class CConditionQuestAvailable extends CQuestCondition
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Requires quest be available: " + TextFormatting.GOLD + name.value;
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Quest available: " + name.value);
+        return result;
     }
 
     @Override

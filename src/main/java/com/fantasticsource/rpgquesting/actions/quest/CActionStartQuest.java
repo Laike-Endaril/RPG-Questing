@@ -6,6 +6,8 @@ import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import java.util.ArrayList;
+
 public class CActionStartQuest extends CQuestAction
 {
     public CActionStartQuest()
@@ -32,8 +34,10 @@ public class CActionStartQuest extends CQuestAction
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Starts quest: " + name.value;
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Start quest: " + name.value);
+        return result;
     }
 }

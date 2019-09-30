@@ -26,6 +26,8 @@ public class CConditionNot extends CCondition
     @Override
     public ArrayList<String> unmetConditions(Entity entity)
     {
+        if (condition == null) return new ArrayList<>();
+
         ArrayList<String> result = condition.unmetConditions(entity);
 
         if (result.size() > 0) return new ArrayList<>();
@@ -39,10 +41,15 @@ public class CConditionNot extends CCondition
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        if (condition == null) return "Requires nothing";
-        return "Requires that this NOT be true: " + condition.description();
+        ArrayList<String> result = condition == null ? new ArrayList<>() : condition.description();
+
+        result.add(0, "{");
+        result.add("}");
+        result.add(0, "NOT:");
+
+        return result;
     }
 
     @Override

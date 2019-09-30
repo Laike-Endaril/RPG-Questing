@@ -5,7 +5,6 @@ import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
 import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.text.TextFormatting;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,9 +32,11 @@ public class CConditionClassIs extends CCondition
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Requires entity class: " + TextFormatting.GOLD + className.value;
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Entity class: " + className.value);
+        return result;
     }
 
     @Override

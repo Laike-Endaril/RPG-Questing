@@ -7,7 +7,6 @@ import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 
@@ -39,16 +38,18 @@ public class CConditionQuestReadyToComplete extends CQuestCondition
         else
         {
             CQuest quest = CQuests.get(name.value);
-            if (quest == null) result.add("Quest must be ready to be completed (quest does not exist!): \"" + name + '"');
-            else if (!quest.isReadyToComplete((EntityPlayerMP) entity)) result.add("Quest must be ready to be completed: \"" + quest.name.value + '"');
+            if (quest == null) result.add("Quest must be ready to turn in (quest does not exist!): \"" + name + '"');
+            else if (!quest.isReadyToComplete((EntityPlayerMP) entity)) result.add("Quest must be ready to turn in: \"" + quest.name.value + '"');
         }
         return result;
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Requires quest be ready to turn in: " + TextFormatting.GOLD + name.value;
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Quest ready to turn in: " + name.value);
+        return result;
     }
 
     @Override

@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CActionEndDialogue extends CAction
 {
@@ -22,9 +23,11 @@ public class CActionEndDialogue extends CAction
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Ends / closes the current dialogue";
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Close the current dialogue");
+        return result;
     }
 
     @Override

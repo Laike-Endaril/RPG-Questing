@@ -11,7 +11,7 @@ public abstract class CCondition extends Component
 {
     public abstract ArrayList<String> unmetConditions(Entity entity);
 
-    public abstract String description();
+    public abstract ArrayList<String> description();
 
     public abstract GUICondition getChoosableElement(GUIScreen screen);
 }

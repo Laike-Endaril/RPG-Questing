@@ -21,6 +21,7 @@ public class CConditionAnd extends CCondition
     public ArrayList<String> unmetConditions(Entity entity)
     {
         ArrayList<String> result = new ArrayList<>();
+
         for (CCondition condition : conditions)
         {
             result.addAll(condition.unmetConditions(entity));
@@ -32,6 +33,7 @@ public class CConditionAnd extends CCondition
             {
                 result.set(i, " " + result.get(i));
             }
+
             result.add(0, "{");
             result.add("}");
             result.add(0, "ALL OF:");
@@ -41,19 +43,25 @@ public class CConditionAnd extends CCondition
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        if (conditions.size() == 0) return "Requires nothing";
+        ArrayList<String> result = new ArrayList<>();
 
-        if (conditions.size() == 1) return conditions.get(0).description();
-
-        StringBuilder s = new StringBuilder("Requires all of these:\n{");
         for (CCondition condition : conditions)
         {
-            s.append("\n ").append(condition.description());
+            result.addAll(condition.description());
         }
-        s.append("\n}");
-        return s.toString();
+
+        for (int i = 0; i < result.size(); i++)
+        {
+            result.set(i, " " + result.get(i));
+        }
+
+        result.add(0, "{");
+        result.add("}");
+        result.add(0, "ALL OF:");
+
+        return result;
     }
 
     @Override

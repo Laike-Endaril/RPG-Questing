@@ -1,3 +1,7 @@
+Quest editor, conditions tab <-> condition editor <-> conditions selector
+
+Quest editor, objectives tab <-> objective editor <->
+
 Quest Editor
 
 

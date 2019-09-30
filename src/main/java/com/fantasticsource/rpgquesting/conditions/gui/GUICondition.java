@@ -3,7 +3,8 @@ package com.fantasticsource.rpgquesting.conditions.gui;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
-import net.minecraft.util.text.TextFormatting;
+
+import java.util.ArrayList;
 
 public class GUICondition extends GUIText
 {
@@ -11,21 +12,33 @@ public class GUICondition extends GUIText
 
     public GUICondition(GUIScreen screen, CCondition condition)
     {
-        super(screen, condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description().replace("Requires", "Require"));
+        super(screen, condition == null ? "(Empty Slot)" : process(condition.description()));
 
         this.condition = condition;
     }
 
     public GUICondition(GUIScreen screen, double x, double y, CCondition condition)
     {
-        super(screen, x, y, condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description().replace("Requires", "Require"));
+        super(screen, x, y, condition == null ? "(Empty Slot)" : process(condition.description()));
 
         this.condition = condition;
     }
 
+    private static String process(ArrayList<String> input)
+    {
+        StringBuilder result = new StringBuilder(input.get(0));
+
+        for (int i = 1; i < input.size(); i++)
+        {
+            result.append("\n").append(input.get(i));
+        }
+
+        return result.toString();
+    }
+
     public GUICondition setCondition(CCondition condition)
     {
-        text = condition == null ? TextFormatting.GOLD + "(Empty Slot)" : condition.description().replace("Requires", "Require");
+        text = condition == null ? "(Empty Slot)" : process(condition.description());
 
         this.condition = condition;
 

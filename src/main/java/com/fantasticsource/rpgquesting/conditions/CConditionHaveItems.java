@@ -8,7 +8,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,9 +53,11 @@ public class CConditionHaveItems extends CCondition
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Requires player to have items: " + TextFormatting.GOLD + "(" + stackToMatch.stack.getCount() + "x) " + stackToMatch.stack.getDisplayName();
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Items: " + stackToMatch.stack.getCount() + " " + stackToMatch.stack.getDisplayName());
+        return result;
     }
 
     @Override

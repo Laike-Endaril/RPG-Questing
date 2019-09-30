@@ -15,7 +15,7 @@ import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
-import com.fantasticsource.rpgquesting.conditions.gui.ConditionSelectionGUI;
+import com.fantasticsource.rpgquesting.conditions.gui.ConditionEditorGUI;
 import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
@@ -130,7 +130,7 @@ public class QuestEditorGUI extends GUIScreen
             GUICondition conditionElement = new GUICondition(GUI, condition);
             conditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
                 gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
             }));
         }
@@ -141,7 +141,7 @@ public class QuestEditorGUI extends GUIScreen
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             conditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
                 gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
             }));
         }
@@ -158,7 +158,7 @@ public class QuestEditorGUI extends GUIScreen
                 conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
                 conditions.add(conditionElement.addClickActions(() ->
                 {
-                    ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
                     gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
                 }));
 
@@ -347,7 +347,7 @@ public class QuestEditorGUI extends GUIScreen
                     GUICondition conditionElement = new GUICondition(GUI, (CCondition) newCondition.copy());
                     conditions.add(index, conditionElement.addClickActions(() ->
                     {
-                        ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
                         gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -364,7 +364,7 @@ public class QuestEditorGUI extends GUIScreen
                         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
                         conditions.add(conditionElement.addClickActions(() ->
                         {
-                            ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
                             gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
                         }));
 

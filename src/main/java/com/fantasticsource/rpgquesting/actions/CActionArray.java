@@ -37,16 +37,25 @@ public class CActionArray extends CAction
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        if (actions.size() == 0) return "Does nothing";
+        ArrayList<String> result = new ArrayList<>();
 
-        if (actions.size() == 1) return actions.get(0).description();
+        for (CAction action : actions)
+        {
+            result.addAll(action.description());
+        }
 
-        StringBuilder s = new StringBuilder("Does all of these things:\n{");
-        for (CAction action : actions) s.append("\n").append(action.description());
-        s.append("\n}");
-        return s.toString();
+        for (int i = 0; i < result.size(); i++)
+        {
+            result.set(i, " " + result.get(i));
+        }
+
+        result.add(0, "{");
+        result.add("}");
+        result.add(0, "ALL OF:");
+
+        return result;
     }
 
     @Override

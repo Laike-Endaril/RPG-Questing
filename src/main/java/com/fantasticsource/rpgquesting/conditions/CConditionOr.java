@@ -44,19 +44,25 @@ public class CConditionOr extends CCondition
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        if (conditions.size() == 0) return "Requires nothing";
+        ArrayList<String> result = new ArrayList<>();
 
-        if (conditions.size() == 1) return conditions.get(0).description();
-
-        StringBuilder s = new StringBuilder("Requires at least one of these:\n{");
         for (CCondition condition : conditions)
         {
-            s.append("\n ").append(condition.description());
+            result.addAll(condition.description());
         }
-        s.append("\n}");
-        return s.toString();
+
+        for (int i = 0; i < result.size(); i++)
+        {
+            result.set(i, " " + result.get(i));
+        }
+
+        result.add(0, "{");
+        result.add("}");
+        result.add(0, "AT LEAST ONE OF:");
+
+        return result;
     }
 
     @Override

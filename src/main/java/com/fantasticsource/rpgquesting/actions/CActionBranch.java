@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class CActionBranch extends CAction
 {
@@ -67,9 +68,11 @@ public class CActionBranch extends CAction
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Goes to branch " + branchIndex.value + " of dialogue: " + CDialogues.getByPermanentID(dialogueID.value).name.value;
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Go to branch " + branchIndex.value + " of dialogue: " + CDialogues.getByPermanentID(dialogueID.value).name.value);
+        return result;
     }
 
     @Override

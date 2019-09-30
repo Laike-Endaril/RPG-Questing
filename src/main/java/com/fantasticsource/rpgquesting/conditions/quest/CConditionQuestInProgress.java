@@ -7,7 +7,6 @@ import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 
@@ -40,15 +39,17 @@ public class CConditionQuestInProgress extends CQuestCondition
         {
             CQuest quest = CQuests.get(name.value);
             if (quest == null) result.add("Quest must be in progress (quest does not exist!): \"" + name.value + '"');
-            else if (!quest.isInProgress((EntityPlayerMP) entity)) result.add("Quest must be in progress: \"" + quest.name.value + '"');
+            else if (!quest.isInProgress((EntityPlayerMP) entity)) result.add("Quest must be in progress (not ready to turn in): \"" + quest.name.value + '"');
         }
         return result;
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Requires quest be in progress (not ready to turn in): " + TextFormatting.GOLD + name.value;
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Quest in progress (not ready to turn in): " + name.value);
+        return result;
     }
 
     @Override

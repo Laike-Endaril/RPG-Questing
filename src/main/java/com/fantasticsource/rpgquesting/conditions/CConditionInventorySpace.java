@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,9 +51,11 @@ public class CConditionInventorySpace extends CCondition
     }
 
     @Override
-    public String description()
+    public ArrayList<String> description()
     {
-        return "Requires player have empty inventory space" + (slotCount.value == 1 ? "" : "s" + ": " + TextFormatting.GOLD + slotCount.value);
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Inventory space: " + slotCount.value);
+        return result;
     }
 
     @Override
