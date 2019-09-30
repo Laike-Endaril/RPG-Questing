@@ -12,18 +12,17 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.rpgquesting.selectionguis.ConditionSelectionGUI;
 import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
-import com.fantasticsource.rpgquesting.selectionguis.RewardSelectionGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -36,7 +35,14 @@ public class QuestEditorGUI extends GUIScreen
     private static GUITextButton save, cancel, delete;
     private static GUIGradientBorder separator;
     private static GUITabView tabView;
-    private static ArrayList<GUICondition> guiConditions = new ArrayList<>();
+
+    @Override
+    public void initGui()
+    {
+        super.initGui();
+
+
+    }
 
     public static void show(CQuest quest)
     {
@@ -82,13 +88,23 @@ public class QuestEditorGUI extends GUIScreen
         {
             rewards.add(new GUIText(GUI, "\n"));
             GUIItemStack rewardElement = new GUIItemStack(GUI, reward.stack);
-            rewards.add(rewardElement.addClickActions(() -> RewardSelectionGUI.show(rewardElement)));
+            rewards.add(rewardElement.addClickActions(() ->
+            {
+                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+            }));
         }
 
-        rewards.add(new GUIText(GUI, "\n"));
-        GUIItemStack rewardElement = new GUIItemStack(GUI, ItemStack.EMPTY);
-        rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-        rewards.add(rewardElement.addClickActions(() -> RewardSelectionGUI.show(rewardElement)));
+        {
+            rewards.add(new GUIText(GUI, "\n"));
+            GUIItemStack rewardElement = new GUIItemStack(GUI, ItemStack.EMPTY);
+            rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+            rewards.add(rewardElement.addClickActions(() ->
+            {
+                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+            }));
+        }
 
         if (quest.rewards.size() > 0)
         {
@@ -98,9 +114,13 @@ public class QuestEditorGUI extends GUIScreen
                 rewards.clear();
 
                 rewards.add(new GUIText(GUI, "\n"));
-                GUIItemStack rewardElement2 = new GUIItemStack(GUI, ItemStack.EMPTY);
-                rewardElement2.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                rewards.add(rewardElement2.addClickActions(() -> RewardSelectionGUI.show(rewardElement2)));
+                GUIItemStack rewardElement = new GUIItemStack(GUI, ItemStack.EMPTY);
+                rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+                rewards.add(rewardElement.addClickActions(() ->
+                {
+                    ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                    gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                }));
 
                 rewards.add(new GUIText(GUI, "\n"));
             }));
@@ -233,5 +253,70 @@ public class QuestEditorGUI extends GUIScreen
     {
         super.onClosed();
         Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
+    }
+
+    public void doIt(GUIItemStack clickedElement, ItemStack stack)
+    {
+        System.out.println(clickedElement.text);
+        System.out.println(stack);
+
+        if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
+        {
+            //Started with empty slot
+            if (!stack.isEmpty())
+            {
+                //Added new reward
+                int index = rewards.indexOf(clickedElement);
+                {
+                    rewards.add(index, new GUIText(GUI, "\n"));
+                    GUIItemStack rewardElement = new GUIItemStack(GUI, stack.copy());
+                    rewards.add(index, rewardElement.addClickActions(() ->
+                    {
+                        ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                        gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Rewards were empty, but no longer are
+                    rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+                    {
+                        rewards.clear();
+
+                        rewards.add(new GUIText(this, "\n"));
+                        GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
+                        rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+                        rewards.add(rewardElement.addClickActions(() ->
+                        {
+                            ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                            gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                        }));
+
+                        rewards.add(new GUIText(this, "\n"));
+                    }));
+                    rewards.add(new GUIText(GUI, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (!stack.isEmpty()) clickedElement.setStack(stack.copy());
+            else
+            {
+                //Removing a reward
+                int index = rewards.indexOf(clickedElement);
+                rewards.remove(index);
+                rewards.remove(index);
+
+                if (rewards.size() == 5)
+                {
+                    //Had one reward, and now have 0 (remove the "clear all" option)
+                    rewards.remove(3);
+                    rewards.remove(3);
+                }
+            }
+        }
     }
 }
