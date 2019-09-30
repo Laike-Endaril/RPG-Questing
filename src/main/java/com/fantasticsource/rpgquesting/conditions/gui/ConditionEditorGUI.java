@@ -8,6 +8,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.conditions.*;
@@ -26,7 +27,8 @@ public class ConditionEditorGUI extends GUIScreen
 {
     public CCondition original, selection;
     public GUICondition current;
-    private GUIGradientBorder separator;
+    private GUIGradient root;
+    private GUIGradientBorder separator, separator2;
     private GUIScrollView conditionSelector, conditionEditor;
     private GUIVerticalScrollbar conditionSelectorScroll, conditionEditorScroll;
 
@@ -43,7 +45,7 @@ public class ConditionEditorGUI extends GUIScreen
         selection = original;
 
 
-        GUIGradient root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
+        root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
         guiElements.add(root);
 
 
@@ -87,10 +89,11 @@ public class ConditionEditorGUI extends GUIScreen
 
         //Condition selector
         double yy = separator.y + separator.height, yy2 = yy + (1 - yy) / 2;
-        conditionSelector = new GUIScrollView(this, 0.02, yy, 0.94, yy2 - yy);
-        root.add(conditionSelector);
 
-        conditionSelectorScroll = new GUIVerticalScrollbar(this, 0.98, yy, 0.02, yy2 - yy, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        conditionSelector = new GUIScrollView(this, 0.94, yy2 - yy);
+        root.add(conditionSelector);
+        conditionSelectorScroll = new GUIVerticalScrollbar(this, 0.02, yy2 - yy, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
         root.add(conditionSelectorScroll);
 
         //Quest conditions
@@ -148,11 +151,16 @@ public class ConditionEditorGUI extends GUIScreen
         }
 
 
+        separator2 = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+        root.add(separator2);
+
+
         //Condition editor
-        conditionEditor = new GUIScrollView(this, 0.02, yy2, 0.94, 1 - yy2);
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        conditionEditor = new GUIScrollView(this, 0.94, 1 - yy2 - separator2.height);
         root.add(conditionEditor);
 
-        conditionEditorScroll = new GUIVerticalScrollbar(this, 0.98, yy2, 0.02, 1 - yy2, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
+        conditionEditorScroll = new GUIVerticalScrollbar(this, 0.02, 1 - yy2 - separator2.height, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
         root.add(conditionEditorScroll);
 
         setCurrent(current.condition);
@@ -164,22 +172,15 @@ public class ConditionEditorGUI extends GUIScreen
         super.onResize(mcIn, w, h);
 
         double yy = separator.y + separator.height, yy2 = yy + (1 - yy) / 2;
-        conditionSelector.y = yy;
+
         conditionSelector.height = yy2 - yy;
-        conditionSelector.recalc();
-
-        conditionSelectorScroll.y = yy;
         conditionSelectorScroll.height = yy2 - yy;
-        conditionSelectorScroll.recalc();
 
 
-        conditionEditor.y = yy2;
-        conditionEditor.height = 1 - yy2;
-        conditionEditor.recalc();
+        conditionEditor.height = 1 - yy2 - separator2.height;
+        conditionEditorScroll.height = 1 - yy2 - separator2.height;
 
-        conditionEditorScroll.y = yy2;
-        conditionEditorScroll.height = 1 - yy2;
-        conditionEditorScroll.recalc();
+        root.recalc();
     }
 
     @Override
@@ -194,18 +195,66 @@ public class ConditionEditorGUI extends GUIScreen
 
         conditionEditor.clear();
 
+        conditionEditor.add(new GUIText(this, "\n"));
+
         if (condition != null)
         {
             Class cls = condition.getClass();
             if (cls == CConditionNameIs.class)
             {
-                GUILabeledTextInput name = new GUILabeledTextInput(this, "Name: ", ((CConditionNameIs) condition).name.value, FilterNotEmpty.INSTANCE);
+                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity name: ", ((CConditionNameIs) condition).name.value, FilterNotEmpty.INSTANCE);
                 name.input.addRecalcActions(() ->
                 {
-                    ((CConditionNameIs) condition).name.set(name.input.text);
-                    current.setCondition(condition);
+                    if (name.input.valid())
+                    {
+                        ((CConditionNameIs) condition).name.set(name.input.text);
+                        current.setCondition(condition);
+                    }
                 });
                 conditionEditor.add(name);
+                conditionEditor.add(new GUIText(this, "\n"));
+            }
+            else if (cls == CConditionEntityEntryIs.class)
+            {
+                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity registry name: ", ((CConditionEntityEntryIs) condition).entityEntryName.value, FilterNotEmpty.INSTANCE);
+                name.input.addRecalcActions(() ->
+                {
+                    if (name.input.valid())
+                    {
+                        ((CConditionEntityEntryIs) condition).entityEntryName.set(name.input.text);
+                        current.setCondition(condition);
+                    }
+                });
+                conditionEditor.add(name);
+                conditionEditor.add(new GUIText(this, "\n"));
+            }
+            else if (cls == CConditionClassIs.class)
+            {
+                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity class name: ", ((CConditionClassIs) condition).className.value, FilterNotEmpty.INSTANCE);
+                name.input.addRecalcActions(() ->
+                {
+                    if (name.input.valid())
+                    {
+                        ((CConditionClassIs) condition).className.set(name.input.text);
+                        current.setCondition(condition);
+                    }
+                });
+                conditionEditor.add(name);
+                conditionEditor.add(new GUIText(this, "\n"));
+            }
+            else if (cls == CConditionInventorySpace.class)
+            {
+                GUILabeledTextInput slotCount = new GUILabeledTextInput(this, "Empty slot count: ", "" + ((CConditionInventorySpace) condition).slotCount.value, FilterInt.INSTANCE);
+                slotCount.input.addRecalcActions(() ->
+                {
+                    if (slotCount.input.valid())
+                    {
+                        ((CConditionInventorySpace) condition).slotCount.set(Integer.parseInt(slotCount.input.text));
+                        current.setCondition(condition);
+                    }
+                });
+                conditionEditor.add(slotCount);
+                conditionEditor.add(new GUIText(this, "\n"));
             }
         }
     }
