@@ -16,12 +16,16 @@ import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestReadyToCo
 import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 
 import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
 public class ConditionEditorGUI extends GUIScreen
 {
     public CCondition original, selection;
+    private GUIGradientBorder separator;
+    private GUIScrollView conditionSelector, conditionEditor;
+    private GUIVerticalScrollbar conditionSelectorScroll, conditionEditorScroll;
 
     public ConditionEditorGUI(GUICondition clickedElement)
     {
@@ -64,21 +68,26 @@ public class ConditionEditorGUI extends GUIScreen
         }));
 
 
-        GUIGradientBorder separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+        //Before and after
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
+
+        root.add(new GUIText(this, TextFormatting.GOLD + "Original: "));
+        root.add(new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy()));
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
+
+        root.add(new GUIText(this, TextFormatting.GOLD + "Current: "));
+        root.add(current);
+        separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
         root.add(separator);
 
 
-        //Before
-
-
-        //After
-
-
         //Condition selector
-        double yy = separator.y + separator.height;
-        GUIScrollView conditionSelector = new GUIScrollView(this, 0.02, yy, 0.94, 1 - yy);
+        double yy = separator.y + separator.height, yy2 = yy + (1 - yy) / 2;
+        conditionSelector = new GUIScrollView(this, 0.02, yy, 0.94, yy2 - yy);
         root.add(conditionSelector);
-        root.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector));
+
+        conditionSelectorScroll = new GUIVerticalScrollbar(this, 0.98, yy, 0.02, yy2 - yy, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
+        root.add(conditionSelectorScroll);
 
         //Quest conditions
         conditionSelector.add(new GUIText(this, "\n"));
@@ -133,6 +142,38 @@ public class ConditionEditorGUI extends GUIScreen
                 element.addClickActions(() -> current.setCondition(((GUICondition) element).condition));
             }
         }
+
+
+        //Condition editor
+        conditionEditor = new GUIScrollView(this, 0.02, yy2, 0.94, 1 - yy2);
+        root.add(conditionEditor);
+
+        conditionEditorScroll = new GUIVerticalScrollbar(this, 0.98, yy2, 0.02, 1 - yy2, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
+        root.add(conditionEditorScroll);
+    }
+
+    @Override
+    public void onResize(Minecraft mcIn, int w, int h)
+    {
+        super.onResize(mcIn, w, h);
+
+        double yy = separator.y + separator.height, yy2 = yy + (1 - yy) / 2;
+        conditionSelector.y = yy;
+        conditionSelector.height = yy2 - yy;
+        conditionSelector.recalc();
+
+        conditionSelectorScroll.y = yy;
+        conditionSelectorScroll.height = yy2 - yy;
+        conditionSelectorScroll.recalc();
+
+
+        conditionEditor.y = yy2;
+        conditionEditor.height = 1 - yy2;
+        conditionEditor.recalc();
+
+        conditionEditorScroll.y = yy2;
+        conditionEditorScroll.height = 1 - yy2;
+        conditionEditorScroll.recalc();
     }
 
     @Override
