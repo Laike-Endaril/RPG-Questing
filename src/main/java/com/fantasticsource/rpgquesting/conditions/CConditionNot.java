@@ -55,9 +55,9 @@ public class CConditionNot extends CCondition
     @Override
     public GUICondition getChoosableElement(GUIScreen screen)
     {
-        GUICondition conditionElement = new GUICondition(screen, new CConditionNot());
-        conditionElement.text = conditionElement.text.replace("nothing", "the opposite of a condition (NOT)...");
-        return conditionElement;
+        GUICondition element = new GUICondition(screen, new CConditionNot());
+        element.text = "NOT (opposite of a condition)";
+        return element;
     }
 
     @Override

@@ -67,9 +67,9 @@ public class CConditionAnd extends CCondition
     @Override
     public GUICondition getChoosableElement(GUIScreen screen)
     {
-        GUICondition conditionElement = new GUICondition(screen, new CConditionAnd());
-        conditionElement.text = conditionElement.text.replace("nothing", "all of multiple conditions (AND)...");
-        return conditionElement;
+        GUICondition element = new GUICondition(screen, new CConditionAnd());
+        element.text = "AND (all of multiple conditions)";
+        return element;
     }
 
     public CConditionAnd add(CCondition... conditions)

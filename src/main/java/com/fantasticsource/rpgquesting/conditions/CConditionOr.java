@@ -68,9 +68,9 @@ public class CConditionOr extends CCondition
     @Override
     public GUICondition getChoosableElement(GUIScreen screen)
     {
-        GUICondition conditionElement = new GUICondition(screen, new CConditionOr());
-        conditionElement.text = conditionElement.text.replace("nothing", "at least one of multiple conditions (OR)...");
-        return conditionElement;
+        GUICondition element = new GUICondition(screen, new CConditionOr());
+        element.text = "OR (any one of multiple conditions)";
+        return element;
     }
 
     public CConditionOr add(CCondition... conditions)

@@ -63,7 +63,9 @@ public class CConditionHaveItems extends CCondition
     @Override
     public GUICondition getChoosableElement(GUIScreen screen)
     {
-        return new GUICondition(screen, new CConditionHaveItems(ItemStack.EMPTY));
+        GUICondition element = new GUICondition(screen, new CConditionHaveItems(ItemStack.EMPTY));
+        element.text = element.text.replace("0 Air", "???");
+        return element;
     }
 
     @Override
