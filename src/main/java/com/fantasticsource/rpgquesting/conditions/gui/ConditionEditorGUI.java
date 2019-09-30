@@ -72,7 +72,8 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
         root.add(new GUIText(this, TextFormatting.GOLD + "Original: "));
-        root.add(new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy()));
+        GUICondition originalElement = new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy());
+        root.add(originalElement.addClickActions(() -> current.setCondition(originalElement.condition)));
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
         root.add(new GUIText(this, TextFormatting.GOLD + "Current: "));
