@@ -1,10 +1,10 @@
 package com.fantasticsource.rpgquesting.conditions.quest;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextFormatting;

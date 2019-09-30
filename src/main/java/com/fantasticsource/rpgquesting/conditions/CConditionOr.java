@@ -1,7 +1,7 @@
 package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
+import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;

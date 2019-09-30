@@ -3,7 +3,7 @@ package com.fantasticsource.rpgquesting.conditions;
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.items.ItemMatcher;
-import com.fantasticsource.rpgquesting.selectionguis.GUICondition;
+import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;

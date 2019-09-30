@@ -1,4 +1,4 @@
-package com.fantasticsource.rpgquesting.selectionguis;
+package com.fantasticsource.rpgquesting.conditions.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
