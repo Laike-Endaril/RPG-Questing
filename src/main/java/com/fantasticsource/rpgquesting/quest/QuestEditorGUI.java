@@ -128,13 +128,23 @@ public class QuestEditorGUI extends GUIScreen
         {
             conditions.add(new GUIText(GUI, "\n"));
             GUICondition conditionElement = new GUICondition(GUI, condition);
-            conditions.add(conditionElement.addClickActions(() -> new ConditionSelectionGUI(conditionElement)));
+            conditions.add(conditionElement.addClickActions(() ->
+            {
+                ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
+            }));
         }
 
-        conditions.add(new GUIText(GUI, "\n"));
-        GUICondition conditionElement = new GUICondition(GUI, null);
-        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-        conditions.add(conditionElement.addClickActions(() -> new ConditionSelectionGUI(conditionElement)));
+        {
+            conditions.add(new GUIText(GUI, "\n"));
+            GUICondition conditionElement = new GUICondition(GUI, null);
+            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+            conditions.add(conditionElement.addClickActions(() ->
+            {
+                ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
+            }));
+        }
 
         if (quest.conditions.size() > 0)
         {
@@ -144,9 +154,13 @@ public class QuestEditorGUI extends GUIScreen
                 conditions.clear();
 
                 conditions.add(new GUIText(GUI, "\n"));
-                GUICondition conditionElement2 = new GUICondition(GUI, null);
-                conditionElement2.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                conditions.add(conditionElement2.addClickActions(() -> new ConditionSelectionGUI(conditionElement2)));
+                GUICondition conditionElement = new GUICondition(GUI, null);
+                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                conditions.add(conditionElement.addClickActions(() ->
+                {
+                    ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                    gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
+                }));
 
                 conditions.add(new GUIText(GUI, "\n"));
             }));
@@ -326,29 +340,37 @@ public class QuestEditorGUI extends GUIScreen
             if (newCondition != null)
             {
                 //Added new condition
-                int index = QuestEditorGUI.conditions.indexOf(activeConditionElement);
+                int index = conditions.indexOf(activeConditionElement);
 
                 {
-                    QuestEditorGUI.conditions.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
-                    GUICondition conditionElement = new GUICondition(QuestEditorGUI.GUI, (CCondition) newCondition.copy());
-                    QuestEditorGUI.conditions.add(index, conditionElement.addClickActions(() -> new ConditionSelectionGUI(conditionElement)));
+                    conditions.add(index, new GUIText(GUI, "\n"));
+                    GUICondition conditionElement = new GUICondition(GUI, (CCondition) newCondition.copy());
+                    conditions.add(index, conditionElement.addClickActions(() ->
+                    {
+                        ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                        gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
+                    }));
                 }
 
                 if (index == 1)
                 {
                     //Conditions were empty, but no longer are
-                    QuestEditorGUI.conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
                     {
-                        QuestEditorGUI.conditions.clear();
+                        conditions.clear();
 
-                        QuestEditorGUI.conditions.add(new GUIText(this, "\n"));
+                        conditions.add(new GUIText(this, "\n"));
                         GUICondition conditionElement = new GUICondition(this, null);
                         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                        QuestEditorGUI.conditions.add(conditionElement.addClickActions(() -> new ConditionSelectionGUI(conditionElement)));
+                        conditions.add(conditionElement.addClickActions(() ->
+                        {
+                            ConditionSelectionGUI gui = new ConditionSelectionGUI(conditionElement);
+                            gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
+                        }));
 
-                        QuestEditorGUI.conditions.add(new GUIText(this, "\n"));
+                        conditions.add(new GUIText(this, "\n"));
                     }));
-                    QuestEditorGUI.conditions.add(new GUIText(QuestEditorGUI.GUI, "\n"));
+                    conditions.add(new GUIText(GUI, "\n"));
                 }
             }
         }
@@ -359,15 +381,15 @@ public class QuestEditorGUI extends GUIScreen
             else
             {
                 //Removing a condition
-                int index = QuestEditorGUI.conditions.indexOf(activeConditionElement);
-                QuestEditorGUI.conditions.remove(index);
-                QuestEditorGUI.conditions.remove(index);
+                int index = conditions.indexOf(activeConditionElement);
+                conditions.remove(index);
+                conditions.remove(index);
 
-                if (QuestEditorGUI.conditions.size() == 5)
+                if (conditions.size() == 5)
                 {
                     //Had one condition, and now have 0 (remove the "clear all" option)
-                    QuestEditorGUI.conditions.remove(3);
-                    QuestEditorGUI.conditions.remove(3);
+                    conditions.remove(3);
+                    conditions.remove(3);
                 }
             }
         }

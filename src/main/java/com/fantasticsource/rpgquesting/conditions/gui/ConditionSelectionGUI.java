@@ -37,21 +37,19 @@ public class ConditionSelectionGUI extends GUIScreen
         guiElements.add(scrollView);
         guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, scrollView));
 
-        {
-            //Current
-            scrollView.add(new GUIText(this, "\n"));
-            GUICondition conditionElement = new GUICondition(this, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
-            conditionElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
-            scrollView.add(conditionElement);
-            scrollView.add(new GUIText(this, "\n\n"));
+        //Current
+        scrollView.add(new GUIText(this, "\n"));
+        GUICondition conditionElement = new GUICondition(this, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
+        conditionElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
+        scrollView.add(conditionElement);
+        scrollView.add(new GUIText(this, "\n\n"));
 
-            //Remove
-            scrollView.add(new GUIText(this, "\n"));
-            conditionElement = new GUICondition(this, null);
-            conditionElement.text = TextFormatting.DARK_PURPLE + "(Remove condition)";
-            scrollView.add(conditionElement);
-            scrollView.add(new GUIText(this, "\n\n"));
-        }
+        //Remove
+        scrollView.add(new GUIText(this, "\n"));
+        conditionElement = new GUICondition(this, null);
+        conditionElement.text = TextFormatting.DARK_PURPLE + "(Remove condition)";
+        scrollView.add(conditionElement);
+        scrollView.add(new GUIText(this, "\n\n"));
 
         //Quest conditions
         scrollView.add(new GUIText(this, "\n"));
@@ -103,8 +101,11 @@ public class ConditionSelectionGUI extends GUIScreen
             GUIElement element = scrollView.get(i);
             if (element instanceof GUICondition)
             {
-                selection = ((GUICondition) element).condition;
-                close();
+                element.addClickActions(() ->
+                {
+                    selection = ((GUICondition) element).condition;
+                    close();
+                });
             }
         }
     }
