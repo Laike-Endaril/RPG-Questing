@@ -20,15 +20,13 @@ import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
 public class ConditionSelectionGUI extends GUIScreen
 {
-    public static final ConditionSelectionGUI GUI = new ConditionSelectionGUI();
-
     private static GUIScrollView scrollView;
     private static GUICondition clickedElement;
 
-    public static void show(GUICondition clickedElement)
+    public ConditionSelectionGUI(GUICondition clickedElement)
     {
-        if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(GUI);
-        else Minecraft.getMinecraft().displayGuiScreen(GUI);
+        if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(this);
+        else Minecraft.getMinecraft().displayGuiScreen(this);
 
         ConditionSelectionGUI.clickedElement = clickedElement;
 
@@ -37,64 +35,64 @@ public class ConditionSelectionGUI extends GUIScreen
 
         {
             //Current
-            scrollView.add(new GUIText(GUI, "\n"));
-            GUICondition conditionElement = new GUICondition(GUI, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
+            scrollView.add(new GUIText(this, "\n"));
+            GUICondition conditionElement = new GUICondition(this, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
             conditionElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
             scrollView.add(conditionElement);
-            scrollView.add(new GUIText(GUI, "\n\n"));
+            scrollView.add(new GUIText(this, "\n\n"));
 
             //Remove
-            scrollView.add(new GUIText(GUI, "\n"));
-            conditionElement = new GUICondition(GUI, null);
+            scrollView.add(new GUIText(this, "\n"));
+            conditionElement = new GUICondition(this, null);
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Remove condition)";
             scrollView.add(conditionElement);
-            scrollView.add(new GUIText(GUI, "\n\n"));
+            scrollView.add(new GUIText(this, "\n\n"));
         }
 
         //Quest conditions
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionQuestAvailable().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionQuestAvailable().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionQuestInProgress().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionQuestInProgress().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionQuestReadyToComplete().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionQuestReadyToComplete().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionQuestCompleted().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionQuestCompleted().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
         //Normal conditions
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionNameIs().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionNameIs().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionEntityEntryIs().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionEntityEntryIs().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionClassIs().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionClassIs().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionInventorySpace().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionInventorySpace().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionHaveItems().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionHaveItems().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
         //Meta conditions
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionAnd().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionAnd().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionNot().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionNot().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
-        scrollView.add(new CConditionOr().getChoosableElement(GUI));
-        scrollView.add(new GUIText(GUI, "\n"));
+        scrollView.add(new CConditionOr().getChoosableElement(this));
+        scrollView.add(new GUIText(this, "\n"));
 
         for (int i = scrollView.size() - 1; i >= 0; i--)
         {
@@ -106,7 +104,7 @@ public class ConditionSelectionGUI extends GUIScreen
         }
     }
 
-    private static void doIt(CCondition condition)
+    private void doIt(CCondition condition)
     {
         if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
         {
@@ -117,21 +115,21 @@ public class ConditionSelectionGUI extends GUIScreen
                 int index = QuestEditorGUI.conditions.indexOf(clickedElement);
                 QuestEditorGUI.conditions.add(index, new GUIText(QuestEditorGUI.GUI, "\n"));
                 GUICondition conditionElement = new GUICondition(QuestEditorGUI.GUI, (CCondition) condition.copy());
-                QuestEditorGUI.conditions.add(index, conditionElement.addClickActions(() -> ConditionSelectionGUI.show(conditionElement)));
+                QuestEditorGUI.conditions.add(index, conditionElement.addClickActions(() -> new ConditionSelectionGUI(conditionElement)));
 
                 if (index == 1)
                 {
                     //Conditions were empty, but no longer are
-                    QuestEditorGUI.conditions.add(new GUIText(GUI, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+                    QuestEditorGUI.conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
                     {
                         QuestEditorGUI.conditions.clear();
 
-                        QuestEditorGUI.conditions.add(new GUIText(GUI, "\n"));
-                        GUICondition conditionElement2 = new GUICondition(GUI, null);
+                        QuestEditorGUI.conditions.add(new GUIText(this, "\n"));
+                        GUICondition conditionElement2 = new GUICondition(this, null);
                         conditionElement2.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                        QuestEditorGUI.conditions.add(conditionElement2.addClickActions(() -> ConditionSelectionGUI.show(conditionElement2)));
+                        QuestEditorGUI.conditions.add(conditionElement2.addClickActions(() -> new ConditionSelectionGUI(conditionElement2)));
 
-                        QuestEditorGUI.conditions.add(new GUIText(GUI, "\n"));
+                        QuestEditorGUI.conditions.add(new GUIText(this, "\n"));
                     }));
                     QuestEditorGUI.conditions.add(new GUIText(QuestEditorGUI.GUI, "\n"));
                 }
@@ -157,7 +155,7 @@ public class ConditionSelectionGUI extends GUIScreen
             }
         }
 
-        GUI.close();
+        close();
     }
 
     @Override

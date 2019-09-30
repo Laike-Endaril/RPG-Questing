@@ -91,7 +91,7 @@ public class QuestEditorGUI extends GUIScreen
             rewards.add(rewardElement.addClickActions(() ->
             {
                 ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                gui.addOnClosedActions(() -> GUI.editReward(rewardElement, gui.selection));
             }));
         }
 
@@ -102,7 +102,7 @@ public class QuestEditorGUI extends GUIScreen
             rewards.add(rewardElement.addClickActions(() ->
             {
                 ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                gui.addOnClosedActions(() -> GUI.editReward(rewardElement, gui.selection));
             }));
         }
 
@@ -119,7 +119,7 @@ public class QuestEditorGUI extends GUIScreen
                 rewards.add(rewardElement.addClickActions(() ->
                 {
                     ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                    gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                    gui.addOnClosedActions(() -> GUI.editReward(rewardElement, gui.selection));
                 }));
 
                 rewards.add(new GUIText(GUI, "\n"));
@@ -136,13 +136,13 @@ public class QuestEditorGUI extends GUIScreen
         {
             conditions.add(new GUIText(GUI, "\n"));
             GUICondition conditionElement = new GUICondition(GUI, condition);
-            conditions.add(conditionElement.addClickActions(() -> ConditionSelectionGUI.show(conditionElement)));
+            conditions.add(conditionElement.addClickActions(() -> new ConditionSelectionGUI(conditionElement)));
         }
 
         conditions.add(new GUIText(GUI, "\n"));
         GUICondition conditionElement = new GUICondition(GUI, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-        conditions.add(conditionElement.addClickActions(() -> ConditionSelectionGUI.show(conditionElement)));
+        conditions.add(conditionElement.addClickActions(() -> new ConditionSelectionGUI(conditionElement)));
 
         if (quest.conditions.size() > 0)
         {
@@ -154,7 +154,7 @@ public class QuestEditorGUI extends GUIScreen
                 conditions.add(new GUIText(GUI, "\n"));
                 GUICondition conditionElement2 = new GUICondition(GUI, null);
                 conditionElement2.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                conditions.add(conditionElement2.addClickActions(() -> ConditionSelectionGUI.show(conditionElement2)));
+                conditions.add(conditionElement2.addClickActions(() -> new ConditionSelectionGUI(conditionElement2)));
 
                 conditions.add(new GUIText(GUI, "\n"));
             }));
@@ -255,25 +255,22 @@ public class QuestEditorGUI extends GUIScreen
         Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
     }
 
-    public void doIt(GUIItemStack clickedElement, ItemStack stack)
+    public void editReward(GUIItemStack activeRewardElement, ItemStack newStack)
     {
-        System.out.println(clickedElement.text);
-        System.out.println(stack);
-
-        if (clickedElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
+        if (activeRewardElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
         {
             //Started with empty slot
-            if (!stack.isEmpty())
+            if (!newStack.isEmpty())
             {
                 //Added new reward
-                int index = rewards.indexOf(clickedElement);
+                int index = rewards.indexOf(activeRewardElement);
                 {
                     rewards.add(index, new GUIText(GUI, "\n"));
-                    GUIItemStack rewardElement = new GUIItemStack(GUI, stack.copy());
+                    GUIItemStack rewardElement = new GUIItemStack(GUI, newStack.copy());
                     rewards.add(index, rewardElement.addClickActions(() ->
                     {
                         ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                        gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                        gui.addOnClosedActions(() -> GUI.editReward(rewardElement, gui.selection));
                     }));
                 }
 
@@ -290,7 +287,7 @@ public class QuestEditorGUI extends GUIScreen
                         rewards.add(rewardElement.addClickActions(() ->
                         {
                             ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                            gui.addOnClosedActions(() -> GUI.doIt(rewardElement, gui.selection));
+                            gui.addOnClosedActions(() -> GUI.editReward(rewardElement, gui.selection));
                         }));
 
                         rewards.add(new GUIText(this, "\n"));
@@ -302,11 +299,11 @@ public class QuestEditorGUI extends GUIScreen
         else
         {
             //Started with non-empty slot, or at least one that should not be empty
-            if (!stack.isEmpty()) clickedElement.setStack(stack.copy());
+            if (!newStack.isEmpty()) activeRewardElement.setStack(newStack.copy());
             else
             {
                 //Removing a reward
-                int index = rewards.indexOf(clickedElement);
+                int index = rewards.indexOf(activeRewardElement);
                 rewards.remove(index);
                 rewards.remove(index);
 
