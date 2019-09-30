@@ -194,16 +194,19 @@ public class ConditionEditorGUI extends GUIScreen
 
         conditionEditor.clear();
 
-        Class cls = condition.getClass();
-        if (cls == CConditionNameIs.class)
+        if (condition != null)
         {
-            GUILabeledTextInput name = new GUILabeledTextInput(this, "Name: ", ((CConditionNameIs) condition).name.value, FilterNotEmpty.INSTANCE);
-            name.input.addRecalcActions(() ->
+            Class cls = condition.getClass();
+            if (cls == CConditionNameIs.class)
             {
-                ((CConditionNameIs) condition).name.set(name.input.text);
-                current.setCondition(condition);
-            });
-            conditionEditor.add(name);
+                GUILabeledTextInput name = new GUILabeledTextInput(this, "Name: ", ((CConditionNameIs) condition).name.value, FilterNotEmpty.INSTANCE);
+                name.input.addRecalcActions(() ->
+                {
+                    ((CConditionNameIs) condition).name.set(name.input.text);
+                    current.setCondition(condition);
+                });
+                conditionEditor.add(name);
+            }
         }
     }
 }
