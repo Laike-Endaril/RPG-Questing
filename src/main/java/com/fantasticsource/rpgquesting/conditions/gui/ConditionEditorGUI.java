@@ -3,21 +3,25 @@ package com.fantasticsource.rpgquesting.conditions.gui;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
+import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
+import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.conditions.*;
 import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestAvailable;
 import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestCompleted;
 import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestInProgress;
 import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestReadyToComplete;
+import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextFormatting;
+
+import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
 public class ConditionEditorGUI extends GUIScreen
 {
-    public CCondition selection;
+    public CCondition original, selection;
 
     public ConditionEditorGUI(GUICondition clickedElement)
     {
@@ -28,28 +32,53 @@ public class ConditionEditorGUI extends GUIScreen
         drawStack = false;
 
 
-        selection = clickedElement.condition;
+        original = clickedElement.condition;
+        selection = original;
 
 
-        guiElements.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        GUIGradient root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
+        guiElements.add(root);
 
-        GUIScrollView conditionSelector = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        guiElements.add(conditionSelector);
-        guiElements.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector));
 
-        //Current
-        conditionSelector.add(new GUIText(this, "\n"));
-        GUICondition conditionElement = new GUICondition(this, clickedElement.condition == null ? null : (CCondition) clickedElement.condition.copy());
-        conditionElement.text += "" + TextFormatting.RESET + TextFormatting.DARK_PURPLE + " (currently selected)";
-        conditionSelector.add(conditionElement);
-        conditionSelector.add(new GUIText(this, "\n\n"));
+        //Management
+        GUICondition current = new GUICondition(this, original);
+        GUITextButton save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
+        root.add(save.addClickActions(() ->
+        {
+            selection = current.condition;
+            close();
+        }));
 
-        //Remove
-        conditionSelector.add(new GUIText(this, "\n"));
-        conditionElement = new GUICondition(this, null);
-        conditionElement.text = TextFormatting.DARK_PURPLE + "(Remove condition)";
-        conditionSelector.add(conditionElement);
-        conditionSelector.add(new GUIText(this, "\n\n"));
+        GUITextButton cancel = new GUITextButton(this, "Close Without Saving");
+        root.add(cancel.addClickActions(() ->
+        {
+            selection = original;
+            close();
+        }));
+
+        GUITextButton delete = new GUITextButton(this, "Delete Condition and Close", RED[0]);
+        root.add(delete.addClickActions(() ->
+        {
+            selection = null;
+            close();
+        }));
+
+
+        GUIGradientBorder separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+        root.add(separator);
+
+
+        //Before
+
+
+        //After
+
+
+        //Condition selector
+        double yy = separator.y + separator.height;
+        GUIScrollView conditionSelector = new GUIScrollView(this, 0.02, yy, 0.94, 1 - yy);
+        root.add(conditionSelector);
+        root.add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector));
 
         //Quest conditions
         conditionSelector.add(new GUIText(this, "\n"));
@@ -101,11 +130,7 @@ public class ConditionEditorGUI extends GUIScreen
             GUIElement element = conditionSelector.get(i);
             if (element instanceof GUICondition)
             {
-                element.addClickActions(() ->
-                {
-                    selection = ((GUICondition) element).condition;
-                    close();
-                });
+                element.addClickActions(() -> current.setCondition(((GUICondition) element).condition));
             }
         }
     }
