@@ -5,12 +5,14 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
+import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.conditions.*;
 import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestAvailable;
 import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestCompleted;
@@ -254,6 +256,22 @@ public class ConditionEditorGUI extends GUIScreen
                     }
                 });
                 conditionEditor.add(slotCount);
+                conditionEditor.add(new GUIText(this, "\n"));
+            }
+            else if (cls == CConditionHaveItems.class)
+            {
+                CConditionHaveItems haveItems = (CConditionHaveItems) condition;
+                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.stack);
+                conditionEditor.add(stackElement.addClickActions(() ->
+                {
+                    ItemSelectionGUI gui = new ItemSelectionGUI(stackElement);
+                    gui.addOnClosedActions(() ->
+                    {
+                        stackElement.setStack(gui.selection);
+                        haveItems.set(gui.selection);
+                        current.setCondition(haveItems);
+                    });
+                }));
                 conditionEditor.add(new GUIText(this, "\n"));
             }
         }
