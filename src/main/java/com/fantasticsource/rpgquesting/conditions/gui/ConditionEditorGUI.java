@@ -14,10 +14,7 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.conditions.*;
-import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestAvailable;
-import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestCompleted;
-import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestInProgress;
-import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestReadyToComplete;
+import com.fantasticsource.rpgquesting.conditions.quest.*;
 import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -272,6 +269,20 @@ public class ConditionEditorGUI extends GUIScreen
                         current.setCondition(haveItems);
                     });
                 }));
+                conditionEditor.add(new GUIText(this, "\n"));
+            }
+            else if (condition instanceof CQuestCondition)
+            {
+                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestCondition) condition).name.value, FilterNotEmpty.INSTANCE);
+                questName.input.addRecalcActions(() ->
+                {
+                    if (questName.input.valid())
+                    {
+                        ((CQuestCondition) condition).name.set(questName.input.text);
+                        current.setCondition(condition);
+                    }
+                });
+                conditionEditor.add(questName);
                 conditionEditor.add(new GUIText(this, "\n"));
             }
         }
