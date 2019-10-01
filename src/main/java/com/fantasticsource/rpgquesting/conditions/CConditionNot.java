@@ -2,6 +2,7 @@ package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
+import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -30,8 +31,12 @@ public class CConditionNot extends CCondition
 
         ArrayList<String> result = condition.unmetConditions(entity);
 
-        if (result.size() > 0) return new ArrayList<>();
+        if (result.size() == 0) return new ArrayList<>();
 
+        for (int i = 0; i < result.size(); i++)
+        {
+            result.set(i, " " + result.get(i));
+        }
 
         result.add(0, "{");
         result.add("}");
@@ -44,6 +49,11 @@ public class CConditionNot extends CCondition
     public ArrayList<String> description()
     {
         ArrayList<String> result = condition == null ? new ArrayList<>() : condition.description();
+
+        for (int i = 0; i < result.size(); i++)
+        {
+            result.set(i, " " + result.get(i));
+        }
 
         result.add(0, "{");
         result.add("}");
@@ -63,28 +73,30 @@ public class CConditionNot extends CCondition
     @Override
     public CConditionNot write(ByteBuf buf)
     {
-        Component.writeMarked(buf, condition);
+        buf.writeBoolean(condition != null);
+        if (condition != null) Component.writeMarked(buf, condition);
         return this;
     }
 
     @Override
     public CConditionNot read(ByteBuf buf)
     {
-        condition = ((CCondition) Component.readMarked(buf));
+        if (buf.readBoolean()) condition = ((CCondition) Component.readMarked(buf));
         return this;
     }
 
     @Override
     public CConditionNot save(OutputStream stream)
     {
-        Component.saveMarked(stream, condition);
+        new CBoolean().set(condition != null).save(stream);
+        if (condition != null) Component.saveMarked(stream, condition);
         return this;
     }
 
     @Override
     public CConditionNot load(InputStream stream)
     {
-        condition = ((CCondition) Component.loadMarked(stream));
+        if (new CBoolean().load(stream).value) condition = ((CCondition) Component.loadMarked(stream));
         return this;
     }
 }

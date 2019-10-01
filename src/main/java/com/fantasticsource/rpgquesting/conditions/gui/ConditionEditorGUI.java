@@ -285,6 +285,22 @@ public class ConditionEditorGUI extends GUIScreen
                 conditionEditor.add(questName);
                 conditionEditor.add(new GUIText(this, "\n"));
             }
+            else if (cls == CConditionNot.class)
+            {
+                CConditionNot not = (CConditionNot) condition;
+                GUICondition subCondition = new GUICondition(this, null);
+                conditionEditor.add(subCondition.addClickActions(() ->
+                {
+                    ConditionEditorGUI gui = new ConditionEditorGUI(subCondition);
+                    gui.addOnClosedActions(() ->
+                    {
+                        subCondition.setCondition(gui.selection);
+                        not.condition = gui.selection;
+                        current.setCondition(not);
+                    });
+                }));
+                conditionEditor.add(new GUIText(this, "\n"));
+            }
         }
     }
 }
