@@ -1,5 +1,3 @@
-Implement editing of AND and OR conditions
-
 Objective editing
 
 
