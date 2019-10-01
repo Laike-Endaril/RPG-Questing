@@ -11,6 +11,7 @@ import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
+import com.fantasticsource.mctools.gui.element.view.GUIAutocroppedView;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.conditions.*;
@@ -87,6 +88,11 @@ public class ConditionEditorGUI extends GUIScreen
         originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
+        GUIAutocroppedView autocroppedView = new GUIAutocroppedView(this, 0, 0);
+        originalView.add(autocroppedView);
+        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
+        autocroppedView.add(new GUIText(this, "ORIGINAL", 3, Color.YELLOW.copy().setVF(0.2f)));
+
         originalView.add(new GUIText(this, "\n"));
         GUICondition originalElement = new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy());
         originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.condition)));
@@ -100,6 +106,11 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
+
+        autocroppedView = new GUIAutocroppedView(this, 0, 0);
+        currentView.add(autocroppedView);
+        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
+        autocroppedView.add(new GUIText(this, "CURRENT", 3, Color.YELLOW.copy().setVF(0.2f)));
 
         currentView.add(new GUIText(this, "\n"));
         currentView.add(current);
@@ -117,6 +128,11 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         conditionSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
         root.add(conditionSelectorScrollbar);
+
+        autocroppedView = new GUIAutocroppedView(this, 0, 0);
+        conditionSelector.add(autocroppedView);
+        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
+        autocroppedView.add(new GUIText(this, "CONDITION SELECTION", 3, Color.YELLOW.copy().setVF(0.2f)));
 
         //Quest conditions
         conditionSelector.add(new GUIText(this, "\n"));
@@ -182,6 +198,11 @@ public class ConditionEditorGUI extends GUIScreen
         conditionEditor = new GUIScrollView(this, 0.94, free / 3);
         root.add(conditionEditor);
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+
+        autocroppedView = new GUIAutocroppedView(this, 0, 0);
+        conditionEditor.add(autocroppedView);
+        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
+        autocroppedView.add(new GUIText(this, "CONDITION EDITING", 3, Color.YELLOW.copy().setVF(0.2f)));
 
         conditionEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
         root.add(conditionEditorScrollbar);

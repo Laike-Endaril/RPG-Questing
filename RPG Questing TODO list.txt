@@ -1,5 +1,3 @@
-Make "before and after" into scrollviews (see in-code to dos)
-
 Implement editing of AND and OR conditions
 
 Objective editing
