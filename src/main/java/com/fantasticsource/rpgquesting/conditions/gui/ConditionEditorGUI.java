@@ -27,9 +27,9 @@ public class ConditionEditorGUI extends GUIScreen
     public CCondition original, selection;
     public GUICondition current;
     private GUIGradient root;
-    private GUIGradientBorder separator, separator2;
-    private GUIScrollView conditionSelector, conditionEditor;
-    private GUIVerticalScrollbar conditionSelectorScroll, conditionEditorScroll;
+    private GUIGradientBorder[] separators = new GUIGradientBorder[4];
+    private GUIScrollView conditionSelector, conditionEditor, originalView, currentView;
+    private GUIVerticalScrollbar conditionSelectorScrollbar, conditionEditorScrollbar, originalScrollbar, currentScrollbar;
 
     public ConditionEditorGUI(GUICondition clickedElement)
     {
@@ -72,29 +72,50 @@ public class ConditionEditorGUI extends GUIScreen
         }));
 
 
-        //Before and after
-        //TODO make them scrollviews, maybe 3 lines each, since metaconditions can be multi-line
-        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
+        separators[0] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+        root.add(separators[0]);
 
-        root.add(new GUIText(this, TextFormatting.GOLD + "Original: "));
+
+        //Original
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        originalView = new GUIScrollView(this, 0.44, 1d / 6);
+        root.add(originalView);
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, 1d / 6, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
+        root.add(originalScrollbar);
+
+        originalView.add(new GUIText(this, "\n" + TextFormatting.GOLD + "Original:\n\n"));
         GUICondition originalElement = new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy());
-        root.add(originalElement.addClickActions(() -> setCurrent(originalElement.condition)));
-        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
+        originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.condition)));
+        originalView.add(new GUIText(this, "\n"));
 
-        root.add(new GUIText(this, TextFormatting.GOLD + "Current: "));
-        root.add(current);
-        separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separator);
+
+        //Current
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        currentView = new GUIScrollView(this, 0.44, 1d / 6);
+        root.add(currentView);
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, 1d / 6, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
+        root.add(currentScrollbar);
+
+        currentView.add(new GUIText(this, "\n" + TextFormatting.GOLD + "Current:\n\n"));
+        currentView.add(current);
+        currentView.add(new GUIText(this, "\n"));
+
+
+        separators[2] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+        root.add(separators[2]);
 
 
         //Condition selector
-        double yy = separator.y + separator.height, yy2 = yy + (1 - yy) / 2;
+        double yy = separators[2].y + separators[2].height, yy2 = yy + (1 - yy) / 2;
 
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         conditionSelector = new GUIScrollView(this, 0.94, yy2 - yy);
         root.add(conditionSelector);
-        conditionSelectorScroll = new GUIVerticalScrollbar(this, 0.02, yy2 - yy, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
-        root.add(conditionSelectorScroll);
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        conditionSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, yy2 - yy, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
+        root.add(conditionSelectorScrollbar);
 
         //Quest conditions
         conditionSelector.add(new GUIText(this, "\n"));
@@ -151,17 +172,18 @@ public class ConditionEditorGUI extends GUIScreen
         }
 
 
-        separator2 = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separator2);
+        separators[3] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+        root.add(separators[3]);
 
 
         //Condition editor
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        conditionEditor = new GUIScrollView(this, 0.94, 1 - yy2 - separator2.height);
+        conditionEditor = new GUIScrollView(this, 0.94, 1 - yy2 - separators[3].height);
         root.add(conditionEditor);
+        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
 
-        conditionEditorScroll = new GUIVerticalScrollbar(this, 0.02, 1 - yy2 - separator2.height, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
-        root.add(conditionEditorScroll);
+        conditionEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, 1 - yy2 - separators[3].height, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
+        root.add(conditionEditorScrollbar);
 
         setCurrent(current.condition);
     }
@@ -171,14 +193,14 @@ public class ConditionEditorGUI extends GUIScreen
     {
         super.onResize(mcIn, w, h);
 
-        double yy = separator.y + separator.height, yy2 = yy + (1 - yy) / 2;
+        double yy = separators[2].y + separators[2].height, yy2 = yy + (1 - yy) / 2;
 
         conditionSelector.height = yy2 - yy;
-        conditionSelectorScroll.height = yy2 - yy;
+        conditionSelectorScrollbar.height = yy2 - yy;
 
 
-        conditionEditor.height = 1 - yy2 - separator2.height;
-        conditionEditorScroll.height = 1 - yy2 - separator2.height;
+        conditionEditor.height = 1 - yy2 - separators[3].height;
+        conditionEditorScrollbar.height = 1 - yy2 - separators[3].height;
 
         root.recalc();
     }
@@ -289,7 +311,7 @@ public class ConditionEditorGUI extends GUIScreen
             else if (cls == CConditionNot.class)
             {
                 CConditionNot not = (CConditionNot) condition;
-                GUICondition subCondition = new GUICondition(this, null);
+                GUICondition subCondition = new GUICondition(this, not.condition);
                 conditionEditor.add(subCondition.addClickActions(() ->
                 {
                     ConditionEditorGUI gui = new ConditionEditorGUI(subCondition);
@@ -303,5 +325,7 @@ public class ConditionEditorGUI extends GUIScreen
                 conditionEditor.add(new GUIText(this, "\n"));
             }
         }
+
+        currentView.recalc();
     }
 }
