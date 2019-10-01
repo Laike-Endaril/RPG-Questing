@@ -11,7 +11,6 @@ import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
-import com.fantasticsource.mctools.gui.element.view.GUIAutocroppedView;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.conditions.*;
@@ -28,6 +27,7 @@ public class ConditionEditorGUI extends GUIScreen
     public GUICondition current;
     private GUIGradient root;
     private GUITextButton delete;
+    private GUIText originalLabel, currentLabel, conditionSelectorLabel, conditionEditorLabel;
     private GUIGradientBorder[] separators = new GUIGradientBorder[4];
     private GUIScrollView conditionSelector, conditionEditor, originalView, currentView;
     private GUIVerticalScrollbar conditionSelectorScrollbar, conditionEditorScrollbar, originalScrollbar, currentScrollbar;
@@ -80,6 +80,17 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(separators[0]);
 
 
+        //Labels
+        originalLabel = new GUIText(this, 0, 0, "ORIGINAL", 3, Color.YELLOW.copy().setVF(0.2f));
+        root.add(originalLabel);
+        currentLabel = new GUIText(this, 0, 0, "CURRENT", 3, Color.YELLOW.copy().setVF(0.2f));
+        root.add(currentLabel);
+        conditionSelectorLabel = new GUIText(this, 0, 0, "CONDITION SELECTION", 3, Color.YELLOW.copy().setVF(0.2f));
+        root.add(conditionSelectorLabel);
+        conditionEditorLabel = new GUIText(this, 0, 0, "CONDITION EDITING", 3, Color.YELLOW.copy().setVF(0.2f));
+        root.add(conditionEditorLabel);
+
+
         //Original
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         originalView = new GUIScrollView(this, 0.44, free / 3);
@@ -87,11 +98,6 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
-
-        GUIAutocroppedView autocroppedView = new GUIAutocroppedView(this, 0, 0);
-        originalView.add(autocroppedView);
-        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
-        autocroppedView.add(new GUIText(this, "ORIGINAL", 3, Color.YELLOW.copy().setVF(0.2f)));
 
         originalView.add(new GUIText(this, "\n"));
         GUICondition originalElement = new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy());
@@ -106,11 +112,6 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
-
-        autocroppedView = new GUIAutocroppedView(this, 0, 0);
-        currentView.add(autocroppedView);
-        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
-        autocroppedView.add(new GUIText(this, "CURRENT", 3, Color.YELLOW.copy().setVF(0.2f)));
 
         currentView.add(new GUIText(this, "\n"));
         currentView.add(current);
@@ -128,11 +129,6 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         conditionSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
         root.add(conditionSelectorScrollbar);
-
-        autocroppedView = new GUIAutocroppedView(this, 0, 0);
-        conditionSelector.add(autocroppedView);
-        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
-        autocroppedView.add(new GUIText(this, "CONDITION SELECTION", 3, Color.YELLOW.copy().setVF(0.2f)));
 
         //Quest conditions
         conditionSelector.add(new GUIText(this, "\n"));
@@ -199,15 +195,24 @@ public class ConditionEditorGUI extends GUIScreen
         root.add(conditionEditor);
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
 
-        autocroppedView = new GUIAutocroppedView(this, 0, 0);
-        conditionEditor.add(autocroppedView);
-        autocroppedView.setSubElementAutoplaceMethod(GUIElement.AP_CENTERED_H_TOP_TO_BOTTOM);
-        autocroppedView.add(new GUIText(this, "CONDITION EDITING", 3, Color.YELLOW.copy().setVF(0.2f)));
-
         conditionEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
         root.add(conditionEditorScrollbar);
 
         setCurrent(current.condition);
+
+
+        //Reposition labels
+        originalLabel.x = originalView.x + originalView.width / 2 - originalLabel.width / 2;
+        originalLabel.y = originalView.y + originalView.height / 2 - originalLabel.height / 2;
+
+        currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
+        currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
+
+        conditionSelectorLabel.x = conditionSelector.x + conditionSelector.width / 2 - conditionSelectorLabel.width / 2;
+        conditionSelectorLabel.y = conditionSelector.y + conditionSelector.height / 2 - conditionSelectorLabel.height / 2;
+
+        conditionEditorLabel.x = conditionEditor.x + conditionEditor.width / 2 - conditionEditorLabel.width / 2;
+        conditionEditorLabel.y = conditionEditor.y + conditionEditor.height / 2 - conditionEditorLabel.height / 2;
     }
 
     @Override
@@ -217,6 +222,8 @@ public class ConditionEditorGUI extends GUIScreen
 
         double free = 1 - delete.height - 0.03;
 
+
+        //Resize views and scrollbars
         originalView.height = free / 3;
         originalScrollbar.height = free / 3;
 
@@ -228,6 +235,21 @@ public class ConditionEditorGUI extends GUIScreen
 
         conditionEditor.height = free / 3;
         conditionEditorScrollbar.height = free / 3;
+
+
+        //Reposition labels
+        originalLabel.x = originalView.x + originalView.width / 2 - originalLabel.width / 2;
+        originalLabel.y = originalView.y + originalView.height / 2 - originalLabel.height / 2;
+
+        currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
+        currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
+
+        conditionSelectorLabel.x = conditionSelector.x + conditionSelector.width / 2 - conditionSelectorLabel.width / 2;
+        conditionSelectorLabel.y = conditionSelector.y + conditionSelector.height / 2 - conditionSelectorLabel.height / 2;
+
+        conditionEditorLabel.x = conditionEditor.x + conditionEditor.width / 2 - conditionEditorLabel.width / 2;
+        conditionEditorLabel.y = conditionEditor.y + conditionEditor.height / 2 - conditionEditorLabel.height / 2;
+
 
         root.recalc();
     }
