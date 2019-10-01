@@ -360,17 +360,88 @@ public class ConditionEditorGUI extends GUIScreen
             else if (cls == CConditionNot.class)
             {
                 CConditionNot not = (CConditionNot) condition;
-                GUICondition subCondition = new GUICondition(this, not.condition);
-                conditionEditor.add(subCondition.addClickActions(() ->
+                GUICondition subConditionElement = new GUICondition(this, not.condition);
+                conditionEditor.add(subConditionElement.addClickActions(() ->
                 {
-                    ConditionEditorGUI gui = new ConditionEditorGUI(subCondition);
+                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
                     gui.addOnClosedActions(() ->
                     {
-                        subCondition.setCondition(gui.selection);
+                        subConditionElement.setCondition(gui.selection);
                         not.condition = gui.selection;
                         current.setCondition(not);
                     });
                 }));
+                conditionEditor.add(new GUIText(this, "\n"));
+            }
+            else if (cls == CConditionAnd.class)
+            {
+                CConditionAnd and = (CConditionAnd) condition;
+                for (int i = 0; i < and.conditions.size(); i++)
+                {
+                    CCondition subCondition = and.conditions.get(i);
+                    GUICondition subConditionElement = new GUICondition(this, subCondition);
+                    conditionEditor.add(subConditionElement.addClickActions(() ->
+                    {
+                        ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
+                        gui.addOnClosedActions(() ->
+                        {
+                            if (gui.selection == null)
+                            {
+                                int index = conditionEditor.indexOf(subConditionElement);
+                                conditionEditor.remove(index);
+                                conditionEditor.remove(index);
+                                and.conditions.remove(subCondition);
+                            }
+                            else
+                            {
+                                subConditionElement.setCondition(gui.selection);
+                                and.conditions.set(and.conditions.indexOf(subCondition), gui.selection);
+                            }
+                            current.setCondition(and);
+                        });
+                    }));
+                    conditionEditor.add(new GUIText(this, "\n"));
+                }
+
+                GUICondition subConditionElement = new GUICondition(this, null);
+                conditionEditor.add(subConditionElement.addClickActions(() ->
+                {
+                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
+                    gui.addOnClosedActions(() ->
+                    {
+                        if (gui.selection != null)
+                        {
+                            int index = conditionEditor.size() - 2;
+                            conditionEditor.add(index, new GUIText(this, "\n"));
+                            CCondition subCondition = gui.selection;
+                            GUICondition subConditionElement2 = new GUICondition(this, subCondition);
+                            conditionEditor.add(index, subConditionElement2.addClickActions(() ->
+                            {
+                                ConditionEditorGUI gui2 = new ConditionEditorGUI(subConditionElement2);
+                                gui2.addOnClosedActions(() ->
+                                {
+                                    if (gui2.selection == null)
+                                    {
+                                        int index2 = conditionEditor.indexOf(subConditionElement);
+                                        conditionEditor.remove(index2);
+                                        conditionEditor.remove(index2);
+                                        and.conditions.remove(subCondition);
+                                    }
+                                    else
+                                    {
+                                        subConditionElement2.setCondition(gui2.selection);
+                                        and.conditions.set(and.conditions.indexOf(subCondition), gui2.selection);
+                                    }
+                                    current.setCondition(and);
+                                });
+                            }));
+
+                            and.conditions.add(gui.selection);
+                            current.setCondition(and);
+                        }
+                    });
+                }));
+
                 conditionEditor.add(new GUIText(this, "\n"));
             }
         }
