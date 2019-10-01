@@ -73,6 +73,7 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         //Before and after
+        //TODO make them scrollviews, maybe 3 lines each, since metaconditions can be multi-line
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
         root.add(new GUIText(this, TextFormatting.GOLD + "Original: "));

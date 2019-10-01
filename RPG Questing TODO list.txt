@@ -1,8 +1,8 @@
-Quest editor, conditions tab <-> condition editor <-> conditions selector
+Make "before and after" into scrollviews (see in-code to dos)
 
-Quest editor, objectives tab <-> objective editor <->
+Implement editing of AND and OR conditions
 
-Quest Editor
+Objective editing
 
 
 
