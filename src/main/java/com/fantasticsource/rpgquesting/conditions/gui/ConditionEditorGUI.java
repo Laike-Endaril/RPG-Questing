@@ -18,7 +18,6 @@ import com.fantasticsource.rpgquesting.conditions.quest.*;
 import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextFormatting;
 
 import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
 
@@ -27,6 +26,7 @@ public class ConditionEditorGUI extends GUIScreen
     public CCondition original, selection;
     public GUICondition current;
     private GUIGradient root;
+    private GUITextButton delete;
     private GUIGradientBorder[] separators = new GUIGradientBorder[4];
     private GUIScrollView conditionSelector, conditionEditor, originalView, currentView;
     private GUIVerticalScrollbar conditionSelectorScrollbar, conditionEditorScrollbar, originalScrollbar, currentScrollbar;
@@ -64,12 +64,15 @@ public class ConditionEditorGUI extends GUIScreen
             close();
         }));
 
-        GUITextButton delete = new GUITextButton(this, "Delete Condition and Close", RED[0]);
+        delete = new GUITextButton(this, "Delete Condition and Close", RED[0]);
         root.add(delete.addClickActions(() ->
         {
             selection = null;
             close();
         }));
+
+
+        double free = 1 - delete.height - 0.03;
 
 
         separators[0] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
@@ -78,13 +81,13 @@ public class ConditionEditorGUI extends GUIScreen
 
         //Original
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalView = new GUIScrollView(this, 0.44, 1d / 6);
+        originalView = new GUIScrollView(this, 0.44, free / 3);
         root.add(originalView);
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, 1d / 6, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
+        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
-        originalView.add(new GUIText(this, "\n" + TextFormatting.GOLD + "Original:\n\n"));
+        originalView.add(new GUIText(this, "\n"));
         GUICondition originalElement = new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy());
         originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.condition)));
         originalView.add(new GUIText(this, "\n"));
@@ -92,13 +95,13 @@ public class ConditionEditorGUI extends GUIScreen
 
         //Current
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentView = new GUIScrollView(this, 0.44, 1d / 6);
+        currentView = new GUIScrollView(this, 0.44, free / 3);
         root.add(currentView);
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, 1d / 6, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
+        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
-        currentView.add(new GUIText(this, "\n" + TextFormatting.GOLD + "Current:\n\n"));
+        currentView.add(new GUIText(this, "\n"));
         currentView.add(current);
         currentView.add(new GUIText(this, "\n"));
 
@@ -108,13 +111,11 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         //Condition selector
-        double yy = separators[2].y + separators[2].height, yy2 = yy + (1 - yy) / 2;
-
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        conditionSelector = new GUIScrollView(this, 0.94, yy2 - yy);
+        conditionSelector = new GUIScrollView(this, 0.94, free / 3);
         root.add(conditionSelector);
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        conditionSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, yy2 - yy, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
+        conditionSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector);
         root.add(conditionSelectorScrollbar);
 
         //Quest conditions
@@ -178,11 +179,11 @@ public class ConditionEditorGUI extends GUIScreen
 
         //Condition editor
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        conditionEditor = new GUIScrollView(this, 0.94, 1 - yy2 - separators[3].height);
+        conditionEditor = new GUIScrollView(this, 0.94, free / 3);
         root.add(conditionEditor);
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
 
-        conditionEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, 1 - yy2 - separators[3].height, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
+        conditionEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor);
         root.add(conditionEditorScrollbar);
 
         setCurrent(current.condition);
@@ -193,14 +194,19 @@ public class ConditionEditorGUI extends GUIScreen
     {
         super.onResize(mcIn, w, h);
 
-        double yy = separators[2].y + separators[2].height, yy2 = yy + (1 - yy) / 2;
+        double free = 1 - delete.height - 0.03;
 
-        conditionSelector.height = yy2 - yy;
-        conditionSelectorScrollbar.height = yy2 - yy;
+        originalView.height = free / 3;
+        originalScrollbar.height = free / 3;
 
+        currentView.height = free / 3;
+        currentScrollbar.height = free / 3;
 
-        conditionEditor.height = 1 - yy2 - separators[3].height;
-        conditionEditorScrollbar.height = 1 - yy2 - separators[3].height;
+        conditionSelector.height = free / 3;
+        conditionSelectorScrollbar.height = free / 3;
+
+        conditionEditor.height = free / 3;
+        conditionEditorScrollbar.height = free / 3;
 
         root.recalc();
     }
