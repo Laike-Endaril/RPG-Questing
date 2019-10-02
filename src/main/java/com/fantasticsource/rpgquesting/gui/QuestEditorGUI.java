@@ -68,7 +68,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CObjective objective : quest.objectives)
         {
             objectives.add(new GUIText(GUI, "\n"));
-            objectives.add(new GUIText(GUI, objective.getFullText(), WHITE[0], WHITE[1], WHITE[2]));
+            objectives.add(new GUIObjective(GUI, objective));
         }
         objectives.add(new GUIText(GUI, "\n"));
 
@@ -138,7 +138,7 @@ public class QuestEditorGUI extends GUIScreen
         {
             conditions.add(new GUIText(GUI, "\n"));
             GUICondition conditionElement = new GUICondition(GUI, null);
-            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
             conditions.add(conditionElement.addClickActions(() ->
             {
                 ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
@@ -155,7 +155,7 @@ public class QuestEditorGUI extends GUIScreen
 
                 conditions.add(new GUIText(GUI, "\n"));
                 GUICondition conditionElement = new GUICondition(GUI, null);
-                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
                 conditions.add(conditionElement.addClickActions(() ->
                 {
                     ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
@@ -334,12 +334,12 @@ public class QuestEditorGUI extends GUIScreen
 
     private void editCondition(GUICondition activeConditionElement, CCondition newCondition)
     {
-        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new objective)"))
         {
             //Started with empty slot
             if (newCondition != null)
             {
-                //Added new condition
+                //Added new objective
                 int index = conditions.indexOf(activeConditionElement);
 
                 {
@@ -361,7 +361,7 @@ public class QuestEditorGUI extends GUIScreen
 
                         conditions.add(new GUIText(this, "\n"));
                         GUICondition conditionElement = new GUICondition(this, null);
-                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
                         conditions.add(conditionElement.addClickActions(() ->
                         {
                             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
@@ -380,14 +380,14 @@ public class QuestEditorGUI extends GUIScreen
             if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
             else
             {
-                //Removing a condition
+                //Removing a objective
                 int index = conditions.indexOf(activeConditionElement);
                 conditions.remove(index);
                 conditions.remove(index);
 
                 if (conditions.size() == 5)
                 {
-                    //Had one condition, and now have 0 (remove the "clear all" option)
+                    //Had one objective, and now have 0 (remove the "clear all" option)
                     conditions.remove(3);
                     conditions.remove(3);
                 }
