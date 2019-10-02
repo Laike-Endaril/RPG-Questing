@@ -5,8 +5,8 @@ import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.CInt;
+import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -117,39 +117,78 @@ public class CObjectiveKill extends CObjective
     @Override
     public CObjectiveKill write(ByteBuf buf)
     {
-        text.write(buf);
+        super.write(buf);
+
         current.write(buf);
         required.write(buf);
+
+        buf.writeInt(conditions.size());
+        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
+
         return this;
     }
 
     @Override
     public CObjectiveKill read(ByteBuf buf)
     {
-        text.read(buf);
+        super.read(buf);
+
         current.read(buf);
         required.read(buf);
+
+        conditions.clear();
+        for (int i = buf.readInt(); i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+
         return this;
     }
 
     @Override
     public CObjectiveKill save(OutputStream stream)
     {
-        new CBoolean().set(owner.value != null).save(stream);
-        if (owner.value != null) owner.save(stream);
-        text.save(stream);
+        super.save(stream);
+
         current.save(stream);
         required.save(stream);
+
+        new CInt().set(conditions.size()).save(stream);
+        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
+
         return this;
     }
 
     @Override
     public CObjectiveKill load(InputStream stream)
     {
-        if (new CBoolean().load(stream).value) owner.load(stream);
-        text.load(stream);
+        super.load(stream);
+
         current.load(stream);
         required.load(stream);
+
+        conditions.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
+
+        return this;
+    }
+
+    @Override
+    public CObjectiveKill writeObf(ByteBuf buf)
+    {
+        super.writeObf(buf);
+
+        current.write(buf);
+        required.write(buf);
+
+        return this;
+    }
+
+    @Override
+    public CObjectiveKill readObf(ByteBuf buf)
+    {
+        super.readObf(buf);
+
+        current.read(buf);
+        required.read(buf);
+
         return this;
     }
 }

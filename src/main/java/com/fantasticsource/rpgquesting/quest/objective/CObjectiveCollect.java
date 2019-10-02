@@ -7,7 +7,6 @@ import com.fantasticsource.mctools.items.ItemMatcher;
 import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.CInt;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -137,39 +136,66 @@ public class CObjectiveCollect extends CObjective
     @Override
     public CObjectiveCollect write(ByteBuf buf)
     {
-        text.write(buf);
+        super.write(buf);
+
         current.write(buf);
         stackToMatch.write(buf);
+
         return this;
     }
 
     @Override
     public CObjectiveCollect read(ByteBuf buf)
     {
-        text.read(buf);
+        super.read(buf);
+
         current.read(buf);
         stackToMatch.read(buf);
+
         return this;
     }
 
     @Override
     public CObjectiveCollect save(OutputStream stream)
     {
-        new CBoolean().set(owner.value != null).save(stream);
-        if (owner.value != null) owner.save(stream);
-        text.save(stream);
+        super.save(stream);
+
         current.save(stream);
         stackToMatch.save(stream);
+
         return this;
     }
 
     @Override
     public CObjectiveCollect load(InputStream stream)
     {
-        if (new CBoolean().load(stream).value) owner.load(stream);
-        text.load(stream);
+        super.load(stream);
+
         current.load(stream);
         stackToMatch.load(stream);
+
+        return this;
+    }
+
+    @Override
+    public CObjectiveCollect writeObf(ByteBuf buf)
+    {
+        super.writeObf(buf);
+
+        current.write(buf);
+        stackToMatch.write(buf);
+
+        return this;
+    }
+
+    @Override
+    public CObjectiveCollect readObf(ByteBuf buf)
+    {
+        super.readObf(buf);
+
+        current.read(buf);
+        stackToMatch.read(buf);
+
         return this;
     }
 }
