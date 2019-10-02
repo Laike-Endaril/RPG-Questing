@@ -1,5 +1,7 @@
 package com.fantasticsource.rpgquesting.quest.objective;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
@@ -30,4 +32,6 @@ public abstract class CObjective extends Component
     public abstract boolean isStarted();
 
     public abstract boolean isDone();
+
+    public abstract GUIObjective getChoosableElement(GUIScreen screen);
 }

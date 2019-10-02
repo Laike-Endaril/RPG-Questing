@@ -2,7 +2,9 @@ package com.fantasticsource.rpgquesting.quest.objective;
 
 import com.fantasticsource.mctools.PlayerData;
 import com.fantasticsource.mctools.component.CItemStack;
+import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.items.ItemMatcher;
+import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.tools.component.CBoolean;
@@ -11,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -121,6 +124,14 @@ public class CObjectiveCollect extends CObjective
 
         //Both sides
         return current.value >= stackToMatch.stack.getCount();
+    }
+
+    @Override
+    public GUIObjective getChoosableElement(GUIScreen screen)
+    {
+        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveCollect("Items collected", new ItemStack(Items.AIR, 1)));
+        guiObjective.text = guiObjective.text.replace("[ ]", "(?/?)");
+        return guiObjective;
     }
 
     @Override

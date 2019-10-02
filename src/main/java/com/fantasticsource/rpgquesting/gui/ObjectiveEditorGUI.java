@@ -80,9 +80,9 @@ public class ObjectiveEditorGUI extends GUIScreen
         root.add(originalLabel);
         currentLabel = new GUIText(this, 0, 0, "CURRENT", 3, Color.YELLOW.copy().setVF(0.2f));
         root.add(currentLabel);
-        objectiveSelectorLabel = new GUIText(this, 0, 0, "CONDITION SELECTION", 3, Color.YELLOW.copy().setVF(0.2f));
+        objectiveSelectorLabel = new GUIText(this, 0, 0, "OBJECTIVE SELECTION", 3, Color.YELLOW.copy().setVF(0.2f));
         root.add(objectiveSelectorLabel);
-        objectiveEditorLabel = new GUIText(this, 0, 0, "CONDITION EDITING", 3, Color.YELLOW.copy().setVF(0.2f));
+        objectiveEditorLabel = new GUIText(this, 0, 0, "OBJECTIVE EDITING", 3, Color.YELLOW.copy().setVF(0.2f));
         root.add(objectiveEditorLabel);
 
 
@@ -128,11 +128,11 @@ public class ObjectiveEditorGUI extends GUIScreen
         //Objective types
         objectiveSelector.add(new GUIText(this, "\n"));
 
-//        objectiveSelector.add(new CObjectiveQuestAvailable().getChoosableElement(this));
-//        objectiveSelector.add(new GUIText(this, "\n"));
-//
-//        objectiveSelector.add(new CObjectiveQuestInProgress().getChoosableElement(this));
-//        objectiveSelector.add(new GUIText(this, "\n"));
+        objectiveSelector.add(new CObjectiveKill().getChoosableElement(this));
+        objectiveSelector.add(new GUIText(this, "\n"));
+
+        objectiveSelector.add(new CObjectiveCollect().getChoosableElement(this));
+        objectiveSelector.add(new GUIText(this, "\n"));
 
 
         for (int i = objectiveSelector.size() - 1; i >= 0; i--)

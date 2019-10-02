@@ -1,6 +1,8 @@
 package com.fantasticsource.rpgquesting.quest.objective;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.tools.component.CBoolean;
@@ -101,6 +103,14 @@ public class CObjectiveKill extends CObjective
     public boolean isDone()
     {
         return current.value >= required.value;
+    }
+
+    @Override
+    public GUIObjective getChoosableElement(GUIScreen screen)
+    {
+        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveKill("Entities killed", 1));;
+        guiObjective.text = guiObjective.text.replace("[ ]", "(?/?)");
+        return guiObjective;
     }
 
     @Override
