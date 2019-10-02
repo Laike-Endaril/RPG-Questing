@@ -138,7 +138,7 @@ public class QuestEditorGUI extends GUIScreen
         {
             conditions.add(new GUIText(GUI, "\n"));
             GUICondition conditionElement = new GUICondition(GUI, null);
-            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             conditions.add(conditionElement.addClickActions(() ->
             {
                 ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
@@ -155,7 +155,7 @@ public class QuestEditorGUI extends GUIScreen
 
                 conditions.add(new GUIText(GUI, "\n"));
                 GUICondition conditionElement = new GUICondition(GUI, null);
-                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
                 conditions.add(conditionElement.addClickActions(() ->
                 {
                     ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
@@ -334,7 +334,7 @@ public class QuestEditorGUI extends GUIScreen
 
     private void editCondition(GUICondition activeConditionElement, CCondition newCondition)
     {
-        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new objective)"))
+        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
         {
             //Started with empty slot
             if (newCondition != null)
@@ -361,7 +361,7 @@ public class QuestEditorGUI extends GUIScreen
 
                         conditions.add(new GUIText(this, "\n"));
                         GUICondition conditionElement = new GUICondition(this, null);
-                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
                         conditions.add(conditionElement.addClickActions(() ->
                         {
                             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
