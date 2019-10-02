@@ -15,7 +15,7 @@ import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;
-import com.fantasticsource.tools.component.Component;
+import com.fantasticsource.tools.component.IObfuscatedComponent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -394,7 +394,7 @@ public class Network
         @Override
         public void toBytes(ByteBuf buf)
         {
-            data.write(buf);
+            data.writeObf(buf);
             ByteBufUtils.writeUTF8String(buf, questToView);
             buf.writeBoolean(openJournal);
             buf.writeBoolean(editMode);
@@ -422,7 +422,7 @@ public class Network
         @Override
         public void fromBytes(ByteBuf buf)
         {
-            data.read(buf);
+            data.readObf(buf);
             questToView = ByteBufUtils.readUTF8String(buf);
             openJournal = buf.readBoolean();
             editMode = buf.readBoolean();
@@ -486,7 +486,7 @@ public class Network
             questName.write(buf);
 
             buf.writeInt(objectives.size());
-            for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+            for (CObjective objective : objectives) IObfuscatedComponent.writeMarkedObf(buf, objective);
         }
 
         @Override
@@ -494,7 +494,7 @@ public class Network
         {
             questName.read(buf);
 
-            for (int i = buf.readInt(); i > 0; i--) objectives.add((CObjective) Component.readMarked(buf));
+            for (int i = buf.readInt(); i > 0; i--) objectives.add((CObjective) IObfuscatedComponent.readMarkedObf(buf));
         }
     }
 

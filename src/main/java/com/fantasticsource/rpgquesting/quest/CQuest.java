@@ -12,11 +12,13 @@ import scala.actors.threadpool.Arrays;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.fantasticsource.rpgquesting.quest.CQuests.QUESTS;
 
 public class CQuest extends Component implements IObfuscatedComponent
 {
+    public CUUID permanentID = new CUUID().set(UUID.randomUUID());
     public CStringUTF8 name = new CStringUTF8();
     public CStringUTF8 group = new CStringUTF8();
     public CInt level = new CInt();
@@ -148,6 +150,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     @Override
     public CQuest save(OutputStream stream)
     {
+        permanentID.save(stream);
         name.save(stream);
         group.save(stream);
         level.save(stream);
@@ -172,6 +175,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     @Override
     public CQuest load(InputStream stream)
     {
+        permanentID.load(stream);
         name.load(stream);
         group.load(stream);
         level.load(stream);
@@ -202,7 +206,7 @@ public class CQuest extends Component implements IObfuscatedComponent
         repeatable.write(buf);
 
         new CInt().set(objectives.size()).write(buf);
-        for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+        for (CObjective objective : objectives) IObfuscatedComponent.writeMarkedObf(buf, objective);
 
         return this;
     }
@@ -216,7 +220,7 @@ public class CQuest extends Component implements IObfuscatedComponent
         repeatable.read(buf);
 
         objectives.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) objectives.add((CObjective) Component.readMarked(buf));
+        for (int i = new CInt().read(buf).value; i > 0; i--) objectives.add((CObjective) IObfuscatedComponent.readMarkedObf(buf));
 
         return this;
     }

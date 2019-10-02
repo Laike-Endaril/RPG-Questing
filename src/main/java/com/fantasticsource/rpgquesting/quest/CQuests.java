@@ -5,7 +5,9 @@ import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
+import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
+import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
@@ -61,8 +63,9 @@ public class CQuests extends Component
         if (quest == null) return;
 
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
-        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>());
-        ArrayList<CObjective> objectives = map.computeIfAbsent(name, o -> new ArrayList<>());
+        LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>());
+        Pair<CUUID, ArrayList<CObjective>> pair = map.computeIfAbsent(name, o -> new Pair<>(new CUUID().set(UUID.randomUUID()), new ArrayList<>()));
+        ArrayList<CObjective> objectives = pair.getValue();
         objectives.clear();
         for (CObjective objective : quest.objectives)
         {
@@ -79,7 +82,7 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data != null)
         {
-            data.trackedQuest.set(name);
+            data.trackedQuestName.set(name);
             data.saveAndSync();
         }
         else if (name == null || name.equals(""))
@@ -94,12 +97,12 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return;
 
-        if (data.trackedQuest.value.equals(questName)) track(player, "");
+        if (data.trackedQuestName.value.equals(questName)) track(player, "");
 
         CQuest quest = get(questName);
         if (quest == null) return;
 
-        LinkedHashMap<String, ArrayList<CObjective>> group = data.inProgressQuests.get(quest.group.value);
+        LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> group = data.inProgressQuests.get(quest.group.value);
         if (group == null) return;
 
         if (group.remove(questName) != null)
@@ -134,7 +137,7 @@ public class CQuests extends Component
         }
 
 
-        String name = data.trackedQuest.value;
+        String name = data.trackedQuestName.value;
         CQuest quest = get(name);
         if (quest == null)
         {
@@ -142,21 +145,21 @@ public class CQuests extends Component
             return;
         }
 
-        LinkedHashMap<String, ArrayList<CObjective>> group = data.inProgressQuests.get(quest.group.value);
+        LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> group = data.inProgressQuests.get(quest.group.value);
         if (group == null)
         {
             Network.WRAPPER.sendTo(new Network.QuestTrackerPacket("", new ArrayList<>()), player);
             return;
         }
 
-        ArrayList<CObjective> objectives = group.get(name);
-        if (objectives == null)
+        Pair<CUUID, ArrayList<CObjective>> pair = group.get(name);
+        if (pair == null)
         {
             Network.WRAPPER.sendTo(new Network.QuestTrackerPacket("", new ArrayList<>()), player);
             return;
         }
 
-        Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, objectives), player);
+        Network.WRAPPER.sendTo(new Network.QuestTrackerPacket(name, pair.getValue()), player);
     }
 
     public static boolean complete(EntityPlayerMP player, String name)
@@ -168,7 +171,7 @@ public class CQuests extends Component
         if (data == null) return false;
 
         String group = quest.group.value;
-        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.get(group);
+        LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(group);
         if (map == null || map.remove(name) == null) return false;
 
         if (map.size() == 0) data.inProgressQuests.remove(group);
@@ -183,7 +186,7 @@ public class CQuests extends Component
         }
 
 
-        if (data.trackedQuest.value.equals(name)) data.trackedQuest.set("");
+        if (data.trackedQuestName.value.equals(name)) data.trackedQuestName.set("");
         data.saveAndSync();
 
         return true;
@@ -194,7 +197,7 @@ public class CQuests extends Component
     {
         CPlayerQuestData data = new CPlayerQuestData(player).load();
         playerQuestData.put(player.getPersistentID(), data);
-        track(player, data.trackedQuest.value);
+        track(player, data.trackedQuestName.value);
     }
 
     public static void unloadPlayerQuestData(EntityPlayerMP player)
@@ -231,14 +234,14 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.get(quest.group.value);
+        LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(quest.group.value);
         if (map == null) return false;
 
-        ArrayList<CObjective> objectives = map.get(quest.name.value);
-        if (objectives == null) return false;
+        Pair<CUUID, ArrayList<CObjective>> pair = map.get(quest.name.value);
+        if (pair == null) return false;
 
         boolean done = true;
-        for (CObjective objective : objectives) if (!objective.isDone()) done = false;
+        for (CObjective objective : pair.getValue()) if (!objective.isDone()) done = false;
         return !done;
     }
 
@@ -256,13 +259,13 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        LinkedHashMap<String, ArrayList<CObjective>> map = data.inProgressQuests.get(quest.group.value);
+        LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(quest.group.value);
         if (map == null) return false;
 
-        ArrayList<CObjective> objectives = map.get(quest.name.value);
-        if (objectives == null) return false;
+        Pair<CUUID, ArrayList<CObjective>> pair = map.get(quest.name.value);
+        if (pair == null) return false;
 
-        for (CObjective objective : objectives) if (!objective.isDone()) return false;
+        for (CObjective objective : pair.getValue()) if (!objective.isDone()) return false;
         return true;
     }
 

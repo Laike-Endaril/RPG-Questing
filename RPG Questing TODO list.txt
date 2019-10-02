@@ -1,8 +1,14 @@
-Fix scissor issue when an autocropped view is inside a scrollview
+Fix obfuscation of collection objectives
 
 Fix objectives not syncing their conditions on full transfer
 
+Fix scissor issue when an autocropped view is inside a scrollview
+
 Objective editing for collection objectives
+
+Saving of quests
+
+When saving quest, if a quest of that name already exists, remove it from the playerdata of all online players (for offline players, it's taken care of on load)
 
 
 

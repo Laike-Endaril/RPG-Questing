@@ -8,6 +8,8 @@ import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.tools.component.CInt;
+import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,11 +57,11 @@ public class CObjectiveCollect extends CObjective
 
 
         boolean changed = false;
-        for (LinkedHashMap<String, ArrayList<CObjective>> map : data.inProgressQuests.values())
+        for (LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map : data.inProgressQuests.values())
         {
-            for (ArrayList<CObjective> objectives : map.values())
+            for (Pair<CUUID, ArrayList<CObjective>> pair : map.values())
             {
-                for (CObjective objective : objectives)
+                for (CObjective objective : pair.getValue())
                 {
                     if (objective.getClass() == CObjectiveCollect.class)
                     {

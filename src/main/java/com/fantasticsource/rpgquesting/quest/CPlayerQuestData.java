@@ -2,9 +2,8 @@ package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
-import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.CStringUTF8;
-import com.fantasticsource.tools.component.Component;
+import com.fantasticsource.tools.component.*;
+import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -13,13 +12,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
-public class CPlayerQuestData extends Component
+public class CPlayerQuestData extends Component implements IObfuscatedComponent
 {
     public EntityPlayerMP player;
-    public CStringUTF8 trackedQuest = new CStringUTF8().set("");
+    public CStringUTF8 trackedQuestName = new CStringUTF8().set("");
     public LinkedHashMap<String, ArrayList<String>> completedQuests = new LinkedHashMap<>();
-    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<CObjective>>> inProgressQuests = new LinkedHashMap<>();
+    public LinkedHashMap<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> inProgressQuests = new LinkedHashMap<>();
 
 
     public CPlayerQuestData()
@@ -34,12 +34,12 @@ public class CPlayerQuestData extends Component
     public CPlayerQuestData saveAndSync()
     {
         //Clear tracked quest if invalid
-        CQuest q = CQuests.get(trackedQuest.value);
-        if (q == null) trackedQuest.set("");
+        CQuest q = CQuests.get(trackedQuestName.value);
+        if (q == null) trackedQuestName.set("");
         else
         {
-            LinkedHashMap<String, ArrayList<CObjective>> group = inProgressQuests.get(q.group.value);
-            if (group == null || group.get(trackedQuest.value) == null) trackedQuest.set("");
+            LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> group = inProgressQuests.get(q.group.value);
+            if (group == null || group.get(trackedQuestName.value) == null) trackedQuestName.set("");
         }
 
 
@@ -90,78 +90,19 @@ public class CPlayerQuestData extends Component
         load(fis);
         fis.close();
 
-        return this;
-    }
-
-    @Override
-    public CPlayerQuestData write(ByteBuf buf)
-    {
-        trackedQuest.write(buf);
-
-        buf.writeInt(completedQuests.size());
-        for (Map.Entry<String, ArrayList<String>> entry : completedQuests.entrySet())
+        for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> groupEntry : inProgressQuests.entrySet())
         {
-            ByteBufUtils.writeUTF8String(buf, entry.getKey());
+            String groupName = groupEntry.getKey();
+            LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> groupQuests = groupEntry.getValue();
 
-            ArrayList<String> groupQuests = entry.getValue();
-            buf.writeInt(groupQuests.size());
-
-            for (String name : groupQuests) new CStringUTF8().set(name).write(buf);
-        }
-
-        buf.writeInt(inProgressQuests.size());
-        for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : inProgressQuests.entrySet())
-        {
-            ByteBufUtils.writeUTF8String(buf, entry.getKey());
-
-            LinkedHashMap<String, ArrayList<CObjective>> subMap = entry.getValue();
-            buf.writeInt(subMap.size());
-
-            for (Map.Entry<String, ArrayList<CObjective>> subEntry : subMap.entrySet())
+            for (Map.Entry<String, Pair<CUUID, ArrayList<CObjective>>> questEntry : groupQuests.entrySet())
             {
-                new CStringUTF8().set(subEntry.getKey()).write(buf);
-
-                ArrayList<CObjective> objectives = subEntry.getValue();
-                buf.writeInt(objectives.size());
-
-                for (CObjective objective : objectives) Component.writeMarked(buf, objective);
-            }
-        }
-
-        return this;
-    }
-
-    @Override
-    public CPlayerQuestData read(ByteBuf buf)
-    {
-        trackedQuest.read(buf);
-
-        completedQuests.clear();
-        for (int i = buf.readInt(); i > 0; i--)
-        {
-            ArrayList<String> list = new ArrayList<>();
-            completedQuests.put(ByteBufUtils.readUTF8String(buf), list);
-
-            for (int i2 = buf.readInt(); i2 > 0; i2--)
-            {
-                list.add(new CStringUTF8().read(buf).value);
-            }
-        }
-
-        inProgressQuests.clear();
-        for (int i = buf.readInt(); i > 0; i--)
-        {
-            LinkedHashMap<String, ArrayList<CObjective>> map = new LinkedHashMap<>();
-            inProgressQuests.put(ByteBufUtils.readUTF8String(buf), map);
-
-            for (int i2 = buf.readInt(); i2 > 0; i2--)
-            {
-                ArrayList<CObjective> objectives = new ArrayList<>();
-                map.put(ByteBufUtils.readUTF8String(buf), objectives);
-
-                for (int i3 = buf.readInt(); i3 > 0; i3--)
+                String questName = questEntry.getKey();
+                CQuest quest = CQuests.get(questName);
+                if (quest == null || !quest.permanentID.value.equals(questEntry.getValue().getKey().value))
                 {
-                    objectives.add((CObjective) Component.readMarked(buf));
+                    groupQuests.remove(questName);
+                    if (groupQuests.size() == 0) inProgressQuests.remove(groupName);
                 }
             }
         }
@@ -170,9 +111,21 @@ public class CPlayerQuestData extends Component
     }
 
     @Override
+    public CPlayerQuestData write(ByteBuf buf)
+    {
+        return this;
+    }
+
+    @Override
+    public CPlayerQuestData read(ByteBuf buf)
+    {
+        return this;
+    }
+
+    @Override
     public CPlayerQuestData save(OutputStream stream)
     {
-        trackedQuest.save(stream);
+        trackedQuestName.save(stream);
 
         new CInt().set(completedQuests.size()).save(stream);
         for (Map.Entry<String, ArrayList<String>> entry : completedQuests.entrySet())
@@ -186,18 +139,20 @@ public class CPlayerQuestData extends Component
         }
 
         new CInt().set(inProgressQuests.size()).save(stream);
-        for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : inProgressQuests.entrySet())
+        for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> entry : inProgressQuests.entrySet())
         {
             new CStringUTF8().set(entry.getKey()).save(stream);
 
-            LinkedHashMap<String, ArrayList<CObjective>> subMap = entry.getValue();
+            LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> subMap = entry.getValue();
             new CInt().set(subMap.size()).save(stream);
 
-            for (Map.Entry<String, ArrayList<CObjective>> subEntry : subMap.entrySet())
+            for (Map.Entry<String, Pair<CUUID, ArrayList<CObjective>>> subEntry : subMap.entrySet())
             {
                 new CStringUTF8().set(subEntry.getKey()).save(stream);
 
-                ArrayList<CObjective> objectives = subEntry.getValue();
+                subEntry.getValue().getKey().save(stream);
+
+                ArrayList<CObjective> objectives = subEntry.getValue().getValue();
                 new CInt().set(objectives.size()).save(stream);
 
                 for (CObjective objective : objectives) Component.saveMarked(stream, objective);
@@ -210,7 +165,7 @@ public class CPlayerQuestData extends Component
     @Override
     public CPlayerQuestData load(InputStream stream)
     {
-        trackedQuest.load(stream);
+        trackedQuestName.load(stream);
 
         completedQuests.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
@@ -227,17 +182,94 @@ public class CPlayerQuestData extends Component
         inProgressQuests.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
         {
-            LinkedHashMap<String, ArrayList<CObjective>> map = new LinkedHashMap<>();
+            LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = new LinkedHashMap<>();
             inProgressQuests.put(new CStringUTF8().load(stream).value, map);
 
             for (int i2 = new CInt().load(stream).value; i2 > 0; i2--)
             {
                 ArrayList<CObjective> objectives = new ArrayList<>();
-                map.put(new CStringUTF8().load(stream).value, objectives);
+
+                map.put(new CStringUTF8().load(stream).value, new Pair<>(new CUUID().load(stream), objectives));
 
                 for (int i3 = new CInt().load(stream).value; i3 > 0; i3--)
                 {
                     objectives.add((CObjective) Component.loadMarked(stream));
+                }
+            }
+        }
+
+        return this;
+    }
+
+    @Override
+    public Component writeObf(ByteBuf buf)
+    {
+        trackedQuestName.write(buf);
+
+        buf.writeInt(completedQuests.size());
+        for (Map.Entry<String, ArrayList<String>> entry : completedQuests.entrySet())
+        {
+            ByteBufUtils.writeUTF8String(buf, entry.getKey());
+
+            ArrayList<String> groupQuests = entry.getValue();
+            buf.writeInt(groupQuests.size());
+
+            for (String name : groupQuests) new CStringUTF8().set(name).write(buf);
+        }
+
+        buf.writeInt(inProgressQuests.size());
+        for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> entry : inProgressQuests.entrySet())
+        {
+            ByteBufUtils.writeUTF8String(buf, entry.getKey());
+
+            LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> subMap = entry.getValue();
+            buf.writeInt(subMap.size());
+
+            for (Map.Entry<String, Pair<CUUID, ArrayList<CObjective>>> subEntry : subMap.entrySet())
+            {
+                new CStringUTF8().set(subEntry.getKey()).write(buf);
+
+                ArrayList<CObjective> objectives = subEntry.getValue().getValue();
+                buf.writeInt(objectives.size());
+
+                for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+            }
+        }
+
+        return this;
+    }
+
+    @Override
+    public Component readObf(ByteBuf buf)
+    {
+        trackedQuestName.read(buf);
+
+        completedQuests.clear();
+        for (int i = buf.readInt(); i > 0; i--)
+        {
+            ArrayList<String> list = new ArrayList<>();
+            completedQuests.put(ByteBufUtils.readUTF8String(buf), list);
+
+            for (int i2 = buf.readInt(); i2 > 0; i2--)
+            {
+                list.add(new CStringUTF8().read(buf).value);
+            }
+        }
+
+        inProgressQuests.clear();
+        for (int i = buf.readInt(); i > 0; i--)
+        {
+            LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = new LinkedHashMap<>();
+            inProgressQuests.put(ByteBufUtils.readUTF8String(buf), map);
+
+            for (int i2 = buf.readInt(); i2 > 0; i2--)
+            {
+                ArrayList<CObjective> objectives = new ArrayList<>();
+                map.put(ByteBufUtils.readUTF8String(buf), new Pair<>(new CUUID().set(UUID.randomUUID()), objectives));
+
+                for (int i3 = buf.readInt(); i3 > 0; i3--)
+                {
+                    objectives.add((CObjective) Component.readMarked(buf));
                 }
             }
         }

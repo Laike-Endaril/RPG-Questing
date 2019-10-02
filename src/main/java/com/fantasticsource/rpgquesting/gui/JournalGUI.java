@@ -14,7 +14,9 @@ import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
+import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.datastructures.Color;
+import com.fantasticsource.tools.datastructures.Pair;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -80,7 +82,7 @@ public class JournalGUI extends GUIScreen
             inProgressTab.add(new GUIText(GUI, "\n"));
         }
 
-        for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry2 : data.inProgressQuests.entrySet())
+        for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> entry2 : data.inProgressQuests.entrySet())
         {
             boolean groupDone = true;
 
@@ -88,12 +90,12 @@ public class JournalGUI extends GUIScreen
             inProgressGroupElementToName.put(groupSpoiler, entry2.getKey());
             inProgressTab.add(groupSpoiler.addClickActions(() -> ownedGroupAction(groupSpoiler)));
 
-            for (Map.Entry<String, ArrayList<CObjective>> entry : entry2.getValue().entrySet())
+            for (Map.Entry<String, Pair<CUUID, ArrayList<CObjective>>> entry : entry2.getValue().entrySet())
             {
                 groupSpoiler.add(new GUIText(GUI, "\n"));
 
                 boolean done = true, started = false;
-                for (CObjective objective : entry.getValue())
+                for (CObjective objective : entry.getValue().getValue())
                 {
                     if (!objective.isDone()) done = false;
                     if (objective.isStarted()) started = true;
@@ -289,9 +291,9 @@ public class JournalGUI extends GUIScreen
 
 
         //Search in-progress quests
-        for (Map.Entry<String, LinkedHashMap<String, ArrayList<CObjective>>> entry : data.inProgressQuests.entrySet())
+        for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> entry : data.inProgressQuests.entrySet())
         {
-            ArrayList<CObjective> objectives = entry.getValue().get(viewedQuest);
+            ArrayList<CObjective> objectives = entry.getValue().get(viewedQuest).getValue();
             if (objectives != null)
             {
                 //Quest found
