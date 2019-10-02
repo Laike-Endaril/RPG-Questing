@@ -68,8 +68,45 @@ public class QuestEditorGUI extends GUIScreen
         for (CObjective objective : quest.objectives)
         {
             objectives.add(new GUIText(GUI, "\n"));
-            objectives.add(new GUIObjective(GUI, objective));
+            GUIObjective objectiveElement = new GUIObjective(GUI, objective);
+            objectives.add(objectiveElement.addClickActions(() ->
+            {
+                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                gui.addOnClosedActions(() -> GUI.editObjective(objectiveElement, gui.selection));
+            }));
         }
+
+        {
+            objectives.add(new GUIText(GUI, "\n"));
+            GUIObjective objectiveElement = new GUIObjective(GUI, null);
+            objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+            objectives.add(objectiveElement.addClickActions(() ->
+            {
+                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                gui.addOnClosedActions(() -> GUI.editObjective(objectiveElement, gui.selection));
+            }));
+        }
+
+        if (quest.objectives.size() > 0)
+        {
+            objectives.add(new GUIText(GUI, "\n"));
+            objectives.add(new GUIText(GUI, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+            {
+                objectives.clear();
+
+                objectives.add(new GUIText(GUI, "\n"));
+                GUIObjective objectiveElement = new GUIObjective(GUI, null);
+                objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+                objectives.add(objectiveElement.addClickActions(() ->
+                {
+                    ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                    gui.addOnClosedActions(() -> GUI.editObjective(objectiveElement, gui.selection));
+                }));
+
+                objectives.add(new GUIText(GUI, "\n"));
+            }));
+        }
+
         objectives.add(new GUIText(GUI, "\n"));
 
 
@@ -262,12 +299,78 @@ public class QuestEditorGUI extends GUIScreen
         tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
     }
 
+
     @Override
     public void onClosed()
     {
         super.onClosed();
         Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
     }
+
+
+    private void editObjective(GUIObjective activeObjectiveElement, CObjective newObjective)
+    {
+        if (activeObjectiveElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new objective)"))
+        {
+            //Started with empty slot
+            if (newObjective != null)
+            {
+                //Added new objective
+                int index = objectives.indexOf(activeObjectiveElement);
+
+                {
+                    objectives.add(index, new GUIText(GUI, "\n"));
+                    GUIObjective objectiveElement = new GUIObjective(GUI, (CObjective) newObjective.copy());
+                    objectives.add(index, objectiveElement.addClickActions(() ->
+                    {
+                        ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                        gui.addOnClosedActions(() -> GUI.editObjective(objectiveElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Objectives were empty, but no longer are
+                    objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+                    {
+                        objectives.clear();
+
+                        objectives.add(new GUIText(this, "\n"));
+                        GUIObjective objectiveElement = new GUIObjective(this, null);
+                        objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+                        objectives.add(objectiveElement.addClickActions(() ->
+                        {
+                            ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                            gui.addOnClosedActions(() -> GUI.editObjective(objectiveElement, gui.selection));
+                        }));
+
+                        objectives.add(new GUIText(this, "\n"));
+                    }));
+                    objectives.add(new GUIText(GUI, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newObjective != null) activeObjectiveElement.setObjective((CObjective) newObjective.copy());
+            else
+            {
+                //Removing a objective
+                int index = objectives.indexOf(activeObjectiveElement);
+                objectives.remove(index);
+                objectives.remove(index);
+
+                if (objectives.size() == 5)
+                {
+                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    objectives.remove(3);
+                    objectives.remove(3);
+                }
+            }
+        }
+    }
+
 
     public void editReward(GUIItemStack activeRewardElement, ItemStack newStack)
     {
@@ -331,6 +434,7 @@ public class QuestEditorGUI extends GUIScreen
             }
         }
     }
+
 
     private void editCondition(GUICondition activeConditionElement, CCondition newCondition)
     {
