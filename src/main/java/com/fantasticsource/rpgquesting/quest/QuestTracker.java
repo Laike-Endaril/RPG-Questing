@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.Render;
+import com.fantasticsource.rpgquesting.gui.JournalGUI;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;

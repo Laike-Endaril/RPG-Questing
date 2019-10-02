@@ -1,4 +1,4 @@
-package com.fantasticsource.rpgquesting.dialogue;
+package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
@@ -8,6 +8,8 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ActionErrorPacket;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;

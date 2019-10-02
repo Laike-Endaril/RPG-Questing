@@ -2,8 +2,8 @@ package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
+import com.fantasticsource.rpgquesting.gui.JournalGUI;
 import com.fantasticsource.rpgquesting.quest.CQuests;
-import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;

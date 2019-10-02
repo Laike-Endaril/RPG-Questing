@@ -15,7 +15,7 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     public CDialogue dialogue = null;
 
     public ArrayList<CDialogueChoice> choices = new ArrayList<>();
-    CStringUTF8 paragraph = new CStringUTF8();
+    public CStringUTF8 paragraph = new CStringUTF8();
 
     public CDialogueBranch()
     {

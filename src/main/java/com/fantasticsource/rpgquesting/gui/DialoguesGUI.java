@@ -1,4 +1,4 @@
-package com.fantasticsource.rpgquesting.dialogue;
+package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;

@@ -1,4 +1,4 @@
-package com.fantasticsource.rpgquesting.quest;
+package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
@@ -10,6 +10,9 @@ import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
+import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
+import com.fantasticsource.rpgquesting.quest.CQuest;
+import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;

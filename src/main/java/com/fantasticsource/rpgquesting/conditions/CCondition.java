@@ -1,7 +1,7 @@
 package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
+import com.fantasticsource.rpgquesting.gui.GUICondition;
 import com.fantasticsource.tools.component.Component;
 import net.minecraft.entity.Entity;
 

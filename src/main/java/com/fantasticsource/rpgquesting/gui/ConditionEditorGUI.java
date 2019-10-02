@@ -1,4 +1,4 @@
-package com.fantasticsource.rpgquesting.conditions.gui;
+package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
@@ -15,11 +15,10 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.conditions.*;
 import com.fantasticsource.rpgquesting.conditions.quest.*;
-import com.fantasticsource.rpgquesting.quest.JournalGUI;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
-import static com.fantasticsource.rpgquesting.quest.JournalGUI.RED;
+import static com.fantasticsource.rpgquesting.gui.JournalGUI.RED;
 
 public class ConditionEditorGUI extends GUIScreen
 {

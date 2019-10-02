@@ -1,8 +1,17 @@
 package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
-import com.fantasticsource.rpgquesting.dialogue.*;
-import com.fantasticsource.rpgquesting.quest.*;
+import com.fantasticsource.rpgquesting.dialogue.CDialogue;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
+import com.fantasticsource.rpgquesting.dialogue.CDialogues;
+import com.fantasticsource.rpgquesting.gui.DialogueGUI;
+import com.fantasticsource.rpgquesting.gui.DialoguesGUI;
+import com.fantasticsource.rpgquesting.gui.JournalGUI;
+import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
+import com.fantasticsource.rpgquesting.quest.CQuest;
+import com.fantasticsource.rpgquesting.quest.CQuests;
+import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.CUUID;

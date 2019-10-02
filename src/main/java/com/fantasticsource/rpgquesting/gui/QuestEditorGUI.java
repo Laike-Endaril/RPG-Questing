@@ -1,4 +1,4 @@
-package com.fantasticsource.rpgquesting.quest;
+package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
@@ -15,8 +15,8 @@ import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
-import com.fantasticsource.rpgquesting.conditions.gui.ConditionEditorGUI;
-import com.fantasticsource.rpgquesting.conditions.gui.GUICondition;
+import com.fantasticsource.rpgquesting.quest.CQuest;
+import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-import static com.fantasticsource.rpgquesting.quest.JournalGUI.*;
+import static com.fantasticsource.rpgquesting.gui.JournalGUI.*;
 
 public class QuestEditorGUI extends GUIScreen
 {
