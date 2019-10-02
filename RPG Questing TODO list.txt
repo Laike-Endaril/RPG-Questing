@@ -1,4 +1,8 @@
-Objective editing
+Fix scissor issue when an autocropped view is inside a scrollview
+
+Fix objectives not syncing their conditions on full transfer
+
+Objective editing for collection objectives
 
 
 

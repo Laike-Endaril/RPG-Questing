@@ -11,8 +11,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public abstract class CObjective extends Component
 {
     CUUID owner = new CUUID();
-    CStringUTF8 text = new CStringUTF8();
-    CBoolean progressIsPrefix = new CBoolean().set(true);
+    public CStringUTF8 text = new CStringUTF8();
+    public CBoolean progressIsPrefix = new CBoolean().set(true);
 
     public final CObjective setOwner(EntityPlayerMP player)
     {

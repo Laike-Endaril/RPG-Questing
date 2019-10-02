@@ -27,8 +27,9 @@ public class CObjectiveKill extends CObjective
         MinecraftForge.EVENT_BUS.register(CObjectiveKill.class);
     }
 
-    CInt current = new CInt(), required = new CInt();
-    ArrayList<CCondition> conditions = new ArrayList<>();
+    CInt current = new CInt();
+    public CInt required = new CInt();
+    public ArrayList<CCondition> conditions = new ArrayList<>();
 
     public CObjectiveKill()
     {
@@ -108,7 +109,7 @@ public class CObjectiveKill extends CObjective
     @Override
     public GUIObjective getChoosableElement(GUIScreen screen)
     {
-        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveKill("Entities killed", 1));;
+        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveKill("Entities killed", 1));
         guiObjective.text = guiObjective.text.replace("[ ]", "(?/?)");
         return guiObjective;
     }

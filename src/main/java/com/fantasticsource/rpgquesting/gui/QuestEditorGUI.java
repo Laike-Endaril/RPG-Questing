@@ -319,12 +319,12 @@ public class QuestEditorGUI extends GUIScreen
                 int index = objectives.indexOf(activeObjectiveElement);
 
                 {
-                    objectives.add(index, new GUIText(GUI, "\n"));
-                    GUIObjective objectiveElement = new GUIObjective(GUI, (CObjective) newObjective.copy());
+                    objectives.add(index, new GUIText(this, "\n"));
+                    GUIObjective objectiveElement = new GUIObjective(this, (CObjective) newObjective.copy());
                     objectives.add(index, objectiveElement.addClickActions(() ->
                     {
                         ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
-                        gui.addOnClosedActions(() -> GUI.editObjective(objectiveElement, gui.selection));
+                        gui.addOnClosedActions(() -> this.editObjective(objectiveElement, gui.selection));
                     }));
                 }
 
@@ -341,12 +341,12 @@ public class QuestEditorGUI extends GUIScreen
                         objectives.add(objectiveElement.addClickActions(() ->
                         {
                             ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
-                            gui.addOnClosedActions(() -> GUI.editObjective(objectiveElement, gui.selection));
+                            gui.addOnClosedActions(() -> this.editObjective(objectiveElement, gui.selection));
                         }));
 
                         objectives.add(new GUIText(this, "\n"));
                     }));
-                    objectives.add(new GUIText(GUI, "\n"));
+                    objectives.add(new GUIText(this, "\n"));
                 }
             }
         }
@@ -383,12 +383,12 @@ public class QuestEditorGUI extends GUIScreen
                 int index = rewards.indexOf(activeRewardElement);
 
                 {
-                    rewards.add(index, new GUIText(GUI, "\n"));
-                    GUIItemStack rewardElement = new GUIItemStack(GUI, newStack.copy());
+                    rewards.add(index, new GUIText(this, "\n"));
+                    GUIItemStack rewardElement = new GUIItemStack(this, newStack.copy());
                     rewards.add(index, rewardElement.addClickActions(() ->
                     {
                         ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                        gui.addOnClosedActions(() -> GUI.editReward(rewardElement, gui.selection));
+                        gui.addOnClosedActions(() -> this.editReward(rewardElement, gui.selection));
                     }));
                 }
 
@@ -405,12 +405,12 @@ public class QuestEditorGUI extends GUIScreen
                         rewards.add(rewardElement.addClickActions(() ->
                         {
                             ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                            gui.addOnClosedActions(() -> GUI.editReward(rewardElement, gui.selection));
+                            gui.addOnClosedActions(() -> this.editReward(rewardElement, gui.selection));
                         }));
 
                         rewards.add(new GUIText(this, "\n"));
                     }));
-                    rewards.add(new GUIText(GUI, "\n"));
+                    rewards.add(new GUIText(this, "\n"));
                 }
             }
         }
@@ -447,12 +447,12 @@ public class QuestEditorGUI extends GUIScreen
                 int index = conditions.indexOf(activeConditionElement);
 
                 {
-                    conditions.add(index, new GUIText(GUI, "\n"));
-                    GUICondition conditionElement = new GUICondition(GUI, (CCondition) newCondition.copy());
+                    conditions.add(index, new GUIText(this, "\n"));
+                    GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     conditions.add(index, conditionElement.addClickActions(() ->
                     {
                         ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                        gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
+                        gui.addOnClosedActions(() -> this.editCondition(conditionElement, gui.selection));
                     }));
                 }
 
@@ -469,12 +469,12 @@ public class QuestEditorGUI extends GUIScreen
                         conditions.add(conditionElement.addClickActions(() ->
                         {
                             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                            gui.addOnClosedActions(() -> GUI.editCondition(conditionElement, gui.selection));
+                            gui.addOnClosedActions(() -> this.editCondition(conditionElement, gui.selection));
                         }));
 
                         conditions.add(new GUIText(this, "\n"));
                     }));
-                    conditions.add(new GUIText(GUI, "\n"));
+                    conditions.add(new GUIText(this, "\n"));
                 }
             }
         }

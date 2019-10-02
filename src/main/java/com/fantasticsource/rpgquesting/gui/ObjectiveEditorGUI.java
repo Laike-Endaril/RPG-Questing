@@ -5,14 +5,21 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
+import com.fantasticsource.mctools.gui.element.view.GUIAutocroppedView;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveCollect;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveKill;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 
 import static com.fantasticsource.rpgquesting.gui.JournalGUI.RED;
 
@@ -26,6 +33,7 @@ public class ObjectiveEditorGUI extends GUIScreen
     private GUIGradientBorder[] separators = new GUIGradientBorder[4];
     private GUIScrollView objectiveSelector, objectiveEditor, originalView, currentView;
     private GUIVerticalScrollbar objectiveSelectorScrollbar, objectiveEditorScrollbar, originalScrollbar, currentScrollbar;
+    private GUIAutocroppedView conditions;
 
     public ObjectiveEditorGUI(GUIObjective clickedElement)
     {
@@ -233,17 +241,89 @@ public class ObjectiveEditorGUI extends GUIScreen
             Class cls = objective.getClass();
             if (cls == CObjectiveKill.class)
             {
-//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity name: ", ((CObjectiveNameIs) objective).name.value, FilterNotEmpty.INSTANCE);
-//                name.input.addRecalcActions(() ->
-//                {
-//                    if (name.input.valid())
-//                    {
-//                        ((CObjectiveNameIs) objective).name.set(name.input.text);
-//                        current.setObjective(objective);
-//                    }
-//                });
-//                objectiveEditor.add(name);
-//                objectiveEditor.add(new GUIText(this, "\n"));
+                CObjectiveKill objectiveKill = (CObjectiveKill) objective;
+
+                GUILabeledTextInput progressIsPrefix = new GUILabeledTextInput(this, "Progress is prefix: ", "" + objectiveKill.progressIsPrefix.value, FilterBoolean.INSTANCE);
+                progressIsPrefix.input.addRecalcActions(() ->
+                {
+                    if (progressIsPrefix.input.valid())
+                    {
+                        objectiveKill.progressIsPrefix.set(FilterBoolean.INSTANCE.parse(progressIsPrefix.input.text));
+                        current.setObjective(objectiveKill);
+                    }
+                });
+                objectiveEditor.add(progressIsPrefix);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput text = new GUILabeledTextInput(this, "Text: ", objectiveKill.text.value, FilterNotEmpty.INSTANCE);
+                text.input.addRecalcActions(() ->
+                {
+                    if (text.input.valid())
+                    {
+                        objectiveKill.text.set(FilterNotEmpty.INSTANCE.parse(text.input.text));
+                        current.setObjective(objectiveKill);
+                    }
+                });
+                objectiveEditor.add(text);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput quantity = new GUILabeledTextInput(this, "Quantity: ", "" + objectiveKill.required.value, FilterInt.INSTANCE);
+                quantity.input.addRecalcActions(() ->
+                {
+                    if (quantity.input.valid())
+                    {
+                        objectiveKill.required.set(FilterInt.INSTANCE.parse(quantity.input.text));
+                        current.setObjective(objectiveKill);
+                    }
+                });
+                objectiveEditor.add(quantity);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+
+                conditions = new GUIAutocroppedView(this);
+                objectiveEditor.add(conditions);
+
+                for (CCondition condition : objectiveKill.conditions)
+                {
+                    conditions.add(new GUIText(this, "\n"));
+                    GUICondition conditionElement = new GUICondition(this, condition);
+                    conditions.add(conditionElement.addClickActions(() ->
+                    {
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                    }));
+                }
+
+                {
+                    conditions.add(new GUIText(this, "\n"));
+                    GUICondition conditionElement = new GUICondition(this, null);
+                    conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                    conditions.add(conditionElement.addClickActions(() ->
+                    {
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                    }));
+                }
+
+                if (objectiveKill.conditions.size() > 0)
+                {
+                    conditions.add(new GUIText(this, "\n"));
+                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+                    {
+                        conditions.clear();
+
+                        conditions.add(new GUIText(this, "\n"));
+                        GUICondition conditionElement = new GUICondition(this, null);
+                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                        conditions.add(conditionElement.addClickActions(() ->
+                        {
+                            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                        }));
+
+                        objectiveEditor.recalc();
+                    }));
+                }
             }
             else if (cls == CObjectiveCollect.class)
             {
@@ -261,6 +341,73 @@ public class ObjectiveEditorGUI extends GUIScreen
             }
         }
 
+        objectiveEditor.add(new GUIText(this, "\n"));
+
         currentView.recalc();
+    }
+
+    private void editCondition(GUICondition activeConditionElement, CCondition newCondition)
+    {
+        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+        {
+            //Started with empty slot
+            if (newCondition != null)
+            {
+                //Added new objective
+                int index = conditions.indexOf(activeConditionElement);
+
+                {
+                    conditions.add(index, new GUIText(this, "\n"));
+                    GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
+                    conditions.add(index, conditionElement.addClickActions(() ->
+                    {
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Conditions were empty, but no longer are
+                    conditions.add(new GUIText(this, "\n"));
+                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+                    {
+                        conditions.clear();
+
+                        conditions.add(new GUIText(this, "\n"));
+                        GUICondition conditionElement = new GUICondition(this, null);
+                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+                        conditions.add(conditionElement.addClickActions(() ->
+                        {
+                            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                        }));
+
+                        objectiveEditor.recalc();
+                    }));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
+            else
+            {
+                //Removing a objective
+                int index = conditions.indexOf(activeConditionElement);
+                conditions.remove(index);
+                conditions.remove(index);
+
+                if (conditions.size() == 5)
+                {
+                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    conditions.remove(3);
+                    conditions.remove(3);
+                }
+            }
+        }
+
+        objectiveEditor.recalc();
     }
 }
