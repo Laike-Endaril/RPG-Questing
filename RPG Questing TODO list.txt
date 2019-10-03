@@ -1,7 +1,3 @@
-Fix obfuscation of collection objectives
-
-Fix objectives not syncing their conditions on full transfer
-
 Fix scissor issue when an autocropped view is inside a scrollview
 
 Objective editing for collection objectives
@@ -64,3 +60,5 @@ Configs for...
 
 
 Make edit-mode journal more efficient (don't send all quests upon opening journal)
+
+Check obfuscation of everything
