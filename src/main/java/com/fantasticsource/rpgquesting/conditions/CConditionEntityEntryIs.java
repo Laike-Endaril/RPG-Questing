@@ -56,14 +56,18 @@ public class CConditionEntityEntryIs extends CCondition
     }
 
     @Override
-    public CConditionEntityEntryIs write(ByteBuf byteBuf)
+    public CConditionEntityEntryIs write(ByteBuf buf)
     {
+        entityEntryName.write(buf);
+
         return this;
     }
 
     @Override
-    public CConditionEntityEntryIs read(ByteBuf byteBuf)
+    public CConditionEntityEntryIs read(ByteBuf buf)
     {
+        entityEntryName.read(buf);
+
         return this;
     }
 

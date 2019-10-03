@@ -69,14 +69,18 @@ public class CConditionHaveItems extends CCondition
     }
 
     @Override
-    public CConditionHaveItems write(ByteBuf byteBuf)
+    public CConditionHaveItems write(ByteBuf buf)
     {
+        stackToMatch.write(buf);
+
         return this;
     }
 
     @Override
-    public CConditionHaveItems read(ByteBuf byteBuf)
+    public CConditionHaveItems read(ByteBuf buf)
     {
+        stackToMatch.read(buf);
+
         return this;
     }
 

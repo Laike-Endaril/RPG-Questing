@@ -29,9 +29,9 @@ public class CObjectiveKill extends CObjective
         MinecraftForge.EVENT_BUS.register(CObjectiveKill.class);
     }
 
-    CInt current = new CInt();
     public CInt required = new CInt();
     public ArrayList<CCondition> conditions = new ArrayList<>();
+    CInt current = new CInt();
 
     public CObjectiveKill()
     {

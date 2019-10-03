@@ -52,14 +52,18 @@ public class CConditionNameIs extends CCondition
     }
 
     @Override
-    public CConditionNameIs write(ByteBuf byteBuf)
+    public CConditionNameIs write(ByteBuf buf)
     {
+        name.write(buf);
+
         return this;
     }
 
     @Override
-    public CConditionNameIs read(ByteBuf byteBuf)
+    public CConditionNameIs read(ByteBuf buf)
     {
+        name.read(buf);
+
         return this;
     }
 

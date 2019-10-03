@@ -11,9 +11,9 @@ import java.io.OutputStream;
 
 public abstract class CObjective extends Component implements IObfuscatedComponent
 {
-    CUUID owner = new CUUID();
     public CStringUTF8 text = new CStringUTF8();
     public CBoolean progressIsPrefix = new CBoolean().set(true);
+    CUUID owner = new CUUID();
 
     public final CObjective setOwner(EntityPlayerMP player)
     {

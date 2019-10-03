@@ -45,7 +45,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         original = clickedElement.objective;
-        selection = original;
+        selection = (CObjective) original.copy();
 
 
         root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
@@ -53,7 +53,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Management
-        current = new GUIObjective(this, original);
+        current = new GUIObjective(this, selection);
         GUITextButton save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
         root.add(save.addClickActions(() ->
         {

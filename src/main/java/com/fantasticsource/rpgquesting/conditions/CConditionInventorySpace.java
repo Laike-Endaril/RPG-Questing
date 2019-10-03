@@ -67,14 +67,18 @@ public class CConditionInventorySpace extends CCondition
     }
 
     @Override
-    public CConditionInventorySpace write(ByteBuf byteBuf)
+    public CConditionInventorySpace write(ByteBuf buf)
     {
+        slotCount.write(buf);
+
         return this;
     }
 
     @Override
-    public CConditionInventorySpace read(ByteBuf byteBuf)
+    public CConditionInventorySpace read(ByteBuf buf)
     {
+        slotCount.read(buf);
+
         return this;
     }
 
