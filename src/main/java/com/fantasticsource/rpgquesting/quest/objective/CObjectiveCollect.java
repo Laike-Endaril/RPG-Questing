@@ -34,7 +34,7 @@ public class CObjectiveCollect extends CObjective
     }
 
     CInt current = new CInt();
-    CItemStack stackToMatch = new CItemStack();
+    public CItemStack stackToMatch = new CItemStack();
 
     public CObjectiveCollect()
     {

@@ -5,6 +5,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
@@ -13,6 +14,7 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIAutocroppedView;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
+import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveCollect;
@@ -45,7 +47,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         original = clickedElement.objective;
-        selection = (CObjective) original.copy();
+        selection = original == null ? null : (CObjective) original.copy();
 
 
         root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
@@ -238,34 +240,36 @@ public class ObjectiveEditorGUI extends GUIScreen
 
         if (objective != null)
         {
+            GUILabeledTextInput progressIsPrefix = new GUILabeledTextInput(this, "Progress is prefix: ", "" + objective.progressIsPrefix.value, FilterBoolean.INSTANCE);
+            progressIsPrefix.input.addRecalcActions(() ->
+            {
+                if (progressIsPrefix.input.valid())
+                {
+                    objective.progressIsPrefix.set(FilterBoolean.INSTANCE.parse(progressIsPrefix.input.text));
+                    current.setObjective(objective);
+                }
+            });
+            objectiveEditor.add(progressIsPrefix);
+            objectiveEditor.add(new GUIText(this, "\n"));
+
+            GUILabeledTextInput text = new GUILabeledTextInput(this, "Text: ", objective.text.value, FilterNotEmpty.INSTANCE);
+            text.input.addRecalcActions(() ->
+            {
+                if (text.input.valid())
+                {
+                    objective.text.set(FilterNotEmpty.INSTANCE.parse(text.input.text));
+                    current.setObjective(objective);
+                }
+            });
+            objectiveEditor.add(text);
+            objectiveEditor.add(new GUIText(this, "\n"));
+
             Class cls = objective.getClass();
             if (cls == CObjectiveKill.class)
             {
+                objectiveEditor.add(new GUIText(this, "\n"));
+
                 CObjectiveKill objectiveKill = (CObjectiveKill) objective;
-
-                GUILabeledTextInput progressIsPrefix = new GUILabeledTextInput(this, "Progress is prefix: ", "" + objectiveKill.progressIsPrefix.value, FilterBoolean.INSTANCE);
-                progressIsPrefix.input.addRecalcActions(() ->
-                {
-                    if (progressIsPrefix.input.valid())
-                    {
-                        objectiveKill.progressIsPrefix.set(FilterBoolean.INSTANCE.parse(progressIsPrefix.input.text));
-                        current.setObjective(objectiveKill);
-                    }
-                });
-                objectiveEditor.add(progressIsPrefix);
-                objectiveEditor.add(new GUIText(this, "\n"));
-
-                GUILabeledTextInput text = new GUILabeledTextInput(this, "Text: ", objectiveKill.text.value, FilterNotEmpty.INSTANCE);
-                text.input.addRecalcActions(() ->
-                {
-                    if (text.input.valid())
-                    {
-                        objectiveKill.text.set(FilterNotEmpty.INSTANCE.parse(text.input.text));
-                        current.setObjective(objectiveKill);
-                    }
-                });
-                objectiveEditor.add(text);
-                objectiveEditor.add(new GUIText(this, "\n"));
 
                 GUILabeledTextInput quantity = new GUILabeledTextInput(this, "Quantity: ", "" + objectiveKill.required.value, FilterInt.INSTANCE);
                 quantity.input.addRecalcActions(() ->
@@ -280,6 +284,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 objectiveEditor.add(new GUIText(this, "\n"));
 
 
+                objectiveEditor.add(new GUIText(this, "\n" + TextFormatting.GOLD + "Conditions...\n"));
                 conditions = new GUIAutocroppedView(this);
                 objectiveEditor.add(conditions);
 
@@ -327,17 +332,14 @@ public class ObjectiveEditorGUI extends GUIScreen
             }
             else if (cls == CObjectiveCollect.class)
             {
-//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity registry name: ", ((CObjectiveEntityEntryIs) objective).entityEntryName.value, FilterNotEmpty.INSTANCE);
-//                name.input.addRecalcActions(() ->
-//                {
-//                    if (name.input.valid())
-//                    {
-//                        ((CObjectiveEntityEntryIs) objective).entityEntryName.set(name.input.text);
-//                        current.setObjective(objective);
-//                    }
-//                });
-//                objectiveEditor.add(name);
-//                objectiveEditor.add(new GUIText(this, "\n"));
+                CObjectiveCollect objectiveCollect = (CObjectiveCollect) objective;
+                GUIItemStack stackToMatch = new GUIItemStack(this, objectiveCollect.stackToMatch.stack);
+                objectiveEditor.add(stackToMatch.addClickActions(() ->
+                {
+                    ItemSelectionGUI gui = new ItemSelectionGUI(stackToMatch);
+                    gui.addOnClosedActions(() -> objectiveEditor.recalc());
+                }));
+                objectiveEditor.add(new GUIText(this, "\n"));
             }
         }
 
