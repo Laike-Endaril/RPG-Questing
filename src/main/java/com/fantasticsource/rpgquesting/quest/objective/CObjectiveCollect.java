@@ -33,8 +33,8 @@ public class CObjectiveCollect extends CObjective
         MinecraftForge.EVENT_BUS.register(CObjectiveCollect.class);
     }
 
-    CInt current = new CInt();
     public CItemStack stackToMatch = new CItemStack();
+    CInt current = new CInt();
 
     public CObjectiveCollect()
     {

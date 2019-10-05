@@ -266,9 +266,13 @@ public class QuestEditorGUI extends GUIScreen
         save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
         root.add(save);
         cancel = new GUITextButton(this, "Close Without Saving");
-        root.add(cancel.addClickActions(() -> GUI.close()));
+        root.add(cancel.addClickActions(GUI::close));
         delete = new GUITextButton(this, "Delete Quest and Close", RED[0]);
-        root.add(delete);
+        root.add(delete.addClickActions(() ->
+        {
+            Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(viewedQuest));
+            GUI.close();
+        }));
 
         separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
         root.add(separator);

@@ -11,6 +11,7 @@ import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -109,6 +110,24 @@ public class CQuests extends Component
         {
             if (group.size() == 0) data.inProgressQuests.remove(quest.group.value);
             data.saveAndSync();
+        }
+    }
+
+    public static void delete(String questname)
+    {
+        for (EntityPlayerMP playerMP : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
+        {
+            abandon(playerMP, questname);
+        }
+
+        CQuest quest = get(questname);
+        QUESTS.worldQuestData.remove(questname);
+
+        LinkedHashMap<String, CQuest> group = QUESTS.worldQuestDataByGroup.get(quest.group.value);
+        if (group != null)
+        {
+            group.remove(questname);
+            if (group.size() == 0) QUESTS.worldQuestDataByGroup.remove(quest.group.value);
         }
     }
 

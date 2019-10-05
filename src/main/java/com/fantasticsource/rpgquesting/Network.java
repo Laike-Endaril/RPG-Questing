@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -52,6 +53,7 @@ public class Network
         WRAPPER.registerMessage(QuestTrackerPacketHandler.class, QuestTrackerPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestTrackerChangePacketHandler.class, RequestTrackerChangePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestAbandonQuestPacketHandler.class, RequestAbandonQuestPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(RequestDeleteQuestPacketHandler.class, RequestDeleteQuestPacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -582,6 +584,48 @@ public class Network
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
             server.addScheduledTask(() -> CQuests.abandon(ctx.getServerHandler().player, packet.questName));
+            return null;
+        }
+    }
+
+
+    public static class RequestDeleteQuestPacket implements IMessage
+    {
+        String questName;
+
+        public RequestDeleteQuestPacket()
+        {
+            //Required
+        }
+
+        public RequestDeleteQuestPacket(String questName)
+        {
+            this.questName = questName;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, questName);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            questName = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class RequestDeleteQuestPacketHandler implements IMessageHandler<RequestDeleteQuestPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestDeleteQuestPacket packet, MessageContext ctx)
+        {
+            if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
+            {
+                CQuests.delete(packet.questName);
+            }
+
             return null;
         }
     }
