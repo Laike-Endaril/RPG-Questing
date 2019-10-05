@@ -26,7 +26,6 @@ public class ConditionEditorGUI extends GUIScreen
     public GUICondition current;
     private GUITextButton delete;
     private GUIText originalLabel, currentLabel, conditionSelectorLabel, conditionEditorLabel;
-    private GUIGradientBorder[] separators = new GUIGradientBorder[4];
     private GUIScrollView conditionSelector, conditionEditor, originalView, currentView;
     private GUIVerticalScrollbar conditionSelectorScrollbar, conditionEditorScrollbar, originalScrollbar, currentScrollbar;
 
@@ -73,8 +72,7 @@ public class ConditionEditorGUI extends GUIScreen
         double free = 1 - delete.height - 0.03;
 
 
-        separators[0] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[0]);
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
 
         //Labels
@@ -115,8 +113,7 @@ public class ConditionEditorGUI extends GUIScreen
         currentView.add(new GUIText(this, "\n"));
 
 
-        separators[2] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[2]);
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
 
         //Condition selector
@@ -182,8 +179,7 @@ public class ConditionEditorGUI extends GUIScreen
         }
 
 
-        separators[3] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[3]);
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
 
         //Condition editor
