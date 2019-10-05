@@ -2,7 +2,6 @@ package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
@@ -262,8 +261,7 @@ public class QuestEditorGUI extends GUIScreen
     @Override
     protected void init()
     {
-        GUIElement root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
-        guiElements.add(root);
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
 
         save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
         root.add(save);

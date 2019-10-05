@@ -1,6 +1,3 @@
-Fix odd scissor issue; visible when editing a kill objective and scrolled down in the objective editing view
-Caused by autocropped view inside a scrollview?
-
 Saving of quests
 
 When saving quest, if a quest of that name already exists, remove it from the playerdata of all online players (for offline players, it's taken care of on load)

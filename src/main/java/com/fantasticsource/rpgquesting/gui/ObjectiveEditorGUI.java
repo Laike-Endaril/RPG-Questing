@@ -29,7 +29,6 @@ public class ObjectiveEditorGUI extends GUIScreen
 {
     public CObjective original, selection;
     public GUIObjective current;
-    private GUIGradient root;
     private GUITextButton delete;
     private GUIText originalLabel, currentLabel, objectiveSelectorLabel, objectiveEditorLabel;
     private GUIGradientBorder[] separators = new GUIGradientBorder[4];
@@ -50,8 +49,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         selection = original == null ? null : (CObjective) original.copy();
 
 
-        root = new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f));
-        guiElements.add(root);
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
 
 
         //Management
@@ -86,13 +84,13 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Labels
-        originalLabel = new GUIText(this, 0, 0, "ORIGINAL", 3, Color.YELLOW.copy().setVF(0.2f));
+        originalLabel = new GUIText(this, 0, 0, "ORIGINAL", Color.YELLOW.copy().setVF(0.2f));
         root.add(originalLabel);
-        currentLabel = new GUIText(this, 0, 0, "CURRENT", 3, Color.YELLOW.copy().setVF(0.2f));
+        currentLabel = new GUIText(this, 0, 0, "CURRENT", Color.YELLOW.copy().setVF(0.2f));
         root.add(currentLabel);
-        objectiveSelectorLabel = new GUIText(this, 0, 0, "OBJECTIVE SELECTION", 3, Color.YELLOW.copy().setVF(0.2f));
+        objectiveSelectorLabel = new GUIText(this, 0, 0, "OBJECTIVE SELECTION", Color.YELLOW.copy().setVF(0.2f));
         root.add(objectiveSelectorLabel);
-        objectiveEditorLabel = new GUIText(this, 0, 0, "OBJECTIVE EDITING", 3, Color.YELLOW.copy().setVF(0.2f));
+        objectiveEditorLabel = new GUIText(this, 0, 0, "OBJECTIVE EDITING", Color.YELLOW.copy().setVF(0.2f));
         root.add(objectiveEditorLabel);
 
 
