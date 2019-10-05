@@ -54,6 +54,7 @@ public class Network
         WRAPPER.registerMessage(RequestTrackerChangePacketHandler.class, RequestTrackerChangePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestAbandonQuestPacketHandler.class, RequestAbandonQuestPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestDeleteQuestPacketHandler.class, RequestDeleteQuestPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(RequestEditQuestPacketHandler.class, RequestEditQuestPacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -624,6 +625,48 @@ public class Network
             if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
             {
                 CQuests.delete(packet.questName);
+            }
+
+            return null;
+        }
+    }
+
+
+    public static class RequestEditQuestPacket implements IMessage
+    {
+        CQuest quest = new CQuest();
+
+        public RequestEditQuestPacket()
+        {
+            //Required
+        }
+
+        public RequestEditQuestPacket(CQuest quest)
+        {
+            this.quest = quest;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            quest.write(buf);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            quest.read(buf);
+        }
+    }
+
+    public static class RequestEditQuestPacketHandler implements IMessageHandler<RequestEditQuestPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestEditQuestPacket packet, MessageContext ctx)
+        {
+            if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
+            {
+                CQuests.saveQuest(packet.quest);
             }
 
             return null;

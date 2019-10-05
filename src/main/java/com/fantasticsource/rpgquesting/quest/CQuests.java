@@ -131,6 +131,11 @@ public class CQuests extends Component
         }
     }
 
+    public static void saveQuest(CQuest quest)
+    {
+        //TODO
+    }
+
     public static void syncJournal(EntityPlayerMP player, String questToView, boolean openJournal)
     {
         //For quest to view, an empty or null string leaves it on whatever is already viewed (or sets it to the tracked quest if none is viewed and a quest is currently tracked)

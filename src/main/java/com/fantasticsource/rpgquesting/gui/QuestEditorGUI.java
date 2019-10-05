@@ -34,6 +34,7 @@ public class QuestEditorGUI extends GUIScreen
     private static GUITextButton save, cancel, delete;
     private static GUIGradientBorder separator;
     private static GUITabView tabView;
+    private static GUIText oldName, newName;
 
     public static void show(CQuest quest)
     {
@@ -44,7 +45,20 @@ public class QuestEditorGUI extends GUIScreen
         main.clear();
 
         main.add(new GUIText(GUI, "\n"));
-        main.add(new GUILabeledTextInput(GUI, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE));
+        GUILabeledTextInput name = new GUILabeledTextInput(GUI, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE);
+        name.input.addRecalcActions(() ->
+        {
+            if (name.input.valid())
+            {
+                newName.text = TextFormatting.GOLD + "NEW NAME: " + TextFormatting.RESET + name.input.text;
+                newName.recalc();
+            }
+        });
+        main.add(name);
+        oldName.text = TextFormatting.GOLD + " OLD NAME: " + TextFormatting.RESET + name.input.text;
+        oldName.recalc();
+        newName.text = TextFormatting.GOLD + " NEW NAME: " + TextFormatting.RESET + name.input.text;
+        newName.recalc();
 
         main.add(new GUIText(GUI, "\n"));
         main.add(new GUILabeledTextInput(GUI, "Group: ", quest.group.value, FilterNotEmpty.INSTANCE));
@@ -263,6 +277,7 @@ public class QuestEditorGUI extends GUIScreen
     {
         root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
 
+        //Management
         save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
         root.add(save);
         cancel = new GUITextButton(this, "Close Without Saving");
@@ -274,28 +289,41 @@ public class QuestEditorGUI extends GUIScreen
             GUI.close();
         }));
 
-        separator = new GUIGradientBorder(this, 1, 0.03, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separator);
+        //Old ane new name
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
+        oldName = new GUIText(this, TextFormatting.GOLD + " OLD NAME: ");
+        root.add(oldName);
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
+        newName = new GUIText(this, TextFormatting.GOLD + " NEW NAME: ");
+        root.add(newName);
 
+        //Tabview
+        separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+        root.add(separator);
         tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
         root.add(tabView);
 
+        //Main tab
         main = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(0).add(main);
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
 
+        //Objectives tab
         objectives = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(1).add(objectives);
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectives));
 
+        //Rewards tab
         rewards = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(2).add(rewards);
         tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, rewards));
 
+        //Conditions tab
         conditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(3).add(conditions);
         tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditions));
 
+        //Dialogues tab
         dialogues = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(4).add(dialogues);
         tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
