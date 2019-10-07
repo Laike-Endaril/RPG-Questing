@@ -169,6 +169,12 @@ public class JournalGUI extends GUIScreen
             navigator.tabViews.get(2).add(allTab);
             navigator.tabViews.get(2).add(new GUIVerticalScrollbar(GUI, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, allTab));
 
+            {
+                allTab.add(new GUIText(GUI, "\n"));
+                GUIText questElement = new GUIText(GUI, "(Create New Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
+                allTab.add(questElement.addClickActions(() -> QuestEditorGUI.show(new CQuest("", "", 1, false))));
+            }
+
             allTab.add(new GUIText(GUI, "\n"));
             for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
             {
