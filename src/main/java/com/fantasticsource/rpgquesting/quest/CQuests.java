@@ -65,7 +65,7 @@ public class CQuests extends Component
 
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
         LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>());
-        Pair<CUUID, ArrayList<CObjective>> pair = map.computeIfAbsent(name, o -> new Pair<>(new CUUID().set(UUID.randomUUID()), new ArrayList<>()));
+        Pair<CUUID, ArrayList<CObjective>> pair = map.computeIfAbsent(name, o -> new Pair<>(new CUUID().set(quest.permanentID.value), new ArrayList<>()));
         ArrayList<CObjective> objectives = pair.getValue();
         objectives.clear();
         for (CObjective objective : quest.objectives)
