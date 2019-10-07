@@ -31,7 +31,6 @@ public class QuestEditorGUI extends GUIScreen
 {
     public static final QuestEditorGUI GUI = new QuestEditorGUI();
     public static GUIScrollView main, objectives, rewards, conditions, dialogues;
-    private static GUITextButton save, cancel, delete;
     private static GUIGradientBorder separator;
     private static GUITabView tabView;
 
@@ -267,16 +266,13 @@ public class QuestEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
 
         //Management
-        save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
-        root.add(save).addClickActions(() ->
+        root.add(new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0])).addClickActions(() ->
         {
             //TODO
             GUI.close();
         });
-        cancel = new GUITextButton(this, "Close Without Saving");
-        root.add(cancel.addClickActions(GUI::close));
-        delete = new GUITextButton(this, "Delete Quest and Close", RED[0]);
-        root.add(delete.addClickActions(() ->
+        root.add(new GUITextButton(this, "Close Without Saving").addClickActions(GUI::close));
+        root.add(new GUITextButton(this, "Delete Quest and Close", RED[0]).addClickActions(() ->
         {
             Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(viewedQuest));
             GUI.close();
