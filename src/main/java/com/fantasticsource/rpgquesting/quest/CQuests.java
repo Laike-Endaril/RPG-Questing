@@ -133,7 +133,9 @@ public class CQuests extends Component
 
     public static void saveQuest(CQuest quest)
     {
-        //TODO
+        //Cleanly remove old one if it exists, then add the new version
+        delete(quest.name.value);
+        add(quest);
     }
 
     public static void syncJournal(EntityPlayerMP player, String questToView, boolean openJournal)

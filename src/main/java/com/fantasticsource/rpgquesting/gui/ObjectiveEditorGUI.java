@@ -335,7 +335,13 @@ public class ObjectiveEditorGUI extends GUIScreen
                 objectiveEditor.add(stackToMatch.addClickActions(() ->
                 {
                     ItemSelectionGUI gui = new ItemSelectionGUI(stackToMatch);
-                    gui.addOnClosedActions(() -> objectiveEditor.recalc());
+                    gui.addOnClosedActions(() ->
+                    {
+                        stackToMatch.setStack(gui.selection);
+                        objectiveCollect.stackToMatch.set(gui.selection);
+                        current.setObjective(objectiveCollect);
+                        objectiveEditor.recalc();
+                    });
                 }));
                 objectiveEditor.add(new GUIText(this, "\n"));
             }

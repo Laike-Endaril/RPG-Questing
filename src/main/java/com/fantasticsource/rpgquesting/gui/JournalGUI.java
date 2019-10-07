@@ -172,7 +172,7 @@ public class JournalGUI extends GUIScreen
             {
                 allTab.add(new GUIText(GUI, "\n"));
                 GUIText questElement = new GUIText(GUI, "(Create New Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
-                allTab.add(questElement.addClickActions(() -> QuestEditorGUI.show(new CQuest("", "", 1, false))));
+                allTab.add(questElement.addClickActions(() -> QuestEditorGUI.GUI.show(new CQuest("", "", 1, false))));
             }
 
             allTab.add(new GUIText(GUI, "\n"));
@@ -277,7 +277,7 @@ public class JournalGUI extends GUIScreen
 
         //Add quest buttons
         questView.add(new GUIText(GUI, "\n\n\n"));
-        questView.add(new GUITextButton(GUI, "Edit Quest").addClickActions(() -> QuestEditorGUI.show(viewedEditable)));
+        questView.add(new GUITextButton(GUI, "Edit Quest").addClickActions(() -> QuestEditorGUI.GUI.show(viewedEditable)));
         questView.add(new GUIText(GUI, "\n"));
     }
 
