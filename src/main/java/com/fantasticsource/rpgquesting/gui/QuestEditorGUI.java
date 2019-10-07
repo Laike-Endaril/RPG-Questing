@@ -255,14 +255,6 @@ public class QuestEditorGUI extends GUIScreen
     }
 
     @Override
-    public void initGui()
-    {
-        super.initGui();
-
-
-    }
-
-    @Override
     public void onResize(Minecraft mcIn, int w, int h)
     {
         super.onResize(mcIn, w, h);
