@@ -35,8 +35,8 @@ public class QuestEditorGUI extends GUIScreen
     public GUIScrollView main, objectives, rewards, conditions, dialogues;
     private GUIGradientBorder separator;
     private GUITabView tabView;
-    GUILabeledTextInput name, group, level, repeatable, experience;
-    GUIText oldName;
+    private GUILabeledTextInput name, group, level, repeatable, experience;
+    private GUIText oldName;
 
     public void show(CQuest quest)
     {
@@ -278,7 +278,7 @@ public class QuestEditorGUI extends GUIScreen
         //Management
         root.add(new GUITextButton(this, "Save", JournalGUI.GREEN[0])).addClickActions(this::trySave);
         root.add(new GUITextButton(this, "Close Editor").addClickActions(this::close));
-        root.add(new GUITextButton(this, "Delete Quest", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(viewedQuest))));
+        root.add(new GUITextButton(this, "Delete Quest", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")))));
 
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
