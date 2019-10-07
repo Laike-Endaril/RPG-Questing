@@ -34,7 +34,6 @@ public class QuestEditorGUI extends GUIScreen
     private static GUITextButton save, cancel, delete;
     private static GUIGradientBorder separator;
     private static GUITabView tabView;
-    private static GUIText oldName, newName;
 
     public static void show(CQuest quest)
     {
@@ -45,20 +44,10 @@ public class QuestEditorGUI extends GUIScreen
         main.clear();
 
         main.add(new GUIText(GUI, "\n"));
-        GUILabeledTextInput name = new GUILabeledTextInput(GUI, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE);
-        name.input.addRecalcActions(() ->
-        {
-            if (name.input.valid())
-            {
-                newName.text = TextFormatting.GOLD + "NEW NAME: " + TextFormatting.RESET + name.input.text;
-                newName.recalc();
-            }
-        });
-        main.add(name);
-        oldName.text = TextFormatting.GOLD + " OLD NAME: " + TextFormatting.RESET + name.input.text;
-        oldName.recalc();
-        newName.text = TextFormatting.GOLD + " NEW NAME: " + TextFormatting.RESET + name.input.text;
-        newName.recalc();
+        main.add(new GUILabeledTextInput(GUI, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE));
+        main.add(new GUIText(GUI, "\n"));
+        main.add(new GUIText(GUI, "(Previous Name: " + quest.name.value + ")", JournalGUI.BLUE[0]));
+        main.add(new GUIText(GUI, "\n"));
 
         main.add(new GUIText(GUI, "\n"));
         main.add(new GUILabeledTextInput(GUI, "Group: ", quest.group.value, FilterNotEmpty.INSTANCE));
@@ -279,7 +268,11 @@ public class QuestEditorGUI extends GUIScreen
 
         //Management
         save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
-        root.add(save);
+        root.add(save).addClickActions(() ->
+        {
+            //TODO
+            GUI.close();
+        });
         cancel = new GUITextButton(this, "Close Without Saving");
         root.add(cancel.addClickActions(GUI::close));
         delete = new GUITextButton(this, "Delete Quest and Close", RED[0]);
@@ -288,14 +281,6 @@ public class QuestEditorGUI extends GUIScreen
             Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(viewedQuest));
             GUI.close();
         }));
-
-        //Old ane new name
-        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
-        oldName = new GUIText(this, TextFormatting.GOLD + " OLD NAME: ");
-        root.add(oldName);
-        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
-        newName = new GUIText(this, TextFormatting.GOLD + " NEW NAME: ");
-        root.add(newName);
 
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
