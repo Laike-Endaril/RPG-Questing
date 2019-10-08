@@ -22,7 +22,7 @@ public class CDialogues extends Component
     public static LinkedHashMap<UUID, CDialogue> dialoguesByPermanentID = new LinkedHashMap<>();
     public static LinkedHashMap<UUID, CDialogue> dialoguesBySessionID = new LinkedHashMap<>();
 
-    public static boolean handle(EntityPlayerMP player, Entity entity)
+    public static boolean entityInteract(EntityPlayerMP player, Entity entity)
     {
         ArrayList<CDialogue> found = new ArrayList<>();
         for (CDialogue dialogue : dialoguesByPermanentID.values())

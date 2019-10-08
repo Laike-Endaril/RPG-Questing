@@ -57,9 +57,11 @@ public class RPGQuesting
     @SubscribeEvent
     public static void playerInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event)
     {
-        if (event.getSide() == Side.SERVER && event.getHand() == EnumHand.MAIN_HAND)
+        if (event.getHand() != EnumHand.MAIN_HAND) return;
+
+        if (event.getSide() == Side.SERVER)
         {
-            if (CDialogues.handle((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
+            if (CDialogues.entityInteract((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
         }
         else CDialogues.targetID = event.getTarget().getEntityId();
     }
