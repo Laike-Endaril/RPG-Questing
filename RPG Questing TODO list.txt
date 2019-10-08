@@ -1,21 +1,8 @@
-Saving of quests
-
-When saving quest, if a quest of that name already exists, remove it from the playerdata of all online players (for offline players, it's taken care of on load)
-
-
-
 Dialogue Editor
 
 
 
 Improve kill crediting for kill objectives; check combat tracker of killed entity
-
-
-
-Objectives types
-* Dialogue
-* Enter area
-* Leave area
 
 
 
@@ -28,6 +15,17 @@ Quest indicator symbols
 Quest indicator color config; each is a level difference and a color
 Eg. "0, FFFF00" would mean that a level difference of 0 makes the indicator yellow
 Based on BlueRPG level
+
+
+
+Rewards shown in dialogue & journal
+
+
+
+Objectives types
+* Dialogue
+* Enter area
+* Leave area
 
 
 
