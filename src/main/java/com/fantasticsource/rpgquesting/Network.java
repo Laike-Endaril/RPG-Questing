@@ -119,7 +119,7 @@ public class Network
             for (CDialogue dialogue : dialogues)
             {
                 dialogueSessionIDs.add(dialogue.sessionID);
-                dialogueDisplayNames.add(dialogue.name);
+                dialogueDisplayNames.add(dialogue.displayName);
             }
         }
 

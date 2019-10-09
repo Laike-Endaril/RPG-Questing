@@ -1,6 +1,4 @@
-Move "All" tab from quest editor to main editor, "quests" tab
-
-
+Make dialogues reference-by-name, with ID check (same as quests)
 
 Dialogue Editor
 

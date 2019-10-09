@@ -18,8 +18,7 @@ import java.util.UUID;
 public class CDialogue extends Component
 {
     public CUUID permanentID = new CUUID().set(UUID.randomUUID());
-    public CStringUTF8 name = new CStringUTF8();
-    public CStringUTF8 group = new CStringUTF8();
+    public CStringUTF8 name = new CStringUTF8(), displayName = new CStringUTF8(), group = new CStringUTF8();
 
     public ArrayList<CCondition> playerConditions = new ArrayList<>();
     public ArrayList<CCondition> entityConditions = new ArrayList<>();
@@ -34,6 +33,7 @@ public class CDialogue extends Component
     public CDialogue(String name, String group)
     {
         this.name.set(name);
+        this.displayName.set(name);
         this.group.set(group);
     }
 
@@ -76,6 +76,7 @@ public class CDialogue extends Component
     {
         permanentID.write(buf);
         name.write(buf);
+        displayName.write(buf);
         group.write(buf);
 
         new CInt().set(playerConditions.size()).write(buf);
@@ -94,8 +95,8 @@ public class CDialogue extends Component
     public CDialogue read(ByteBuf buf)
     {
         permanentID.read(buf);
-        CDialogues.add(this);
         name.read(buf);
+        displayName.read(buf);
         group.read(buf);
 
         playerConditions.clear();
@@ -116,6 +117,7 @@ public class CDialogue extends Component
     {
         permanentID.save(stream);
         name.save(stream);
+        displayName.save(stream);
         group.save(stream);
 
         new CInt().set(playerConditions.size()).save(stream);
@@ -136,6 +138,7 @@ public class CDialogue extends Component
         permanentID.load(stream);
         CDialogues.add(this);
         name.load(stream);
+        displayName.load(stream);
         group.load(stream);
 
         playerConditions.clear();

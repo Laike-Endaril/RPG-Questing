@@ -40,14 +40,26 @@ public class CDialogueBranch extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueBranch write(ByteBuf byteBuf)
+    public CDialogueBranch write(ByteBuf buf)
     {
+        dialogue.permanentID.write(buf);
+        paragraph.write(buf);
+
+        new CInt().set(choices.size()).write(buf);
+        for (CDialogueChoice choice : choices) choice.write(buf);
+
         return this;
     }
 
     @Override
-    public CDialogueBranch read(ByteBuf byteBuf)
+    public CDialogueBranch read(ByteBuf buf)
     {
+        setDialogue(CDialogues.getByPermanentID(new CUUID().read(buf).value));
+        paragraph.read(buf);
+
+        choices.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) choices.add(new CDialogueChoice().read(buf));
+
         return this;
     }
 

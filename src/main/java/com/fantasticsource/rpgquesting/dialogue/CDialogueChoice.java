@@ -59,14 +59,26 @@ public class CDialogueChoice extends Component implements IObfuscatedComponent
     }
 
     @Override
-    public CDialogueChoice write(ByteBuf byteBuf)
+    public CDialogueChoice write(ByteBuf buf)
     {
+        text.write(buf);
+
+        new CInt().set(availabilityConditions.size()).write(buf);
+        for (CCondition condition : availabilityConditions) Component.writeMarked(buf, condition);
+
+        Component.writeMarked(buf, action);
         return this;
     }
 
     @Override
-    public CDialogueChoice read(ByteBuf byteBuf)
+    public CDialogueChoice read(ByteBuf buf)
     {
+        text.read(buf);
+
+        availabilityConditions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) availabilityConditions.add((CCondition) Component.readMarked(buf));
+
+        action = (CAction) Component.readMarked(buf);
         return this;
     }
 
