@@ -53,7 +53,7 @@ public class MainEditorGUI extends GUIScreen
     {
     }
 
-    public static void show(CPlayerQuestData dataIn, String questToView, LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests)
+    public static void show(LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests)
     {
         //Make sure GUI exists
         Minecraft.getMinecraft().displayGuiScreen(GUI);
@@ -64,7 +64,6 @@ public class MainEditorGUI extends GUIScreen
 
 
         //General pre-computation for new data
-        if (dataIn != null) data = dataIn;
         if (data == null) return;
 
         LinkedHashMap<String, Boolean> knownQuestGroupCompletion = new LinkedHashMap<>();

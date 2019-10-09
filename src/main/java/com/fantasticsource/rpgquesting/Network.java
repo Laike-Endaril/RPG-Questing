@@ -8,6 +8,7 @@ import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.gui.DialogueGUI;
 import com.fantasticsource.rpgquesting.gui.DialoguesGUI;
 import com.fantasticsource.rpgquesting.gui.JournalGUI;
+import com.fantasticsource.rpgquesting.gui.MainEditorGUI;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
@@ -721,12 +722,9 @@ public class Network
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
-                if (packet.openGUI || JournalGUI.GUI.isVisible())
+                if (packet.openGUI || MainEditorGUI.GUI.isVisible())
                 {
-                    //TODO
-//                    String quest = packet.questToView;
-//                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.allQuests);
-//                    else JournalGUI.show(packet.data, quest, packet.allQuests);
+                    MainEditorGUI.show(packet.allQuests);
                 }
             });
             return null;
