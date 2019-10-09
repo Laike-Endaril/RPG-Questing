@@ -9,7 +9,6 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
-import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
@@ -23,12 +22,11 @@ import static com.fantasticsource.rpgquesting.Colors.WHITE;
 
 public class MainEditorGUI extends GUIScreen
 {
-    public static CPlayerQuestData data = null;
-    private static CQuest viewedEditable = null;
-    private static GUITabView navigator;
-    private static GUIScrollView questsTab = null, dialoguesTab = null, detailView;
-    private static LinkedHashMap<GUIText, CQuest> allQuestElementToQuest = new LinkedHashMap<>();
-    private static LinkedHashMap<String, GUITextSpoiler> allNameToGroupElement = new LinkedHashMap<>();
+    private CQuest viewedEditable = null;
+    private GUITabView navigator;
+    private GUIScrollView questNav = null, dialogueNav = null, detailView;
+    private LinkedHashMap<GUIText, CQuest> allQuestElementToQuest = new LinkedHashMap<>();
+    private LinkedHashMap<String, GUITextSpoiler> allNameToGroupElement = new LinkedHashMap<>();
 
     private MainEditorGUI()
     {
@@ -43,28 +41,28 @@ public class MainEditorGUI extends GUIScreen
 
 
         //Quests
-        questsTab = new GUIScrollView(gui, 0.04, 0, 0.88, 1);
-        navigator.tabViews.get(0).add(questsTab);
-        navigator.tabViews.get(0).add(new GUIVerticalScrollbar(gui, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, questsTab));
+        gui.questNav = new GUIScrollView(gui, 0.04, 0, 0.88, 1);
+        gui.navigator.tabViews.get(0).add(gui.questNav);
+        gui.navigator.tabViews.get(0).add(new GUIVerticalScrollbar(gui, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, gui.questNav));
 
         {
-            questsTab.add(new GUIText(gui, "\n"));
+            gui.questNav.add(new GUIText(gui, "\n"));
             GUIText questElement = new GUIText(gui, "(Create New Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
-            questsTab.add(questElement.addClickActions(() -> QuestEditorGUI.GUI.show(new CQuest("", "", 1, false))));
+            gui.questNav.add(questElement.addClickActions(() -> QuestEditorGUI.GUI.show(new CQuest("", "", 1, false))));
         }
 
-        questsTab.add(new GUIText(gui, "\n"));
+        gui.questNav.add(new GUIText(gui, "\n"));
         for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
         {
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(gui, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
-            questsTab.add(groupSpoiler.addClickActions(() ->
+            gui.questNav.add(groupSpoiler.addClickActions(() ->
             {
-                for (GUITextSpoiler spoiler : allNameToGroupElement.values())
+                for (GUITextSpoiler spoiler : gui.allNameToGroupElement.values())
                 {
                     if (spoiler != groupSpoiler) spoiler.hide();
                 }
             }));
-            allNameToGroupElement.put(entry.getKey(), groupSpoiler);
+            gui.allNameToGroupElement.put(entry.getKey(), groupSpoiler);
 
             for (Map.Entry<String, CQuest> entry2 : entry.getValue().entrySet())
             {
@@ -73,17 +71,17 @@ public class MainEditorGUI extends GUIScreen
                 GUIText questElement = new GUIText(gui, "* " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
                 groupSpoiler.add(questElement.addClickActions(() ->
                 {
-                    CQuest quest = allQuestElementToQuest.get(questElement);
+                    CQuest quest = gui.allQuestElementToQuest.get(questElement);
                     if (quest != null) gui.setDetailView(quest);
                 }));
 
-                allQuestElementToQuest.put(questElement, entry2.getValue());
+                gui.allQuestElementToQuest.put(questElement, entry2.getValue());
             }
 
             groupSpoiler.add(0, new GUIText(gui, "\n==============================================================================================", WHITE[0]));
             groupSpoiler.add(new GUIText(gui, "\n==============================================================================================\n\n", WHITE[0]));
 
-            questsTab.add(new GUIText(gui, "\n"));
+            gui.questNav.add(new GUIText(gui, "\n"));
         }
     }
 
@@ -108,7 +106,7 @@ public class MainEditorGUI extends GUIScreen
             }
 
             group.show();
-            questsTab.focus(group);
+            questNav.focus(group);
             navigator.setActiveTab(0);
         });
         detailView.add(new GUIText(this, "\n\n"));
