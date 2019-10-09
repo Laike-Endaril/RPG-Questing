@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 
+import static com.fantasticsource.rpgquesting.Colors.*;
 import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 
@@ -58,23 +59,23 @@ public class QuestTracker
             if (objective.isDone())
             {
                 questStarted = true;
-                colors.add(JournalGUI.GREEN[0]);
+                colors.add(GREEN[0]);
             }
             else if (objective.isStarted())
             {
                 questStarted = true;
                 questDone = false;
-                colors.add(JournalGUI.YELLOW[0]);
+                colors.add(YELLOW[0]);
             }
             else
             {
                 questDone = false;
-                colors.add(JournalGUI.RED[0]);
+                colors.add(RED[0]);
             }
 
             elements.add(objective.getFullText());
         }
-        Color c = questDone ? JournalGUI.GREEN[0] : questStarted ? JournalGUI.YELLOW[0] : JournalGUI.RED[0];
+        Color c = questDone ? GREEN[0] : questStarted ? YELLOW[0] : RED[0];
         colors.add(0, c);
         elements.add(0, questname);
 

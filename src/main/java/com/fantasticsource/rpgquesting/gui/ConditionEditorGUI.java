@@ -18,7 +18,8 @@ import com.fantasticsource.rpgquesting.conditions.quest.*;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
-import static com.fantasticsource.rpgquesting.gui.JournalGUI.RED;
+import static com.fantasticsource.rpgquesting.Colors.GREEN;
+import static com.fantasticsource.rpgquesting.Colors.RED;
 
 public class ConditionEditorGUI extends GUIScreen
 {
@@ -47,7 +48,7 @@ public class ConditionEditorGUI extends GUIScreen
 
         //Management
         current = new GUICondition(this, original);
-        GUITextButton save = new GUITextButton(this, "Save and Close", JournalGUI.GREEN[0]);
+        GUITextButton save = new GUITextButton(this, "Save and Close", GREEN[0]);
         root.add(save.addClickActions(() ->
         {
             selection = current.condition;

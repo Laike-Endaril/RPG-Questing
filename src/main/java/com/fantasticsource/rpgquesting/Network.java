@@ -720,13 +720,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(EditorPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() ->
-            {
-                if (packet.openGUI || MainEditorGUI.GUI.isVisible())
-                {
-                    MainEditorGUI.show(packet.allQuests);
-                }
-            });
+            Minecraft.getMinecraft().addScheduledTask(() -> MainEditorGUI.show(packet.allQuests));
             return null;
         }
     }

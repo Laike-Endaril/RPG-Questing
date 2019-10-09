@@ -27,7 +27,7 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-import static com.fantasticsource.rpgquesting.gui.JournalGUI.*;
+import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class QuestEditorGUI extends GUIScreen
 {
@@ -53,7 +53,7 @@ public class QuestEditorGUI extends GUIScreen
         main.add(name);
         main.add(new GUIText(this, "\n"));
 
-        oldName = new GUIText(this, "(Previous Name: " + quest.name.value + ")", JournalGUI.BLUE[0]);
+        oldName = new GUIText(this, "(Previous Name: " + quest.name.value + ")", BLUE[0]);
         main.add(oldName);
         main.add(new GUIText(this, "\n\n"));
 
@@ -269,7 +269,7 @@ public class QuestEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
 
         //Management
-        root.add(new GUITextButton(this, "Save", JournalGUI.GREEN[0])).addClickActions(this::trySave);
+        root.add(new GUITextButton(this, "Save", GREEN[0])).addClickActions(this::trySave);
         root.add(new GUITextButton(this, "Close Editor").addClickActions(this::close));
         root.add(new GUITextButton(this, "Delete Quest", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")))));
 
