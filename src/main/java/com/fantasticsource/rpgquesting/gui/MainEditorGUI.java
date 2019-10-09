@@ -24,11 +24,14 @@ import static com.fantasticsource.rpgquesting.Colors.WHITE;
 
 public class MainEditorGUI extends GUIScreen
 {
-    private CQuest viewedEditable = null;
     private GUITabView navigator;
     private GUIScrollView questNav = null, dialogueNav = null, detailView;
+
     private LinkedHashMap<GUIText, CQuest> allQuestElementToQuest = new LinkedHashMap<>();
-    private LinkedHashMap<String, GUITextSpoiler> allNameToGroupElement = new LinkedHashMap<>();
+    private LinkedHashMap<String, GUITextSpoiler> allNameToQuestGroupElement = new LinkedHashMap<>();
+
+    private LinkedHashMap<GUIText, CDialogue> allDialogueElementToDialogue = new LinkedHashMap<>();
+    private LinkedHashMap<String, GUITextSpoiler> allNameToDialogueGroupElement = new LinkedHashMap<>();
 
     private MainEditorGUI()
     {
@@ -59,12 +62,12 @@ public class MainEditorGUI extends GUIScreen
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(gui, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
             gui.questNav.add(groupSpoiler.addClickActions(() ->
             {
-                for (GUITextSpoiler spoiler : gui.allNameToGroupElement.values())
+                for (GUITextSpoiler spoiler : gui.allNameToQuestGroupElement.values())
                 {
                     if (spoiler != groupSpoiler) spoiler.hide();
                 }
             }));
-            gui.allNameToGroupElement.put(entry.getKey(), groupSpoiler);
+            gui.allNameToQuestGroupElement.put(entry.getKey(), groupSpoiler);
 
             for (Map.Entry<String, CQuest> entry2 : entry.getValue().entrySet())
             {
@@ -95,34 +98,34 @@ public class MainEditorGUI extends GUIScreen
         {
             gui.dialogueNav.add(new GUIText(gui, "\n"));
             GUIText dialogueElement = new GUIText(gui, "(Create New Dialogue)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
-            gui.dialogueNav.add(dialogueElement.addClickActions(() -> DialogueEditorGUI.GUI.show(new CQuest("", "", 1, false))));
+            gui.dialogueNav.add(dialogueElement.addClickActions(() -> DialogueEditorGUI.GUI.show(new CDialogue("", ""))));
         }
 
         gui.dialogueNav.add(new GUIText(gui, "\n"));
-        for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
+        for (Map.Entry<String, LinkedHashMap<UUID, CDialogue>> entry : allDialogues.entrySet())
         {
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(gui, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
             gui.dialogueNav.add(groupSpoiler.addClickActions(() ->
             {
-                for (GUITextSpoiler spoiler : gui.allNameToGroupElement.values())
+                for (GUITextSpoiler spoiler : gui.allNameToDialogueGroupElement.values())
                 {
                     if (spoiler != groupSpoiler) spoiler.hide();
                 }
             }));
-            gui.allNameToGroupElement.put(entry.getKey(), groupSpoiler);
+            gui.allNameToDialogueGroupElement.put(entry.getKey(), groupSpoiler);
 
-            for (Map.Entry<String, CQuest> entry2 : entry.getValue().entrySet())
+            for (Map.Entry<UUID, CDialogue> entry2 : entry.getValue().entrySet())
             {
                 groupSpoiler.add(new GUIText(gui, "\n"));
 
-                GUIText questElement = new GUIText(gui, "* " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
-                groupSpoiler.add(questElement.addClickActions(() ->
+                GUIText dialogueElement = new GUIText(gui, "* " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
+                groupSpoiler.add(dialogueElement.addClickActions(() ->
                 {
-                    CQuest quest = gui.allQuestElementToQuest.get(questElement);
-                    if (quest != null) gui.setDetailView(quest);
+                    CDialogue dialogue = gui.allDialogueElementToDialogue.get(dialogueElement);
+                    if (dialogue != null) gui.setDetailView(dialogue);
                 }));
 
-                gui.allQuestElementToQuest.put(questElement, entry2.getValue());
+                gui.allDialogueElementToDialogue.put(dialogueElement, entry2.getValue());
             }
 
             groupSpoiler.add(0, new GUIText(gui, "\n==============================================================================================", WHITE[0]));
@@ -137,17 +140,15 @@ public class MainEditorGUI extends GUIScreen
         if (detailView == null) return;
 
 
-        viewedEditable = quest;
-
         detailView.clear();
 
-        //Add quest name
+        //Name
         detailView.add(new GUIText(this, "\n"));
         detailView.add(new GUIText(this, quest.name.value, WHITE[0], WHITE[1], WHITE[2])).addClickActions(() ->
         {
-            GUITextSpoiler group = allNameToGroupElement.get(viewedEditable.group.value);
+            GUITextSpoiler group = allNameToQuestGroupElement.get(quest.group.value);
 
-            for (GUITextSpoiler spoiler : allNameToGroupElement.values())
+            for (GUITextSpoiler spoiler : allNameToQuestGroupElement.values())
             {
                 spoiler.hide();
             }
@@ -167,9 +168,40 @@ public class MainEditorGUI extends GUIScreen
         }
 
 
-        //Add quest buttons
+        //Edit button
         detailView.add(new GUIText(this, "\n\n\n"));
-        detailView.add(new GUITextButton(this, "Edit Quest").addClickActions(() -> QuestEditorGUI.GUI.show(viewedEditable)));
+        detailView.add(new GUITextButton(this, "Edit Quest").addClickActions(() -> QuestEditorGUI.GUI.show(quest)));
+        detailView.add(new GUIText(this, "\n"));
+    }
+
+    public void setDetailView(CDialogue dialogue)
+    {
+        if (detailView == null) return;
+
+
+        detailView.clear();
+
+        //Name
+        detailView.add(new GUIText(this, "\n"));
+        detailView.add(new GUIText(this, dialogue.name.value, WHITE[0], WHITE[1], WHITE[2])).addClickActions(() ->
+        {
+            GUITextSpoiler group = allNameToDialogueGroupElement.get(dialogue.group.value);
+
+            for (GUITextSpoiler spoiler : allNameToDialogueGroupElement.values())
+            {
+                spoiler.hide();
+            }
+
+            group.show();
+            dialogueNav.focus(group);
+            navigator.setActiveTab(1);
+        });
+        detailView.add(new GUIText(this, "\n\n"));
+
+
+        //Edit button
+        detailView.add(new GUIText(this, "\n\n\n"));
+        detailView.add(new GUITextButton(this, "Edit Dialogue").addClickActions(() -> DialogueEditorGUI.GUI.show(dialogue)));
         detailView.add(new GUIText(this, "\n"));
     }
 

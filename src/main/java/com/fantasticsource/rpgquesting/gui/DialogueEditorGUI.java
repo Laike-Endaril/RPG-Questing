@@ -15,6 +15,7 @@ import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
@@ -38,7 +39,7 @@ public class DialogueEditorGUI extends GUIScreen
     private GUILabeledTextInput name, group, level, repeatable, experience;
     private GUIText oldName;
 
-    public void show(CQuest quest)
+    public void show(CDialogue dialogue)
     {
         Minecraft.getMinecraft().displayGuiScreen(this);
 
