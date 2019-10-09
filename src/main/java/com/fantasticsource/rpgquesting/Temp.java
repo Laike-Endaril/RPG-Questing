@@ -26,8 +26,9 @@ public class Temp
     public static void addKillQuest(boolean repeatable)
     {
         String name = "The Wolf named Chicken";
+        String group = "The Wolves";
 
-        CQuest quest = new CQuest(name, "The Wolves", 1, repeatable);
+        CQuest quest = new CQuest(name, group, 1, repeatable);
         CQuests.add(quest);
 
         quest.addObjectives(new CObjectiveKill("chickens killed", 5, new CConditionEntityEntryIs("chicken")));
@@ -35,7 +36,7 @@ public class Temp
         quest.setExp(5);
 
 
-        CDialogue dialogue = new CDialogue().setName(name + " (quest)");
+        CDialogue dialogue = new CDialogue(name + " (quest)", group);
         CDialogues.add(dialogue);
 
         CDialogueBranch branch = new CDialogueBranch("Yeah, that's right...despite being a wolf, my name is \"Chicken\".  Freaking...you know what?  Go kill 5 chickens for me and maybe I'll tell you how I got the name.");
@@ -47,7 +48,7 @@ public class Temp
         dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 
 
-        dialogue = new CDialogue().setName(name + " (in progress)");
+        dialogue = new CDialogue(name + " (in progress)", group);
         CDialogues.add(dialogue);
 
         branch = new CDialogueBranch("You kill those chickens yet?  Doesn't look like it...");
@@ -58,7 +59,7 @@ public class Temp
         dialogue.addEntityConditions(new CConditionEntityEntryIs("wolf"), new CConditionNameIs("Chicken"));
 
 
-        dialogue = new CDialogue().setName(name + " (complete)");
+        dialogue = new CDialogue(name + " (complete)", group);
         CDialogues.add(dialogue);
 
         branch = new CDialogueBranch("Hey, grats.  You killed some helpless chickens.  Slow clap.");
@@ -79,19 +80,20 @@ public class Temp
     public static void addCollectionQuest(boolean repeatable)
     {
         String name = "The Wolves are Hungry";
+        String group = "The Wolves";
 
         CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("wolf")};
         ItemStack toCollect = new ItemStack(Items.CHICKEN, 5);
 
 
-        CQuest quest = new CQuest(name, "The Wolves", 1, repeatable);
+        CQuest quest = new CQuest(name, group, 1, repeatable);
         CQuests.add(quest);
 
         quest.addObjectives(new CObjectiveCollect("chicken meat collected", toCollect));
         quest.setExp(15);
 
 
-        CDialogue dialogue = new CDialogue().setName(name + " (quest)");
+        CDialogue dialogue = new CDialogue(name + " (quest)", group);
         CDialogues.add(dialogue);
 
         CDialogueBranch branch = new CDialogueBranch("The pack hungers, two-legs...we hunger for the meat of the winged ones...");
@@ -103,7 +105,7 @@ public class Temp
         dialogue.addEntityConditions(dialogueConditions);
 
 
-        dialogue = new CDialogue().setName(name + " (in progress)");
+        dialogue = new CDialogue(name + " (in progress)", group);
         CDialogues.add(dialogue);
 
         branch = new CDialogueBranch("I appreciate the effort, two-legs, but I fear this amount is not enough; the pack would surely fight over it unless we have more.");
@@ -114,7 +116,7 @@ public class Temp
         dialogue.addEntityConditions(dialogueConditions);
 
 
-        dialogue = new CDialogue().setName(name + " (complete)");
+        dialogue = new CDialogue(name + " (complete)", group);
         CDialogues.add(dialogue);
 
         branch = new CDialogueBranch("Thank you, two-legs.  I share with you some of my knowledge of the forest.");
@@ -132,19 +134,20 @@ public class Temp
     public static void addCollectionQuest2(boolean repeatable)
     {
         String name = "Bird Bath";
+        String group = "For the Birds";
 
         CCondition[] dialogueConditions = new CCondition[]{new CConditionEntityEntryIs("chicken")};
         ItemStack toCollect = new ItemStack(Items.WATER_BUCKET, 1);
 
 
-        CQuest quest = new CQuest(name, "For the Birds", 1, repeatable);
+        CQuest quest = new CQuest(name, group, 1, repeatable);
         CQuests.add(quest);
 
         quest.addObjectives(new CObjectiveCollect("bucket of water collected", toCollect));
         quest.addRewards(new ItemStack(Items.FEATHER, 16));
 
 
-        CDialogue dialogue = new CDialogue().setName(name + " (quest)");
+        CDialogue dialogue = new CDialogue(name + " (quest)", group);
         CDialogues.add(dialogue);
 
         CDialogueBranch branch = new CDialogueBranch("I say, now I say I am getting Kentucky FRIED out here, son!  You bring me a bathtub and I'll give you some priiiiime feathers.");
@@ -156,7 +159,7 @@ public class Temp
         dialogue.addEntityConditions(dialogueConditions);
 
 
-        dialogue = new CDialogue().setName(name + " (complete)");
+        dialogue = new CDialogue(name + " (complete)", group);
         CDialogues.add(dialogue);
 
         branch = new CDialogueBranch("Now that is a FIIIIINE bath ya got there.");

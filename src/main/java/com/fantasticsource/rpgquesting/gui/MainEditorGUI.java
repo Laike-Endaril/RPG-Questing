@@ -9,6 +9,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
@@ -16,6 +17,7 @@ import net.minecraft.client.Minecraft;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.fantasticsource.rpgquesting.Colors.PURPLE;
 import static com.fantasticsource.rpgquesting.Colors.WHITE;
@@ -32,7 +34,7 @@ public class MainEditorGUI extends GUIScreen
     {
     }
 
-    public static void show(LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests)
+    public static void show(LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests, LinkedHashMap<String, LinkedHashMap<UUID, CDialogue>> allDialogues)
     {
         MainEditorGUI gui = new MainEditorGUI();
 
@@ -82,6 +84,51 @@ public class MainEditorGUI extends GUIScreen
             groupSpoiler.add(new GUIText(gui, "\n==============================================================================================\n\n", WHITE[0]));
 
             gui.questNav.add(new GUIText(gui, "\n"));
+        }
+
+
+        //Dialogues
+        gui.dialogueNav = new GUIScrollView(gui, 0.04, 0, 0.88, 1);
+        gui.navigator.tabViews.get(1).add(gui.dialogueNav);
+        gui.navigator.tabViews.get(1).add(new GUIVerticalScrollbar(gui, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, gui.dialogueNav));
+
+        {
+            gui.dialogueNav.add(new GUIText(gui, "\n"));
+            GUIText dialogueElement = new GUIText(gui, "(Create New Dialogue)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
+            gui.dialogueNav.add(dialogueElement.addClickActions(() -> DialogueEditorGUI.GUI.show(new CQuest("", "", 1, false))));
+        }
+
+        gui.dialogueNav.add(new GUIText(gui, "\n"));
+        for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
+        {
+            GUITextSpoiler groupSpoiler = new GUITextSpoiler(gui, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
+            gui.dialogueNav.add(groupSpoiler.addClickActions(() ->
+            {
+                for (GUITextSpoiler spoiler : gui.allNameToGroupElement.values())
+                {
+                    if (spoiler != groupSpoiler) spoiler.hide();
+                }
+            }));
+            gui.allNameToGroupElement.put(entry.getKey(), groupSpoiler);
+
+            for (Map.Entry<String, CQuest> entry2 : entry.getValue().entrySet())
+            {
+                groupSpoiler.add(new GUIText(gui, "\n"));
+
+                GUIText questElement = new GUIText(gui, "* " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
+                groupSpoiler.add(questElement.addClickActions(() ->
+                {
+                    CQuest quest = gui.allQuestElementToQuest.get(questElement);
+                    if (quest != null) gui.setDetailView(quest);
+                }));
+
+                gui.allQuestElementToQuest.put(questElement, entry2.getValue());
+            }
+
+            groupSpoiler.add(0, new GUIText(gui, "\n==============================================================================================", WHITE[0]));
+            groupSpoiler.add(new GUIText(gui, "\n==============================================================================================\n\n", WHITE[0]));
+
+            gui.dialogueNav.add(new GUIText(gui, "\n"));
         }
     }
 
