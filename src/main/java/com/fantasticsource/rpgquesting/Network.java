@@ -55,6 +55,7 @@ public class Network
         WRAPPER.registerMessage(RequestAbandonQuestPacketHandler.class, RequestAbandonQuestPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestDeleteQuestPacketHandler.class, RequestDeleteQuestPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestSaveQuestPacketHandler.class, RequestSaveQuestPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(RequestEditorDataPacketHandler.class, RequestEditorDataPacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -669,6 +670,31 @@ public class Network
                 CQuests.saveQuest(packet.quest);
             }
 
+            return null;
+        }
+    }
+
+
+    public static class RequestEditorDataPacket implements IMessage
+    {
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+        }
+    }
+
+    public static class RequestEditorDataPacketHandler implements IMessageHandler<RequestEditorDataPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestEditorDataPacket packet, MessageContext ctx)
+        {
+            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+            server.addScheduledTask(() -> CQuests.syncEditor(ctx.getServerHandler().player, "", true));
             return null;
         }
     }

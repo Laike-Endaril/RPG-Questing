@@ -1,3 +1,7 @@
+Move "All" tab from quest editor to main editor, "quests" tab
+
+
+
 Dialogue Editor
 
 
