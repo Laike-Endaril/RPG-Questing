@@ -11,6 +11,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
+import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CUUID;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class JournalGUI extends GUIScreen
+public class MainEditorGUI extends GUIScreen
 {
     public static final Color[]
             RED = new Color[]{Color.RED.copy().setVF(0.5f), Color.RED.copy().setVF(0.75f), Color.WHITE},
@@ -32,24 +33,27 @@ public class JournalGUI extends GUIScreen
             PURPLE = new Color[]{Color.PURPLE.copy().setVF(0.5f), Color.PURPLE.copy().setVF(0.75f), Color.WHITE},
             WHITE = new Color[]{Color.WHITE.copy().setVF(0.5f), Color.WHITE.copy().setVF(0.75f), Color.WHITE};
 
-    public static final JournalGUI GUI = new JournalGUI();
+    public static final MainEditorGUI GUI = new MainEditorGUI();
     public static CPlayerQuestData data = null;
     public static String viewedQuest = "";
+    private static CQuest viewedEditable = null;
     private static GUITabView navigator;
-    private static GUIScrollView inProgressTab, completedTab, questView;
+    private static GUIScrollView inProgressTab, completedTab, allTab = null, questView;
     private static LinkedHashMap<GUIText, String> inProgressQuestElementToName = new LinkedHashMap<>();
     private static LinkedHashMap<GUIText, String> completedQuestElementToName = new LinkedHashMap<>();
     private static LinkedHashMap<String, GUIText> inProgressStringToQuestElement = new LinkedHashMap<>();
     private static LinkedHashMap<String, GUIText> completedStringToQuestElement = new LinkedHashMap<>();
     private static LinkedHashMap<GUITextSpoiler, String> inProgressGroupElementToName = new LinkedHashMap<>();
     private static LinkedHashMap<GUITextSpoiler, String> completedGroupElementToName = new LinkedHashMap<>();
+    private static LinkedHashMap<GUIText, CQuest> allQuestElementToQuest = new LinkedHashMap<>();
+    private static LinkedHashMap<String, GUITextSpoiler> allNameToGroupElement = new LinkedHashMap<>();
     private static GUIText viewTracked = null;
 
-    private JournalGUI()
+    private MainEditorGUI()
     {
     }
 
-    public static void show(CPlayerQuestData dataIn, String questToView)
+    public static void show(CPlayerQuestData dataIn, String questToView, LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests)
     {
         //Make sure GUI exists
         Minecraft.getMinecraft().displayGuiScreen(GUI);
@@ -150,12 +154,69 @@ public class JournalGUI extends GUIScreen
         //Currently selected quest
         if (questToView.equals("")) questToView = QuestTracker.questname;
         setQuestViewProgressMode(questToView);
+
+
+        //All quests (remove tab if not in edit mode; add tab and populate if in edit mode)
+        if (allQuests == null)
+        {
+            if (navigator.tabs.size() == 3) navigator.removeTab(2);
+        }
+        else
+        {
+            if (navigator.tabs.size() == 2) navigator.addTab("All");
+
+            allTab = new GUIScrollView(GUI, 0.04, 0, 0.88, 1);
+            navigator.tabViews.get(2).add(allTab);
+            navigator.tabViews.get(2).add(new GUIVerticalScrollbar(GUI, 0.96, 0, 0.04, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, allTab));
+
+            {
+                allTab.add(new GUIText(GUI, "\n"));
+                GUIText questElement = new GUIText(GUI, "(Create New Quest)\n", PURPLE[0], PURPLE[1], PURPLE[2]);
+                allTab.add(questElement.addClickActions(() -> QuestEditorGUI.GUI.show(new CQuest("", "", 1, false))));
+            }
+
+            allTab.add(new GUIText(GUI, "\n"));
+            for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
+            {
+                GUITextSpoiler groupSpoiler = new GUITextSpoiler(GUI, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
+                allTab.add(groupSpoiler.addClickActions(() ->
+                {
+                    for (GUITextSpoiler spoiler : allNameToGroupElement.values())
+                    {
+                        if (spoiler != groupSpoiler) spoiler.hide();
+                    }
+
+                    inProgressTab.focus(groupSpoiler);
+                }));
+                allNameToGroupElement.put(entry.getKey(), groupSpoiler);
+
+                for (Map.Entry<String, CQuest> entry2 : entry.getValue().entrySet())
+                {
+                    groupSpoiler.add(new GUIText(GUI, "\n"));
+
+                    GUIText questElement = new GUIText(GUI, "* " + entry2.getKey() + "\n", WHITE[0], WHITE[1], WHITE[2]);
+                    groupSpoiler.add(questElement.addClickActions(() ->
+                    {
+                        CQuest quest = allQuestElementToQuest.get(questElement);
+                        if (quest != null) setQuestViewEditMode(quest);
+                    }));
+
+                    allQuestElementToQuest.put(questElement, entry2.getValue());
+                }
+
+                groupSpoiler.add(0, new GUIText(GUI, "\n==============================================================================================", WHITE[0]));
+                groupSpoiler.add(new GUIText(GUI, "\n==============================================================================================\n\n", WHITE[0]));
+
+                allTab.add(new GUIText(GUI, "\n"));
+            }
+        }
     }
 
     public static void clear()
     {
         data = null;
         viewedQuest = "";
+        viewedEditable = null;
 
 
         if (GUI == null || !GUI.isInitialized()) return;
@@ -173,7 +234,51 @@ public class JournalGUI extends GUIScreen
         completedTab.clear();
         questView.clear();
 
+        allTab = null;
+        allQuestElementToQuest.clear();
+        allNameToGroupElement.clear();
         if (navigator.tabs.size() == 3) navigator.removeTab(2);
+    }
+
+    public static void setQuestViewEditMode(CQuest quest)
+    {
+        if (questView == null) return;
+
+
+        viewedEditable = quest;
+
+        questView.clear();
+
+        //Add quest name
+        questView.add(new GUIText(GUI, "\n"));
+        questView.add(new GUIText(GUI, quest.name.value, WHITE[0], WHITE[1], WHITE[2])).addClickActions(() ->
+        {
+            GUITextSpoiler group = allNameToGroupElement.get(viewedEditable.group.value);
+
+            for (GUITextSpoiler spoiler : allNameToGroupElement.values())
+            {
+                spoiler.hide();
+            }
+
+            group.show();
+            allTab.focus(group);
+            navigator.setActiveTab(2);
+        });
+        questView.add(new GUIText(GUI, "\n\n"));
+
+
+        //Add objectives
+        for (CObjective objective : quest.objectives)
+        {
+            questView.add(new GUIText(GUI, objective.getFullText(), WHITE[0]));
+            questView.add(new GUIText(GUI, "\n"));
+        }
+
+
+        //Add quest buttons
+        questView.add(new GUIText(GUI, "\n\n\n"));
+        questView.add(new GUITextButton(GUI, "Edit Quest").addClickActions(() -> QuestEditorGUI.GUI.show(viewedEditable)));
+        questView.add(new GUIText(GUI, "\n"));
     }
 
     public static void setQuestViewProgressMode(String questName)

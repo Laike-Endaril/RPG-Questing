@@ -56,6 +56,7 @@ public class Network
         WRAPPER.registerMessage(RequestDeleteQuestPacketHandler.class, RequestDeleteQuestPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestSaveQuestPacketHandler.class, RequestSaveQuestPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestEditorDataPacketHandler.class, RequestEditorDataPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(EditorPacketHandler.class, EditorPacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -414,9 +415,9 @@ public class Network
             {
                 if (packet.openGUI || JournalGUI.GUI.isVisible())
                 {
-//                    String quest = packet.questToView;
-//                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.allQuests);
-//                    else JournalGUI.show(packet.data, quest, packet.allQuests);
+                    String quest = packet.questToView;
+                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest);
+                    else JournalGUI.show(packet.data, quest);
                 }
             });
             return null;
@@ -656,17 +657,17 @@ public class Network
     }
 
 
-    public static class EditorlPacket implements IMessage
+    public static class EditorPacket implements IMessage
     {
         public boolean openGUI = false;
         LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests = null;
 
-        public EditorlPacket()
+        public EditorPacket()
         {
             //Required
         }
 
-        public EditorlPacket(boolean openGUI)
+        public EditorPacket(boolean openGUI)
         {
             this.openGUI = openGUI;
         }
@@ -712,16 +713,17 @@ public class Network
         }
     }
 
-    public static class EditorlPacketHandler implements IMessageHandler<EditorlPacket, IMessage>
+    public static class EditorPacketHandler implements IMessageHandler<EditorPacket, IMessage>
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(EditorlPacket packet, MessageContext ctx)
+        public IMessage onMessage(EditorPacket packet, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
                 if (packet.openGUI || JournalGUI.GUI.isVisible())
                 {
+                    //TODO
 //                    String quest = packet.questToView;
 //                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.allQuests);
 //                    else JournalGUI.show(packet.data, quest, packet.allQuests);

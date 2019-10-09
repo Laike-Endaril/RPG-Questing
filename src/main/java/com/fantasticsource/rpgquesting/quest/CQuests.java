@@ -150,7 +150,7 @@ public class CQuests extends Component
     {
         if (player.interactionManager.getGameType() != GameType.CREATIVE) return;
 
-        Network.WRAPPER.sendTo(new Network.EditorlPacket(openGUI), player);
+        Network.WRAPPER.sendTo(new Network.EditorPacket(openGUI), player);
     }
 
     public static void syncTracker(EntityPlayerMP player)
