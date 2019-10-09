@@ -138,19 +138,19 @@ public class CQuests extends Component
         add(quest);
     }
 
-    public static void syncJournal(EntityPlayerMP player, String questToView, boolean openJournal)
+    public static void syncJournal(EntityPlayerMP player, String questToView, boolean openGUI)
     {
         //For quest to view, an empty or null string leaves it on whatever is already viewed (or sets it to the tracked quest if none is viewed and a quest is currently tracked)
         //To explicitly set it to the tracked quest, well...send the tracked quest name
 
-        Network.WRAPPER.sendTo(new Network.JournalPacket(CQuests.playerQuestData.get(player.getPersistentID()), questToView, openJournal), player);
+        Network.WRAPPER.sendTo(new Network.JournalPacket(CQuests.playerQuestData.get(player.getPersistentID()), questToView, openGUI), player);
     }
 
-    public static void syncEditor(EntityPlayerMP player, String questToView, boolean openJournal)
+    public static void syncEditor(EntityPlayerMP player, boolean openGUI)
     {
         if (player.interactionManager.getGameType() != GameType.CREATIVE) return;
 
-        Network.WRAPPER.sendTo(new Network.JournalPacket(CQuests.playerQuestData.get(player.getPersistentID()), questToView, openJournal, true), player);
+        Network.WRAPPER.sendTo(new Network.EditorlPacket(openGUI), player);
     }
 
     public static void syncTracker(EntityPlayerMP player)

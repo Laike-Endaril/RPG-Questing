@@ -373,26 +373,18 @@ public class Network
     {
         public CPlayerQuestData data = new CPlayerQuestData();
         public String questToView = null;
-        public boolean openJournal = false;
-        public boolean editMode = false;
-        LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests = null;
+        public boolean openGUI = false;
 
         public JournalPacket()
         {
             //Required
         }
 
-        public JournalPacket(CPlayerQuestData playerQuestData, String questToView, boolean openJournal)
-        {
-            this(playerQuestData, questToView, openJournal, false);
-        }
-
-        public JournalPacket(CPlayerQuestData playerQuestData, String questToView, boolean openJournal, boolean editMode)
+        public JournalPacket(CPlayerQuestData playerQuestData, String questToView, boolean openGUI)
         {
             if (playerQuestData != null) data = playerQuestData;
             this.questToView = questToView == null ? "" : questToView;
-            this.openJournal = openJournal;
-            this.editMode = editMode;
+            this.openGUI = openGUI;
         }
 
         @Override
@@ -400,27 +392,7 @@ public class Network
         {
             data.writeObf(buf);
             ByteBufUtils.writeUTF8String(buf, questToView);
-            buf.writeBoolean(openJournal);
-            buf.writeBoolean(editMode);
-
-            if (editMode)
-            {
-                LinkedHashMap<String, LinkedHashMap<String, CQuest>> map = CQuests.QUESTS.worldQuestDataByGroup;
-
-                buf.writeInt(map.size());
-                for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : map.entrySet())
-                {
-                    ByteBufUtils.writeUTF8String(buf, entry.getKey());
-
-                    LinkedHashMap<String, CQuest> map2 = entry.getValue();
-                    buf.writeInt(map2.size());
-                    for (Map.Entry<String, CQuest> entry2 : map2.entrySet())
-                    {
-                        ByteBufUtils.writeUTF8String(buf, entry2.getKey());
-                        entry2.getValue().write(buf);
-                    }
-                }
-            }
+            buf.writeBoolean(openGUI);
         }
 
         @Override
@@ -428,23 +400,7 @@ public class Network
         {
             data.readObf(buf);
             questToView = ByteBufUtils.readUTF8String(buf);
-            openJournal = buf.readBoolean();
-            editMode = buf.readBoolean();
-
-            if (editMode)
-            {
-                allQuests = new LinkedHashMap<>();
-                for (int i = buf.readInt(); i > 0; i--)
-                {
-                    LinkedHashMap<String, CQuest> map = new LinkedHashMap<>();
-                    allQuests.put(ByteBufUtils.readUTF8String(buf), map);
-
-                    for (int i2 = buf.readInt(); i2 > 0; i2--)
-                    {
-                        map.put(ByteBufUtils.readUTF8String(buf), new CQuest().read(buf));
-                    }
-                }
-            }
+            openGUI = buf.readBoolean();
         }
     }
 
@@ -456,11 +412,11 @@ public class Network
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
             {
-                if (packet.openJournal || JournalGUI.GUI.isVisible())
+                if (packet.openGUI || JournalGUI.GUI.isVisible())
                 {
-                    String quest = packet.questToView;
-                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.allQuests);
-                    else JournalGUI.show(packet.data, quest, packet.allQuests);
+//                    String quest = packet.questToView;
+//                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.allQuests);
+//                    else JournalGUI.show(packet.data, quest, packet.allQuests);
                 }
             });
             return null;
@@ -694,7 +650,83 @@ public class Network
         public IMessage onMessage(RequestEditorDataPacket packet, MessageContext ctx)
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            server.addScheduledTask(() -> CQuests.syncEditor(ctx.getServerHandler().player, "", true));
+            server.addScheduledTask(() -> CQuests.syncEditor(ctx.getServerHandler().player, true));
+            return null;
+        }
+    }
+
+
+    public static class EditorlPacket implements IMessage
+    {
+        public boolean openGUI = false;
+        LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests = null;
+
+        public EditorlPacket()
+        {
+            //Required
+        }
+
+        public EditorlPacket(boolean openGUI)
+        {
+            this.openGUI = openGUI;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            buf.writeBoolean(openGUI);
+
+            LinkedHashMap<String, LinkedHashMap<String, CQuest>> map = CQuests.QUESTS.worldQuestDataByGroup;
+
+            buf.writeInt(map.size());
+            for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : map.entrySet())
+            {
+                ByteBufUtils.writeUTF8String(buf, entry.getKey());
+
+                LinkedHashMap<String, CQuest> map2 = entry.getValue();
+                buf.writeInt(map2.size());
+                for (Map.Entry<String, CQuest> entry2 : map2.entrySet())
+                {
+                    ByteBufUtils.writeUTF8String(buf, entry2.getKey());
+                    entry2.getValue().write(buf);
+                }
+            }
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            openGUI = buf.readBoolean();
+
+            allQuests = new LinkedHashMap<>();
+            for (int i = buf.readInt(); i > 0; i--)
+            {
+                LinkedHashMap<String, CQuest> map = new LinkedHashMap<>();
+                allQuests.put(ByteBufUtils.readUTF8String(buf), map);
+
+                for (int i2 = buf.readInt(); i2 > 0; i2--)
+                {
+                    map.put(ByteBufUtils.readUTF8String(buf), new CQuest().read(buf));
+                }
+            }
+        }
+    }
+
+    public static class EditorlPacketHandler implements IMessageHandler<EditorlPacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(EditorlPacket packet, MessageContext ctx)
+        {
+            Minecraft.getMinecraft().addScheduledTask(() ->
+            {
+                if (packet.openGUI || JournalGUI.GUI.isVisible())
+                {
+//                    String quest = packet.questToView;
+//                    if (quest.equals("")) JournalGUI.show(packet.data, JournalGUI.viewedQuest, packet.allQuests);
+//                    else JournalGUI.show(packet.data, quest, packet.allQuests);
+                }
+            });
             return null;
         }
     }
