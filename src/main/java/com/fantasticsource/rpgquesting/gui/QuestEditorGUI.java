@@ -14,6 +14,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Network;
+import com.fantasticsource.rpgquesting.Network.RequestEditorDataPacket;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
@@ -309,7 +310,7 @@ public class QuestEditorGUI extends GUIScreen
     public void onClosed()
     {
         super.onClosed();
-        Network.WRAPPER.sendToServer(new Network.RequestJournalDataPacket());
+        Network.WRAPPER.sendToServer(new RequestEditorDataPacket());
     }
 
 
