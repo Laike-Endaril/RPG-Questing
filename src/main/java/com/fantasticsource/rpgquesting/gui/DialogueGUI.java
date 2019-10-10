@@ -8,8 +8,6 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ActionErrorPacket;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -25,7 +23,6 @@ public class DialogueGUI extends GUIScreen
             TF_OLD_DIALOGUE = TextFormatting.GRAY;
     private static GUIScrollView scrollView;
 
-    private static CDialogueBranch current = null;
     private static ArrayList<String> lines = new ArrayList<>();
     private static ArrayList<GUIText> errorLines = new ArrayList<>();
 
@@ -40,8 +37,7 @@ public class DialogueGUI extends GUIScreen
         if (packet.clear) lines.clear();
         clearErrors();
 
-        current = packet.branch;
-        lines.add(current.paragraph.value);
+        lines.add(packet.paragraph.value);
         lines.add("\n");
 
 
@@ -49,9 +45,9 @@ public class DialogueGUI extends GUIScreen
 
         for (String line : lines) scrollView.add(new GUIText(GUI, processString(line)));
 
-        for (CDialogueChoice choice : current.choices)
+        for (String choice : packet.choices)
         {
-            GUIText choiceElement = new GUIText(GUI, processString(choice.text.value) + '\n', C_CHOICE, Color.AQUA, Color.YELLOW);
+            GUIText choiceElement = new GUIText(GUI, processString(choice) + '\n', C_CHOICE, Color.AQUA, Color.YELLOW);
             scrollView.add(choiceElement.addClickActions(() ->
             {
                 for (int i = 0; i < lines.size(); i++)
@@ -62,7 +58,7 @@ public class DialogueGUI extends GUIScreen
                 String s = choiceElement.toString();
                 s = s.substring(0, s.length() - 1);
                 lines.add(TF_OLD_CHOICE + s + "\n\n\n");
-                Network.WRAPPER.sendToServer(new Network.MakeChoicePacket(current, s));
+                Network.WRAPPER.sendToServer(new Network.MakeChoicePacket(s));
             }));
         }
     }

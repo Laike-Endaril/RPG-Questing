@@ -15,8 +15,8 @@ import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CStringUTF8;
-import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.IObfuscatedComponent;
+import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -39,6 +39,7 @@ import java.util.Map;
 public class Network
 {
     public static final SimpleNetworkWrapper WRAPPER = new SimpleNetworkWrapper(RPGQuesting.MODID);
+    private static final LinkedHashMap<EntityPlayerMP, Pair<Entity, CDialogueBranch>> CURRENT_PLAYER_BRANCHES = new LinkedHashMap<>();
     private static int discriminator = 0;
 
     public static void init()
@@ -61,34 +62,57 @@ public class Network
     }
 
 
+    public static void branch(EntityPlayerMP player, Entity target)
+    {
+        CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(target, null));
+    }
+
+    public static void branch(EntityPlayerMP player, boolean clear, CDialogueBranch branch)
+    {
+        branch(player, CURRENT_PLAYER_BRANCHES.get(player).getKey(), clear, branch);
+    }
+
+    public static void branch(EntityPlayerMP player, Entity target, boolean clear, CDialogueBranch branch)
+    {
+        CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(target, branch));
+        WRAPPER.sendTo(new DialogueBranchPacket(clear, branch), player);
+    }
+
     public static class DialogueBranchPacket implements IMessage
     {
         public boolean clear;
-        public CDialogueBranch branch;
+        public CStringUTF8 paragraph = new CStringUTF8();
+        public ArrayList<String> choices = new ArrayList<>();
 
         public DialogueBranchPacket()
         {
             //Required
         }
 
-        public DialogueBranchPacket(boolean clear, CDialogueBranch branch)
+        private DialogueBranchPacket(boolean clear, CDialogueBranch branch)
         {
             this.clear = clear;
-            this.branch = branch;
+            this.paragraph.set(branch.paragraph.value);
+            for (CDialogueChoice choice : branch.choices) choices.add(choice.text.value);
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
             buf.writeBoolean(clear);
-            branch.writeObf(buf);
+            paragraph.write(buf);
+
+            buf.writeInt(choices.size());
+            for (String s : choices) ByteBufUtils.writeUTF8String(buf, s);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
             clear = buf.readBoolean();
-            branch = new CDialogueBranch().readObf(buf);
+            paragraph.read(buf);
+
+            for (int i = buf.readInt(); i > 0; i--) choices.add(ByteBufUtils.readUTF8String(buf));
         }
     }
 
@@ -106,8 +130,7 @@ public class Network
 
     public static class MultipleDialoguesPacket implements IMessage
     {
-        public ArrayList<CUUID> dialogueSessionIDs = new ArrayList<>();
-        public ArrayList<CStringUTF8> dialogueDisplayNames = new ArrayList<>();
+        public ArrayList<String> dialogueNames = new ArrayList<>();
 
         public MultipleDialoguesPacket()
         {
@@ -118,31 +141,21 @@ public class Network
         {
             for (CDialogue dialogue : dialogues)
             {
-                dialogueSessionIDs.add(dialogue.sessionID);
-                dialogueDisplayNames.add(dialogue.displayName);
+                dialogueNames.add(dialogue.name.value);
             }
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(dialogueSessionIDs.size());
-            for (CUUID dialogueSessionID : dialogueSessionIDs) dialogueSessionID.write(buf);
-            for (CStringUTF8 dialogueDisplayName : dialogueDisplayNames) dialogueDisplayName.write(buf);
+            buf.writeInt(dialogueNames.size());
+            for (String name : dialogueNames) ByteBufUtils.writeUTF8String(buf, name);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
-            int size = buf.readInt();
-            for (int i = size; i > 0; i--)
-            {
-                dialogueSessionIDs.add(new CUUID().read(buf));
-            }
-            for (int i = size; i > 0; i--)
-            {
-                dialogueDisplayNames.add(new CStringUTF8().read(buf));
-            }
+            for (int i = buf.readInt(); i > 0; i--) dialogueNames.add(ByteBufUtils.readUTF8String(buf));
         }
     }
 
@@ -160,31 +173,28 @@ public class Network
 
     public static class ChooseDialoguePacket implements IMessage
     {
-        int targetID;
-        CUUID dialogueSessionID;
+        CStringUTF8 choice = new CStringUTF8();
 
         public ChooseDialoguePacket()
         {
             //Required
         }
 
-        public ChooseDialoguePacket(CUUID dialogueSessionID)
+        public ChooseDialoguePacket(String choice)
         {
-            this.dialogueSessionID = dialogueSessionID;
+            this.choice.set(choice);
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(CDialogues.targetID);
-            dialogueSessionID.write(buf);
+            choice.write(buf);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
-            targetID = buf.readInt();
-            dialogueSessionID = new CUUID().read(buf);
+            choice.read(buf);
         }
     }
 
@@ -197,11 +207,11 @@ public class Network
             server.addScheduledTask(() ->
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
-                Entity target = player.world.getEntityByID(packet.targetID);
-                CDialogue dialogue = CDialogues.getBySessionID(packet.dialogueSessionID.value);
+                CDialogue dialogue = CDialogues.get(packet.choice.value);
+                Entity target = CURRENT_PLAYER_BRANCHES.get(player).getKey();
                 if (target != null && target.getDistanceSq(player) < 25 && dialogue.isAvailable(player, target))
                 {
-                    WRAPPER.sendTo(new DialogueBranchPacket(true, dialogue.branches.get(0)), player);
+                    branch(player, target, true, dialogue.branches.get(0));
                 }
             });
             return null;
@@ -236,34 +246,27 @@ public class Network
 
     public static class MakeChoicePacket implements IMessage
     {
-        public CDialogueBranch currentBranch = new CDialogueBranch();
         public CStringUTF8 choice = new CStringUTF8();
-        int targetID;
 
         public MakeChoicePacket()
         {
             //Required
         }
 
-        public MakeChoicePacket(CDialogueBranch currentBranch, String choice)
+        public MakeChoicePacket(String choice)
         {
             this.choice.set(choice);
-            this.currentBranch = currentBranch;
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
-            buf.writeInt(CDialogues.targetID);
-            currentBranch.writeObf(buf);
             choice.write(buf);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
-            targetID = buf.readInt();
-            currentBranch = currentBranch.readObf(buf);
             choice.read(buf);
         }
     }
@@ -277,25 +280,20 @@ public class Network
             server.addScheduledTask(() ->
             {
                 EntityPlayerMP player = ctx.getServerHandler().player;
-                Entity target = player.world.getEntityByID(packet.targetID);
-                CDialogue dialogue = CDialogues.getBySessionID(packet.currentBranch.dialogueSessionID.value);
+                Pair<Entity, CDialogueBranch> currentBranchData = CURRENT_PLAYER_BRANCHES.get(player);
+                Entity target = currentBranchData.getKey();
+                CDialogueBranch branch = currentBranchData.getValue();
                 if (target != null && target.getDistanceSq(player) < 25)
                 {
-                    for (CDialogueBranch branch : dialogue.branches)
+                    for (CDialogueChoice choice : branch.choices)
                     {
-                        if (branch.sessionID.value.equals(packet.currentBranch.sessionID.value))
+                        if (choice.text.value.equals(packet.choice.value))
                         {
-                            for (CDialogueChoice choice : branch.choices)
+                            if (CDialogues.get(branch.dialogueName.value).isAvailable(player, target) || choice.action.getClass() == CActionEndDialogue.class)
                             {
-                                if (choice.text.value.equals(packet.choice.value))
-                                {
-                                    if (dialogue.isAvailable(player, target) || choice.action.getClass() == CActionEndDialogue.class)
-                                    {
-                                        choice.execute(player);
-                                    }
-                                    return;
-                                }
+                                choice.execute(player);
                             }
+                            return;
                         }
                     }
                 }

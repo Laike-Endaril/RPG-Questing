@@ -18,13 +18,11 @@ import java.util.UUID;
 public class CDialogue extends Component
 {
     public CUUID permanentID = new CUUID().set(UUID.randomUUID());
-    public CStringUTF8 name = new CStringUTF8(), displayName = new CStringUTF8(), group = new CStringUTF8();
+    public CStringUTF8 name = new CStringUTF8(), group = new CStringUTF8();
 
     public ArrayList<CCondition> playerConditions = new ArrayList<>();
     public ArrayList<CCondition> entityConditions = new ArrayList<>();
     public ArrayList<CDialogueBranch> branches = new ArrayList<>();
-
-    public CUUID sessionID = new CUUID().set(UUID.randomUUID());
 
     public CDialogue()
     {
@@ -33,7 +31,6 @@ public class CDialogue extends Component
     public CDialogue(String name, String group)
     {
         this.name.set(name);
-        this.displayName.set(name);
         this.group.set(group);
     }
 
@@ -74,41 +71,12 @@ public class CDialogue extends Component
     @Override
     public CDialogue write(ByteBuf buf)
     {
-        permanentID.write(buf);
-        name.write(buf);
-        displayName.write(buf);
-        group.write(buf);
-
-        new CInt().set(playerConditions.size()).write(buf);
-        for (CCondition condition : playerConditions) Component.writeMarked(buf, condition);
-
-        new CInt().set(entityConditions.size()).write(buf);
-        for (CCondition condition : entityConditions) Component.writeMarked(buf, condition);
-
-        new CInt().set(branches.size()).write(buf);
-        for (CDialogueBranch branch : branches) branch.write(buf);
-
         return this;
     }
 
     @Override
     public CDialogue read(ByteBuf buf)
     {
-        permanentID.read(buf);
-        name.read(buf);
-        displayName.read(buf);
-        group.read(buf);
-
-        playerConditions.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) playerConditions.add((CCondition) Component.readMarked(buf));
-
-        entityConditions.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) entityConditions.add((CCondition) Component.readMarked(buf));
-
-        branches.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) branches.add(new CDialogueBranch());
-        for (CDialogueBranch branch : branches) branch.read(buf);
-
         return this;
     }
 
@@ -117,7 +85,6 @@ public class CDialogue extends Component
     {
         permanentID.save(stream);
         name.save(stream);
-        displayName.save(stream);
         group.save(stream);
 
         new CInt().set(playerConditions.size()).save(stream);
@@ -138,7 +105,6 @@ public class CDialogue extends Component
         permanentID.load(stream);
         CDialogues.add(this);
         name.load(stream);
-        displayName.load(stream);
         group.load(stream);
 
         playerConditions.clear();

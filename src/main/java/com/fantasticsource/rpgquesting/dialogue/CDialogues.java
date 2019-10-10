@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.dialogue;
 
 import com.fantasticsource.rpgquesting.Network;
-import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.tools.component.CInt;
@@ -15,7 +14,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.UUID;
 
 public class CDialogues extends Component
 {
@@ -24,13 +22,12 @@ public class CDialogues extends Component
     @SideOnly(Side.CLIENT)
     public static int targetID = -1;
 
-    public static LinkedHashMap<UUID, CDialogue> dialoguesByPermanentID = new LinkedHashMap<>();
-    public static LinkedHashMap<UUID, CDialogue> dialoguesBySessionID = new LinkedHashMap<>();
+    public static LinkedHashMap<String, CDialogue> dialogues = new LinkedHashMap<>();
 
     public static boolean entityInteract(EntityPlayerMP player, Entity entity)
     {
         ArrayList<CDialogue> found = new ArrayList<>();
-        for (CDialogue dialogue : dialoguesByPermanentID.values())
+        for (CDialogue dialogue : dialogues.values())
         {
             if (dialogue.isAvailable(player, entity)) found.add(dialogue);
         }
@@ -38,10 +35,11 @@ public class CDialogues extends Component
         if (found.size() == 0) return false;
         else if (found.size() == 1)
         {
-            Network.WRAPPER.sendTo(new DialogueBranchPacket(true, found.get(0).branches.get(0)), player);
+            Network.branch(player, entity, true, found.get(0).branches.get(0));
         }
         else
         {
+            Network.branch(player, entity);
             Network.WRAPPER.sendTo(new MultipleDialoguesPacket(found), player);
         }
 
@@ -50,18 +48,12 @@ public class CDialogues extends Component
 
     public static void add(CDialogue dialogue)
     {
-        dialoguesByPermanentID.put(dialogue.permanentID.value, dialogue);
-        dialoguesBySessionID.put(dialogue.sessionID.value, dialogue);
+        dialogues.put(dialogue.name.value, dialogue);
     }
 
-    public static CDialogue getByPermanentID(UUID id)
+    public static CDialogue get(String name)
     {
-        return dialoguesByPermanentID.get(id);
-    }
-
-    public static CDialogue getBySessionID(UUID id)
-    {
-        return dialoguesBySessionID.get(id);
+        return dialogues.get(name);
     }
 
     public CDialogues save() throws IOException
@@ -84,8 +76,7 @@ public class CDialogues extends Component
 
     public CDialogues clear()
     {
-        dialoguesByPermanentID.clear();
-        dialoguesBySessionID.clear();
+        dialogues.clear();
         return this;
     }
 
@@ -121,8 +112,8 @@ public class CDialogues extends Component
     @Override
     public CDialogues save(OutputStream stream)
     {
-        new CInt().set(dialoguesByPermanentID.size()).save(stream);
-        for (CDialogue dialogue : dialoguesByPermanentID.values()) dialogue.save(stream);
+        new CInt().set(dialogues.size()).save(stream);
+        for (CDialogue dialogue : dialogues.values()) dialogue.save(stream);
         return this;
     }
 

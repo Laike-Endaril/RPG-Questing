@@ -3,7 +3,6 @@ package com.fantasticsource.rpgquesting;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.gui.JournalGUI;
-import com.fantasticsource.rpgquesting.gui.MainEditorGUI;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -80,9 +79,9 @@ public class RPGQuesting
         if (!addedNewStuff)
         {
             addedNewStuff = true;
-//            Temp.addKillQuest(false);
-//            Temp.addCollectionQuest(true);
-//            Temp.addCollectionQuest2(false);
+            Temp.addKillQuest(false);
+            Temp.addCollectionQuest(true);
+            Temp.addCollectionQuest2(false);
         }
     }
 

@@ -1,5 +1,3 @@
-Make dialogues reference-by-name, with ID check (same as quests)
-
 Dialogue Editor
 
 

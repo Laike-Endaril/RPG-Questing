@@ -25,7 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.LinkedHashMap;
-import java.util.UUID;
 
 import static com.fantasticsource.rpgquesting.Colors.*;
 
@@ -221,18 +220,18 @@ public class QuestEditorGUI extends GUIScreen
         //Dialogues tab
         dialogues.clear();
 
-        LinkedHashMap<UUID, GUITextSpoiler> dialogueSpoilers = new LinkedHashMap<>();
+        LinkedHashMap<String, GUITextSpoiler> dialogueSpoilers = new LinkedHashMap<>();
         for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
         {
-            UUID id = dialogueEntry.dialogueID.value;
-            GUITextSpoiler spoiler = dialogueSpoilers.get(id);
+            String dialogueName = dialogueEntry.dialogueName.value;
+            GUITextSpoiler spoiler = dialogueSpoilers.get(dialogueName);
             if (spoiler == null)
             {
                 spoiler = new GUITextSpoiler(this, dialogueEntry.dialogueName.value, WHITE[0], WHITE[1], WHITE[2]);
 
                 dialogues.add(new GUIText(this, "\n"));
                 dialogues.add(spoiler);
-                dialogueSpoilers.put(id, spoiler);
+                dialogueSpoilers.put(dialogueName, spoiler);
 
                 spoiler.add(new GUIText(this, "\n"));
                 spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));

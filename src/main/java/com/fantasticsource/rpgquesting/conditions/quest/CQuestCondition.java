@@ -5,17 +5,15 @@ import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.tools.component.CStringUTF8;
-import com.fantasticsource.tools.component.CUUID;
 import io.netty.buffer.ByteBuf;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
 
 public abstract class CQuestCondition extends CCondition
 {
     public CStringUTF8 name = new CStringUTF8();
-    public CUUID dialogueID = new CUUID().set(UUID.randomUUID());
+    public CStringUTF8 dialogueName = new CStringUTF8();
 
 
     public CQuestCondition()
@@ -28,7 +26,7 @@ public abstract class CQuestCondition extends CCondition
 
         if (branch != null)
         {
-            dialogueID.set(branch.dialogue.permanentID.value);
+            dialogueName.set(branch.dialogueName.value);
 
             quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
         }
@@ -42,7 +40,7 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition write(ByteBuf buf)
     {
         name.write(buf);
-        dialogueID.write(buf);
+        dialogueName.write(buf);
 
         return this;
     }
@@ -51,7 +49,7 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition read(ByteBuf buf)
     {
         name.read(buf);
-        dialogueID.read(buf);
+        dialogueName.read(buf);
 
         return this;
     }
@@ -60,7 +58,7 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition save(OutputStream stream)
     {
         name.save(stream);
-        dialogueID.save(stream);
+        dialogueName.save(stream);
 
         return this;
     }
@@ -69,7 +67,7 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition load(InputStream stream)
     {
         name.load(stream);
-        dialogueID.load(stream);
+        dialogueName.load(stream);
 
         return this;
     }

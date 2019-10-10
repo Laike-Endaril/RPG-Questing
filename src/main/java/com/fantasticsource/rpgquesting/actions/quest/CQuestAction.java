@@ -7,18 +7,15 @@ import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
-import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
 
 public abstract class CQuestAction extends CAction
 {
-    public CStringUTF8 name = new CStringUTF8();
-    public CUUID dialogueID = new CUUID().set(UUID.randomUUID());
+    public CStringUTF8 name = new CStringUTF8(), dialogueName = new CStringUTF8();
 
 
     public CQuestAction()
@@ -32,7 +29,7 @@ public abstract class CQuestAction extends CAction
 
         if (branch != null)
         {
-            dialogueID.set(branch.dialogue.permanentID.value);
+            dialogueName.set(branch.dialogueName.value);
 
             quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
         }
@@ -46,7 +43,7 @@ public abstract class CQuestAction extends CAction
     public CQuestAction write(ByteBuf buf)
     {
         name.write(buf);
-        dialogueID.write(buf);
+        dialogueName.write(buf);
 
         buf.writeInt(conditions.size());
         for (CCondition condition : conditions) Component.writeMarked(buf, condition);
@@ -58,7 +55,7 @@ public abstract class CQuestAction extends CAction
     public CQuestAction read(ByteBuf buf)
     {
         name.read(buf);
-        dialogueID.read(buf);
+        dialogueName.read(buf);
 
         conditions.clear();
         for (int i = buf.readInt(); i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
@@ -70,7 +67,7 @@ public abstract class CQuestAction extends CAction
     public CQuestAction save(OutputStream stream)
     {
         name.save(stream);
-        dialogueID.save(stream);
+        dialogueName.save(stream);
 
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -82,7 +79,7 @@ public abstract class CQuestAction extends CAction
     public CQuestAction load(InputStream stream)
     {
         name.load(stream);
-        dialogueID.load(stream);
+        dialogueName.load(stream);
 
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));

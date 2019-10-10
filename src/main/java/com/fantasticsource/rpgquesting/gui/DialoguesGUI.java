@@ -8,7 +8,6 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ChooseDialoguePacket;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
-import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
@@ -28,15 +27,10 @@ public class DialoguesGUI extends GUIScreen
         Minecraft.getMinecraft().displayGuiScreen(GUI);
 
         scrollView.clear();
-        for (int i = 0; i < packet.dialogueDisplayNames.size(); i++)
+        for (String name : packet.dialogueNames)
         {
-            GUITextButton button = new GUITextButton(GUI, packet.dialogueDisplayNames.get(i).value);
-            int i2 = i;
-            scrollView.add(button.addClickActions(() ->
-            {
-                CUUID dialogueSessionID = packet.dialogueSessionIDs.get(i2);
-                if (dialogueSessionID != null) Network.WRAPPER.sendToServer(new ChooseDialoguePacket(dialogueSessionID));
-            }));
+            GUITextButton button = new GUITextButton(GUI, name);
+            scrollView.add(button.addClickActions(() -> Network.WRAPPER.sendToServer(new ChooseDialoguePacket(name))));
         }
     }
 
