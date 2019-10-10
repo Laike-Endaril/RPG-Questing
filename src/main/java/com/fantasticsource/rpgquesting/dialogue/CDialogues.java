@@ -23,6 +23,7 @@ public class CDialogues extends Component
     public static int targetID = -1;
 
     public static LinkedHashMap<String, CDialogue> dialogues = new LinkedHashMap<>();
+    public static LinkedHashMap<String, LinkedHashMap<String, CDialogue>> dialoguesByGroup = new LinkedHashMap<>();
 
     public static boolean entityInteract(EntityPlayerMP player, Entity entity)
     {
@@ -49,6 +50,7 @@ public class CDialogues extends Component
     public static void add(CDialogue dialogue)
     {
         dialogues.put(dialogue.name.value, dialogue);
+        dialoguesByGroup.computeIfAbsent(dialogue.group.value, o -> new LinkedHashMap<>()).put(dialogue.name.value, dialogue);
     }
 
     public static CDialogue get(String name)
@@ -77,6 +79,7 @@ public class CDialogues extends Component
     public CDialogues clear()
     {
         dialogues.clear();
+        dialoguesByGroup.clear();
         return this;
     }
 

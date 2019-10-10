@@ -659,7 +659,8 @@ public class Network
     public static class EditorPacket implements IMessage
     {
         public boolean openGUI = false;
-        LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests = null;
+        public LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests = null;
+        public LinkedHashMap<String, LinkedHashMap<String, CDialogue>> allDialogues = null;
 
         public EditorPacket()
         {
@@ -676,19 +677,33 @@ public class Network
         {
             buf.writeBoolean(openGUI);
 
-            LinkedHashMap<String, LinkedHashMap<String, CQuest>> map = CQuests.QUESTS.worldQuestDataByGroup;
-
-            buf.writeInt(map.size());
-            for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : map.entrySet())
+            allQuests = CQuests.QUESTS.worldQuestDataByGroup;
+            buf.writeInt(allQuests.size());
+            for (Map.Entry<String, LinkedHashMap<String, CQuest>> group : allQuests.entrySet())
             {
-                ByteBufUtils.writeUTF8String(buf, entry.getKey());
+                ByteBufUtils.writeUTF8String(buf, group.getKey());
 
-                LinkedHashMap<String, CQuest> map2 = entry.getValue();
-                buf.writeInt(map2.size());
-                for (Map.Entry<String, CQuest> entry2 : map2.entrySet())
+                LinkedHashMap<String, CQuest> groupQuests = group.getValue();
+                buf.writeInt(groupQuests.size());
+                for (Map.Entry<String, CQuest> quest : groupQuests.entrySet())
                 {
-                    ByteBufUtils.writeUTF8String(buf, entry2.getKey());
-                    entry2.getValue().write(buf);
+                    ByteBufUtils.writeUTF8String(buf, quest.getKey());
+                    quest.getValue().write(buf);
+                }
+            }
+
+            allDialogues = CDialogues.dialoguesByGroup;
+            buf.writeInt(allDialogues.size());
+            for (Map.Entry<String, LinkedHashMap<String, CDialogue>> group : allDialogues.entrySet())
+            {
+                ByteBufUtils.writeUTF8String(buf, group.getKey());
+
+                LinkedHashMap<String, CDialogue> groupDialogues = group.getValue();
+                buf.writeInt(groupDialogues.size());
+                for (Map.Entry<String, CDialogue> dialogue : groupDialogues.entrySet())
+                {
+                    ByteBufUtils.writeUTF8String(buf, dialogue.getKey());
+                    dialogue.getValue().write(buf);
                 }
             }
         }
@@ -701,12 +716,24 @@ public class Network
             allQuests = new LinkedHashMap<>();
             for (int i = buf.readInt(); i > 0; i--)
             {
-                LinkedHashMap<String, CQuest> map = new LinkedHashMap<>();
-                allQuests.put(ByteBufUtils.readUTF8String(buf), map);
+                LinkedHashMap<String, CQuest> group = new LinkedHashMap<>();
+                allQuests.put(ByteBufUtils.readUTF8String(buf), group);
 
                 for (int i2 = buf.readInt(); i2 > 0; i2--)
                 {
-                    map.put(ByteBufUtils.readUTF8String(buf), new CQuest().read(buf));
+                    group.put(ByteBufUtils.readUTF8String(buf), new CQuest().read(buf));
+                }
+            }
+
+            allDialogues = new LinkedHashMap<>();
+            for (int i = buf.readInt(); i > 0; i--)
+            {
+                LinkedHashMap<String, CDialogue> group = new LinkedHashMap<>();
+                allDialogues.put(ByteBufUtils.readUTF8String(buf), group);
+
+                for (int i2 = buf.readInt(); i2 > 0; i2--)
+                {
+                    group.put(ByteBufUtils.readUTF8String(buf), new CDialogue().read(buf));
                 }
             }
         }
@@ -718,7 +745,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(EditorPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> MainEditorGUI.show(packet.allQuests, new LinkedHashMap<>())); //TODO change null to actual data
+            Minecraft.getMinecraft().addScheduledTask(() -> MainEditorGUI.show(packet));
             return null;
         }
     }

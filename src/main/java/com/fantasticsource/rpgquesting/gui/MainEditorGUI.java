@@ -9,6 +9,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.Network.EditorPacket;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
@@ -17,7 +18,6 @@ import net.minecraft.client.Minecraft;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.fantasticsource.rpgquesting.Colors.PURPLE;
 import static com.fantasticsource.rpgquesting.Colors.WHITE;
@@ -37,7 +37,7 @@ public class MainEditorGUI extends GUIScreen
     {
     }
 
-    public static void show(LinkedHashMap<String, LinkedHashMap<String, CQuest>> allQuests, LinkedHashMap<String, LinkedHashMap<UUID, CDialogue>> allDialogues)
+    public static void show(EditorPacket packet)
     {
         MainEditorGUI gui = new MainEditorGUI();
 
@@ -57,7 +57,7 @@ public class MainEditorGUI extends GUIScreen
         }
 
         gui.questNav.add(new GUIText(gui, "\n"));
-        for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : allQuests.entrySet())
+        for (Map.Entry<String, LinkedHashMap<String, CQuest>> entry : packet.allQuests.entrySet())
         {
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(gui, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
             gui.questNav.add(groupSpoiler.addClickActions(() ->
@@ -102,7 +102,7 @@ public class MainEditorGUI extends GUIScreen
         }
 
         gui.dialogueNav.add(new GUIText(gui, "\n"));
-        for (Map.Entry<String, LinkedHashMap<UUID, CDialogue>> entry : allDialogues.entrySet())
+        for (Map.Entry<String, LinkedHashMap<String, CDialogue>> entry : packet.allDialogues.entrySet())
         {
             GUITextSpoiler groupSpoiler = new GUITextSpoiler(gui, entry.getKey(), WHITE[0], WHITE[1], WHITE[2]);
             gui.dialogueNav.add(groupSpoiler.addClickActions(() ->
@@ -114,7 +114,7 @@ public class MainEditorGUI extends GUIScreen
             }));
             gui.allNameToDialogueGroupElement.put(entry.getKey(), groupSpoiler);
 
-            for (Map.Entry<UUID, CDialogue> entry2 : entry.getValue().entrySet())
+            for (Map.Entry<String, CDialogue> entry2 : entry.getValue().entrySet())
             {
                 groupSpoiler.add(new GUIText(gui, "\n"));
 
