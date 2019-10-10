@@ -121,7 +121,7 @@ public class CDialogues extends Component
     public CDialogues load(InputStream stream)
     {
         clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) new CDialogue().load(stream);
+        for (int i = new CInt().load(stream).value; i > 0; i--) add(new CDialogue().load(stream));
         return this;
     }
 }

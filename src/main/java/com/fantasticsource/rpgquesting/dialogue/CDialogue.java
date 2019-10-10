@@ -3,7 +3,6 @@ package com.fantasticsource.rpgquesting.dialogue;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
-import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -13,11 +12,9 @@ import scala.actors.threadpool.Arrays;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class CDialogue extends Component
 {
-    public CUUID permanentID = new CUUID().set(UUID.randomUUID());
     public CStringUTF8 name = new CStringUTF8(), group = new CStringUTF8();
 
     public ArrayList<CCondition> playerConditions = new ArrayList<>();
@@ -83,7 +80,6 @@ public class CDialogue extends Component
     @Override
     public CDialogue save(OutputStream stream)
     {
-        permanentID.save(stream);
         name.save(stream);
         group.save(stream);
 
@@ -102,8 +98,6 @@ public class CDialogue extends Component
     @Override
     public CDialogue load(InputStream stream)
     {
-        permanentID.load(stream);
-        CDialogues.add(this);
         name.load(stream);
         group.load(stream);
 

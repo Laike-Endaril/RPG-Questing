@@ -1,3 +1,11 @@
+Fix mouse offset for item selection GUI
+
+Add quest completion actions
+Remove quest rewards
+Remove quest experience
+
+
+
 Dialogue Editor
 
 

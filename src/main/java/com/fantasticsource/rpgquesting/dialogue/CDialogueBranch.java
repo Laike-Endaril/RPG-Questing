@@ -53,6 +53,7 @@ public class CDialogueBranch extends Component
     @Override
     public CDialogueBranch save(OutputStream stream)
     {
+        dialogueName.save(stream);
         paragraph.save(stream);
 
         new CInt().set(choices.size()).save(stream);
@@ -64,6 +65,7 @@ public class CDialogueBranch extends Component
     @Override
     public CDialogueBranch load(InputStream stream)
     {
+        dialogueName.load(stream);
         paragraph.load(stream);
 
         choices.clear();
