@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting;
 
-import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
@@ -16,11 +15,8 @@ import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.IObfuscatedComponent;
-import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -39,7 +35,6 @@ import java.util.Map;
 public class Network
 {
     public static final SimpleNetworkWrapper WRAPPER = new SimpleNetworkWrapper(RPGQuesting.MODID);
-    private static final LinkedHashMap<EntityPlayerMP, Pair<Entity, CDialogueBranch>> CURRENT_PLAYER_BRANCHES = new LinkedHashMap<>();
     private static int discriminator = 0;
 
     public static void init()
@@ -59,24 +54,9 @@ public class Network
         WRAPPER.registerMessage(RequestSaveQuestPacketHandler.class, RequestSaveQuestPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestEditorDataPacketHandler.class, RequestEditorDataPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(EditorPacketHandler.class, EditorPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(RequestDeleteDialoguePacketHandler.class, RequestDeleteDialoguePacket.class, discriminator++, Side.SERVER);
     }
 
-
-    public static void branch(EntityPlayerMP player, Entity target)
-    {
-        CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(target, null));
-    }
-
-    public static void branch(EntityPlayerMP player, boolean clear, CDialogueBranch branch)
-    {
-        branch(player, CURRENT_PLAYER_BRANCHES.get(player).getKey(), clear, branch);
-    }
-
-    public static void branch(EntityPlayerMP player, Entity target, boolean clear, CDialogueBranch branch)
-    {
-        CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(target, branch));
-        WRAPPER.sendTo(new DialogueBranchPacket(clear, branch), player);
-    }
 
     public static class DialogueBranchPacket implements IMessage
     {
@@ -89,7 +69,7 @@ public class Network
             //Required
         }
 
-        private DialogueBranchPacket(boolean clear, CDialogueBranch branch)
+        public DialogueBranchPacket(boolean clear, CDialogueBranch branch)
         {
             this.clear = clear;
             this.paragraph.set(branch.paragraph.value);
@@ -204,16 +184,7 @@ public class Network
         public IMessage onMessage(ChooseDialoguePacket packet, MessageContext ctx)
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            server.addScheduledTask(() ->
-            {
-                EntityPlayerMP player = ctx.getServerHandler().player;
-                CDialogue dialogue = CDialogues.get(packet.choice.value);
-                Entity target = CURRENT_PLAYER_BRANCHES.get(player).getKey();
-                if (target != null && target.getDistanceSq(player) < 25 && dialogue.isAvailable(player, target))
-                {
-                    branch(player, target, true, dialogue.branches.get(0));
-                }
-            });
+            server.addScheduledTask(() -> CDialogues.tryStart(ctx.getServerHandler().player, packet.choice.value));
             return null;
         }
     }
@@ -277,27 +248,7 @@ public class Network
         public IMessage onMessage(MakeChoicePacket packet, MessageContext ctx)
         {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            server.addScheduledTask(() ->
-            {
-                EntityPlayerMP player = ctx.getServerHandler().player;
-                Pair<Entity, CDialogueBranch> currentBranchData = CURRENT_PLAYER_BRANCHES.get(player);
-                Entity target = currentBranchData.getKey();
-                CDialogueBranch branch = currentBranchData.getValue();
-                if (target != null && target.getDistanceSq(player) < 25)
-                {
-                    for (CDialogueChoice choice : branch.choices)
-                    {
-                        if (choice.text.value.equals(packet.choice.value))
-                        {
-                            if (CDialogues.get(branch.dialogueName.value).isAvailable(player, target) || choice.action.getClass() == CActionEndDialogue.class)
-                            {
-                                choice.execute(player);
-                            }
-                            return;
-                        }
-                    }
-                }
-            });
+            server.addScheduledTask(() -> CDialogues.tryMakeChoice(ctx.getServerHandler().player, packet.choice.value));
             return null;
         }
     }
@@ -746,6 +697,48 @@ public class Network
         public IMessage onMessage(EditorPacket packet, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() -> MainEditorGUI.show(packet));
+            return null;
+        }
+    }
+
+
+    public static class RequestDeleteDialoguePacket implements IMessage
+    {
+        String dialogueName;
+
+        public RequestDeleteDialoguePacket()
+        {
+            //Required
+        }
+
+        public RequestDeleteDialoguePacket(String dialogueName)
+        {
+            this.dialogueName = dialogueName;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, dialogueName);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            dialogueName = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class RequestDeleteDialoguePacketHandler implements IMessageHandler<RequestDeleteDialoguePacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestDeleteDialoguePacket packet, MessageContext ctx)
+        {
+            if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
+            {
+                CDialogues.delete(packet.dialogueName);
+            }
+
             return null;
         }
     }

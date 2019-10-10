@@ -2,12 +2,12 @@ package com.fantasticsource.rpgquesting.actions;
 
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
-import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
+import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,8 +37,12 @@ public class CActionBranch extends CAction
     public void execute(Entity entity)
     {
         if (!(entity instanceof EntityPlayerMP)) return;
-        CDialogue dialogue = CDialogues.get(dialogueName.value);
-        Network.branch((EntityPlayerMP) entity, false, dialogue.branches.get(branchIndex.value));
+
+
+        EntityPlayerMP player = (EntityPlayerMP) entity;
+        CDialogueBranch branch = CDialogues.get(dialogueName.value).branches.get(branchIndex.value);
+        CDialogues.CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(CDialogues.CURRENT_PLAYER_BRANCHES.get(player).getKey(), branch));
+        Network.WRAPPER.sendTo(new Network.DialogueBranchPacket(false, branch), player);
     }
 
     @Override

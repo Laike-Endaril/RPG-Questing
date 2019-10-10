@@ -8,6 +8,7 @@ import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,7 @@ public class DialogueEditorGUI extends GUIScreen
     public GUIScrollView main, playerConditions, entityConditions, branches;
     private GUIGradientBorder separator;
     private GUITabView tabView;
+    private GUIText oldName;
 
     public void show(CDialogue dialogue)
     {
@@ -50,14 +52,12 @@ public class DialogueEditorGUI extends GUIScreen
         //Management
         root.add(new GUITextButton(this, "Save", GREEN[0])).addClickActions(this::trySave);
         root.add(new GUITextButton(this, "Close Editor").addClickActions(this::close));
-        root.add(new GUITextButton(this, "Delete Quest", RED[0]).addClickActions(() ->
-        {
-        }));
+        root.add(new GUITextButton(this, "Delete Dialogue", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")))));
 
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
         root.add(separator);
-        tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Branches", "Availability Conditions (Player)", "Availability Conditions (Entity)");
+        tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Availability Conditions (Player)", "Availability Conditions (Entity)", "Branches");
         root.add(tabView);
 
         //Main tab
@@ -65,20 +65,20 @@ public class DialogueEditorGUI extends GUIScreen
         tabView.tabViews.get(0).add(main);
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
 
-        //Quests
-        branches = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(1).add(branches);
-        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, branches));
-
-        //Rewards tab
+        //Player Conditions tab
         playerConditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(2).add(playerConditions);
-        tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, playerConditions));
+        tabView.tabViews.get(1).add(playerConditions);
+        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, playerConditions));
 
-        //Conditions tab
+        //Entity Conditions tab
         entityConditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(3).add(entityConditions);
-        tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, entityConditions));
+        tabView.tabViews.get(2).add(entityConditions);
+        tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, entityConditions));
+
+        //Branches tab
+        branches = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        tabView.tabViews.get(3).add(branches);
+        tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, branches));
     }
 
 
