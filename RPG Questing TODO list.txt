@@ -55,6 +55,4 @@ Configs for...
 
 
 
-Make edit-mode journal more efficient (don't send all quests upon opening journal)
-
 Check obfuscation of everything
