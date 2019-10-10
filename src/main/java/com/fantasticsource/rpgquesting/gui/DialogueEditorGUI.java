@@ -1,15 +1,16 @@
 package com.fantasticsource.rpgquesting.gui;
 
-import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
-import com.fantasticsource.mctools.gui.element.text.*;
+import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
+import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
+import com.fantasticsource.mctools.gui.element.text.GUIText;
+import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
-import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
@@ -17,17 +18,14 @@ import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.quest.CQuest;
-import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.LinkedHashMap;
-import java.util.UUID;
-
-import static com.fantasticsource.rpgquesting.Colors.*;
+import static com.fantasticsource.rpgquesting.Colors.GREEN;
+import static com.fantasticsource.rpgquesting.Colors.RED;
 
 public class DialogueEditorGUI extends GUIScreen
 {
@@ -49,210 +47,210 @@ public class DialogueEditorGUI extends GUIScreen
 
         main.add(new GUIText(this, "\n"));
 
-        name = new GUILabeledTextInput(this, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE);
-        main.add(name);
-        main.add(new GUIText(this, "\n"));
-
-        oldName = new GUIText(this, "(Previous Name: " + quest.name.value + ")", BLUE[0]);
-        main.add(oldName);
-        main.add(new GUIText(this, "\n\n"));
-
-        group = new GUILabeledTextInput(this, "Group: ", quest.group.value, FilterNotEmpty.INSTANCE);
-        main.add(group);
-        main.add(new GUIText(this, "\n"));
-
-        level = new GUILabeledTextInput(this, "Level: ", "" + quest.level.value, FilterInt.INSTANCE);
-        main.add(level);
-        main.add(new GUIText(this, "\n"));
-
-        repeatable = new GUILabeledTextInput(this, "Repeatable: ", "" + quest.repeatable.value, FilterBoolean.INSTANCE);
-        main.add(repeatable);
-        main.add(new GUIText(this, "\n"));
-
-        experience = new GUILabeledTextInput(this, "Experience Awarded: ", "" + quest.experience.value, FilterInt.INSTANCE);
-        main.add(experience);
-        main.add(new GUIText(this, "\n"));
+//        name = new GUILabeledTextInput(this, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE);
+//        main.add(name);
+//        main.add(new GUIText(this, "\n"));
+//
+//        oldName = new GUIText(this, "(Previous Name: " + quest.name.value + ")", BLUE[0]);
+//        main.add(oldName);
+//        main.add(new GUIText(this, "\n\n"));
+//
+//        group = new GUILabeledTextInput(this, "Group: ", quest.group.value, FilterNotEmpty.INSTANCE);
+//        main.add(group);
+//        main.add(new GUIText(this, "\n"));
+//
+//        level = new GUILabeledTextInput(this, "Level: ", "" + quest.level.value, FilterInt.INSTANCE);
+//        main.add(level);
+//        main.add(new GUIText(this, "\n"));
+//
+//        repeatable = new GUILabeledTextInput(this, "Repeatable: ", "" + quest.repeatable.value, FilterBoolean.INSTANCE);
+//        main.add(repeatable);
+//        main.add(new GUIText(this, "\n"));
+//
+//        experience = new GUILabeledTextInput(this, "Experience Awarded: ", "" + quest.experience.value, FilterInt.INSTANCE);
+//        main.add(experience);
+//        main.add(new GUIText(this, "\n"));
 
 
         //Objectives tab
-        objectives.clear();
-
-        for (CObjective objective : quest.objectives)
-        {
-            objectives.add(new GUIText(this, "\n"));
-            GUIObjective objectiveElement = new GUIObjective(this, objective);
-            objectives.add(objectiveElement.addClickActions(() ->
-            {
-                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
-                gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
-            }));
-        }
-
-        {
-            objectives.add(new GUIText(this, "\n"));
-            GUIObjective objectiveElement = new GUIObjective(this, null);
-            objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
-            objectives.add(objectiveElement.addClickActions(() ->
-            {
-                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
-                gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
-            }));
-        }
-
-        if (quest.objectives.size() > 0)
-        {
-            objectives.add(new GUIText(this, "\n"));
-            objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-            {
-                objectives.clear();
-
-                objectives.add(new GUIText(this, "\n"));
-                GUIObjective objectiveElement = new GUIObjective(this, null);
-                objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
-                objectives.add(objectiveElement.addClickActions(() ->
-                {
-                    ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
-                    gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
-                }));
-
-                objectives.add(new GUIText(this, "\n"));
-            }));
-        }
-
-        objectives.add(new GUIText(this, "\n"));
+//        objectives.clear();
+//
+//        for (CObjective objective : quest.objectives)
+//        {
+//            objectives.add(new GUIText(this, "\n"));
+//            GUIObjective objectiveElement = new GUIObjective(this, objective);
+//            objectives.add(objectiveElement.addClickActions(() ->
+//            {
+//                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+//                gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
+//            }));
+//        }
+//
+//        {
+//            objectives.add(new GUIText(this, "\n"));
+//            GUIObjective objectiveElement = new GUIObjective(this, null);
+//            objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+//            objectives.add(objectiveElement.addClickActions(() ->
+//            {
+//                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+//                gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
+//            }));
+//        }
+//
+//        if (quest.objectives.size() > 0)
+//        {
+//            objectives.add(new GUIText(this, "\n"));
+//            objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+//            {
+//                objectives.clear();
+//
+//                objectives.add(new GUIText(this, "\n"));
+//                GUIObjective objectiveElement = new GUIObjective(this, null);
+//                objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+//                objectives.add(objectiveElement.addClickActions(() ->
+//                {
+//                    ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+//                    gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
+//                }));
+//
+//                objectives.add(new GUIText(this, "\n"));
+//            }));
+//        }
+//
+//        objectives.add(new GUIText(this, "\n"));
 
 
         //Rewards tab
-        rewards.clear();
-
-        for (CItemStack reward : quest.rewards)
-        {
-            rewards.add(new GUIText(this, "\n"));
-            GUIItemStack rewardElement = new GUIItemStack(this, reward.stack);
-            rewards.add(rewardElement.addClickActions(() ->
-            {
-                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
-            }));
-        }
-
-        {
-            rewards.add(new GUIText(this, "\n"));
-            GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
-            rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-            rewards.add(rewardElement.addClickActions(() ->
-            {
-                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
-            }));
-        }
-
-        if (quest.rewards.size() > 0)
-        {
-            rewards.add(new GUIText(this, "\n"));
-            rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-            {
-                rewards.clear();
-
-                rewards.add(new GUIText(this, "\n"));
-                GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
-                rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                rewards.add(rewardElement.addClickActions(() ->
-                {
-                    ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                    gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
-                }));
-
-                rewards.add(new GUIText(this, "\n"));
-            }));
-        }
-
-        rewards.add(new GUIText(this, "\n"));
+//        rewards.clear();
+//
+//        for (CItemStack reward : quest.rewards)
+//        {
+//            rewards.add(new GUIText(this, "\n"));
+//            GUIItemStack rewardElement = new GUIItemStack(this, reward.stack);
+//            rewards.add(rewardElement.addClickActions(() ->
+//            {
+//                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+//                gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
+//            }));
+//        }
+//
+//        {
+//            rewards.add(new GUIText(this, "\n"));
+//            GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
+//            rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+//            rewards.add(rewardElement.addClickActions(() ->
+//            {
+//                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+//                gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
+//            }));
+//        }
+//
+//        if (quest.rewards.size() > 0)
+//        {
+//            rewards.add(new GUIText(this, "\n"));
+//            rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+//            {
+//                rewards.clear();
+//
+//                rewards.add(new GUIText(this, "\n"));
+//                GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
+//                rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+//                rewards.add(rewardElement.addClickActions(() ->
+//                {
+//                    ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+//                    gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
+//                }));
+//
+//                rewards.add(new GUIText(this, "\n"));
+//            }));
+//        }
+//
+//        rewards.add(new GUIText(this, "\n"));
 
 
         //Conditions tab
-        conditions.clear();
-
-        for (CCondition condition : quest.conditions)
-        {
-            conditions.add(new GUIText(this, "\n"));
-            GUICondition conditionElement = new GUICondition(this, condition);
-            conditions.add(conditionElement.addClickActions(() ->
-            {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-            }));
-        }
-
-        {
-            conditions.add(new GUIText(this, "\n"));
-            GUICondition conditionElement = new GUICondition(this, null);
-            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-            conditions.add(conditionElement.addClickActions(() ->
-            {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-            }));
-        }
-
-        if (quest.conditions.size() > 0)
-        {
-            conditions.add(new GUIText(this, "\n"));
-            conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-            {
-                conditions.clear();
-
-                conditions.add(new GUIText(this, "\n"));
-                GUICondition conditionElement = new GUICondition(this, null);
-                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                conditions.add(conditionElement.addClickActions(() ->
-                {
-                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                    gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-                }));
-
-                conditions.add(new GUIText(this, "\n"));
-            }));
-        }
-
-        conditions.add(new GUIText(this, "\n"));
+//        conditions.clear();
+//
+//        for (CCondition condition : quest.conditions)
+//        {
+//            conditions.add(new GUIText(this, "\n"));
+//            GUICondition conditionElement = new GUICondition(this, condition);
+//            conditions.add(conditionElement.addClickActions(() ->
+//            {
+//                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+//                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+//            }));
+//        }
+//
+//        {
+//            conditions.add(new GUIText(this, "\n"));
+//            GUICondition conditionElement = new GUICondition(this, null);
+//            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+//            conditions.add(conditionElement.addClickActions(() ->
+//            {
+//                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+//                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+//            }));
+//        }
+//
+//        if (quest.conditions.size() > 0)
+//        {
+//            conditions.add(new GUIText(this, "\n"));
+//            conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
+//            {
+//                conditions.clear();
+//
+//                conditions.add(new GUIText(this, "\n"));
+//                GUICondition conditionElement = new GUICondition(this, null);
+//                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+//                conditions.add(conditionElement.addClickActions(() ->
+//                {
+//                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+//                    gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+//                }));
+//
+//                conditions.add(new GUIText(this, "\n"));
+//            }));
+//        }
+//
+//        conditions.add(new GUIText(this, "\n"));
 
 
         //Dialogues tab
-        dialogues.clear();
-
-        LinkedHashMap<UUID, GUITextSpoiler> dialogueSpoilers = new LinkedHashMap<>();
-        for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
-        {
-            UUID id = dialogueEntry.dialogueID.value;
-            GUITextSpoiler spoiler = dialogueSpoilers.get(id);
-            if (spoiler == null)
-            {
-                spoiler = new GUITextSpoiler(this, dialogueEntry.dialogueName.value, WHITE[0], WHITE[1], WHITE[2]);
-
-                dialogues.add(new GUIText(this, "\n"));
-                dialogues.add(spoiler);
-                dialogueSpoilers.put(id, spoiler);
-
-                spoiler.add(new GUIText(this, "\n"));
-                spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
-                spoiler.add(new GUIText(this, "\n"));
-                spoiler.add(new GUIText(this, "* ", WHITE[0]));
-                spoiler.add(new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
-                spoiler.add(new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
-                spoiler.add(new GUIText(this, "\n"));
-                spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
-                spoiler.add(new GUIText(this, "\n"));
-            }
-            else
-            {
-                spoiler.add(spoiler.size() - 2, new GUIText(this, "* ", WHITE[0]));
-                spoiler.add(spoiler.size() - 2, new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
-                spoiler.add(spoiler.size() - 2, new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
-                spoiler.add(spoiler.size() - 2, new GUIText(this, "\n"));
-            }
-        }
-        dialogues.add(new GUIText(this, "\n"));
+//        dialogues.clear();
+//
+//        LinkedHashMap<UUID, GUITextSpoiler> dialogueSpoilers = new LinkedHashMap<>();
+//        for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
+//        {
+//            UUID id = dialogueEntry.dialogueID.value;
+//            GUITextSpoiler spoiler = dialogueSpoilers.get(id);
+//            if (spoiler == null)
+//            {
+//                spoiler = new GUITextSpoiler(this, dialogueEntry.dialogueName.value, WHITE[0], WHITE[1], WHITE[2]);
+//
+//                dialogues.add(new GUIText(this, "\n"));
+//                dialogues.add(spoiler);
+//                dialogueSpoilers.put(id, spoiler);
+//
+//                spoiler.add(new GUIText(this, "\n"));
+//                spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
+//                spoiler.add(new GUIText(this, "\n"));
+//                spoiler.add(new GUIText(this, "* ", WHITE[0]));
+//                spoiler.add(new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
+//                spoiler.add(new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
+//                spoiler.add(new GUIText(this, "\n"));
+//                spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
+//                spoiler.add(new GUIText(this, "\n"));
+//            }
+//            else
+//            {
+//                spoiler.add(spoiler.size() - 2, new GUIText(this, "* ", WHITE[0]));
+//                spoiler.add(spoiler.size() - 2, new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
+//                spoiler.add(spoiler.size() - 2, new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
+//                spoiler.add(spoiler.size() - 2, new GUIText(this, "\n"));
+//            }
+//        }
+//        dialogues.add(new GUIText(this, "\n"));
     }
 
     @Override

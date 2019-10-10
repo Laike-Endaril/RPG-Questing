@@ -720,7 +720,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(EditorPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> MainEditorGUI.show(packet.allQuests, null)); //TODO change null to actual data
+            Minecraft.getMinecraft().addScheduledTask(() -> MainEditorGUI.show(packet.allQuests, new LinkedHashMap<>())); //TODO change null to actual data
             return null;
         }
     }

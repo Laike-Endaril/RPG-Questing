@@ -9,6 +9,8 @@ import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,7 +20,10 @@ import java.util.UUID;
 public class CDialogues extends Component
 {
     public static final CDialogues DIALOGUES = new CDialogues();
+
+    @SideOnly(Side.CLIENT)
     public static int targetID = -1;
+
     public static LinkedHashMap<UUID, CDialogue> dialoguesByPermanentID = new LinkedHashMap<>();
     public static LinkedHashMap<UUID, CDialogue> dialoguesBySessionID = new LinkedHashMap<>();
 
