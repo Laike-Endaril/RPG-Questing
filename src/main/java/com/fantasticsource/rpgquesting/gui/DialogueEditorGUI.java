@@ -84,6 +84,40 @@ public class DialogueEditorGUI extends GUIScreen
         }
 
         playerConditions.add(new GUIText(this, "\n"));
+
+
+        //Availability conditions (entity) tab
+        entityConditions.clear();
+
+        for (CCondition condition : dialogue.entityConditions)
+        {
+            entityConditions.add(new GUIText(this, "\n"));
+            GUICondition conditionElement = new GUICondition(this, condition);
+            entityConditions.add(conditionElement.addClickActions(() ->
+            {
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
+            }));
+        }
+
+        {
+            entityConditions.add(new GUIText(this, "\n"));
+            GUICondition conditionElement = new GUICondition(this, null);
+            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+            entityConditions.add(conditionElement.addClickActions(() ->
+            {
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
+            }));
+        }
+
+        if (dialogue.entityConditions.size() > 0)
+        {
+            entityConditions.add(new GUIText(this, "\n"));
+            entityConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearEntityConditions));
+        }
+
+        entityConditions.add(new GUIText(this, "\n"));
     }
 
     @Override
@@ -209,6 +243,75 @@ public class DialogueEditorGUI extends GUIScreen
             gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
         }));
         playerConditions.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
+    }
+
+
+    private void editEntityCondition(GUICondition activeConditionElement, CCondition newCondition)
+    {
+        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+        {
+            //Started with empty slot
+            if (newCondition != null)
+            {
+                //Added new objective
+                int index = entityConditions.indexOf(activeConditionElement);
+
+                {
+                    entityConditions.add(index, new GUIText(this, "\n"));
+                    GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
+                    entityConditions.add(index, conditionElement.addClickActions(() ->
+                    {
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Conditions were empty, but no longer are
+                    entityConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearEntityConditions));
+                    entityConditions.add(new GUIText(this, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
+            else
+            {
+                //Removing a objective
+                int index = entityConditions.indexOf(activeConditionElement);
+                entityConditions.remove(index);
+                entityConditions.remove(index);
+
+                if (entityConditions.size() == 5)
+                {
+                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    entityConditions.remove(3);
+                    entityConditions.remove(3);
+                }
+            }
+        }
+
+        tabView.recalc();
+    }
+
+    private void clearEntityConditions()
+    {
+        entityConditions.clear();
+
+        entityConditions.add(new GUIText(this, "\n"));
+        GUICondition conditionElement = new GUICondition(this, null);
+        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+        entityConditions.add(conditionElement.addClickActions(() ->
+        {
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
+        }));
+        entityConditions.add(new GUIText(this, "\n"));
 
         tabView.recalc();
     }
