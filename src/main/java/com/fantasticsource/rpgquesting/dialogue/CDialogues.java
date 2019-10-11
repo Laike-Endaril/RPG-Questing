@@ -3,6 +3,9 @@ package com.fantasticsource.rpgquesting.dialogue;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
 import com.fantasticsource.rpgquesting.RPGQuesting;
+import com.fantasticsource.rpgquesting.quest.CQuest;
+import com.fantasticsource.rpgquesting.quest.CQuests;
+import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import com.fantasticsource.tools.datastructures.Pair;
@@ -122,6 +125,14 @@ public class CDialogues extends Component
                 }
                 return false;
             });
+        }
+
+        for (CQuest quest : CQuests.QUESTS.worldQuestData.values())
+        {
+            for (CRelatedDialogueEntry entry : quest.relatedDialogues.toArray(new CRelatedDialogueEntry[0]))
+            {
+                if (entry.dialogueName.value.equals(dialogueName)) quest.relatedDialogues.remove(entry);
+            }
         }
 
         dialogues.remove(dialogueName);
