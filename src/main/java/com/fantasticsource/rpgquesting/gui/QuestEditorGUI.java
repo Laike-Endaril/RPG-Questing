@@ -101,21 +101,7 @@ public class QuestEditorGUI extends GUIScreen
         if (quest.objectives.size() > 0)
         {
             objectives.add(new GUIText(this, "\n"));
-            objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-            {
-                objectives.clear();
-
-                objectives.add(new GUIText(this, "\n"));
-                GUIObjective objectiveElement = new GUIObjective(this, null);
-                objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
-                objectives.add(objectiveElement.addClickActions(() ->
-                {
-                    ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
-                    gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
-                }));
-
-                objectives.add(new GUIText(this, "\n"));
-            }));
+            objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearObjectives));
         }
 
         objectives.add(new GUIText(this, "\n"));
@@ -149,21 +135,7 @@ public class QuestEditorGUI extends GUIScreen
         if (quest.rewards.size() > 0)
         {
             rewards.add(new GUIText(this, "\n"));
-            rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-            {
-                rewards.clear();
-
-                rewards.add(new GUIText(this, "\n"));
-                GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
-                rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                rewards.add(rewardElement.addClickActions(() ->
-                {
-                    ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                    gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
-                }));
-
-                rewards.add(new GUIText(this, "\n"));
-            }));
+            rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearRewards));
         }
 
         rewards.add(new GUIText(this, "\n"));
@@ -197,21 +169,7 @@ public class QuestEditorGUI extends GUIScreen
         if (quest.conditions.size() > 0)
         {
             conditions.add(new GUIText(this, "\n"));
-            conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-            {
-                conditions.clear();
-
-                conditions.add(new GUIText(this, "\n"));
-                GUICondition conditionElement = new GUICondition(this, null);
-                conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                conditions.add(conditionElement.addClickActions(() ->
-                {
-                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                    gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-                }));
-
-                conditions.add(new GUIText(this, "\n"));
-            }));
+            conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
         }
 
         conditions.add(new GUIText(this, "\n"));
@@ -336,21 +294,7 @@ public class QuestEditorGUI extends GUIScreen
                 if (index == 1)
                 {
                     //Objectives were empty, but no longer are
-                    objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-                    {
-                        objectives.clear();
-
-                        objectives.add(new GUIText(this, "\n"));
-                        GUIObjective objectiveElement = new GUIObjective(this, null);
-                        objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
-                        objectives.add(objectiveElement.addClickActions(() ->
-                        {
-                            ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
-                            gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
-                        }));
-
-                        objectives.add(new GUIText(this, "\n"));
-                    }));
+                    objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearObjectives));
                     objectives.add(new GUIText(this, "\n"));
                 }
             }
@@ -376,8 +320,25 @@ public class QuestEditorGUI extends GUIScreen
         }
     }
 
+    private void clearObjectives()
+    {
+        objectives.clear();
 
-    public void editReward(GUIItemStack activeRewardElement, ItemStack newStack)
+        objectives.add(new GUIText(this, "\n"));
+        GUIObjective objectiveElement = new GUIObjective(this, null);
+        objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
+        objectives.add(objectiveElement.addClickActions(() ->
+        {
+            ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+            gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
+        }));
+        objectives.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
+    }
+
+
+    private void editReward(GUIItemStack activeRewardElement, ItemStack newStack)
     {
         if (activeRewardElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new reward)"))
         {
@@ -400,21 +361,7 @@ public class QuestEditorGUI extends GUIScreen
                 if (index == 1)
                 {
                     //Rewards were empty, but no longer are
-                    rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-                    {
-                        rewards.clear();
-
-                        rewards.add(new GUIText(this, "\n"));
-                        GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
-                        rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
-                        rewards.add(rewardElement.addClickActions(() ->
-                        {
-                            ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
-                            gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
-                        }));
-
-                        rewards.add(new GUIText(this, "\n"));
-                    }));
+                    rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearRewards));
                     rewards.add(new GUIText(this, "\n"));
                 }
             }
@@ -438,6 +385,23 @@ public class QuestEditorGUI extends GUIScreen
                 }
             }
         }
+    }
+
+    private void clearRewards()
+    {
+        rewards.clear();
+
+        rewards.add(new GUIText(this, "\n"));
+        GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
+        rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
+        rewards.add(rewardElement.addClickActions(() ->
+        {
+            ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+            gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
+        }));
+        rewards.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
     }
 
 
@@ -464,21 +428,7 @@ public class QuestEditorGUI extends GUIScreen
                 if (index == 1)
                 {
                     //Conditions were empty, but no longer are
-                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-                    {
-                        conditions.clear();
-
-                        conditions.add(new GUIText(this, "\n"));
-                        GUICondition conditionElement = new GUICondition(this, null);
-                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                        conditions.add(conditionElement.addClickActions(() ->
-                        {
-                            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-                        }));
-
-                        conditions.add(new GUIText(this, "\n"));
-                    }));
+                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                     conditions.add(new GUIText(this, "\n"));
                 }
             }
@@ -504,9 +454,28 @@ public class QuestEditorGUI extends GUIScreen
         }
     }
 
-    boolean trySave()
+    private void clearConditions()
     {
-        if (!name.input.valid() || !group.input.valid() || !level.input.valid() || !repeatable.input.valid() || !experience.input.valid()) return false;
+        conditions.clear();
+
+        conditions.add(new GUIText(this, "\n"));
+        GUICondition conditionElement = new GUICondition(this, null);
+        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+        conditions.add(conditionElement.addClickActions(() ->
+        {
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+        }));
+        conditions.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
+    }
+
+    private void trySave()
+    {
+        //TODO Add error messages here?
+        if (!name.input.valid() || !group.input.valid() || !level.input.valid() || !repeatable.input.valid() || !experience.input.valid()) return;
+
 
         CQuest quest = new CQuest(name.input.text, group.input.text, FilterInt.INSTANCE.parse(level.input.text), FilterBoolean.INSTANCE.parse(repeatable.input.text));
         quest.setExp(FilterInt.INSTANCE.parse(experience.input.text));
@@ -542,6 +511,5 @@ public class QuestEditorGUI extends GUIScreen
         }
 
         Network.WRAPPER.sendToServer(new Network.RequestSaveQuestPacket(quest));
-        return true;
     }
 }

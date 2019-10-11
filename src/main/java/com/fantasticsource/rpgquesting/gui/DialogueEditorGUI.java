@@ -11,9 +11,11 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 
 import static com.fantasticsource.rpgquesting.Colors.*;
 
@@ -48,6 +50,40 @@ public class DialogueEditorGUI extends GUIScreen
         group = new GUILabeledTextInput(this, "Group: ", dialogue.group.value, FilterNotEmpty.INSTANCE);
         main.add(group);
         main.add(new GUIText(this, "\n"));
+
+
+        //Availability conditions (player) tab
+        playerConditions.clear();
+
+        for (CCondition condition : dialogue.playerConditions)
+        {
+            playerConditions.add(new GUIText(this, "\n"));
+            GUICondition conditionElement = new GUICondition(this, condition);
+            playerConditions.add(conditionElement.addClickActions(() ->
+            {
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
+            }));
+        }
+
+        {
+            playerConditions.add(new GUIText(this, "\n"));
+            GUICondition conditionElement = new GUICondition(this, null);
+            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+            playerConditions.add(conditionElement.addClickActions(() ->
+            {
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
+            }));
+        }
+
+        if (dialogue.playerConditions.size() > 0)
+        {
+            playerConditions.add(new GUIText(this, "\n"));
+            playerConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearPlayerConditions));
+        }
+
+        playerConditions.add(new GUIText(this, "\n"));
     }
 
     @Override
@@ -86,12 +122,12 @@ public class DialogueEditorGUI extends GUIScreen
         tabView.tabViews.get(0).add(main);
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
 
-        //Player Conditions tab
+        //Availability conditions (player) tab
         playerConditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(1).add(playerConditions);
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, playerConditions));
 
-        //Entity Conditions tab
+        //Availability conditions (entity) tab
         entityConditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(2).add(entityConditions);
         tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, entityConditions));
@@ -106,5 +142,74 @@ public class DialogueEditorGUI extends GUIScreen
     boolean trySave()
     {
         return true;
+    }
+
+
+    private void editPlayerCondition(GUICondition activeConditionElement, CCondition newCondition)
+    {
+        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+        {
+            //Started with empty slot
+            if (newCondition != null)
+            {
+                //Added new objective
+                int index = playerConditions.indexOf(activeConditionElement);
+
+                {
+                    playerConditions.add(index, new GUIText(this, "\n"));
+                    GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
+                    playerConditions.add(index, conditionElement.addClickActions(() ->
+                    {
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Conditions were empty, but no longer are
+                    playerConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearPlayerConditions));
+                    playerConditions.add(new GUIText(this, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
+            else
+            {
+                //Removing a objective
+                int index = playerConditions.indexOf(activeConditionElement);
+                playerConditions.remove(index);
+                playerConditions.remove(index);
+
+                if (playerConditions.size() == 5)
+                {
+                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    playerConditions.remove(3);
+                    playerConditions.remove(3);
+                }
+            }
+        }
+
+        tabView.recalc();
+    }
+
+    private void clearPlayerConditions()
+    {
+        playerConditions.clear();
+
+        playerConditions.add(new GUIText(this, "\n"));
+        GUICondition conditionElement = new GUICondition(this, null);
+        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+        playerConditions.add(conditionElement.addClickActions(() ->
+        {
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
+        }));
+        playerConditions.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
     }
 }

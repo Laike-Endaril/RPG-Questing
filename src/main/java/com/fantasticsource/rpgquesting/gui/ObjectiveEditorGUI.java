@@ -312,21 +312,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 if (objectiveKill.conditions.size() > 0)
                 {
                     conditions.add(new GUIText(this, "\n"));
-                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-                    {
-                        conditions.clear();
-
-                        conditions.add(new GUIText(this, "\n"));
-                        GUICondition conditionElement = new GUICondition(this, null);
-                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                        conditions.add(conditionElement.addClickActions(() ->
-                        {
-                            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-                        }));
-
-                        objectiveEditor.recalc();
-                    }));
+                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                 }
             }
             else if (cls == CObjectiveCollect.class)
@@ -377,21 +363,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 {
                     //Conditions were empty, but no longer are
                     conditions.add(new GUIText(this, "\n"));
-                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(() ->
-                    {
-                        conditions.clear();
-
-                        conditions.add(new GUIText(this, "\n"));
-                        GUICondition conditionElement = new GUICondition(this, null);
-                        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
-                        conditions.add(conditionElement.addClickActions(() ->
-                        {
-                            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-                        }));
-
-                        objectiveEditor.recalc();
-                    }));
+                    conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                 }
             }
         }
@@ -414,6 +386,23 @@ public class ObjectiveEditorGUI extends GUIScreen
                 }
             }
         }
+
+        objectiveEditor.recalc();
+    }
+
+    private void clearConditions()
+    {
+        conditions.clear();
+
+        conditions.add(new GUIText(this, "\n"));
+        GUICondition conditionElement = new GUICondition(this, null);
+        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+        conditions.add(conditionElement.addClickActions(() ->
+        {
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+        }));
+        conditions.add(new GUIText(this, "\n"));
 
         objectiveEditor.recalc();
     }
