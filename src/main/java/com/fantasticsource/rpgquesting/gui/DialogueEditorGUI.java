@@ -55,6 +55,13 @@ public class DialogueEditorGUI extends GUIScreen
     }
 
     @Override
+    public void onClosed()
+    {
+        super.onClosed();
+        Network.WRAPPER.sendToServer(new Network.RequestEditorDataPacket());
+    }
+
+    @Override
     protected void init()
     {
         root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
