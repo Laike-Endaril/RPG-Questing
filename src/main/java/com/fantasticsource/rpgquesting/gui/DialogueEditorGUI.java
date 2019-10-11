@@ -24,7 +24,7 @@ public class DialogueEditorGUI extends GUIScreen
     public GUIScrollView main, playerConditions, entityConditions, branches;
     private GUIGradientBorder separator;
     private GUITabView tabView;
-    private GUILabeledTextInput name;
+    private GUILabeledTextInput name, group;
     private GUIText oldName;
 
     public void show(CDialogue dialogue)
@@ -44,6 +44,10 @@ public class DialogueEditorGUI extends GUIScreen
         oldName = new GUIText(this, "(Previous Name: " + dialogue.name.value + ")", BLUE[0]);
         main.add(oldName);
         main.add(new GUIText(this, "\n\n"));
+
+        group = new GUILabeledTextInput(this, "Group: ", dialogue.group.value, FilterNotEmpty.INSTANCE);
+        main.add(group);
+        main.add(new GUIText(this, "\n"));
     }
 
     @Override

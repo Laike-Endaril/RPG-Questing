@@ -1,5 +1,4 @@
 Dialogues...
-* Name (current, previous)
 * Availability conditions: player (array)
 * Availability conditions: entity (array)
 * Branches (array)
@@ -14,6 +13,8 @@ Choices...
 * Actions (array)
 
 Action editor GUI
+
+Saving of dialogue
 
 
 
