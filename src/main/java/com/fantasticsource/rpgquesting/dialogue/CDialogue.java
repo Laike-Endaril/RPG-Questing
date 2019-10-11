@@ -68,12 +68,37 @@ public class CDialogue extends Component
     @Override
     public CDialogue write(ByteBuf buf)
     {
+        name.write(buf);
+        group.write(buf);
+
+        new CInt().set(playerConditions.size()).write(buf);
+        for (CCondition condition : playerConditions) Component.writeMarked(buf, condition);
+
+        new CInt().set(entityConditions.size()).write(buf);
+        for (CCondition condition : entityConditions) Component.writeMarked(buf, condition);
+
+        new CInt().set(branches.size()).write(buf);
+        for (CDialogueBranch branch : branches) branch.write(buf);
+
         return this;
     }
 
     @Override
     public CDialogue read(ByteBuf buf)
     {
+        name.read(buf);
+        group.read(buf);
+
+        playerConditions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) playerConditions.add((CCondition) Component.readMarked(buf));
+
+        entityConditions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) entityConditions.add((CCondition) Component.readMarked(buf));
+
+        branches.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) branches.add(new CDialogueBranch());
+        for (CDialogueBranch branch : branches) branch.read(buf);
+
         return this;
     }
 

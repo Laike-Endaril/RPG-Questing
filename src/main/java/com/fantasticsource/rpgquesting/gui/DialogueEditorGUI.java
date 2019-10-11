@@ -4,8 +4,10 @@ import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
@@ -13,8 +15,7 @@ import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
-import static com.fantasticsource.rpgquesting.Colors.GREEN;
-import static com.fantasticsource.rpgquesting.Colors.RED;
+import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class DialogueEditorGUI extends GUIScreen
 {
@@ -23,6 +24,7 @@ public class DialogueEditorGUI extends GUIScreen
     public GUIScrollView main, playerConditions, entityConditions, branches;
     private GUIGradientBorder separator;
     private GUITabView tabView;
+    private GUILabeledTextInput name;
     private GUIText oldName;
 
     public void show(CDialogue dialogue)
@@ -34,6 +36,14 @@ public class DialogueEditorGUI extends GUIScreen
         main.clear();
 
         main.add(new GUIText(this, "\n"));
+
+        name = new GUILabeledTextInput(this, "Name: ", dialogue.name.value, FilterNotEmpty.INSTANCE);
+        main.add(name);
+        main.add(new GUIText(this, "\n"));
+
+        oldName = new GUIText(this, "(Previous Name: " + dialogue.name.value + ")", BLUE[0]);
+        main.add(oldName);
+        main.add(new GUIText(this, "\n\n"));
     }
 
     @Override
@@ -52,7 +62,7 @@ public class DialogueEditorGUI extends GUIScreen
         //Management
         root.add(new GUITextButton(this, "Save", GREEN[0])).addClickActions(this::trySave);
         root.add(new GUITextButton(this, "Close Editor").addClickActions(this::close));
-        root.add(new GUITextButton(this, "Delete Dialogue", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")))));
+        root.add(new GUITextButton(this, "Delete Dialogue", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteDialoguePacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")))));
 
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));

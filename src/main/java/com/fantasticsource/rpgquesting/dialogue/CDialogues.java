@@ -106,7 +106,28 @@ public class CDialogues extends Component
 
     public static void delete(String dialogueName)
     {
+        CDialogue dialogue = get(dialogueName);
+        if (dialogue == null) return;
 
+
+        for (CDialogueBranch branch : dialogue.branches)
+        {
+            CURRENT_PLAYER_BRANCHES.entrySet().removeIf(e ->
+            {
+                Pair<Entity, CDialogueBranch> currentData = e.getValue();
+                if (currentData != null && currentData.getValue() == branch)
+                {
+                    Network.WRAPPER.sendTo(new Network.CloseDialoguePacket(), e.getKey());
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        dialogues.remove(dialogueName);
+        LinkedHashMap<String, CDialogue> group = dialoguesByGroup.get(dialogue.group.value);
+        group.remove(dialogueName);
+        if (group.size() == 0) dialoguesByGroup.remove(dialogue.group.value);
     }
 
     public CDialogues save() throws IOException
