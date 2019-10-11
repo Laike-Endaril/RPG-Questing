@@ -1,4 +1,19 @@
-Dialogue Editor
+Dialogues...
+* Name (current, previous)
+* Availability conditions: player (array)
+* Availability conditions: entity (array)
+* Branches (array)
+
+Branches...
+* Paragraph (editable multiline text; can actually be more than one paragraph)
+* Choices (array)
+
+Choices...
+* Text (eg. "Sure, I'll find your dog")
+* Availability conditions (array)
+* Actions (array)
+
+Action editor GUI
 
 
 
