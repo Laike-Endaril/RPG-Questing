@@ -47,7 +47,7 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         //Management
-        current = new GUICondition(this, original);
+        current = new GUICondition(this, original == null ? null : (CCondition) original.copy());
         GUITextButton save = new GUITextButton(this, "Save and Close", GREEN[0]);
         root.add(save.addClickActions(() ->
         {
