@@ -13,7 +13,6 @@ import java.io.OutputStream;
 public abstract class CQuestCondition extends CCondition
 {
     public CStringUTF8 name = new CStringUTF8();
-    public CStringUTF8 dialogueName = new CStringUTF8();
 
 
     public CQuestCondition()
@@ -26,8 +25,6 @@ public abstract class CQuestCondition extends CCondition
 
         if (branch != null)
         {
-            dialogueName.set(branch.dialogueName.value);
-
             quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
         }
     }
@@ -40,8 +37,6 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition write(ByteBuf buf)
     {
         name.write(buf);
-        dialogueName.write(buf);
-
         return this;
     }
 
@@ -49,8 +44,6 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition read(ByteBuf buf)
     {
         name.read(buf);
-        dialogueName.read(buf);
-
         return this;
     }
 
@@ -58,8 +51,6 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition save(OutputStream stream)
     {
         name.save(stream);
-        dialogueName.save(stream);
-
         return this;
     }
 
@@ -67,8 +58,6 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition load(InputStream stream)
     {
         name.load(stream);
-        dialogueName.load(stream);
-
         return this;
     }
 }
