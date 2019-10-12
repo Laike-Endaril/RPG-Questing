@@ -4,6 +4,8 @@ import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.GUITextInput;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterNone;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.tools.datastructures.Color;
@@ -15,9 +17,9 @@ import static com.fantasticsource.rpgquesting.Colors.RED;
 public class BranchEditorGUI extends GUIScreen
 {
     public CDialogueBranch original, selection;
-    public GUIBranch current;
     private GUIGradientBorder separator;
     private GUITabView tabView;
+    private GUITextInput paragraph;
 
     public BranchEditorGUI(GUIBranch clickedElement)
     {
@@ -29,7 +31,12 @@ public class BranchEditorGUI extends GUIScreen
 
 
         original = clickedElement.branch;
-        selection = original == null ? null : (CDialogueBranch) original.copy();
+        selection = (CDialogueBranch) original.copy();
+
+
+        //Paragraph tab
+        paragraph = new GUITextInput(this, original.paragraph.value, FilterNone.INSTANCE);
+        tabView.tabViews.get(0).add(paragraph);
     }
 
     @Override
@@ -53,7 +60,9 @@ public class BranchEditorGUI extends GUIScreen
         //Management
         root.add(new GUITextButton(this, "Save and Close", GREEN[0]).addClickActions(() ->
         {
-            selection = current.branch;
+            selection = new CDialogueBranch(paragraph.text);
+            selection.dialogueName.set(original.dialogueName.value);
+            //TODO add choices
             close();
         }));
 
