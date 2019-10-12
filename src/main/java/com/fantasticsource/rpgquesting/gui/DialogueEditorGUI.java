@@ -13,6 +13,7 @@ import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -118,6 +119,40 @@ public class DialogueEditorGUI extends GUIScreen
         }
 
         entityConditions.add(new GUIText(this, "\n"));
+
+
+        //Branches tab
+        branches.clear();
+
+        int i = 0;
+        for (CDialogueBranch branch : dialogue.branches)
+        {
+            branches.add(new GUIText(this, "\n"));
+            GUIBranch branchElement = new GUIBranch(this, branch, "Branch " + i++);
+            branches.add(branchElement.addClickActions(() ->
+            {
+                BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+                gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
+            }));
+        }
+
+        {
+            branches.add(new GUIText(this, "\n"));
+            GUIBranch branchElement = new GUIBranch(this, null, TextFormatting.DARK_PURPLE + "(Add new branch)");
+            branches.add(branchElement.addClickActions(() ->
+            {
+                BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+                gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
+            }));
+        }
+
+        if (dialogue.branches.size() > 0)
+        {
+            branches.add(new GUIText(this, "\n"));
+            branches.add(new GUIText(this, "(Clear all branches)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearBranches));
+        }
+
+        branches.add(new GUIText(this, "\n"));
     }
 
     @Override
@@ -186,7 +221,7 @@ public class DialogueEditorGUI extends GUIScreen
             //Started with empty slot
             if (newCondition != null)
             {
-                //Added new objective
+                //Added new condition
                 int index = playerConditions.indexOf(activeConditionElement);
 
                 {
@@ -213,14 +248,14 @@ public class DialogueEditorGUI extends GUIScreen
             if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
             else
             {
-                //Removing a objective
+                //Removing a condition
                 int index = playerConditions.indexOf(activeConditionElement);
                 playerConditions.remove(index);
                 playerConditions.remove(index);
 
                 if (playerConditions.size() == 5)
                 {
-                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    //Had one condition, and now have 0 (remove the "clear all" option)
                     playerConditions.remove(3);
                     playerConditions.remove(3);
                 }
@@ -255,7 +290,7 @@ public class DialogueEditorGUI extends GUIScreen
             //Started with empty slot
             if (newCondition != null)
             {
-                //Added new objective
+                //Added new condition
                 int index = entityConditions.indexOf(activeConditionElement);
 
                 {
@@ -282,14 +317,14 @@ public class DialogueEditorGUI extends GUIScreen
             if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
             else
             {
-                //Removing a objective
+                //Removing a condition
                 int index = entityConditions.indexOf(activeConditionElement);
                 entityConditions.remove(index);
                 entityConditions.remove(index);
 
                 if (entityConditions.size() == 5)
                 {
-                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    //Had one condition, and now have 0 (remove the "clear all" option)
                     entityConditions.remove(3);
                     entityConditions.remove(3);
                 }
@@ -312,6 +347,74 @@ public class DialogueEditorGUI extends GUIScreen
             gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
         }));
         entityConditions.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
+    }
+
+
+    private void editBranch(GUIBranch activeBranchElement, CDialogueBranch newBranch)
+    {
+        if (activeBranchElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new branch)"))
+        {
+            //Started with empty slot
+            if (newBranch != null)
+            {
+                //Added new branch
+                int index = branches.indexOf(activeBranchElement);
+
+                {
+                    branches.add(index, new GUIText(this, "\n"));
+                    GUIBranch branchElement = new GUIBranch(this, (CDialogueBranch) newBranch.copy(), "Branch " + (index / 2));
+                    branches.add(index, branchElement.addClickActions(() ->
+                    {
+                        BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+                        gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Branches were empty, but no longer are
+                    branches.add(new GUIText(this, "(Clear all branches)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearBranches));
+                    branches.add(new GUIText(this, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newBranch != null) activeBranchElement.setBranch((CDialogueBranch) newBranch.copy());
+            else
+            {
+                //Removing a branch
+                int index = branches.indexOf(activeBranchElement);
+                branches.remove(index);
+                branches.remove(index);
+
+                if (branches.size() == 5)
+                {
+                    //Had one branch, and now have 0 (remove the "clear all" option)
+                    branches.remove(3);
+                    branches.remove(3);
+                }
+            }
+        }
+
+        tabView.recalc();
+    }
+
+    private void clearBranches()
+    {
+        branches.clear();
+
+        branches.add(new GUIText(this, "\n"));
+        GUIBranch branchElement = new GUIBranch(this, null, TextFormatting.DARK_PURPLE + "(Add new branch)");
+        branches.add(branchElement.addClickActions(() ->
+        {
+            BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+            gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
+        }));
+        branches.add(new GUIText(this, "\n"));
 
         tabView.recalc();
     }

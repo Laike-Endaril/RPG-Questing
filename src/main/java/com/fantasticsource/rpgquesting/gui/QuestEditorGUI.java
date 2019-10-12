@@ -305,7 +305,7 @@ public class QuestEditorGUI extends GUIScreen
             if (newObjective != null) activeObjectiveElement.setObjective((CObjective) newObjective.copy());
             else
             {
-                //Removing a objective
+                //Removing an objective
                 int index = objectives.indexOf(activeObjectiveElement);
                 objectives.remove(index);
                 objectives.remove(index);
@@ -405,15 +405,15 @@ public class QuestEditorGUI extends GUIScreen
     }
 
 
-    private void editCondition(GUICondition activeConditionElement, CCondition newCondition)
+    private void editCondition(GUICondition activeObjectiveElement, CCondition newCondition)
     {
-        if (activeConditionElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+        if (activeObjectiveElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
         {
             //Started with empty slot
             if (newCondition != null)
             {
                 //Added new objective
-                int index = conditions.indexOf(activeConditionElement);
+                int index = conditions.indexOf(activeObjectiveElement);
 
                 {
                     conditions.add(index, new GUIText(this, "\n"));
@@ -427,7 +427,7 @@ public class QuestEditorGUI extends GUIScreen
 
                 if (index == 1)
                 {
-                    //Conditions were empty, but no longer are
+                    //Objectives were empty, but no longer are
                     conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                     conditions.add(new GUIText(this, "\n"));
                 }
@@ -436,11 +436,11 @@ public class QuestEditorGUI extends GUIScreen
         else
         {
             //Started with non-empty slot, or at least one that should not be empty
-            if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
+            if (newCondition != null) activeObjectiveElement.setCondition((CCondition) newCondition.copy());
             else
             {
-                //Removing a objective
-                int index = conditions.indexOf(activeConditionElement);
+                //Removing an objective
+                int index = conditions.indexOf(activeObjectiveElement);
                 conditions.remove(index);
                 conditions.remove(index);
 

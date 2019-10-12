@@ -16,6 +16,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIAutocroppedView;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveCollect;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveKill;
@@ -26,9 +27,9 @@ import net.minecraft.util.text.TextFormatting;
 import static com.fantasticsource.rpgquesting.Colors.GREEN;
 import static com.fantasticsource.rpgquesting.Colors.RED;
 
-public class ObjectiveEditorGUI extends GUIScreen
+public class BranchEditorGUI extends GUIScreen
 {
-    public CObjective original, selection;
+    public CDialogueBranch original, selection;
     public GUIObjective current;
     private GUITextButton delete;
     private GUIText originalLabel, currentLabel, objectiveSelectorLabel, objectiveEditorLabel;
@@ -37,151 +38,151 @@ public class ObjectiveEditorGUI extends GUIScreen
     private GUIVerticalScrollbar objectiveSelectorScrollbar, objectiveEditorScrollbar, originalScrollbar, currentScrollbar;
     private GUIAutocroppedView conditions;
 
-    public ObjectiveEditorGUI(GUIObjective clickedElement)
+    public BranchEditorGUI(GUIBranch clickedElement)
     {
-        if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(this);
-        else Minecraft.getMinecraft().displayGuiScreen(this);
-
-
-        drawStack = false;
-
-
-        original = clickedElement.objective;
-        selection = original == null ? null : (CObjective) original.copy();
-
-
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
-
-
-        //Management
-        current = new GUIObjective(this, selection);
-        GUITextButton save = new GUITextButton(this, "Save and Close", GREEN[0]);
-        root.add(save.addClickActions(() ->
-        {
-            selection = current.objective;
-            close();
-        }));
-
-        GUITextButton cancel = new GUITextButton(this, "Close Without Saving");
-        root.add(cancel.addClickActions(() ->
-        {
-            selection = original;
-            close();
-        }));
-
-        delete = new GUITextButton(this, "Delete Objective and Close", RED[0]);
-        root.add(delete.addClickActions(() ->
-        {
-            selection = null;
-            close();
-        }));
-
-
-        double free = 1 - delete.height - 0.03;
-
-
-        separators[0] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[0]);
-
-
-        //Labels
-        originalLabel = new GUIText(this, 0, 0, "ORIGINAL", Color.YELLOW.copy().setVF(0.2f));
-        root.add(originalLabel);
-        currentLabel = new GUIText(this, 0, 0, "CURRENT", Color.YELLOW.copy().setVF(0.2f));
-        root.add(currentLabel);
-        objectiveSelectorLabel = new GUIText(this, 0, 0, "OBJECTIVE SELECTION", Color.YELLOW.copy().setVF(0.2f));
-        root.add(objectiveSelectorLabel);
-        objectiveEditorLabel = new GUIText(this, 0, 0, "OBJECTIVE EDITING", Color.YELLOW.copy().setVF(0.2f));
-        root.add(objectiveEditorLabel);
-
-
-        //Original
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalView = new GUIScrollView(this, 0.44, free / 3);
-        root.add(originalView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
-        root.add(originalScrollbar);
-
-        originalView.add(new GUIText(this, "\n"));
-        GUIObjective originalElement = new GUIObjective(this, current.objective == null ? null : (CObjective) current.objective.copy());
-        originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.objective)));
-        originalView.add(new GUIText(this, "\n"));
-
-
-        //Current
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentView = new GUIScrollView(this, 0.44, free / 3);
-        root.add(currentView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
-        root.add(currentScrollbar);
-
-        currentView.add(new GUIText(this, "\n"));
-        currentView.add(current);
-        currentView.add(new GUIText(this, "\n"));
-
-
-        separators[2] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[2]);
-
-
-        //Objective selector
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        objectiveSelector = new GUIScrollView(this, 0.94, free / 3);
-        root.add(objectiveSelector);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        objectiveSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveSelector);
-        root.add(objectiveSelectorScrollbar);
-
-        //Objective types
-        objectiveSelector.add(new GUIText(this, "\n"));
-
-        objectiveSelector.add(new CObjectiveKill().getChoosableElement(this));
-        objectiveSelector.add(new GUIText(this, "\n"));
-
-        objectiveSelector.add(new CObjectiveCollect().getChoosableElement(this));
-        objectiveSelector.add(new GUIText(this, "\n"));
-
-
-        for (int i = objectiveSelector.size() - 1; i >= 0; i--)
-        {
-            GUIElement element = objectiveSelector.get(i);
-            if (element instanceof GUIObjective)
-            {
-                element.addClickActions(() -> setCurrent(((GUIObjective) element).objective));
-            }
-        }
-
-
-        separators[3] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[3]);
-
-
-        //Objective editor
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        objectiveEditor = new GUIScrollView(this, 0.94, free / 3);
-        root.add(objectiveEditor);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-
-        objectiveEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveEditor);
-        root.add(objectiveEditorScrollbar);
-
-        setCurrent(current.objective);
-
-
-        //Reposition labels
-        originalLabel.x = originalView.x + originalView.width / 2 - originalLabel.width / 2;
-        originalLabel.y = originalView.y + originalView.height / 2 - originalLabel.height / 2;
-
-        currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
-        currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
-
-        objectiveSelectorLabel.x = objectiveSelector.x + objectiveSelector.width / 2 - objectiveSelectorLabel.width / 2;
-        objectiveSelectorLabel.y = objectiveSelector.y + objectiveSelector.height / 2 - objectiveSelectorLabel.height / 2;
-
-        objectiveEditorLabel.x = objectiveEditor.x + objectiveEditor.width / 2 - objectiveEditorLabel.width / 2;
-        objectiveEditorLabel.y = objectiveEditor.y + objectiveEditor.height / 2 - objectiveEditorLabel.height / 2;
+//        if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(this);
+//        else Minecraft.getMinecraft().displayGuiScreen(this);
+//
+//
+//        drawStack = false;
+//
+//
+//        original = clickedElement.objective;
+//        selection = original == null ? null : (CObjective) original.copy();
+//
+//
+//        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+//
+//
+//        //Management
+//        current = new GUIObjective(this, selection);
+//        GUITextButton save = new GUITextButton(this, "Save and Close", GREEN[0]);
+//        root.add(save.addClickActions(() ->
+//        {
+//            selection = current.objective;
+//            close();
+//        }));
+//
+//        GUITextButton cancel = new GUITextButton(this, "Close Without Saving");
+//        root.add(cancel.addClickActions(() ->
+//        {
+//            selection = original;
+//            close();
+//        }));
+//
+//        delete = new GUITextButton(this, "Delete Objective and Close", RED[0]);
+//        root.add(delete.addClickActions(() ->
+//        {
+//            selection = null;
+//            close();
+//        }));
+//
+//
+//        double free = 1 - delete.height - 0.03;
+//
+//
+//        separators[0] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+//        root.add(separators[0]);
+//
+//
+//        //Labels
+//        originalLabel = new GUIText(this, 0, 0, "ORIGINAL", Color.YELLOW.copy().setVF(0.2f));
+//        root.add(originalLabel);
+//        currentLabel = new GUIText(this, 0, 0, "CURRENT", Color.YELLOW.copy().setVF(0.2f));
+//        root.add(currentLabel);
+//        objectiveSelectorLabel = new GUIText(this, 0, 0, "OBJECTIVE SELECTION", Color.YELLOW.copy().setVF(0.2f));
+//        root.add(objectiveSelectorLabel);
+//        objectiveEditorLabel = new GUIText(this, 0, 0, "OBJECTIVE EDITING", Color.YELLOW.copy().setVF(0.2f));
+//        root.add(objectiveEditorLabel);
+//
+//
+//        //Original
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//        originalView = new GUIScrollView(this, 0.44, free / 3);
+//        root.add(originalView);
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
+//        root.add(originalScrollbar);
+//
+//        originalView.add(new GUIText(this, "\n"));
+//        GUIObjective originalElement = new GUIObjective(this, current.objective == null ? null : (CObjective) current.objective.copy());
+//        originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.objective)));
+//        originalView.add(new GUIText(this, "\n"));
+//
+//
+//        //Current
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//        currentView = new GUIScrollView(this, 0.44, free / 3);
+//        root.add(currentView);
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
+//        root.add(currentScrollbar);
+//
+//        currentView.add(new GUIText(this, "\n"));
+//        currentView.add(current);
+//        currentView.add(new GUIText(this, "\n"));
+//
+//
+//        separators[2] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+//        root.add(separators[2]);
+//
+//
+//        //Objective selector
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//        objectiveSelector = new GUIScrollView(this, 0.94, free / 3);
+//        root.add(objectiveSelector);
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//        objectiveSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveSelector);
+//        root.add(objectiveSelectorScrollbar);
+//
+//        //Objective types
+//        objectiveSelector.add(new GUIText(this, "\n"));
+//
+//        objectiveSelector.add(new CObjectiveKill().getChoosableElement(this));
+//        objectiveSelector.add(new GUIText(this, "\n"));
+//
+//        objectiveSelector.add(new CObjectiveCollect().getChoosableElement(this));
+//        objectiveSelector.add(new GUIText(this, "\n"));
+//
+//
+//        for (int i = objectiveSelector.size() - 1; i >= 0; i--)
+//        {
+//            GUIElement element = objectiveSelector.get(i);
+//            if (element instanceof GUIObjective)
+//            {
+//                element.addClickActions(() -> setCurrent(((GUIObjective) element).objective));
+//            }
+//        }
+//
+//
+//        separators[3] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
+//        root.add(separators[3]);
+//
+//
+//        //Objective editor
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//        objectiveEditor = new GUIScrollView(this, 0.94, free / 3);
+//        root.add(objectiveEditor);
+//        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+//
+//        objectiveEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveEditor);
+//        root.add(objectiveEditorScrollbar);
+//
+//        setCurrent(current.objective);
+//
+//
+//        //Reposition labels
+//        originalLabel.x = originalView.x + originalView.width / 2 - originalLabel.width / 2;
+//        originalLabel.y = originalView.y + originalView.height / 2 - originalLabel.height / 2;
+//
+//        currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
+//        currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
+//
+//        objectiveSelectorLabel.x = objectiveSelector.x + objectiveSelector.width / 2 - objectiveSelectorLabel.width / 2;
+//        objectiveSelectorLabel.y = objectiveSelector.y + objectiveSelector.height / 2 - objectiveSelectorLabel.height / 2;
+//
+//        objectiveEditorLabel.x = objectiveEditor.x + objectiveEditor.width / 2 - objectiveEditorLabel.width / 2;
+//        objectiveEditorLabel.y = objectiveEditor.y + objectiveEditor.height / 2 - objectiveEditorLabel.height / 2;
     }
 
     @Override
@@ -361,7 +362,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
                 if (index == 1)
                 {
-                    //Objectives were empty, but no longer are
+                    //Conditions were empty, but no longer are
                     conditions.add(new GUIText(this, "\n"));
                     conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                 }
@@ -373,7 +374,7 @@ public class ObjectiveEditorGUI extends GUIScreen
             if (newCondition != null) activeConditionElement.setCondition((CCondition) newCondition.copy());
             else
             {
-                //Removing an objective
+                //Removing a objective
                 int index = conditions.indexOf(activeConditionElement);
                 conditions.remove(index);
                 conditions.remove(index);
