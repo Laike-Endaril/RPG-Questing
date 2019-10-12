@@ -5,6 +5,7 @@ Branches...
 Choices...
 * Text (eg. "Sure, I'll find your dog")
 * Availability conditions (array)
+* Add read / write methods to actions
 * Actions (array)
 
 Action editor GUI

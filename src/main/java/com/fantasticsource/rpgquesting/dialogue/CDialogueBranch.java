@@ -41,12 +41,24 @@ public class CDialogueBranch extends Component
     @Override
     public CDialogueBranch write(ByteBuf buf)
     {
+        dialogueName.write(buf);
+        paragraph.write(buf);
+
+        new CInt().set(choices.size()).write(buf);
+        for (CDialogueChoice choice : choices) choice.write(buf);
+
         return this;
     }
 
     @Override
     public CDialogueBranch read(ByteBuf buf)
     {
+        dialogueName.read(buf);
+        paragraph.read(buf);
+
+        choices.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) choices.add(new CDialogueChoice().read(buf));
+
         return this;
     }
 
