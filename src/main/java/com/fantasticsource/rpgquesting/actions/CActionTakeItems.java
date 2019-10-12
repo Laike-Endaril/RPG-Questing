@@ -65,12 +65,22 @@ public class CActionTakeItems extends CAction
     @Override
     public CActionTakeItems write(ByteBuf buf)
     {
+        stackToMatch.write(buf);
+
+        new CInt().set(conditions.size()).write(buf);
+        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
+
         return this;
     }
 
     @Override
     public CActionTakeItems read(ByteBuf buf)
     {
+        stackToMatch.read(buf);
+
+        conditions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+
         return this;
     }
 

@@ -56,12 +56,24 @@ public class CActionBranch extends CAction
     @Override
     public CActionBranch write(ByteBuf buf)
     {
+        dialogueName.write(buf);
+        branchIndex.write(buf);
+
+        new CInt().set(conditions.size()).write(buf);
+        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
+
         return this;
     }
 
     @Override
     public CActionBranch read(ByteBuf buf)
     {
+        dialogueName.read(buf);
+        branchIndex.read(buf);
+
+        conditions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+
         return this;
     }
 

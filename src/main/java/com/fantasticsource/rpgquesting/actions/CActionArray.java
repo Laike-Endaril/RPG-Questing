@@ -61,12 +61,24 @@ public class CActionArray extends CAction
     @Override
     public CActionArray write(ByteBuf buf)
     {
+        new CInt().set(conditions.size()).write(buf);
+        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
+
+        new CInt().set(actions.size()).write(buf);
+        for (CAction action : actions) Component.writeMarked(buf, action);
+
         return this;
     }
 
     @Override
     public CActionArray read(ByteBuf buf)
     {
+        conditions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+
+        actions.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--) actions.add((CAction) Component.readMarked(buf));
+
         return this;
     }
 
