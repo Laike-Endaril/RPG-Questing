@@ -3,11 +3,11 @@ package com.fantasticsource.rpgquesting.gui;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
+import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIMultilineTextInput;
-import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
-import com.fantasticsource.mctools.gui.element.text.GUITextInput;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNone;
+import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.tools.datastructures.Color;
@@ -21,7 +21,8 @@ public class BranchEditorGUI extends GUIScreen
     public CDialogueBranch original, selection;
     private GUIGradientBorder separator;
     private GUITabView tabView;
-    private GUIText paragraph;
+    private GUIScrollView paragraphView, choicesView;
+    private GUIMultilineTextInput paragraph;
 
     public BranchEditorGUI(GUIBranch clickedElement)
     {
@@ -38,7 +39,11 @@ public class BranchEditorGUI extends GUIScreen
 
         //Paragraph tab
         paragraph = new GUIMultilineTextInput(this, original.paragraph.value, FilterNone.INSTANCE);
-        tabView.tabViews.get(0).add(paragraph);
+        paragraphView.add(paragraph.addRecalcActions(() -> paragraphView.recalcThisOnly()));
+
+
+        //Choices tab
+        choicesView.clear();
     }
 
     @Override
@@ -64,7 +69,7 @@ public class BranchEditorGUI extends GUIScreen
         {
             selection = new CDialogueBranch(paragraph.text);
             selection.dialogueName.set(original.dialogueName.value);
-            //TODO add choices
+            //TODO add new choices to selection
             close();
         }));
 
@@ -87,5 +92,17 @@ public class BranchEditorGUI extends GUIScreen
 
         tabView = new GUITabView(this, 0, separator.y + separator.height, 1, 1 - separator.y - separator.height, "Paragraph", "Choices");
         root.add(tabView);
+
+
+        //Paragraph tab
+        paragraphView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        tabView.tabViews.get(0).add(paragraphView);
+        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, paragraphView));
+
+
+        //Choices tab
+        choicesView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        tabView.tabViews.get(1).add(choicesView);
+        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, choicesView));
     }
 }
