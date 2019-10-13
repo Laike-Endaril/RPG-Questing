@@ -3,6 +3,8 @@ package com.fantasticsource.rpgquesting.gui;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
+import com.fantasticsource.mctools.gui.element.text.GUIMultilineTextInput;
+import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextInput;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNone;
@@ -19,7 +21,7 @@ public class BranchEditorGUI extends GUIScreen
     public CDialogueBranch original, selection;
     private GUIGradientBorder separator;
     private GUITabView tabView;
-    private GUITextInput paragraph;
+    private GUIText paragraph;
 
     public BranchEditorGUI(GUIBranch clickedElement)
     {
@@ -35,7 +37,7 @@ public class BranchEditorGUI extends GUIScreen
 
 
         //Paragraph tab
-        paragraph = new GUITextInput(this, original.paragraph.value, FilterNone.INSTANCE);
+        paragraph = new GUIMultilineTextInput(this, original.paragraph.value, FilterNone.INSTANCE);
         tabView.tabViews.get(0).add(paragraph);
     }
 
