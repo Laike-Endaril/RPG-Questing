@@ -39,7 +39,18 @@ public class BranchEditorGUI extends GUIScreen
 
         //Paragraph tab
         paragraph = new GUIMultilineTextInput(this, original.paragraph.value, FilterNone.INSTANCE);
-        paragraphView.add(paragraph.addRecalcActions(() -> paragraphView.recalcThisOnly()));
+        paragraphView.add(paragraph.addRecalcActions(() ->
+        {
+            paragraphView.recalcThisOnly();
+
+
+            int line = paragraph.cursorLine();
+            double ratio = 1d / paragraph.fullLineCount();
+            double lineTop = line * ratio * paragraphView.internalHeight;
+            double lineBottom = (line + 1) * ratio * paragraphView.internalHeight;
+            if (lineTop < paragraphView.top) paragraphView.progress = lineTop / (paragraphView.internalHeight - 1);
+            else if (lineBottom > paragraphView.bottom) paragraphView.progress = (lineBottom - 1) / (paragraphView.internalHeight - 1);
+        }));
 
 
         //Choices tab
