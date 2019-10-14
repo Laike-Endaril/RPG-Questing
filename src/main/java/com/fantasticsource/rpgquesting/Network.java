@@ -55,6 +55,7 @@ public class Network
         WRAPPER.registerMessage(RequestEditorDataPacketHandler.class, RequestEditorDataPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(EditorPacketHandler.class, EditorPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestDeleteDialoguePacketHandler.class, RequestDeleteDialoguePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(RequestSaveDialoguePacketHandler.class, RequestSaveDialoguePacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -737,6 +738,48 @@ public class Network
             if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
             {
                 CDialogues.delete(packet.dialogueName);
+            }
+
+            return null;
+        }
+    }
+
+
+    public static class RequestSaveDialoguePacket implements IMessage
+    {
+        CDialogue dialogue = new CDialogue();
+
+        public RequestSaveDialoguePacket()
+        {
+            //Required
+        }
+
+        public RequestSaveDialoguePacket(CDialogue quest)
+        {
+            this.dialogue = quest;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            dialogue.write(buf);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            dialogue.read(buf);
+        }
+    }
+
+    public static class RequestSaveDialoguePacketHandler implements IMessageHandler<RequestSaveDialoguePacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(RequestSaveDialoguePacket packet, MessageContext ctx)
+        {
+            if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
+            {
+                CDialogues.saveDialogue(packet.dialogue);
             }
 
             return null;

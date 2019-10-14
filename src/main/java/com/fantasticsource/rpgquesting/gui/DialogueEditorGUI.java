@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
@@ -208,9 +209,45 @@ public class DialogueEditorGUI extends GUIScreen
     }
 
 
-    boolean trySave()
+    private void trySave()
     {
-        return true;
+        //TODO Add error messages here?
+        if (!name.input.valid() || !group.input.valid()) return;
+
+
+        CDialogue dialogue = new CDialogue(name.input.text, group.input.text);
+
+        for (GUIElement element : playerConditions.children)
+        {
+            if (!(element instanceof GUICondition)) continue;
+
+            CCondition condition = ((GUICondition) element).condition;
+            if (condition == null) continue;
+
+            dialogue.addPlayerConditions(condition);
+        }
+
+        for (GUIElement element : entityConditions.children)
+        {
+            if (!(element instanceof GUICondition)) continue;
+
+            CCondition condition = ((GUICondition) element).condition;
+            if (condition == null) continue;
+
+            dialogue.addEntityConditions(condition);
+        }
+
+        for (GUIElement element : branches.children)
+        {
+            if (!(element instanceof GUIBranch)) continue;
+
+            CDialogueBranch branch = ((GUIBranch) element).branch;
+            if (branch == null) continue;
+
+            dialogue.branches.add(branch);
+        }
+
+        Network.WRAPPER.sendToServer(new Network.RequestSaveDialoguePacket(dialogue));
     }
 
 

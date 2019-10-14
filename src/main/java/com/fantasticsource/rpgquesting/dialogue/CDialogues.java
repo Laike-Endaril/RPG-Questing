@@ -141,6 +141,13 @@ public class CDialogues extends Component
         if (group.size() == 0) dialoguesByGroup.remove(dialogue.group.value);
     }
 
+    public static void saveDialogue(CDialogue dialogue)
+    {
+        //Cleanly remove old one if it exists, then add the new version
+        delete(dialogue.name.value);
+        add(dialogue);
+    }
+
     public CDialogues save() throws IOException
     {
         File file = RPGQuesting.worldDataFolder;
