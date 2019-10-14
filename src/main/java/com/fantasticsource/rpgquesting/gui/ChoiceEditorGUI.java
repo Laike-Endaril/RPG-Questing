@@ -10,7 +10,6 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
-import com.fantasticsource.rpgquesting.actions.CAction;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
@@ -24,9 +23,10 @@ public class ChoiceEditorGUI extends GUIScreen
 {
     public CDialogueChoice selection;
     private GUITabView tabView;
-    private GUIScrollView conditionsView, actionsView;
+    private GUIScrollView mainView, conditionsView;
     private GUIGradientBorder separator;
     private GUILabeledTextInput text;
+    private GUIAction action;
 
     public ChoiceEditorGUI(GUIChoice clickedElement)
     {
@@ -41,10 +41,16 @@ public class ChoiceEditorGUI extends GUIScreen
 
 
         //Main tab
-        tabView.tabViews.get(0).clear();
-        tabView.tabViews.get(0).add(new GUIText(this, "\n"));
-        text = new GUILabeledTextInput(this, " Text: ", selection.text.value, FilterNotEmpty.INSTANCE);
-        tabView.tabViews.get(0).add(text);
+        mainView.clear();
+        mainView.add(new GUIText(this, "\n"));
+        text = new GUILabeledTextInput(this, "Text: ", selection.text.value, FilterNotEmpty.INSTANCE);
+        mainView.add(text);
+
+        mainView.add(new GUIText(this, "\nAction...\n\n"));
+        action = new GUIAction(this, selection.action);
+        mainView.add(action);
+
+        mainView.add(new GUIText(this, "\n"));
 
 
         //Conditions tab
@@ -79,9 +85,6 @@ public class ChoiceEditorGUI extends GUIScreen
         }
 
         conditionsView.add(new GUIText(this, "\n"));
-
-
-        //Actions tab
     }
 
     @Override
@@ -127,20 +130,20 @@ public class ChoiceEditorGUI extends GUIScreen
         root.add(separator);
 
 
-        tabView = new GUITabView(this, 0, separator.y + separator.height, 1, 1 - separator.y - separator.height, "Main", "Availability Conditions", "Actions");
+        tabView = new GUITabView(this, 0, separator.y + separator.height, 1, 1 - separator.y - separator.height, "Main", "Availability Conditions");
         root.add(tabView);
+
+
+        //Main tab
+        mainView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        tabView.tabViews.get(0).add(mainView);
+        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, mainView));
 
 
         //Conditions tab
         conditionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(0).add(conditionsView);
-        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionsView));
-
-
-        //Actions tab
-        actionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(1).add(actionsView);
-        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionsView));
+        tabView.tabViews.get(1).add(conditionsView);
+        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionsView));
     }
 
 
@@ -206,73 +209,6 @@ public class ChoiceEditorGUI extends GUIScreen
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
         conditionsView.add(new GUIText(this, "\n"));
-
-        tabView.recalc();
-    }
-
-
-    private void editAction(GUIAction activeObjectiveElement, CAction newAction)
-    {
-        if (activeObjectiveElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new action)"))
-        {
-            //Started with empty slot
-            if (newAction != null)
-            {
-                //Added new action
-                int index = actionsView.indexOf(activeObjectiveElement);
-
-                {
-                    actionsView.add(index, new GUIText(this, "\n"));
-                    GUIAction actionElement = new GUIAction(this, (CAction) newAction.copy());
-                    actionsView.add(index, actionElement.addClickActions(() ->
-                    {
-                        ActionEditorGUI gui = new ActionEditorGUI(actionElement);
-                        gui.addOnClosedActions(() -> editAction(actionElement, gui.selection));
-                    }));
-                }
-
-                if (index == 1)
-                {
-                    //Objectives were empty, but no longer are
-                    actionsView.add(new GUIText(this, "(Clear all actions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearActions));
-                    actionsView.add(new GUIText(this, "\n"));
-                }
-            }
-        }
-        else
-        {
-            //Started with non-empty slot, or at least one that should not be empty
-            if (newAction != null) activeObjectiveElement.setAction((CAction) newAction.copy());
-            else
-            {
-                //Removing an objective
-                int index = actionsView.indexOf(activeObjectiveElement);
-                actionsView.remove(index);
-                actionsView.remove(index);
-
-                if (actionsView.size() == 5)
-                {
-                    //Had one objective, and now have 0 (remove the "clear all" option)
-                    actionsView.remove(3);
-                    actionsView.remove(3);
-                }
-            }
-        }
-    }
-
-    private void clearActions()
-    {
-        actionsView.clear();
-
-        actionsView.add(new GUIText(this, "\n"));
-        GUIAction actionElement = new GUIAction(this, null);
-        actionElement.text = TextFormatting.DARK_PURPLE + "(Add new action)";
-        actionsView.add(actionElement.addClickActions(() ->
-        {
-            ActionEditorGUI gui = new ActionEditorGUI(actionElement);
-            gui.addOnClosedActions(() -> editAction(actionElement, gui.selection));
-        }));
-        actionsView.add(new GUIText(this, "\n"));
 
         tabView.recalc();
     }
