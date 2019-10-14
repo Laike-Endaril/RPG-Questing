@@ -32,14 +32,14 @@ public class CActionCompleteQuest extends CQuestAction
     protected void execute(Entity entity)
     {
         if (!(entity instanceof EntityPlayerMP)) return;
-        CQuests.complete((EntityPlayerMP) entity, name.value);
+        CQuests.complete((EntityPlayerMP) entity, questName.value);
     }
 
     @Override
     public ArrayList<String> description()
     {
         ArrayList<String> result = new ArrayList<>();
-        result.add("Complete quest: " + name.value);
+        result.add("Complete quest: " + questName.value);
         return result;
     }
 

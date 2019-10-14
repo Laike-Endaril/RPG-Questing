@@ -15,7 +15,7 @@ import java.io.OutputStream;
 
 public abstract class CQuestAction extends CAction
 {
-    public CStringUTF8 name = new CStringUTF8(), dialogueName = new CStringUTF8();
+    public CStringUTF8 questName = new CStringUTF8();
 
 
     public CQuestAction()
@@ -24,13 +24,10 @@ public abstract class CQuestAction extends CAction
 
     public CQuestAction(CQuest quest, CDialogueBranch branch)
     {
-        name.set(quest.name.value);
-
+        questName.set(quest.name.value);
 
         if (branch != null)
         {
-            dialogueName.set(branch.dialogueName.value);
-
             quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
         }
     }
@@ -42,8 +39,7 @@ public abstract class CQuestAction extends CAction
     @Override
     public CQuestAction write(ByteBuf buf)
     {
-        name.write(buf);
-        dialogueName.write(buf);
+        questName.write(buf);
 
         buf.writeInt(conditions.size());
         for (CCondition condition : conditions) Component.writeMarked(buf, condition);
@@ -54,8 +50,7 @@ public abstract class CQuestAction extends CAction
     @Override
     public CQuestAction read(ByteBuf buf)
     {
-        name.read(buf);
-        dialogueName.read(buf);
+        questName.read(buf);
 
         conditions.clear();
         for (int i = buf.readInt(); i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
@@ -66,8 +61,7 @@ public abstract class CQuestAction extends CAction
     @Override
     public CQuestAction save(OutputStream stream)
     {
-        name.save(stream);
-        dialogueName.save(stream);
+        questName.save(stream);
 
         new CInt().set(conditions.size()).save(stream);
         for (CCondition condition : conditions) Component.saveMarked(stream, condition);
@@ -78,8 +72,7 @@ public abstract class CQuestAction extends CAction
     @Override
     public CQuestAction load(InputStream stream)
     {
-        name.load(stream);
-        dialogueName.load(stream);
+        questName.load(stream);
 
         conditions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));

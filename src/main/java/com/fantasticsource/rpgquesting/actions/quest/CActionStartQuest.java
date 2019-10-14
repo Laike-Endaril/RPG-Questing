@@ -1,10 +1,8 @@
 package com.fantasticsource.rpgquesting.actions.quest;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.rpgquesting.conditions.quest.CConditionQuestAvailable;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.gui.GUIAction;
-import com.fantasticsource.rpgquesting.gui.GUICondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
@@ -34,14 +32,14 @@ public class CActionStartQuest extends CQuestAction
     protected void execute(Entity entity)
     {
         if (!(entity instanceof EntityPlayerMP)) return;
-        CQuests.start((EntityPlayerMP) entity, name.value);
+        CQuests.start((EntityPlayerMP) entity, questName.value);
     }
 
     @Override
     public ArrayList<String> description()
     {
         ArrayList<String> result = new ArrayList<>();
-        result.add("Start quest: " + name.value);
+        result.add("Start quest: " + questName.value);
         return result;
     }
 

@@ -18,8 +18,10 @@ import com.fantasticsource.rpgquesting.actions.*;
 import com.fantasticsource.rpgquesting.actions.quest.CActionCompleteQuest;
 import com.fantasticsource.rpgquesting.actions.quest.CActionStartQuest;
 import com.fantasticsource.rpgquesting.actions.quest.CQuestAction;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 
 import static com.fantasticsource.rpgquesting.Colors.GREEN;
 import static com.fantasticsource.rpgquesting.Colors.RED;
@@ -31,7 +33,7 @@ public class ActionEditorGUI extends GUIScreen
     private GUITextButton delete;
     private GUIText originalLabel, currentLabel;
     private GUITabView tabView;
-    private GUIScrollView originalView, currentView, actionOptionsView;
+    private GUIScrollView originalView, currentView, actionOptionsView, requiredConditionsView;
     private GUIVerticalScrollbar originalScrollbar, currentScrollbar;
 
     public ActionEditorGUI(GUIAction clickedElement)
@@ -56,6 +58,16 @@ public class ActionEditorGUI extends GUIScreen
         root.add(save.addClickActions(() ->
         {
             selection = current.action;
+
+            selection.conditions.clear();
+            for (GUIElement element : requiredConditionsView.children)
+            {
+                if (element instanceof GUICondition)
+                {
+                    selection.addConditions(((GUICondition) element).condition);
+                }
+            }
+
             close();
         }));
 
@@ -171,11 +183,43 @@ public class ActionEditorGUI extends GUIScreen
         tabView.tabViews.get(1).add(actionOptionsView);
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionOptionsView));
 
+        setCurrent(selection);
+
 
         //Required Conditions tab
-        GUIScrollView requiredConditionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        requiredConditionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(2).add(requiredConditionsView);
         tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, requiredConditionsView));
+
+        for (CCondition condition : selection.conditions)
+        {
+            requiredConditionsView.add(new GUIText(this, "\n"));
+            GUICondition conditionElement = new GUICondition(this, condition);
+            requiredConditionsView.add(conditionElement.addClickActions(() ->
+            {
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+            }));
+        }
+
+        {
+            requiredConditionsView.add(new GUIText(this, "\n"));
+            GUICondition conditionElement = new GUICondition(this, null);
+            conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+            requiredConditionsView.add(conditionElement.addClickActions(() ->
+            {
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+            }));
+        }
+
+        if (selection.conditions.size() > 0)
+        {
+            requiredConditionsView.add(new GUIText(this, "\n"));
+            requiredConditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
+        }
+
+        requiredConditionsView.add(new GUIText(this, "\n"));
 
 
         //Reposition labels
@@ -265,12 +309,12 @@ public class ActionEditorGUI extends GUIScreen
             }
             else if (action instanceof CQuestAction)
             {
-                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestAction) action).name.value, FilterNotEmpty.INSTANCE);
+                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestAction) action).questName.value, FilterNotEmpty.INSTANCE);
                 questName.input.addRecalcActions(() ->
                 {
                     if (questName.input.valid())
                     {
-                        ((CQuestAction) action).name.set(questName.input.text);
+                        ((CQuestAction) action).questName.set(questName.input.text);
                         current.setAction(action);
                     }
                 });
@@ -367,5 +411,72 @@ public class ActionEditorGUI extends GUIScreen
         }
 
         currentView.recalc();
+    }
+
+
+    private void editCondition(GUICondition activeObjectiveElement, CCondition newCondition)
+    {
+        if (activeObjectiveElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new condition)"))
+        {
+            //Started with empty slot
+            if (newCondition != null)
+            {
+                //Added new condition
+                int index = requiredConditionsView.indexOf(activeObjectiveElement);
+
+                {
+                    requiredConditionsView.add(index, new GUIText(this, "\n"));
+                    GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
+                    requiredConditionsView.add(index, conditionElement.addClickActions(() ->
+                    {
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Objectives were empty, but no longer are
+                    requiredConditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
+                    requiredConditionsView.add(new GUIText(this, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newCondition != null) activeObjectiveElement.setCondition((CCondition) newCondition.copy());
+            else
+            {
+                //Removing an objective
+                int index = requiredConditionsView.indexOf(activeObjectiveElement);
+                requiredConditionsView.remove(index);
+                requiredConditionsView.remove(index);
+
+                if (requiredConditionsView.size() == 5)
+                {
+                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    requiredConditionsView.remove(3);
+                    requiredConditionsView.remove(3);
+                }
+            }
+        }
+    }
+
+    private void clearConditions()
+    {
+        requiredConditionsView.clear();
+
+        requiredConditionsView.add(new GUIText(this, "\n"));
+        GUICondition conditionElement = new GUICondition(this, null);
+        conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
+        requiredConditionsView.add(conditionElement.addClickActions(() ->
+        {
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+        }));
+        requiredConditionsView.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
     }
 }
