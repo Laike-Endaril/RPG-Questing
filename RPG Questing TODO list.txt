@@ -1,6 +1,3 @@
-Branches...
-* Choices (array)
-
 Choices...
 * Text (eg. "Sure, I'll find your dog")
 * Availability conditions (array)

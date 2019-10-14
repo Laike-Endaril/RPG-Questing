@@ -5,13 +5,16 @@ import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIMultilineTextInput;
+import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNone;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 
 import static com.fantasticsource.rpgquesting.Colors.GREEN;
 import static com.fantasticsource.rpgquesting.Colors.RED;
@@ -55,6 +58,36 @@ public class BranchEditorGUI extends GUIScreen
 
         //Choices tab
         choicesView.clear();
+
+        for (CDialogueChoice choice : original.choices)
+        {
+            choicesView.add(new GUIText(this, "\n"));
+            GUIChoice choiceElement = new GUIChoice(this, choice);
+            choicesView.add(choiceElement.addClickActions(() ->
+            {
+                ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+                gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
+            }));
+        }
+
+        {
+            choicesView.add(new GUIText(this, "\n"));
+            GUIChoice choiceElement = new GUIChoice(this, null);
+            choiceElement.text = TextFormatting.DARK_PURPLE + "(Add new choice)";
+            choicesView.add(choiceElement.addClickActions(() ->
+            {
+                ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+                gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
+            }));
+        }
+
+        if (original.choices.size() > 0)
+        {
+            choicesView.add(new GUIText(this, "\n"));
+            choicesView.add(new GUIText(this, "(Clear all choices)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearChoices));
+        }
+
+        choicesView.add(new GUIText(this, "\n"));
     }
 
     @Override
@@ -115,5 +148,72 @@ public class BranchEditorGUI extends GUIScreen
         choicesView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(1).add(choicesView);
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, choicesView));
+    }
+
+
+    private void editChoice(GUIChoice activeChoiceElement, CDialogueChoice newChoice)
+    {
+        if (activeChoiceElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new choice)"))
+        {
+            //Started with empty slot
+            if (newChoice != null)
+            {
+                //Added new choice
+                int index = choicesView.indexOf(activeChoiceElement);
+
+                {
+                    choicesView.add(index, new GUIText(this, "\n"));
+                    GUIChoice choiceElement = new GUIChoice(this, (CDialogueChoice) newChoice.copy());
+                    choicesView.add(index, choiceElement.addClickActions(() ->
+                    {
+                        ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+                        gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Choices were empty, but no longer are
+                    choicesView.add(new GUIText(this, "(Clear all choices)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearChoices));
+                    choicesView.add(new GUIText(this, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newChoice != null) activeChoiceElement.setChoice((CDialogueChoice) newChoice.copy());
+            else
+            {
+                //Removing a choice
+                int index = choicesView.indexOf(activeChoiceElement);
+                choicesView.remove(index);
+                choicesView.remove(index);
+
+                if (choicesView.size() == 5)
+                {
+                    //Had one choice, and now have 0 (remove the "clear all" option)
+                    choicesView.remove(3);
+                    choicesView.remove(3);
+                }
+            }
+        }
+    }
+
+    private void clearChoices()
+    {
+        choicesView.clear();
+
+        choicesView.add(new GUIText(this, "\n"));
+        GUIChoice choiceElement = new GUIChoice(this, null);
+        choiceElement.text = TextFormatting.DARK_PURPLE + "(Add new choice)";
+        choicesView.add(choiceElement.addClickActions(() ->
+        {
+            ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+            gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
+        }));
+        choicesView.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
     }
 }
