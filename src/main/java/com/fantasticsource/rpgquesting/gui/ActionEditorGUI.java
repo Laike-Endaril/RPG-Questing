@@ -293,77 +293,77 @@ public class ActionEditorGUI extends GUIScreen
                 }));
                 actionOptionsView.add(new GUIText(this, "\n"));
             }
-//            else if (cls == CActionAnd.class)
-//            {
-//                CActionAnd and = (CActionAnd) action;
-//                for (int i = 0; i < and.actions.size(); i++)
-//                {
-//                    CAction subAction = and.actions.get(i);
-//                    GUIAction subActionElement = new GUIAction(this, subAction);
-//                    actionOptionsView.add(subActionElement.addClickActions(() ->
-//                    {
-//                        ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
-//                        gui.addOnClosedActions(() ->
-//                        {
-//                            if (gui.selection == null)
-//                            {
-//                                int index = actionOptionsView.indexOf(subActionElement);
-//                                actionOptionsView.remove(index);
-//                                actionOptionsView.remove(index);
-//                                and.actions.remove(subAction);
-//                            }
-//                            else
-//                            {
-//                                subActionElement.setAction(gui.selection);
-//                                and.actions.set(and.actions.indexOf(subAction), gui.selection);
-//                            }
-//                            current.setAction(and);
-//                        });
-//                    }));
-//                    actionOptionsView.add(new GUIText(this, "\n"));
-//                }
-//
-//                GUIAction subActionElement = new GUIAction(this, null);
-//                actionOptionsView.add(subActionElement.addClickActions(() ->
-//                {
-//                    ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
-//                    gui.addOnClosedActions(() ->
-//                    {
-//                        if (gui.selection != null)
-//                        {
-//                            int index = actionOptionsView.size() - 2;
-//                            actionOptionsView.add(index, new GUIText(this, "\n"));
-//                            CAction subAction = gui.selection;
-//                            GUIAction subActionElement2 = new GUIAction(this, subAction);
-//                            actionOptionsView.add(index, subActionElement2.addClickActions(() ->
-//                            {
-//                                ActionEditorGUI gui2 = new ActionEditorGUI(subActionElement2);
-//                                gui2.addOnClosedActions(() ->
-//                                {
-//                                    if (gui2.selection == null)
-//                                    {
-//                                        int index2 = actionOptionsView.indexOf(subActionElement);
-//                                        actionOptionsView.remove(index2);
-//                                        actionOptionsView.remove(index2);
-//                                        and.actions.remove(subAction);
-//                                    }
-//                                    else
-//                                    {
-//                                        subActionElement2.setAction(gui2.selection);
-//                                        and.actions.set(and.actions.indexOf(subAction), gui2.selection);
-//                                    }
-//                                    current.setAction(and);
-//                                });
-//                            }));
-//
-//                            and.actions.add(gui.selection);
-//                            current.setAction(and);
-//                        }
-//                    });
-//                }));
-//
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
+            else if (cls == CActionArray.class)
+            {
+                CActionArray and = (CActionArray) action;
+                for (int i = 0; i < and.actions.size(); i++)
+                {
+                    CAction subAction = and.actions.get(i);
+                    GUIAction subActionElement = new GUIAction(this, subAction);
+                    actionOptionsView.add(subActionElement.addClickActions(() ->
+                    {
+                        ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
+                        gui.addOnClosedActions(() ->
+                        {
+                            if (gui.selection == null)
+                            {
+                                int index = actionOptionsView.indexOf(subActionElement);
+                                actionOptionsView.remove(index);
+                                actionOptionsView.remove(index);
+                                and.actions.remove(subAction);
+                            }
+                            else
+                            {
+                                subActionElement.setAction(gui.selection);
+                                and.actions.set(and.actions.indexOf(subAction), gui.selection);
+                            }
+                            current.setAction(and);
+                        });
+                    }));
+                    actionOptionsView.add(new GUIText(this, "\n"));
+                }
+
+                GUIAction subActionElement = new GUIAction(this, null);
+                actionOptionsView.add(subActionElement.addClickActions(() ->
+                {
+                    ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
+                    gui.addOnClosedActions(() ->
+                    {
+                        if (gui.selection != null)
+                        {
+                            int index = actionOptionsView.size() - 2;
+                            actionOptionsView.add(index, new GUIText(this, "\n"));
+                            CAction subAction = gui.selection;
+                            GUIAction subActionElement2 = new GUIAction(this, subAction);
+                            actionOptionsView.add(index, subActionElement2.addClickActions(() ->
+                            {
+                                ActionEditorGUI gui2 = new ActionEditorGUI(subActionElement2);
+                                gui2.addOnClosedActions(() ->
+                                {
+                                    if (gui2.selection == null)
+                                    {
+                                        int index2 = actionOptionsView.indexOf(subActionElement);
+                                        actionOptionsView.remove(index2);
+                                        actionOptionsView.remove(index2);
+                                        and.actions.remove(subAction);
+                                    }
+                                    else
+                                    {
+                                        subActionElement2.setAction(gui2.selection);
+                                        and.actions.set(and.actions.indexOf(subAction), gui2.selection);
+                                    }
+                                    current.setAction(and);
+                                });
+                            }));
+
+                            and.actions.add(gui.selection);
+                            current.setAction(and);
+                        }
+                    });
+                }));
+
+                actionOptionsView.add(new GUIText(this, "\n"));
+            }
         }
 
         currentView.recalc();
