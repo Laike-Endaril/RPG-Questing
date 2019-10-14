@@ -64,7 +64,8 @@ public class ActionEditorGUI extends GUIScreen
             {
                 if (element instanceof GUICondition)
                 {
-                    selection.addConditions(((GUICondition) element).condition);
+                    CCondition condition = ((GUICondition) element).condition;
+                    if (condition != null) selection.addConditions(condition);
                 }
             }
 

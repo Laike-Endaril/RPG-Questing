@@ -1,5 +1,3 @@
-Action editor GUI
-
 Saving of choices
 
 Saving of branches
