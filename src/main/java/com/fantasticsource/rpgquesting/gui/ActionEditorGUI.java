@@ -5,12 +5,15 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.actions.*;
 import com.fantasticsource.rpgquesting.actions.quest.CActionCompleteQuest;
 import com.fantasticsource.rpgquesting.actions.quest.CActionStartQuest;
@@ -234,50 +237,32 @@ public class ActionEditorGUI extends GUIScreen
                 actionOptionsView.add(new GUIText(this, "(No options)\n"));
                 actionOptionsView.add(new GUIText(this, "\n"));
             }
-//            else if (cls == CActionClassIs.class)
-//            {
-//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity class name: ", ((CActionClassIs) action).className.value, FilterNotEmpty.INSTANCE);
-//                name.input.addRecalcActions(() ->
-//                {
-//                    if (name.input.valid())
-//                    {
-//                        ((CActionClassIs) action).className.set(name.input.text);
-//                        current.setAction(action);
-//                    }
-//                });
-//                actionOptionsView.add(name);
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
-//            else if (cls == CActionInventorySpace.class)
-//            {
-//                GUILabeledTextInput slotCount = new GUILabeledTextInput(this, "Empty slot count: ", "" + ((CActionInventorySpace) action).slotCount.value, FilterInt.INSTANCE);
-//                slotCount.input.addRecalcActions(() ->
-//                {
-//                    if (slotCount.input.valid())
-//                    {
-//                        ((CActionInventorySpace) action).slotCount.set(Integer.parseInt(slotCount.input.text));
-//                        current.setAction(action);
-//                    }
-//                });
-//                actionOptionsView.add(slotCount);
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
-//            else if (cls == CActionHaveItems.class)
-//            {
-//                CActionHaveItems haveItems = (CActionHaveItems) action;
-//                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.stack);
-//                actionOptionsView.add(stackElement.addClickActions(() ->
-//                {
-//                    ItemSelectionGUI gui = new ItemSelectionGUI(stackElement);
-//                    gui.addOnClosedActions(() ->
-//                    {
-//                        stackElement.setStack(gui.selection);
-//                        haveItems.set(gui.selection);
-//                        current.setAction(haveItems);
-//                    });
-//                }));
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
+            else if (cls == CActionBranch.class)
+            {
+                GUILabeledTextInput dialogueName = new GUILabeledTextInput(this, "Dialogue Name: ", ((CActionBranch) action).dialogueName.value, FilterNotEmpty.INSTANCE);
+                dialogueName.input.addRecalcActions(() ->
+                {
+                    if (dialogueName.input.valid())
+                    {
+                        ((CActionBranch) action).dialogueName.set(dialogueName.input.text);
+                        current.setAction(action);
+                    }
+                });
+                actionOptionsView.add(dialogueName);
+                actionOptionsView.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput branchIndex = new GUILabeledTextInput(this, "Branch Index: ", "" + ((CActionBranch) action).branchIndex.value, FilterInt.INSTANCE);
+                branchIndex.input.addRecalcActions(() ->
+                {
+                    if (branchIndex.input.valid())
+                    {
+                        ((CActionBranch) action).branchIndex.set(FilterInt.INSTANCE.parse(branchIndex.input.text));
+                        current.setAction(action);
+                    }
+                });
+                actionOptionsView.add(branchIndex);
+                actionOptionsView.add(new GUIText(this, "\n"));
+            }
             else if (action instanceof CQuestAction)
             {
                 GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestAction) action).name.value, FilterNotEmpty.INSTANCE);
@@ -292,22 +277,22 @@ public class ActionEditorGUI extends GUIScreen
                 actionOptionsView.add(questName);
                 actionOptionsView.add(new GUIText(this, "\n"));
             }
-//            else if (cls == CActionNot.class)
-//            {
-//                CActionNot not = (CActionNot) action;
-//                GUIAction subActionElement = new GUIAction(this, not.action);
-//                actionOptionsView.add(subActionElement.addClickActions(() ->
-//                {
-//                    ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
-//                    gui.addOnClosedActions(() ->
-//                    {
-//                        subActionElement.setAction(gui.selection);
-//                        not.action = gui.selection;
-//                        current.setAction(not);
-//                    });
-//                }));
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
+            else if (cls == CActionTakeItems.class)
+            {
+                CActionTakeItems haveItems = (CActionTakeItems) action;
+                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.stack);
+                actionOptionsView.add(stackElement.addClickActions(() ->
+                {
+                    ItemSelectionGUI gui = new ItemSelectionGUI(stackElement);
+                    gui.addOnClosedActions(() ->
+                    {
+                        stackElement.setStack(gui.selection);
+                        haveItems.set(gui.selection);
+                        current.setAction(haveItems);
+                    });
+                }));
+                actionOptionsView.add(new GUIText(this, "\n"));
+            }
 //            else if (cls == CActionAnd.class)
 //            {
 //                CActionAnd and = (CActionAnd) action;
@@ -373,77 +358,6 @@ public class ActionEditorGUI extends GUIScreen
 //
 //                            and.actions.add(gui.selection);
 //                            current.setAction(and);
-//                        }
-//                    });
-//                }));
-//
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
-//            else if (cls == CActionOr.class)
-//            {
-//                CActionOr or = (CActionOr) action;
-//                for (int i = 0; i < or.actions.size(); i++)
-//                {
-//                    CAction subAction = or.actions.get(i);
-//                    GUIAction subActionElement = new GUIAction(this, subAction);
-//                    actionOptionsView.add(subActionElement.addClickActions(() ->
-//                    {
-//                        ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
-//                        gui.addOnClosedActions(() ->
-//                        {
-//                            if (gui.selection == null)
-//                            {
-//                                int index = actionOptionsView.indexOf(subActionElement);
-//                                actionOptionsView.remove(index);
-//                                actionOptionsView.remove(index);
-//                                or.actions.remove(subAction);
-//                            }
-//                            else
-//                            {
-//                                subActionElement.setAction(gui.selection);
-//                                or.actions.set(or.actions.indexOf(subAction), gui.selection);
-//                            }
-//                            current.setAction(or);
-//                        });
-//                    }));
-//                    actionOptionsView.add(new GUIText(this, "\n"));
-//                }
-//
-//                GUIAction subActionElement = new GUIAction(this, null);
-//                actionOptionsView.add(subActionElement.addClickActions(() ->
-//                {
-//                    ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
-//                    gui.addOnClosedActions(() ->
-//                    {
-//                        if (gui.selection != null)
-//                        {
-//                            int index = actionOptionsView.size() - 2;
-//                            actionOptionsView.add(index, new GUIText(this, "\n"));
-//                            CAction subAction = gui.selection;
-//                            GUIAction subActionElement2 = new GUIAction(this, subAction);
-//                            actionOptionsView.add(index, subActionElement2.addClickActions(() ->
-//                            {
-//                                ActionEditorGUI gui2 = new ActionEditorGUI(subActionElement2);
-//                                gui2.addOnClosedActions(() ->
-//                                {
-//                                    if (gui2.selection == null)
-//                                    {
-//                                        int index2 = actionOptionsView.indexOf(subActionElement);
-//                                        actionOptionsView.remove(index2);
-//                                        actionOptionsView.remove(index2);
-//                                        or.actions.remove(subAction);
-//                                    }
-//                                    else
-//                                    {
-//                                        subActionElement2.setAction(gui2.selection);
-//                                        or.actions.set(or.actions.indexOf(subAction), gui2.selection);
-//                                    }
-//                                    current.setAction(or);
-//                                });
-//                            }));
-//
-//                            or.actions.add(gui.selection);
-//                            current.setAction(or);
 //                        }
 //                    });
 //                }));

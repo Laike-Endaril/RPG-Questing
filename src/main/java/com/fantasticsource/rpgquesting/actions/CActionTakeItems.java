@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class CActionTakeItems extends CAction
 {
-    CItemStack stackToMatch = new CItemStack();
+    public CItemStack stackToMatch = new CItemStack();
 
     public CActionTakeItems()
     {

@@ -20,8 +20,9 @@ import java.util.ArrayList;
 
 public class CActionBranch extends CAction
 {
-    private CStringUTF8 dialogueName = new CStringUTF8();
-    private CInt branchIndex = new CInt();
+    public static String queuedDialogueName = "X";
+    public CStringUTF8 dialogueName = new CStringUTF8().set(queuedDialogueName);
+    public CInt branchIndex = new CInt();
 
 
     public CActionBranch()
@@ -51,7 +52,7 @@ public class CActionBranch extends CAction
     public ArrayList<String> description()
     {
         ArrayList<String> result = new ArrayList<>();
-        result.add("Go to branch " + branchIndex.value + " of dialogue: " + (dialogueName.value == null ? "?" : dialogueName.value));
+        result.add("Go to branch " + branchIndex.value + " of dialogue: " + dialogueName.value);
         return result;
     }
 
@@ -106,8 +107,6 @@ public class CActionBranch extends CAction
     @Override
     public GUIAction getChoosableElement(GUIScreen screen)
     {
-        GUIAction actionElement = new GUIAction(screen, new CActionBranch());
-        actionElement.text = actionElement.text.replace("0", "X");
-        return actionElement;
+        return new GUIAction(screen, new CActionBranch());
     }
 }

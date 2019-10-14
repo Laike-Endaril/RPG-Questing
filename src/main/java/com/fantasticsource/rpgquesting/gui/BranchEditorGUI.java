@@ -10,6 +10,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNone;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
@@ -38,6 +39,10 @@ public class BranchEditorGUI extends GUIScreen
 
         original = clickedElement.branch;
         selection = (CDialogueBranch) original.copy();
+
+
+        //For CActionBranch, way down in BranchEditorGUI -> ChoiceEditorGUI -> ActionEditorGUI
+        CActionBranch.queuedDialogueName = selection.dialogueName.value;
 
 
         //Paragraph tab
