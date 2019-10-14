@@ -3,7 +3,10 @@ package com.fantasticsource.rpgquesting.gui;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
+import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
+import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
@@ -17,7 +20,9 @@ public class ChoiceEditorGUI extends GUIScreen
 {
     public CDialogueChoice selection;
     private GUITabView tabView;
+    private GUIScrollView conditionsView, actionsView;
     private GUIGradientBorder separator;
+    private GUILabeledTextInput text;
 
     public ChoiceEditorGUI(GUIChoice clickedElement)
     {
@@ -31,6 +36,16 @@ public class ChoiceEditorGUI extends GUIScreen
         selection = clickedElement.choice;
 
 
+        //Main tab
+        tabView.tabViews.get(0).clear();
+        text = new GUILabeledTextInput(this, "Text: ", selection.text.value, FilterNotEmpty.INSTANCE);
+        tabView.tabViews.get(0).add(text);
+
+
+        //Conditions tab
+
+
+        //Actions tab
     }
 
     @Override
@@ -78,6 +93,16 @@ public class ChoiceEditorGUI extends GUIScreen
 
         tabView = new GUITabView(this, 0, separator.y + separator.height, 1, 1 - separator.y - separator.height, "Main", "Availability Conditions", "Actions");
         root.add(tabView);
+
+
+        //Conditions tab
+        conditionsView = new GUIScrollView(this, 1, 1);
+        tabView.tabViews.get(1).add(conditionsView);
+
+
+        //Actions tab
+        actionsView = new GUIScrollView(this, 1, 1);
+        tabView.tabViews.get(1).add(actionsView);
     }
 
 

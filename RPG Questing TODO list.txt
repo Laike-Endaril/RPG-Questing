@@ -1,5 +1,4 @@
 Choices...
-* Text (eg. "Sure, I'll find your dog")
 * Availability conditions (array)
 * Actions (array)
 
