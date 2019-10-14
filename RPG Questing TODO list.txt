@@ -1,5 +1,4 @@
 Choices...
-* Availability conditions (array)
 * Actions (array)
 
 Action editor GUI

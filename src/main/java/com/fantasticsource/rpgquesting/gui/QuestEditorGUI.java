@@ -412,7 +412,7 @@ public class QuestEditorGUI extends GUIScreen
             //Started with empty slot
             if (newCondition != null)
             {
-                //Added new objective
+                //Added new condition
                 int index = conditions.indexOf(activeObjectiveElement);
 
                 {
@@ -427,7 +427,7 @@ public class QuestEditorGUI extends GUIScreen
 
                 if (index == 1)
                 {
-                    //Objectives were empty, but no longer are
+                    //Conditions were empty, but no longer are
                     conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                     conditions.add(new GUIText(this, "\n"));
                 }
@@ -439,14 +439,14 @@ public class QuestEditorGUI extends GUIScreen
             if (newCondition != null) activeObjectiveElement.setCondition((CCondition) newCondition.copy());
             else
             {
-                //Removing an objective
+                //Removing a condition
                 int index = conditions.indexOf(activeObjectiveElement);
                 conditions.remove(index);
                 conditions.remove(index);
 
                 if (conditions.size() == 5)
                 {
-                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    //Had one condition, and now have 0 (remove the "clear all" option)
                     conditions.remove(3);
                     conditions.remove(3);
                 }
