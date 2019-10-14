@@ -5,13 +5,16 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.actions.*;
 import com.fantasticsource.rpgquesting.actions.quest.CActionCompleteQuest;
 import com.fantasticsource.rpgquesting.actions.quest.CActionStartQuest;
+import com.fantasticsource.rpgquesting.actions.quest.CQuestAction;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
@@ -226,34 +229,11 @@ public class ActionEditorGUI extends GUIScreen
         if (action != null)
         {
             Class cls = action.getClass();
-//            if (cls == CActionNameIs.class)
-//            {
-//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity name: ", ((CActionNameIs) action).name.value, FilterNotEmpty.INSTANCE);
-//                name.input.addRecalcActions(() ->
-//                {
-//                    if (name.input.valid())
-//                    {
-//                        ((CActionNameIs) action).name.set(name.input.text);
-//                        current.setAction(action);
-//                    }
-//                });
-//                actionOptionsView.add(name);
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
-//            else if (cls == CActionEntityEntryIs.class)
-//            {
-//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity registry name: ", ((CActionEntityEntryIs) action).entityEntryName.value, FilterNotEmpty.INSTANCE);
-//                name.input.addRecalcActions(() ->
-//                {
-//                    if (name.input.valid())
-//                    {
-//                        ((CActionEntityEntryIs) action).entityEntryName.set(name.input.text);
-//                        current.setAction(action);
-//                    }
-//                });
-//                actionOptionsView.add(name);
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
+            if (cls == CActionEndDialogue.class)
+            {
+                actionOptionsView.add(new GUIText(this, "(No options)\n"));
+                actionOptionsView.add(new GUIText(this, "\n"));
+            }
 //            else if (cls == CActionClassIs.class)
 //            {
 //                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity class name: ", ((CActionClassIs) action).className.value, FilterNotEmpty.INSTANCE);
@@ -298,20 +278,20 @@ public class ActionEditorGUI extends GUIScreen
 //                }));
 //                actionOptionsView.add(new GUIText(this, "\n"));
 //            }
-//            else if (action instanceof CQuestAction)
-//            {
-//                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestAction) action).name.value, FilterNotEmpty.INSTANCE);
-//                questName.input.addRecalcActions(() ->
-//                {
-//                    if (questName.input.valid())
-//                    {
-//                        ((CQuestAction) action).name.set(questName.input.text);
-//                        current.setAction(action);
-//                    }
-//                });
-//                actionOptionsView.add(questName);
-//                actionOptionsView.add(new GUIText(this, "\n"));
-//            }
+            else if (action instanceof CQuestAction)
+            {
+                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestAction) action).name.value, FilterNotEmpty.INSTANCE);
+                questName.input.addRecalcActions(() ->
+                {
+                    if (questName.input.valid())
+                    {
+                        ((CQuestAction) action).name.set(questName.input.text);
+                        current.setAction(action);
+                    }
+                });
+                actionOptionsView.add(questName);
+                actionOptionsView.add(new GUIText(this, "\n"));
+            }
 //            else if (cls == CActionNot.class)
 //            {
 //                CActionNot not = (CActionNot) action;
