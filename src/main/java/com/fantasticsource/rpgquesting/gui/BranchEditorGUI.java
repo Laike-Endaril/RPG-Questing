@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
@@ -119,8 +120,18 @@ public class BranchEditorGUI extends GUIScreen
         root.add(new GUITextButton(this, "Save and Close", GREEN[0]).addClickActions(() ->
         {
             selection = new CDialogueBranch(paragraph.text);
+
             selection.dialogueName.set(original.dialogueName.value);
-            //TODO add new choices to selection
+
+            for (GUIElement element : choicesView.children)
+            {
+                if (element instanceof GUIChoice)
+                {
+                    CDialogueChoice choice = ((GUIChoice) element).choice;
+                    if (choice != null) selection.add(choice);
+                }
+            }
+
             close();
         }));
 
