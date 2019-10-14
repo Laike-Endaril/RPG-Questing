@@ -1,14 +1,17 @@
 package com.fantasticsource.rpgquesting.actions;
 
 import com.fantasticsource.mctools.component.CItemStack;
+import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.items.ItemMatcher;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import java.io.InputStream;
@@ -104,5 +107,11 @@ public class CActionTakeItems extends CAction
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
 
         return this;
+    }
+
+    @Override
+    public GUIAction getChoosableElement(GUIScreen screen)
+    {
+        return new GUIAction(screen, new CActionTakeItems(new ItemStack(Items.AIR, 1)));
     }
 }

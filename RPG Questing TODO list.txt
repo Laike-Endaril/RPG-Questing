@@ -1,9 +1,12 @@
-Choices...
-* Actions (array)
-
 Action editor GUI
 
-Saving of dialogue
+Saving of choices
+
+Saving of branches
+
+Saving of dialogues
+
+Test
 
 
 

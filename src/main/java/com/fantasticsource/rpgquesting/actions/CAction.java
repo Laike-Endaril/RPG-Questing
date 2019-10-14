@@ -1,7 +1,9 @@
 package com.fantasticsource.rpgquesting.actions;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.conditions.CConditionAnd;
+import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.component.Component;
 import net.minecraft.entity.Entity;
 import scala.actors.threadpool.Arrays;
@@ -28,4 +30,6 @@ public abstract class CAction extends Component
     protected abstract void execute(Entity entity);
 
     public abstract ArrayList<String> description();
+
+    public abstract GUIAction getChoosableElement(GUIScreen screen);
 }

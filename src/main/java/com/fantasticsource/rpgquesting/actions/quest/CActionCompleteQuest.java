@@ -1,6 +1,8 @@
 package com.fantasticsource.rpgquesting.actions.quest;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
@@ -39,5 +41,13 @@ public class CActionCompleteQuest extends CQuestAction
         ArrayList<String> result = new ArrayList<>();
         result.add("Complete quest: " + name.value);
         return result;
+    }
+
+    @Override
+    public GUIAction getChoosableElement(GUIScreen screen)
+    {
+        CQuest quest = new CQuest();
+        quest.name.set("Quest Name");
+        return new GUIAction(screen, new CActionCompleteQuest(quest, null));
     }
 }

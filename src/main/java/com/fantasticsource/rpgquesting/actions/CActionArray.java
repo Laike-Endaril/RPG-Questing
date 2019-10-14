@@ -1,6 +1,8 @@
 package com.fantasticsource.rpgquesting.actions;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
@@ -104,5 +106,13 @@ public class CActionArray extends CAction
         for (int i = new CInt().load(stream).value; i > 0; i--) actions.add((CAction) Component.loadMarked(stream));
 
         return this;
+    }
+
+    @Override
+    public GUIAction getChoosableElement(GUIScreen screen)
+    {
+        GUIAction element = new GUIAction(screen, new CActionArray());
+        element.text = "Array (multiple actions)";
+        return element;
     }
 }

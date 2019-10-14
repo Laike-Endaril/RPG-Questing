@@ -1,9 +1,11 @@
 package com.fantasticsource.rpgquesting.actions;
 
+import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
+import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
@@ -99,5 +101,12 @@ public class CActionBranch extends CAction
         for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
 
         return this;
+    }
+
+    @Override
+    public GUIAction getChoosableElement(GUIScreen screen)
+    {
+        CDialogueBranch branch = new CDialogueBranch("");
+        return new GUIAction(screen, new CActionBranch(branch));
     }
 }

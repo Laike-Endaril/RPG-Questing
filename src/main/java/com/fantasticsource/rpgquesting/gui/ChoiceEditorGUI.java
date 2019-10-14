@@ -10,6 +10,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.actions.CAction;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
@@ -210,13 +211,69 @@ public class ChoiceEditorGUI extends GUIScreen
     }
 
 
-//    private void editAction(GUIAction activeActionElement, CAction newAction)
-//    {
-//        //TODO
-//    }
+    private void editAction(GUIAction activeObjectiveElement, CAction newAction)
+    {
+        if (activeObjectiveElement.text.equals(TextFormatting.DARK_PURPLE + "(Add new action)"))
+        {
+            //Started with empty slot
+            if (newAction != null)
+            {
+                //Added new action
+                int index = actionsView.indexOf(activeObjectiveElement);
+
+                {
+                    actionsView.add(index, new GUIText(this, "\n"));
+                    GUIAction actionElement = new GUIAction(this, (CAction) newAction.copy());
+                    actionsView.add(index, actionElement.addClickActions(() ->
+                    {
+                        ActionEditorGUI gui = new ActionEditorGUI(actionElement);
+                        gui.addOnClosedActions(() -> editAction(actionElement, gui.selection));
+                    }));
+                }
+
+                if (index == 1)
+                {
+                    //Objectives were empty, but no longer are
+                    actionsView.add(new GUIText(this, "(Clear all actions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearActions));
+                    actionsView.add(new GUIText(this, "\n"));
+                }
+            }
+        }
+        else
+        {
+            //Started with non-empty slot, or at least one that should not be empty
+            if (newAction != null) activeObjectiveElement.setAction((CAction) newAction.copy());
+            else
+            {
+                //Removing an objective
+                int index = actionsView.indexOf(activeObjectiveElement);
+                actionsView.remove(index);
+                actionsView.remove(index);
+
+                if (actionsView.size() == 5)
+                {
+                    //Had one objective, and now have 0 (remove the "clear all" option)
+                    actionsView.remove(3);
+                    actionsView.remove(3);
+                }
+            }
+        }
+    }
 
     private void clearActions()
     {
-        //TODO
+        actionsView.clear();
+
+        actionsView.add(new GUIText(this, "\n"));
+        GUIAction actionElement = new GUIAction(this, null);
+        actionElement.text = TextFormatting.DARK_PURPLE + "(Add new action)";
+        actionsView.add(actionElement.addClickActions(() ->
+        {
+            ActionEditorGUI gui = new ActionEditorGUI(actionElement);
+            gui.addOnClosedActions(() -> editAction(actionElement, gui.selection));
+        }));
+        actionsView.add(new GUIText(this, "\n"));
+
+        tabView.recalc();
     }
 }
