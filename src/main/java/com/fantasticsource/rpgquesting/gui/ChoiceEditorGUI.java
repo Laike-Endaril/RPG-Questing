@@ -46,9 +46,17 @@ public class ChoiceEditorGUI extends GUIScreen
         text = new GUILabeledTextInput(this, "Text: ", selection.text.value, FilterNotEmpty.INSTANCE);
         mainView.add(text);
 
-        mainView.add(new GUIText(this, "\nAction...\n\n"));
+        mainView.add(new GUIText(this, "\n\nAction...\n\n"));
         action = new GUIAction(this, selection.action);
-        mainView.add(action);
+        mainView.add(action.addClickActions(() ->
+        {
+            ActionEditorGUI gui = new ActionEditorGUI(action);
+            gui.addOnClosedActions(() ->
+            {
+                action.setAction(gui.selection);
+                mainView.recalc();
+            });
+        }));
 
         mainView.add(new GUIText(this, "\n"));
 

@@ -51,7 +51,7 @@ public class CActionBranch extends CAction
     public ArrayList<String> description()
     {
         ArrayList<String> result = new ArrayList<>();
-        result.add("Go to branch " + branchIndex.value + " of dialogue: " + dialogueName.value);
+        result.add("Go to branch " + branchIndex.value + " of dialogue: " + (dialogueName.value == null ? "?" : dialogueName.value));
         return result;
     }
 
@@ -106,7 +106,8 @@ public class CActionBranch extends CAction
     @Override
     public GUIAction getChoosableElement(GUIScreen screen)
     {
-        CDialogueBranch branch = new CDialogueBranch("");
-        return new GUIAction(screen, new CActionBranch(branch));
+        GUIAction actionElement = new GUIAction(screen, new CActionBranch());
+        actionElement.text = actionElement.text.replace("0", "X");
+        return actionElement;
     }
 }
