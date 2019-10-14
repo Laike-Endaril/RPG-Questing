@@ -95,6 +95,7 @@ public class BranchEditorGUI extends GUIScreen
     {
         super.onResize(mcIn, w, h);
 
+
         //Resize views and scrollbars
         tabView.y = separator.y + separator.height;
         tabView.height = 1 - tabView.y;
@@ -107,6 +108,7 @@ public class BranchEditorGUI extends GUIScreen
     protected void init()
     {
         root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+
 
         //Management
         root.add(new GUITextButton(this, "Save and Close", GREEN[0]).addClickActions(() ->
