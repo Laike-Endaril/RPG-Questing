@@ -24,8 +24,9 @@ public class ActionEditorGUI extends GUIScreen
     public GUIAction current;
     private GUITextButton delete;
     private GUIText originalLabel, currentLabel;
-    private GUIScrollView actionSelector, actionEditor, originalView, currentView;
-    private GUIVerticalScrollbar actionSelectorScrollbar, actionEditorScrollbar, originalScrollbar, currentScrollbar;
+    private GUITabView tabView;
+    private GUIScrollView originalView, currentView, actionOptionsView;
+    private GUIVerticalScrollbar originalScrollbar, currentScrollbar;
 
     public ActionEditorGUI(GUIAction clickedElement)
     {
@@ -67,7 +68,7 @@ public class ActionEditorGUI extends GUIScreen
         }));
 
 
-        double free = 1 - delete.height - 0.01;
+        double free = 1 - delete.height - 0.02;
 
 
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
@@ -108,54 +109,67 @@ public class ActionEditorGUI extends GUIScreen
 
 
         //Tabview
-        GUITabView tabView = new GUITabView(this, 1, free * 2 / 3, "Base Action Type", "Action Options", "Required Conditions");
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
+
+        tabView = new GUITabView(this, 1, free * 2 / 3, "Base Action Type", "Action Options", "Required Conditions");
         root.add(tabView);
 
 
         //Base Action Type tab
-        actionSelector = new GUIScrollView(this, 0.02, 1, 0.94, 1);
-        tabView.tabViews.get(0).add(actionSelector);
-        actionSelectorScrollbar = new GUIVerticalScrollbar(this, 0.98, 1, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionSelector);
-        tabView.tabViews.get(0).add(actionSelectorScrollbar);
+        GUIScrollView actionTypeView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        tabView.tabViews.get(0).add(actionTypeView);
+        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionTypeView));
 
         //Dialogue actions
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUIText(this, "\n"));
 
-        actionSelector.add(new CActionBranch().getChoosableElement(this));
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new CActionBranch().getChoosableElement(this));
+        actionTypeView.add(new GUIText(this, "\n"));
 
-        actionSelector.add(new CActionEndDialogue().getChoosableElement(this));
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new CActionEndDialogue().getChoosableElement(this));
+        actionTypeView.add(new GUIText(this, "\n"));
 
         //Quest actions
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUIText(this, "\n"));
 
-        actionSelector.add(new CActionStartQuest().getChoosableElement(this));
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new CActionStartQuest().getChoosableElement(this));
+        actionTypeView.add(new GUIText(this, "\n"));
 
-        actionSelector.add(new CActionCompleteQuest().getChoosableElement(this));
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new CActionCompleteQuest().getChoosableElement(this));
+        actionTypeView.add(new GUIText(this, "\n"));
 
         //Normal actions
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUIText(this, "\n"));
 
-        actionSelector.add(new CActionTakeItems().getChoosableElement(this));
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new CActionTakeItems().getChoosableElement(this));
+        actionTypeView.add(new GUIText(this, "\n"));
 
         //Meta actions
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUIText(this, "\n"));
 
-        actionSelector.add(new CActionArray().getChoosableElement(this));
-        actionSelector.add(new GUIText(this, "\n"));
+        actionTypeView.add(new CActionArray().getChoosableElement(this));
+        actionTypeView.add(new GUIText(this, "\n"));
 
-        for (int i = actionSelector.size() - 1; i >= 0; i--)
+        for (int i = actionTypeView.size() - 1; i >= 0; i--)
         {
-            GUIElement element = actionSelector.get(i);
+            GUIElement element = actionTypeView.get(i);
             if (element instanceof GUIAction)
             {
                 element.addClickActions(() -> setCurrent(((GUIAction) element).action));
             }
         }
+
+
+        //Action Options tab
+        actionOptionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        tabView.tabViews.get(1).add(actionOptionsView);
+        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionOptionsView));
+
+
+        //Required Conditions tab
+        GUIScrollView requiredConditionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        tabView.tabViews.get(2).add(requiredConditionsView);
+        tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, requiredConditionsView));
 
 
         //Reposition labels
@@ -171,7 +185,7 @@ public class ActionEditorGUI extends GUIScreen
     {
         super.onResize(mcIn, w, h);
 
-        double free = 1 - delete.height - 0.03;
+        double free = 1 - delete.height - 0.02;
 
 
         //Resize views and scrollbars
@@ -181,11 +195,7 @@ public class ActionEditorGUI extends GUIScreen
         currentView.height = free / 3;
         currentScrollbar.height = free / 3;
 
-        actionSelector.height = free / 3;
-        actionSelectorScrollbar.height = free / 3;
-
-        actionEditor.height = free / 3;
-        actionEditorScrollbar.height = free / 3;
+        tabView.height = free * 2 / 3;
 
 
         //Reposition labels
@@ -206,5 +216,262 @@ public class ActionEditorGUI extends GUIScreen
 
     private void setCurrent(CAction action)
     {
+        current.setAction(action);
+
+
+        actionOptionsView.clear();
+
+        actionOptionsView.add(new GUIText(this, "\n"));
+
+        if (action != null)
+        {
+            Class cls = action.getClass();
+//            if (cls == CActionNameIs.class)
+//            {
+//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity name: ", ((CActionNameIs) action).name.value, FilterNotEmpty.INSTANCE);
+//                name.input.addRecalcActions(() ->
+//                {
+//                    if (name.input.valid())
+//                    {
+//                        ((CActionNameIs) action).name.set(name.input.text);
+//                        current.setAction(action);
+//                    }
+//                });
+//                actionOptionsView.add(name);
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (cls == CActionEntityEntryIs.class)
+//            {
+//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity registry name: ", ((CActionEntityEntryIs) action).entityEntryName.value, FilterNotEmpty.INSTANCE);
+//                name.input.addRecalcActions(() ->
+//                {
+//                    if (name.input.valid())
+//                    {
+//                        ((CActionEntityEntryIs) action).entityEntryName.set(name.input.text);
+//                        current.setAction(action);
+//                    }
+//                });
+//                actionOptionsView.add(name);
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (cls == CActionClassIs.class)
+//            {
+//                GUILabeledTextInput name = new GUILabeledTextInput(this, "Entity class name: ", ((CActionClassIs) action).className.value, FilterNotEmpty.INSTANCE);
+//                name.input.addRecalcActions(() ->
+//                {
+//                    if (name.input.valid())
+//                    {
+//                        ((CActionClassIs) action).className.set(name.input.text);
+//                        current.setAction(action);
+//                    }
+//                });
+//                actionOptionsView.add(name);
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (cls == CActionInventorySpace.class)
+//            {
+//                GUILabeledTextInput slotCount = new GUILabeledTextInput(this, "Empty slot count: ", "" + ((CActionInventorySpace) action).slotCount.value, FilterInt.INSTANCE);
+//                slotCount.input.addRecalcActions(() ->
+//                {
+//                    if (slotCount.input.valid())
+//                    {
+//                        ((CActionInventorySpace) action).slotCount.set(Integer.parseInt(slotCount.input.text));
+//                        current.setAction(action);
+//                    }
+//                });
+//                actionOptionsView.add(slotCount);
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (cls == CActionHaveItems.class)
+//            {
+//                CActionHaveItems haveItems = (CActionHaveItems) action;
+//                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.stack);
+//                actionOptionsView.add(stackElement.addClickActions(() ->
+//                {
+//                    ItemSelectionGUI gui = new ItemSelectionGUI(stackElement);
+//                    gui.addOnClosedActions(() ->
+//                    {
+//                        stackElement.setStack(gui.selection);
+//                        haveItems.set(gui.selection);
+//                        current.setAction(haveItems);
+//                    });
+//                }));
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (action instanceof CQuestAction)
+//            {
+//                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestAction) action).name.value, FilterNotEmpty.INSTANCE);
+//                questName.input.addRecalcActions(() ->
+//                {
+//                    if (questName.input.valid())
+//                    {
+//                        ((CQuestAction) action).name.set(questName.input.text);
+//                        current.setAction(action);
+//                    }
+//                });
+//                actionOptionsView.add(questName);
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (cls == CActionNot.class)
+//            {
+//                CActionNot not = (CActionNot) action;
+//                GUIAction subActionElement = new GUIAction(this, not.action);
+//                actionOptionsView.add(subActionElement.addClickActions(() ->
+//                {
+//                    ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
+//                    gui.addOnClosedActions(() ->
+//                    {
+//                        subActionElement.setAction(gui.selection);
+//                        not.action = gui.selection;
+//                        current.setAction(not);
+//                    });
+//                }));
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (cls == CActionAnd.class)
+//            {
+//                CActionAnd and = (CActionAnd) action;
+//                for (int i = 0; i < and.actions.size(); i++)
+//                {
+//                    CAction subAction = and.actions.get(i);
+//                    GUIAction subActionElement = new GUIAction(this, subAction);
+//                    actionOptionsView.add(subActionElement.addClickActions(() ->
+//                    {
+//                        ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
+//                        gui.addOnClosedActions(() ->
+//                        {
+//                            if (gui.selection == null)
+//                            {
+//                                int index = actionOptionsView.indexOf(subActionElement);
+//                                actionOptionsView.remove(index);
+//                                actionOptionsView.remove(index);
+//                                and.actions.remove(subAction);
+//                            }
+//                            else
+//                            {
+//                                subActionElement.setAction(gui.selection);
+//                                and.actions.set(and.actions.indexOf(subAction), gui.selection);
+//                            }
+//                            current.setAction(and);
+//                        });
+//                    }));
+//                    actionOptionsView.add(new GUIText(this, "\n"));
+//                }
+//
+//                GUIAction subActionElement = new GUIAction(this, null);
+//                actionOptionsView.add(subActionElement.addClickActions(() ->
+//                {
+//                    ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
+//                    gui.addOnClosedActions(() ->
+//                    {
+//                        if (gui.selection != null)
+//                        {
+//                            int index = actionOptionsView.size() - 2;
+//                            actionOptionsView.add(index, new GUIText(this, "\n"));
+//                            CAction subAction = gui.selection;
+//                            GUIAction subActionElement2 = new GUIAction(this, subAction);
+//                            actionOptionsView.add(index, subActionElement2.addClickActions(() ->
+//                            {
+//                                ActionEditorGUI gui2 = new ActionEditorGUI(subActionElement2);
+//                                gui2.addOnClosedActions(() ->
+//                                {
+//                                    if (gui2.selection == null)
+//                                    {
+//                                        int index2 = actionOptionsView.indexOf(subActionElement);
+//                                        actionOptionsView.remove(index2);
+//                                        actionOptionsView.remove(index2);
+//                                        and.actions.remove(subAction);
+//                                    }
+//                                    else
+//                                    {
+//                                        subActionElement2.setAction(gui2.selection);
+//                                        and.actions.set(and.actions.indexOf(subAction), gui2.selection);
+//                                    }
+//                                    current.setAction(and);
+//                                });
+//                            }));
+//
+//                            and.actions.add(gui.selection);
+//                            current.setAction(and);
+//                        }
+//                    });
+//                }));
+//
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+//            else if (cls == CActionOr.class)
+//            {
+//                CActionOr or = (CActionOr) action;
+//                for (int i = 0; i < or.actions.size(); i++)
+//                {
+//                    CAction subAction = or.actions.get(i);
+//                    GUIAction subActionElement = new GUIAction(this, subAction);
+//                    actionOptionsView.add(subActionElement.addClickActions(() ->
+//                    {
+//                        ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
+//                        gui.addOnClosedActions(() ->
+//                        {
+//                            if (gui.selection == null)
+//                            {
+//                                int index = actionOptionsView.indexOf(subActionElement);
+//                                actionOptionsView.remove(index);
+//                                actionOptionsView.remove(index);
+//                                or.actions.remove(subAction);
+//                            }
+//                            else
+//                            {
+//                                subActionElement.setAction(gui.selection);
+//                                or.actions.set(or.actions.indexOf(subAction), gui.selection);
+//                            }
+//                            current.setAction(or);
+//                        });
+//                    }));
+//                    actionOptionsView.add(new GUIText(this, "\n"));
+//                }
+//
+//                GUIAction subActionElement = new GUIAction(this, null);
+//                actionOptionsView.add(subActionElement.addClickActions(() ->
+//                {
+//                    ActionEditorGUI gui = new ActionEditorGUI(subActionElement);
+//                    gui.addOnClosedActions(() ->
+//                    {
+//                        if (gui.selection != null)
+//                        {
+//                            int index = actionOptionsView.size() - 2;
+//                            actionOptionsView.add(index, new GUIText(this, "\n"));
+//                            CAction subAction = gui.selection;
+//                            GUIAction subActionElement2 = new GUIAction(this, subAction);
+//                            actionOptionsView.add(index, subActionElement2.addClickActions(() ->
+//                            {
+//                                ActionEditorGUI gui2 = new ActionEditorGUI(subActionElement2);
+//                                gui2.addOnClosedActions(() ->
+//                                {
+//                                    if (gui2.selection == null)
+//                                    {
+//                                        int index2 = actionOptionsView.indexOf(subActionElement);
+//                                        actionOptionsView.remove(index2);
+//                                        actionOptionsView.remove(index2);
+//                                        or.actions.remove(subAction);
+//                                    }
+//                                    else
+//                                    {
+//                                        subActionElement2.setAction(gui2.selection);
+//                                        or.actions.set(or.actions.indexOf(subAction), gui2.selection);
+//                                    }
+//                                    current.setAction(or);
+//                                });
+//                            }));
+//
+//                            or.actions.add(gui.selection);
+//                            current.setAction(or);
+//                        }
+//                    });
+//                }));
+//
+//                actionOptionsView.add(new GUIText(this, "\n"));
+//            }
+        }
+
+        currentView.recalc();
     }
 }
