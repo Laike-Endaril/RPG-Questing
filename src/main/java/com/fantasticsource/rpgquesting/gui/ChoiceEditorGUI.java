@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.gui;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
@@ -119,7 +120,24 @@ public class ChoiceEditorGUI extends GUIScreen
         GUITextButton save = new GUITextButton(this, "Save and Close", GREEN[0]);
         root.add(save.addClickActions(() ->
         {
-            //TODO create new choice and set selection to it
+            //TODO Add error messages here?
+            if (!text.input.valid()) return;
+
+
+            selection = new CDialogueChoice(text.input.text);
+
+            selection.setAction(action.action);
+
+            selection.availabilityConditions.clear();
+            for (GUIElement element : conditionsView.children)
+            {
+                if (element instanceof GUICondition)
+                {
+                    CCondition condition = ((GUICondition) element).condition;
+                    if (condition != null) selection.availabilityConditions.add(condition);
+                }
+            }
+
             close();
         }));
 

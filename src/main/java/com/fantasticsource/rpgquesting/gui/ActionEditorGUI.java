@@ -73,11 +73,7 @@ public class ActionEditorGUI extends GUIScreen
         }));
 
         GUITextButton cancel = new GUITextButton(this, "Close Without Saving");
-        root.add(cancel.addClickActions(() ->
-        {
-            selection = original;
-            close();
-        }));
+        root.add(cancel.addClickActions(this::close));
 
         delete = new GUITextButton(this, "Delete Action and Close", RED[0]);
         root.add(delete.addClickActions(() ->
