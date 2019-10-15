@@ -19,6 +19,7 @@ import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveCollect;
+import com.fantasticsource.rpgquesting.quest.objective.CObjectiveDialogue;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveKill;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -136,6 +137,9 @@ public class ObjectiveEditorGUI extends GUIScreen
         root.add(objectiveSelectorScrollbar);
 
         //Objective types
+        objectiveSelector.add(new GUIText(this, "\n"));
+
+        objectiveSelector.add(new CObjectiveDialogue().getChoosableElement(this));
         objectiveSelector.add(new GUIText(this, "\n"));
 
         objectiveSelector.add(new CObjectiveKill().getChoosableElement(this));
@@ -265,7 +269,37 @@ public class ObjectiveEditorGUI extends GUIScreen
             objectiveEditor.add(new GUIText(this, "\n"));
 
             Class cls = objective.getClass();
-            if (cls == CObjectiveKill.class)
+            if (cls == CObjectiveDialogue.class)
+            {
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                CObjectiveDialogue objectiveDialogue = (CObjectiveDialogue) objective;
+
+                GUILabeledTextInput dialogueName = new GUILabeledTextInput(this, "Dialogue Name: ", "" + objectiveDialogue.dialogueName.value, FilterNotEmpty.INSTANCE);
+                dialogueName.input.addRecalcActions(() ->
+                {
+                    if (dialogueName.input.valid())
+                    {
+                        objectiveDialogue.dialogueName.set(dialogueName.input.text);
+                        current.setObjective(objectiveDialogue);
+                    }
+                });
+                objectiveEditor.add(dialogueName);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput branchIndex = new GUILabeledTextInput(this, "Branch Index: ", "" + objectiveDialogue.branchIndex.value, FilterInt.INSTANCE);
+                branchIndex.input.addRecalcActions(() ->
+                {
+                    if (branchIndex.input.valid())
+                    {
+                        objectiveDialogue.branchIndex.set(FilterInt.INSTANCE.parse(branchIndex.input.text));
+                        current.setObjective(objectiveDialogue);
+                    }
+                });
+                objectiveEditor.add(branchIndex);
+                objectiveEditor.add(new GUIText(this, "\n"));
+            }
+            else if (cls == CObjectiveKill.class)
             {
                 objectiveEditor.add(new GUIText(this, "\n"));
 

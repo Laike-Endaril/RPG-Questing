@@ -27,7 +27,6 @@ Rewards shown in dialogue & journal
 
 
 Objectives types
-* Dialogue
 * Enter area
 * Leave area
 

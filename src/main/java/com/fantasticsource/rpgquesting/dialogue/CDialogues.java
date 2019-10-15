@@ -12,8 +12,6 @@ import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -65,7 +63,7 @@ public class CDialogues extends Component
     {
         CDialogueBranch branch = dialogue.branches.get(0);
         CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(target, branch));
-        Network.WRAPPER.sendTo(new Network.DialogueBranchPacket(true, branch), player);
+        Network.branch(player, true, branch);
     }
 
     public static void tryMakeChoice(EntityPlayerMP player, String choice)

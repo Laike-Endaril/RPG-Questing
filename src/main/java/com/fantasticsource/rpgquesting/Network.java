@@ -13,10 +13,12 @@ import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
+import com.fantasticsource.rpgquesting.quest.objective.CObjectiveDialogue;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.IObfuscatedComponent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -59,6 +61,14 @@ public class Network
     }
 
 
+    public static void branch(EntityPlayerMP player, boolean clear, CDialogueBranch branch)
+    {
+        WRAPPER.sendTo(new DialogueBranchPacket(clear, branch), player);
+
+        CDialogue dialogue = CDialogues.get(branch.dialogueName.value);
+        CObjectiveDialogue.onDialogue(player, dialogue.name.value, dialogue.branches.indexOf(branch));
+    }
+
     public static class DialogueBranchPacket implements IMessage
     {
         public boolean clear;
@@ -70,7 +80,7 @@ public class Network
             //Required
         }
 
-        public DialogueBranchPacket(boolean clear, CDialogueBranch branch)
+        private DialogueBranchPacket(boolean clear, CDialogueBranch branch)
         {
             this.clear = clear;
             this.paragraph.set(branch.paragraph.value);

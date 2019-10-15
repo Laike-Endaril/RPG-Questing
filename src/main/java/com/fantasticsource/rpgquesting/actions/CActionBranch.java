@@ -47,7 +47,7 @@ public class CActionBranch extends CAction
         EntityPlayerMP player = (EntityPlayerMP) entity;
         CDialogueBranch branch = CDialogues.get(dialogueName.value).branches.get(branchIndex.value);
         CDialogues.CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(CDialogues.CURRENT_PLAYER_BRANCHES.get(player).getKey(), branch));
-        Network.WRAPPER.sendTo(new Network.DialogueBranchPacket(false, branch), player);
+        Network.branch(player, false, branch);
     }
 
     @Override

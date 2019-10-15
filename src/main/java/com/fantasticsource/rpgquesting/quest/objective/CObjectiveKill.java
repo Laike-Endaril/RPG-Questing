@@ -65,6 +65,7 @@ public class CObjectiveKill extends CObjective
         CPlayerQuestData data = CQuests.playerQuestData.get(player.getPersistentID());
         if (data == null) return;
 
+        boolean changed = false;
         for (LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map : data.inProgressQuests.values())
         {
             for (Pair<CUUID, ArrayList<CObjective>> value : map.values())
@@ -91,13 +92,15 @@ public class CObjectiveKill extends CObjective
                             if (doit)
                             {
                                 objectiveKill.current.value++;
-                                data.saveAndSync();
+                                changed = true;
                             }
                         }
                     }
                 }
             }
         }
+
+        if (changed) data.saveAndSync();
     }
 
     @Override
