@@ -60,15 +60,18 @@ public class BranchEditorGUI extends GUIScreen
         //Choices tab
         choicesView.clear();
 
-        for (CDialogueChoice choice : original.choices)
+        if (original != null)
         {
-            choicesView.add(new GUIText(this, "\n"));
-            GUIChoice choiceElement = new GUIChoice(this, choice);
-            choicesView.add(choiceElement.addClickActions(() ->
+            for (CDialogueChoice choice : original.choices)
             {
-                ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
-                gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
-            }));
+                choicesView.add(new GUIText(this, "\n"));
+                GUIChoice choiceElement = new GUIChoice(this, choice);
+                choicesView.add(choiceElement.addClickActions(() ->
+                {
+                    ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+                    gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
+                }));
+            }
         }
 
         {
@@ -82,7 +85,7 @@ public class BranchEditorGUI extends GUIScreen
             }));
         }
 
-        if (original.choices.size() > 0)
+        if (original != null && original.choices.size() > 0)
         {
             choicesView.add(new GUIText(this, "\n"));
             choicesView.add(new GUIText(this, "(Clear all choices)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearChoices));
@@ -155,6 +158,8 @@ public class BranchEditorGUI extends GUIScreen
         paragraphView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
         tabView.tabViews.get(0).add(paragraphView);
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, paragraphView));
+
+        tabView.tabs.get(0).addClickActions(() -> paragraph.setActive(true));
 
 
         //Choices tab
