@@ -11,6 +11,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.actions.CActionArray;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
@@ -117,7 +118,7 @@ public class ChoiceEditorGUI extends GUIScreen
     @Override
     protected void init()
     {
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
 
         //Management

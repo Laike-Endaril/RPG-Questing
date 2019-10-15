@@ -13,6 +13,7 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
+import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.conditions.*;
 import com.fantasticsource.rpgquesting.conditions.quest.*;
 import com.fantasticsource.tools.datastructures.Color;
@@ -43,7 +44,7 @@ public class ConditionEditorGUI extends GUIScreen
         selection = original;
 
 
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
 
         //Management

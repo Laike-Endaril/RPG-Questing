@@ -9,6 +9,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
@@ -336,7 +337,7 @@ public class JournalGUI extends GUIScreen
     @Override
     protected void init()
     {
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
         navigator = new GUITabView(this, 0, 0, 0.5, 1, "In Progress", "Completed");
         root.add(navigator);

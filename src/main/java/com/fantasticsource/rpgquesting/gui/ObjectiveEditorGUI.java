@@ -15,6 +15,7 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIAutocroppedView;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
+import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.rpgquesting.quest.objective.CObjectiveCollect;
@@ -50,7 +51,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         selection = original == null ? null : (CObjective) original.copy();
 
 
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
 
         //Management

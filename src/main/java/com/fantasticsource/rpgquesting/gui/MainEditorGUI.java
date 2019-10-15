@@ -16,8 +16,7 @@ import net.minecraft.client.Minecraft;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.fantasticsource.rpgquesting.Colors.PURPLE;
-import static com.fantasticsource.rpgquesting.Colors.WHITE;
+import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class MainEditorGUI extends GUIScreen
 {
@@ -125,7 +124,7 @@ public class MainEditorGUI extends GUIScreen
     @Override
     protected void init()
     {
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        root.add(new GUIGradient(this, 0, 0, 1, 1, T_BLACK));
 
         navigator = new GUITabView(this, 1, 1, "Quests", "Dialogues");
         root.add(navigator);

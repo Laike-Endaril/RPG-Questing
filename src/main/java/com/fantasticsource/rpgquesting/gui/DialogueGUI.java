@@ -5,6 +5,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
+import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ActionErrorPacket;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
@@ -108,7 +109,7 @@ public class DialogueGUI extends GUIScreen
     @Override
     protected void init()
     {
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
         scrollView = new GUIScrollView(this, 0, 0, 0.98, 1);
         root.add(scrollView);

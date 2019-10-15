@@ -14,6 +14,7 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
+import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.actions.*;
 import com.fantasticsource.rpgquesting.actions.quest.CActionCompleteQuest;
 import com.fantasticsource.rpgquesting.actions.quest.CActionStartQuest;
@@ -49,7 +50,7 @@ public class ActionEditorGUI extends GUIScreen
         selection = original;
 
 
-        root.add(new GUIGradient(this, 0, 0, 1, 1, Color.BLACK.copy().setAF(0.7f)));
+        root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
 
         //Management

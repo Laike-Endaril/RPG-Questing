@@ -6,9 +6,9 @@ import com.fantasticsource.rpgquesting.conditions.CConditionAnd;
 import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.component.Component;
 import net.minecraft.entity.Entity;
-import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class CAction extends Component
 {
