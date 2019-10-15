@@ -1,3 +1,11 @@
+Change quest and dialogue editing buttons to...
+...Save and close
+...Close without saving
+...Delete and close
+...Duplicate
+
+Change Condition editor layout to same as action editor layout
+
 Link quest editor and dialogue editor to each other
 
 

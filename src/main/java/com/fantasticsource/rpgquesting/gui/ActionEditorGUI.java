@@ -189,15 +189,18 @@ public class ActionEditorGUI extends GUIScreen
         tabView.tabViews.get(2).add(requiredConditionsView);
         tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, requiredConditionsView));
 
-        for (CCondition condition : selection.conditions)
+        if (selection != null)
         {
-            requiredConditionsView.add(new GUIText(this, "\n"));
-            GUICondition conditionElement = new GUICondition(this, condition);
-            requiredConditionsView.add(conditionElement.addClickActions(() ->
+            for (CCondition condition : selection.conditions)
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-            }));
+                requiredConditionsView.add(new GUIText(this, "\n"));
+                GUICondition conditionElement = new GUICondition(this, condition);
+                requiredConditionsView.add(conditionElement.addClickActions(() ->
+                {
+                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                    gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                }));
+            }
         }
 
         {
@@ -211,7 +214,7 @@ public class ActionEditorGUI extends GUIScreen
             }));
         }
 
-        if (selection.conditions.size() > 0)
+        if (selection != null && selection.conditions.size() > 0)
         {
             requiredConditionsView.add(new GUIText(this, "\n"));
             requiredConditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
