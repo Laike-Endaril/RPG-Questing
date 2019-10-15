@@ -21,6 +21,8 @@ import static com.fantasticsource.rpgquesting.Colors.WHITE;
 
 public class MainEditorGUI extends GUIScreen
 {
+    private static int lastTab = 0;
+
     private GUITabView navigator;
     private GUIScrollView questNav = null, dialogueNav = null;
 
@@ -116,6 +118,8 @@ public class MainEditorGUI extends GUIScreen
 
             gui.dialogueNav.add(new GUIText(gui, "\n"));
         }
+
+        gui.navigator.setActiveTab(lastTab);
     }
 
     @Override
@@ -125,5 +129,13 @@ public class MainEditorGUI extends GUIScreen
 
         navigator = new GUITabView(this, 1, 1, "Quests", "Dialogues");
         root.add(navigator);
+    }
+
+    @Override
+    public void onClosed()
+    {
+        super.onClosed();
+
+        lastTab = navigator.currentTab();
     }
 }
