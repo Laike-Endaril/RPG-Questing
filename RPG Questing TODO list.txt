@@ -1,4 +1,4 @@
-Improve kill crediting for kill objectives; check combat tracker of killed entity
+Link quest editor and dialogue editor to each other
 
 
 

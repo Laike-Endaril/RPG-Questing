@@ -11,7 +11,9 @@ import com.fantasticsource.tools.component.Component;
 import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.CombatTracker;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -47,11 +49,17 @@ public class CObjectiveKill extends CObjective
     @SubscribeEvent
     public static void onKill(LivingDeathEvent event)
     {
-        Entity killer = event.getSource().getTrueSource();
-        if (!(killer instanceof EntityPlayerMP)) return;
-
-        EntityPlayerMP player = (EntityPlayerMP) killer;
+        Entity killer;
         Entity entity = event.getEntity();
+
+        if (!(entity instanceof EntityLivingBase)) return;
+        {
+            CombatTracker tracker = ((EntityLivingBase) entity).getCombatTracker();
+            killer = tracker.getBestAttacker();
+            if (!(killer instanceof EntityPlayerMP)) return;
+        }
+        EntityPlayerMP player = (EntityPlayerMP) killer;
+
         CPlayerQuestData data = CQuests.playerQuestData.get(player.getPersistentID());
         if (data == null) return;
 
