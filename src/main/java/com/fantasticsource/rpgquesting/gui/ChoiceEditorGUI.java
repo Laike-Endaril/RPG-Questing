@@ -11,6 +11,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextButton;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
+import com.fantasticsource.rpgquesting.actions.CActionArray;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
@@ -44,11 +45,11 @@ public class ChoiceEditorGUI extends GUIScreen
         //Main tab
         mainView.clear();
         mainView.add(new GUIText(this, "\n"));
-        text = new GUILabeledTextInput(this, "Text: ", selection.text.value, FilterNotEmpty.INSTANCE);
+        text = new GUILabeledTextInput(this, "Text: ", selection == null ? "" : selection.text.value, FilterNotEmpty.INSTANCE);
         mainView.add(text);
 
         mainView.add(new GUIText(this, "\n\nAction...\n\n"));
-        action = new GUIAction(this, selection.action);
+        action = selection == null ? new GUIAction(this, new CActionArray()) : new GUIAction(this, selection.action);
         mainView.add(action.addClickActions(() ->
         {
             ActionEditorGUI gui = new ActionEditorGUI(action);
@@ -65,15 +66,18 @@ public class ChoiceEditorGUI extends GUIScreen
         //Conditions tab
         conditionsView.clear();
 
-        for (CCondition condition : selection.availabilityConditions)
+        if (selection != null)
         {
-            conditionsView.add(new GUIText(this, "\n"));
-            GUICondition conditionElement = new GUICondition(this, condition);
-            conditionsView.add(conditionElement.addClickActions(() ->
+            for (CCondition condition : selection.availabilityConditions)
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
-                gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
-            }));
+                conditionsView.add(new GUIText(this, "\n"));
+                GUICondition conditionElement = new GUICondition(this, condition);
+                conditionsView.add(conditionElement.addClickActions(() ->
+                {
+                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                    gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
+                }));
+            }
         }
 
         {
@@ -87,7 +91,7 @@ public class ChoiceEditorGUI extends GUIScreen
             }));
         }
 
-        if (selection.availabilityConditions.size() > 0)
+        if (selection != null && selection.availabilityConditions.size() > 0)
         {
             conditionsView.add(new GUIText(this, "\n"));
             conditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));

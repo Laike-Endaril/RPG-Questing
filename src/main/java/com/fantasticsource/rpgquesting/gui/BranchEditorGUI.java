@@ -119,7 +119,8 @@ public class BranchEditorGUI extends GUIScreen
         {
             selection = new CDialogueBranch(paragraph.text);
 
-            selection.dialogueName.set(original.dialogueName.value);
+            //Dummy value to prevent errors.  This is re-set to the correct value in DialogueEditorGUI.trySave()
+            selection.dialogueName.set("");
 
             for (GUIElement element : choicesView.children)
             {
