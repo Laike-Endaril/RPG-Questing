@@ -24,7 +24,7 @@ public class CDialogues extends Component
     public static final CDialogues DIALOGUES = new CDialogues();
     public static final LinkedHashMap<EntityPlayerMP, Pair<Entity, CDialogueBranch>> CURRENT_PLAYER_BRANCHES = new LinkedHashMap<>();
 
-    @SideOnly(Side.CLIENT)
+    //Only used on client
     public static int targetID = -1;
 
     public static LinkedHashMap<String, CDialogue> dialogues = new LinkedHashMap<>();
