@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.dialogue;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
 import com.fantasticsource.rpgquesting.RPGQuesting;
+import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
@@ -77,8 +78,6 @@ public class CDialogues extends Component
         CDialogueBranch currentBranch = currentData.getValue();
         if (currentBranch == null) return;
 
-        if (!get(currentBranch.dialogueName.value).isAvailable(player, target)) return;
-
         CDialogueChoice found = null;
         for (CDialogueChoice choice2 : currentBranch.choices)
         {
@@ -89,6 +88,9 @@ public class CDialogues extends Component
             }
         }
         if (found == null) return;
+
+
+        if (found.action.getClass() != CActionEndDialogue.class && !get(currentBranch.dialogueName.value).isAvailable(player, target)) return;
 
 
         found.execute(player);
