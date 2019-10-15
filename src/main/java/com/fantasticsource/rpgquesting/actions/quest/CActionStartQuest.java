@@ -7,6 +7,8 @@ import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,7 @@ public class CActionStartQuest extends CQuestAction
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUIAction getChoosableElement(GUIScreen screen)
     {
         CQuest quest = new CQuest();

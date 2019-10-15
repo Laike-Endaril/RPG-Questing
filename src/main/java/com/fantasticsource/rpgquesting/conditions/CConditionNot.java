@@ -6,6 +6,8 @@ import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -63,6 +65,7 @@ public class CConditionNot extends CCondition
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUICondition getChoosableElement(GUIScreen screen)
     {
         GUICondition element = new GUICondition(screen, new CConditionNot());

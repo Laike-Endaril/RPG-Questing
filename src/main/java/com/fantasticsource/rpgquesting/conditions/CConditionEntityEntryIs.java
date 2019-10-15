@@ -8,6 +8,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,6 +52,7 @@ public class CConditionEntityEntryIs extends CCondition
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUICondition getChoosableElement(GUIScreen screen)
     {
         return new GUICondition(screen, new CConditionEntityEntryIs("domain:name"));

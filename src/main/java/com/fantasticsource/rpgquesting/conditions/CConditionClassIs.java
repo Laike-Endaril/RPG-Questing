@@ -5,6 +5,8 @@ import com.fantasticsource.rpgquesting.gui.GUICondition;
 import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,6 +42,7 @@ public class CConditionClassIs extends CCondition
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUICondition getChoosableElement(GUIScreen screen)
     {
         return new GUICondition(screen, new CConditionClassIs("packages.Classname"));

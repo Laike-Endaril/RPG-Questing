@@ -20,6 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -128,6 +129,7 @@ public class CObjectiveCollect extends CObjective
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUIObjective getChoosableElement(GUIScreen screen)
     {
         GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveCollect("Items collected", new ItemStack(Items.AIR, 1)));

@@ -8,6 +8,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,6 +63,7 @@ public class CConditionHaveItems extends CCondition
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUICondition getChoosableElement(GUIScreen screen)
     {
         GUICondition element = new GUICondition(screen, new CConditionHaveItems(ItemStack.EMPTY));

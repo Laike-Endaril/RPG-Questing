@@ -7,6 +7,8 @@ import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -109,6 +111,7 @@ public class CActionArray extends CAction
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUIAction getChoosableElement(GUIScreen screen)
     {
         GUIAction element = new GUIAction(screen, new CActionArray());

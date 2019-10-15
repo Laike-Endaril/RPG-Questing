@@ -10,6 +10,8 @@ import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -69,6 +71,7 @@ public class CActionEndDialogue extends CAction
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUIAction getChoosableElement(GUIScreen screen)
     {
         return new GUIAction(screen, new CActionEndDialogue());

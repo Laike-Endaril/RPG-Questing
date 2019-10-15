@@ -5,6 +5,8 @@ import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.tools.component.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +36,7 @@ public abstract class CObjective extends Component implements IObfuscatedCompone
 
     public abstract boolean isDone();
 
+    @SideOnly(Side.CLIENT)
     public abstract GUIObjective getChoosableElement(GUIScreen screen);
 
     @Override

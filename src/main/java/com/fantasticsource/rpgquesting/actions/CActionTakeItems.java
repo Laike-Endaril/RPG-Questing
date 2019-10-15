@@ -13,6 +13,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -110,6 +112,7 @@ public class CActionTakeItems extends CAction
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GUIAction getChoosableElement(GUIScreen screen)
     {
         return new GUIAction(screen, new CActionTakeItems(new ItemStack(Items.AIR, 1)));

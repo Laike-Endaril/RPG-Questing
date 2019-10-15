@@ -6,6 +6,8 @@ import com.fantasticsource.rpgquesting.conditions.CConditionAnd;
 import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.component.Component;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,5 +33,6 @@ public abstract class CAction extends Component
 
     public abstract ArrayList<String> description();
 
+    @SideOnly(Side.CLIENT)
     public abstract GUIAction getChoosableElement(GUIScreen screen);
 }
