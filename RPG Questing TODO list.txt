@@ -1,8 +1,4 @@
-Saving of dialogues
-
-Test
-
-
+Make main editor remember last used tab
 
 Improve kill crediting for kill objectives; check combat tracker of killed entity
 
