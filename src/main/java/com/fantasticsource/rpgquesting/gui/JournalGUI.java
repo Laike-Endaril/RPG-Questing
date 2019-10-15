@@ -189,80 +189,84 @@ public class JournalGUI extends GUIScreen
         //Search in-progress quests
         for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> entry : data.inProgressQuests.entrySet())
         {
-            ArrayList<CObjective> objectives = entry.getValue().get(viewedQuest).getValue();
-            if (objectives != null)
+            Pair<CUUID, ArrayList<CObjective>> questEntry = entry.getValue().get(viewedQuest);
+            if (questEntry == null) continue;
+
+
+            ArrayList<CObjective> objectives = questEntry.getValue();
+            if (objectives == null) continue;
+
+
+            //Quest found
+
+
+            //Find color
+            boolean done = true, started = false;
+            for (CObjective objective : objectives)
             {
-                //Quest found
-
-
-                //Find color
-                boolean done = true, started = false;
-                for (CObjective objective : objectives)
-                {
-                    if (!objective.isDone()) done = false;
-                    if (objective.isStarted()) started = true;
-                    if (started && !done) break;
-                }
-                Color[] c = done ? GREEN : started ? YELLOW : RED;
-
-
-                //Add quest name
-                questView.add(new GUIText(GUI, "\n"));
-                questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]).addClickActions(() ->
-                {
-                    GUIText quest = inProgressStringToQuestElement.get(viewedQuest);
-                    if (quest != null)
-                    {
-                        for (GUITextSpoiler group : inProgressGroupElementToName.keySet())
-                        {
-                            if (group.indexOf(quest) != -1) group.show();
-                            else group.hide();
-                        }
-                        inProgressTab.focus(quest);
-                        navigator.setActiveTab(0);
-                    }
-
-                    quest = completedStringToQuestElement.get(viewedQuest);
-                    if (quest != null)
-                    {
-                        for (GUITextSpoiler group : completedGroupElementToName.keySet())
-                        {
-                            if (group.indexOf(quest) != -1) group.show();
-                            else group.hide();
-                        }
-                        completedTab.focus(quest);
-                        navigator.setActiveTab(1);
-                    }
-                }));
-                questView.add(new GUIText(GUI, "\n\n"));
-
-
-                //Add objectives
-                for (CObjective objective : objectives)
-                {
-                    c = objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED;
-                    questView.add(new GUIText(GUI, objective.getFullText(), c[0]));
-                    questView.add(new GUIText(GUI, "\n"));
-                }
-
-
-                //Add quest buttons
-                questView.add(new GUIText(GUI, "\n\n\n"));
-                if (viewedQuest.equals(QuestTracker.questname))
-                {
-                    questView.add(new GUITextButton(GUI, "Stop Tracking").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(""))));
-                }
-                else
-                {
-                    questView.add(new GUITextButton(GUI, "Start Tracking").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(viewedQuest))));
-                }
-                questView.add(new GUIText(GUI, "\n"));
-                questView.add(new GUITextButton(GUI, "Abandon").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestAbandonQuestPacket(viewedQuest))));
-                questView.add(new GUIText(GUI, "\n"));
-
-
-                return;
+                if (!objective.isDone()) done = false;
+                if (objective.isStarted()) started = true;
+                if (started && !done) break;
             }
+            Color[] c = done ? GREEN : started ? YELLOW : RED;
+
+
+            //Add quest name
+            questView.add(new GUIText(GUI, "\n"));
+            questView.add(new GUIText(GUI, viewedQuest, c[0], c[1], c[2]).addClickActions(() ->
+            {
+                GUIText quest = inProgressStringToQuestElement.get(viewedQuest);
+                if (quest != null)
+                {
+                    for (GUITextSpoiler group : inProgressGroupElementToName.keySet())
+                    {
+                        if (group.indexOf(quest) != -1) group.show();
+                        else group.hide();
+                    }
+                    inProgressTab.focus(quest);
+                    navigator.setActiveTab(0);
+                }
+
+                quest = completedStringToQuestElement.get(viewedQuest);
+                if (quest != null)
+                {
+                    for (GUITextSpoiler group : completedGroupElementToName.keySet())
+                    {
+                        if (group.indexOf(quest) != -1) group.show();
+                        else group.hide();
+                    }
+                    completedTab.focus(quest);
+                    navigator.setActiveTab(1);
+                }
+            }));
+            questView.add(new GUIText(GUI, "\n\n"));
+
+
+            //Add objectives
+            for (CObjective objective : objectives)
+            {
+                c = objective.isDone() ? GREEN : objective.isStarted() ? YELLOW : RED;
+                questView.add(new GUIText(GUI, objective.getFullText(), c[0]));
+                questView.add(new GUIText(GUI, "\n"));
+            }
+
+
+            //Add quest buttons
+            questView.add(new GUIText(GUI, "\n\n\n"));
+            if (viewedQuest.equals(QuestTracker.questname))
+            {
+                questView.add(new GUITextButton(GUI, "Stop Tracking").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(""))));
+            }
+            else
+            {
+                questView.add(new GUITextButton(GUI, "Start Tracking").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestTrackerChangePacket(viewedQuest))));
+            }
+            questView.add(new GUIText(GUI, "\n"));
+            questView.add(new GUITextButton(GUI, "Abandon").addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestAbandonQuestPacket(viewedQuest))));
+            questView.add(new GUIText(GUI, "\n"));
+
+
+            return;
         }
 
 
