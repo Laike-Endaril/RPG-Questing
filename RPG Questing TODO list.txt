@@ -6,8 +6,6 @@ Change quest and dialogue editing buttons to...
 
 Change Condition editor layout to same as action editor layout
 
-When clicking action type, automatically go to action options
-
 
 
 Link quest editor and dialogue editor to each other

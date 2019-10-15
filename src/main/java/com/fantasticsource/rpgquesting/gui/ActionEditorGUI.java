@@ -171,7 +171,11 @@ public class ActionEditorGUI extends GUIScreen
             GUIElement element = actionTypeView.get(i);
             if (element instanceof GUIAction)
             {
-                element.addClickActions(() -> setCurrent(((GUIAction) element).action));
+                element.addClickActions(() ->
+                {
+                    setCurrent(((GUIAction) element).action);
+                    tabView.setActiveTab(1);
+                });
             }
         }
 
