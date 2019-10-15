@@ -123,6 +123,9 @@ public class CQuests extends Component
         CQuest quest = get(questname);
         QUESTS.worldQuestData.remove(questname);
 
+        if (quest == null) return;
+
+
         LinkedHashMap<String, CQuest> group = QUESTS.worldQuestDataByGroup.get(quest.group.value);
         if (group != null)
         {

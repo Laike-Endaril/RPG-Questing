@@ -12,9 +12,13 @@ import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network;
+import com.fantasticsource.rpgquesting.actions.CAction;
+import com.fantasticsource.rpgquesting.actions.CActionArray;
+import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
+import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -42,7 +46,11 @@ public class DialogueEditorGUI extends GUIScreen
         main.add(new GUIText(this, "\n"));
 
         name = new GUILabeledTextInput(this, "Name: ", dialogue.name.value, FilterNotEmpty.INSTANCE);
-        main.add(name);
+        main.add(name.addRecalcActions(() ->
+        {
+            //For CActionBranch, way down in DialogueEditorGUI -> BranchEditorGUI -> ChoiceEditorGUI -> ActionEditorGUI
+            if (name.input.valid()) CActionBranch.queuedDialogueName = name.input.text;
+        }));
         main.add(new GUIText(this, "\n"));
 
         oldName = new GUIText(this, "(Previous Name: " + dialogue.name.value + ")", BLUE[0]);
@@ -243,6 +251,14 @@ public class DialogueEditorGUI extends GUIScreen
 
             CDialogueBranch branch = ((GUIBranch) element).branch;
             if (branch == null) continue;
+
+
+            branch.dialogueName.set(name.input.text);
+            for (CDialogueChoice choice : branch.choices)
+            {
+                setBranchActionDialogueName(choice.action);
+            }
+
 
             dialogue.branches.add(branch);
         }
@@ -454,5 +470,14 @@ public class DialogueEditorGUI extends GUIScreen
         branches.add(new GUIText(this, "\n"));
 
         tabView.recalc();
+    }
+
+    private void setBranchActionDialogueName(CAction action)
+    {
+        if (action instanceof CActionBranch) ((CActionBranch) action).dialogueName.set(name.input.text);
+        else if (action instanceof CActionArray)
+        {
+            for (CAction action2 : ((CActionArray) action).actions) setBranchActionDialogueName(action2);
+        }
     }
 }
