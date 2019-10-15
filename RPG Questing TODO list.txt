@@ -6,6 +6,18 @@ Change quest and dialogue editing buttons to...
 
 
 
+Check bold text scissor issue
+
+
+
+Add dialogue templates, maybe in one or more of these places...
+...quest editor, related dialogues tab
+...main editor, dialogues tab
+...a new screen, between main editor and dialogue editor
+...dialogue editor
+
+
+
 Link quest editor and dialogue editor to each other
 
 
