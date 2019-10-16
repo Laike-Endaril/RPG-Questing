@@ -17,10 +17,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
-import com.fantasticsource.rpgquesting.quest.objective.CObjective;
-import com.fantasticsource.rpgquesting.quest.objective.CObjectiveCollect;
-import com.fantasticsource.rpgquesting.quest.objective.CObjectiveDialogue;
-import com.fantasticsource.rpgquesting.quest.objective.CObjectiveKill;
+import com.fantasticsource.rpgquesting.quest.objective.*;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -146,6 +143,9 @@ public class ObjectiveEditorGUI extends GUIScreen
         objectiveSelector.add(new GUIText(this, "\n"));
 
         objectiveSelector.add(new CObjectiveCollect().getChoosableElement(this));
+        objectiveSelector.add(new GUIText(this, "\n"));
+
+        objectiveSelector.add(new CObjectiveEnterArea().getChoosableElement(this));
         objectiveSelector.add(new GUIText(this, "\n"));
 
 
@@ -365,6 +365,82 @@ public class ObjectiveEditorGUI extends GUIScreen
                         objectiveEditor.recalc();
                     });
                 }));
+                objectiveEditor.add(new GUIText(this, "\n"));
+            }
+            else if (cls == CObjectiveEnterArea.class)
+            {
+                CObjectiveEnterArea objectiveEnterArea = (CObjectiveEnterArea) objective;
+
+                GUILabeledTextInput x1 = new GUILabeledTextInput(this, "X1: ", "" + objectiveEnterArea.coords[0].value, FilterInt.INSTANCE);
+                x1.input.addRecalcActions(() ->
+                {
+                    if (x1.input.valid())
+                    {
+                        objectiveEnterArea.coords[0].set(FilterInt.INSTANCE.parse(x1.input.text));
+                        current.setObjective(objectiveEnterArea);
+                    }
+                });
+                objectiveEditor.add(x1);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput y1 = new GUILabeledTextInput(this, "Y1: ", "" + objectiveEnterArea.coords[1].value, FilterInt.INSTANCE);
+                y1.input.addRecalcActions(() ->
+                {
+                    if (y1.input.valid())
+                    {
+                        objectiveEnterArea.coords[1].set(FilterInt.INSTANCE.parse(y1.input.text));
+                        current.setObjective(objectiveEnterArea);
+                    }
+                });
+                objectiveEditor.add(y1);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput z1 = new GUILabeledTextInput(this, "Z1: ", "" + objectiveEnterArea.coords[2].value, FilterInt.INSTANCE);
+                z1.input.addRecalcActions(() ->
+                {
+                    if (z1.input.valid())
+                    {
+                        objectiveEnterArea.coords[2].set(FilterInt.INSTANCE.parse(z1.input.text));
+                        current.setObjective(objectiveEnterArea);
+                    }
+                });
+                objectiveEditor.add(z1);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput x2 = new GUILabeledTextInput(this, "X2: ", "" + objectiveEnterArea.coords[3].value, FilterInt.INSTANCE);
+                x2.input.addRecalcActions(() ->
+                {
+                    if (x2.input.valid())
+                    {
+                        objectiveEnterArea.coords[3].set(FilterInt.INSTANCE.parse(x2.input.text));
+                        current.setObjective(objectiveEnterArea);
+                    }
+                });
+                objectiveEditor.add(x2);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput y2 = new GUILabeledTextInput(this, "Y2: ", "" + objectiveEnterArea.coords[4].value, FilterInt.INSTANCE);
+                y2.input.addRecalcActions(() ->
+                {
+                    if (y2.input.valid())
+                    {
+                        objectiveEnterArea.coords[4].set(FilterInt.INSTANCE.parse(y2.input.text));
+                        current.setObjective(objectiveEnterArea);
+                    }
+                });
+                objectiveEditor.add(y2);
+                objectiveEditor.add(new GUIText(this, "\n"));
+
+                GUILabeledTextInput z2 = new GUILabeledTextInput(this, "Z2: ", "" + objectiveEnterArea.coords[5].value, FilterInt.INSTANCE);
+                z2.input.addRecalcActions(() ->
+                {
+                    if (z2.input.valid())
+                    {
+                        objectiveEnterArea.coords[5].set(FilterInt.INSTANCE.parse(z2.input.text));
+                        current.setObjective(objectiveEnterArea);
+                    }
+                });
+                objectiveEditor.add(z2);
                 objectiveEditor.add(new GUIText(this, "\n"));
             }
         }

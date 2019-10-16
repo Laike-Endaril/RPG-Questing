@@ -1,3 +1,8 @@
+Objectives types
+* Leave area
+
+
+
 Change quest and dialogue editing buttons to...
 ...Save and close
 ...Close without saving
@@ -36,12 +41,6 @@ Based on BlueRPG level
 
 
 Rewards shown in dialogue & journal
-
-
-
-Objectives types
-* Enter area
-* Leave area
 
 
 
