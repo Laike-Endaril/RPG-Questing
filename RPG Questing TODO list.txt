@@ -6,11 +6,6 @@ Change quest and dialogue editing buttons to...
 
 
 
-Check bold text scissor issue...
-...only happens when there are spaces *while bold is active* (even just putting a reset before the space and a bold after the space fixes it)
-
-
-
 Add dialogue templates, maybe in one or more of these places...
 ...quest editor, related dialogues tab
 ...main editor, dialogues tab
