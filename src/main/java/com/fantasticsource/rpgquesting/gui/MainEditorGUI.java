@@ -126,7 +126,7 @@ public class MainEditorGUI extends GUIScreen
     {
         root.add(new GUIGradient(this, 0, 0, 1, 1, T_BLACK));
 
-        navigator = new GUITabView(this, 1, 1, "Quests", "Dialogues");
+        navigator = new GUITabView(this, 1, 1, "All Quests", "All Dialogues");
         root.add(navigator);
     }
 

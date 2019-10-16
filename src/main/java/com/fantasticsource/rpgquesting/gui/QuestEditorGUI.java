@@ -234,7 +234,7 @@ public class QuestEditorGUI extends GUIScreen
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
         root.add(separator);
-        tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Objectives", "Rewards", "Availability Conditions", "Dialogues");
+        tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Objectives", "Rewards", "Availability Conditions", "Related Dialogues");
         root.add(tabView);
 
         //Main tab
