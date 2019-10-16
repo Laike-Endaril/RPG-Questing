@@ -1,3 +1,19 @@
+Timing conditions for repeatable quests
+
+
+
+Quest indicator symbols
+* ! for available quests that can't be repeated
+* Circular arrow for available quests that can be repeated
+* ... for quests in progress
+* ? for quests ready to turn in
+
+Quest indicator color config; each is a level difference and a color
+Eg. "0, FFFF00" would mean that a level difference of 0 makes the indicator yellow
+Based on BlueRPG level
+
+
+
 Change quest and dialogue editing buttons to...
 ...Save and close
 ...Close without saving
@@ -18,15 +34,7 @@ Link quest editor and dialogue editor to each other
 
 
 
-Quest indicator symbols
-* ! for available quests that can't be repeated
-* Circular arrow for available quests that can be repeated
-* ... for quests in progress
-* ? for quests ready to turn in
-
-Quest indicator color config; each is a level difference and a color
-Eg. "0, FFFF00" would mean that a level difference of 0 makes the indicator yellow
-Based on BlueRPG level
+Sounds
 
 
 
