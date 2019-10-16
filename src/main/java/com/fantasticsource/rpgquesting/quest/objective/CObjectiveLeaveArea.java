@@ -23,21 +23,21 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class CObjectiveEnterArea extends CObjectiveArea
+public class CObjectiveLeaveArea extends CObjectiveArea
 {
     static
     {
-        MinecraftForge.EVENT_BUS.register(CObjectiveEnterArea.class);
+        MinecraftForge.EVENT_BUS.register(CObjectiveLeaveArea.class);
     }
 
     public final CBoolean done = new CBoolean();
 
-    public CObjectiveEnterArea()
+    public CObjectiveLeaveArea()
     {
         super();
     }
 
-    public CObjectiveEnterArea(String text, int x1, int y1, int z1, int x2, int y2, int z2)
+    public CObjectiveLeaveArea(String text, int x1, int y1, int z1, int x2, int y2, int z2)
     {
         super(text, x1, y1, z1, x2, y2, z2);
     }
@@ -62,16 +62,16 @@ public class CObjectiveEnterArea extends CObjectiveArea
 
                 for (CObjective objective : objectives)
                 {
-                    if (objective.getClass() == CObjectiveEnterArea.class)
+                    if (objective.getClass() == CObjectiveLeaveArea.class)
                     {
-                        CObjectiveEnterArea objectiveEnterArea = (CObjectiveEnterArea) objective;
+                        CObjectiveLeaveArea objectiveEnterArea = (CObjectiveLeaveArea) objective;
                         BlockPos pos = player.getPosition();
                         CInt[] coords = objectiveEnterArea.coords;
 
                         if (!objectiveEnterArea.done.value
-                                && pos.getX() >= coords[0].value && pos.getX() <= coords[3].value
-                                && pos.getY() >= coords[1].value && pos.getY() <= coords[4].value
-                                && pos.getZ() >= coords[2].value && pos.getZ() <= coords[5].value)
+                                && (pos.getX() < coords[0].value || pos.getX() > coords[3].value
+                                || pos.getY() < coords[1].value || pos.getY() > coords[4].value
+                                || pos.getZ() < coords[2].value || pos.getZ() > coords[5].value))
                         {
                             objectiveEnterArea.done.set(true);
                             changed = true;
@@ -106,11 +106,11 @@ public class CObjectiveEnterArea extends CObjectiveArea
     @SideOnly(Side.CLIENT)
     public GUIObjective getChoosableElement(GUIScreen screen)
     {
-        return new GUIObjective(screen, new CObjectiveEnterArea("Visit area", 0, 0, 0, 1, 1, 1));
+        return new GUIObjective(screen, new CObjectiveLeaveArea("Leave area", 0, 0, 0, 1, 1, 1));
     }
 
     @Override
-    public CObjectiveEnterArea write(ByteBuf buf)
+    public CObjectiveLeaveArea write(ByteBuf buf)
     {
         super.write(buf);
 
@@ -120,7 +120,7 @@ public class CObjectiveEnterArea extends CObjectiveArea
     }
 
     @Override
-    public CObjectiveEnterArea read(ByteBuf buf)
+    public CObjectiveLeaveArea read(ByteBuf buf)
     {
         super.read(buf);
 
@@ -130,7 +130,7 @@ public class CObjectiveEnterArea extends CObjectiveArea
     }
 
     @Override
-    public CObjectiveEnterArea save(OutputStream stream)
+    public CObjectiveLeaveArea save(OutputStream stream)
     {
         super.save(stream);
 
@@ -140,7 +140,7 @@ public class CObjectiveEnterArea extends CObjectiveArea
     }
 
     @Override
-    public CObjectiveEnterArea load(InputStream stream)
+    public CObjectiveLeaveArea load(InputStream stream)
     {
         super.load(stream);
 
@@ -150,7 +150,7 @@ public class CObjectiveEnterArea extends CObjectiveArea
     }
 
     @Override
-    public CObjectiveEnterArea writeObf(ByteBuf buf)
+    public CObjectiveLeaveArea writeObf(ByteBuf buf)
     {
         super.writeObf(buf);
 
@@ -160,7 +160,7 @@ public class CObjectiveEnterArea extends CObjectiveArea
     }
 
     @Override
-    public CObjectiveEnterArea readObf(ByteBuf buf)
+    public CObjectiveLeaveArea readObf(ByteBuf buf)
     {
         super.readObf(buf);
 

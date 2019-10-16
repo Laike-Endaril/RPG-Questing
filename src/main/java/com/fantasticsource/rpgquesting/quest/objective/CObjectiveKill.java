@@ -127,8 +127,8 @@ public class CObjectiveKill extends CObjective
     @SideOnly(Side.CLIENT)
     public GUIObjective getChoosableElement(GUIScreen screen)
     {
-        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveKill("Entities killed", 1));
-        guiObjective.text = guiObjective.text.replace("[ ]", "(?/?)");
+        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveKill("Kill X Entities", 1));
+        guiObjective.text = guiObjective.text.replace("[ ]", "(0/X)");
         return guiObjective;
     }
 

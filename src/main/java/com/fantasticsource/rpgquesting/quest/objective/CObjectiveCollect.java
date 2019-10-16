@@ -132,8 +132,8 @@ public class CObjectiveCollect extends CObjective
     @SideOnly(Side.CLIENT)
     public GUIObjective getChoosableElement(GUIScreen screen)
     {
-        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveCollect("Items collected", new ItemStack(Items.AIR, 1)));
-        guiObjective.text = guiObjective.text.replace("[ ]", "(?/?)");
+        GUIObjective guiObjective = new GUIObjective(screen, new CObjectiveCollect("Collect X items", new ItemStack(Items.AIR, 1)));
+        guiObjective.text = guiObjective.text.replace("[ ]", "(0/X)");
         return guiObjective;
     }
 
