@@ -40,6 +40,7 @@ public class RPGQuesting
     {
         Network.init();
         MinecraftForge.EVENT_BUS.register(RPGQuesting.class);
+        MinecraftForge.EVENT_BUS.register(OverheadIndicators.class);
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
@@ -124,5 +125,6 @@ public class RPGQuesting
     {
         JournalGUI.clear();
         QuestTracker.stopTracking();
+        OverheadIndicators.overheadIndicators.clear();
     }
 }
