@@ -840,7 +840,6 @@ public class Network
             {
                 if (packet.function == FUNC_SET_NONE) OverheadIndicators.overheadIndicators.remove(packet.entityID);
                 else OverheadIndicators.overheadIndicators.put(packet.entityID, packet.function);
-                System.out.println(Minecraft.getMinecraft().world.getEntityByID(packet.entityID).getName() + ", " + packet.function);
             });
             return null;
         }

@@ -1,4 +1,3 @@
-Make overhead indicator data stream more efficient
 Add overhead quest indicator graphics
 
 

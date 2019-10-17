@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting;
 import com.fantasticsource.mctools.ServerTickTimer;
 import com.fantasticsource.rpgquesting.actions.quest.CActionCompleteQuest;
 import com.fantasticsource.rpgquesting.actions.quest.CActionStartQuest;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.quest.CQuest;
@@ -53,7 +54,7 @@ public class OverheadIndicators
         CActionStartQuest start = new CActionStartQuest();
         CActionCompleteQuest complete = new CActionCompleteQuest();
 
-        int maxFunc = 0;
+        int maxFunc = -1;
 
         for (CQuest quest : CQuests.QUESTS.worldQuestData.values())
         {
@@ -102,9 +103,34 @@ public class OverheadIndicators
                     break;
                 }
             }
+            else
+            {
+                if (maxFunc >= FUNC_SET_NONE) continue;
+
+                for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
+                {
+                    CDialogue dialogue = CDialogues.get(dialogueEntry.dialogueName.value);
+
+                    boolean entityHas = true;
+                    for (CCondition condition : dialogue.entityConditions)
+                    {
+                        if (condition.unmetConditions(entity).size() > 0)
+                        {
+                            entityHas = false;
+                            break;
+                        }
+                    }
+
+                    if (entityHas)
+                    {
+                        maxFunc = FUNC_SET_NONE;
+                        break;
+                    }
+                }
+            }
         }
 
-        Network.WRAPPER.sendTo(new Network.OverheadIndicatorPacket(entity.getEntityId(), maxFunc), player);
+        if (maxFunc >= FUNC_SET_NONE) Network.WRAPPER.sendTo(new Network.OverheadIndicatorPacket(entity.getEntityId(), maxFunc), player);
 
         FMLCommonHandler.instance().getMinecraftServerInstance().profiler.endSection();
     }
