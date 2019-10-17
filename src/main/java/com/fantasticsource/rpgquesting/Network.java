@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.fantasticsource.rpgquesting.OverheadIndicators.FUNC_SET_NONE;
+
 public class Network
 {
     public static final SimpleNetworkWrapper WRAPPER = new SimpleNetworkWrapper(RPGQuesting.MODID);
@@ -58,6 +60,7 @@ public class Network
         WRAPPER.registerMessage(EditorPacketHandler.class, EditorPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(RequestDeleteDialoguePacketHandler.class, RequestDeleteDialoguePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(RequestSaveDialoguePacketHandler.class, RequestSaveDialoguePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(OverheadIndicatorPacketHandler.class, OverheadIndicatorPacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -792,6 +795,53 @@ public class Network
                 CDialogues.saveDialogue(packet.dialogue);
             }
 
+            return null;
+        }
+    }
+
+
+    public static class OverheadIndicatorPacket implements IMessage
+    {
+        int entityID, function;
+
+        public OverheadIndicatorPacket()
+        {
+            //Required
+        }
+
+        public OverheadIndicatorPacket(int entityID, int function)
+        {
+            this.entityID = entityID;
+            this.function = function;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            buf.writeInt(entityID);
+            buf.writeInt(function);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            entityID = buf.readInt();
+            function = buf.readInt();
+        }
+    }
+
+    public static class OverheadIndicatorPacketHandler implements IMessageHandler<OverheadIndicatorPacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(OverheadIndicatorPacket packet, MessageContext ctx)
+        {
+            Minecraft.getMinecraft().addScheduledTask(() ->
+            {
+                if (packet.function == FUNC_SET_NONE) OverheadIndicators.overheadIndicators.remove(packet.entityID);
+                else OverheadIndicators.overheadIndicators.put(packet.entityID, packet.function);
+                System.out.println(Minecraft.getMinecraft().world.getEntityByID(packet.entityID).getName() + ", " + packet.function);
+            });
             return null;
         }
     }
