@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting;
 
 import com.fantasticsource.mctools.MCTools;
+import com.fantasticsource.rpgquesting.compat.Compat;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.gui.JournalGUI;
 import com.fantasticsource.rpgquesting.quest.CQuests;
@@ -13,7 +14,9 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
@@ -126,5 +129,13 @@ public class RPGQuesting
         JournalGUI.clear();
         QuestTracker.stopTracking();
         OverheadIndicators.overheadIndicators.clear();
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        //Compat init
+        if (Loader.isModLoaded("neat")) Compat.neat = true;
+        if (Loader.isModLoaded("customnpcs")) Compat.customnpcs = true;
     }
 }
