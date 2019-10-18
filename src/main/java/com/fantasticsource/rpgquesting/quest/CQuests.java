@@ -1,8 +1,10 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.component.CItemStack;
+import com.fantasticsource.mctools.sound.SimpleSound;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.RPGQuesting;
+import com.fantasticsource.rpgquesting.Sounds;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CUUID;
@@ -76,6 +78,8 @@ public class CQuests extends Component
         data.saveAndSync();
 
         track(player, name);
+
+        SimpleSound.playOnClient(player, Sounds.QUEST_ACCEPTED);
     }
 
     public static void track(EntityPlayerMP player, String name)
@@ -211,12 +215,14 @@ public class CQuests extends Component
         player.addExperience(quest.experience.value);
         for (CItemStack stack : quest.rewards)
         {
-            player.addItemStackToInventory(stack.stack.copy());
+            player.addItemStackToInventory(stack.value.copy());
         }
 
 
         if (data.trackedQuestName.value.equals(name)) data.trackedQuestName.set("");
         data.saveAndSync();
+
+        SimpleSound.playOnClient(player, Sounds.QUEST_COMPLETE);
 
         return true;
     }

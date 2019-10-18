@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.Render;
+import com.fantasticsource.mctools.sound.SimpleSound;
 import com.fantasticsource.rpgquesting.Sounds;
 import com.fantasticsource.rpgquesting.gui.JournalGUI;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
@@ -42,8 +43,8 @@ public class QuestTracker
             {
                 if (!QuestTracker.objectives.get(i).isDone() && objectives.get(i).isDone())
                 {
-                    System.out.println("Sound");
-                    Minecraft.getMinecraft().getSoundHandler().playSound(Sounds.OBJECTIVE_COMPLETE);
+                    SimpleSound.play(Sounds.OBJECTIVE_COMPLETE);
+                    break;
                 }
             }
         }

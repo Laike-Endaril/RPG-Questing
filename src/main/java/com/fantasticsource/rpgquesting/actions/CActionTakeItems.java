@@ -46,10 +46,10 @@ public class CActionTakeItems extends CAction
     {
         if (!(entity instanceof EntityPlayerMP)) return;
 
-        int i = stackToMatch.stack.getCount();
+        int i = stackToMatch.value.getCount();
         for (ItemStack stack : ((EntityPlayerMP) entity).inventory.mainInventory)
         {
-            if (ItemMatcher.stacksMatch(stack, stackToMatch.stack))
+            if (ItemMatcher.stacksMatch(stack, stackToMatch.value))
             {
                 int shrink = Tools.min(i, stack.getCount());
                 stack.shrink(shrink);
@@ -63,7 +63,7 @@ public class CActionTakeItems extends CAction
     public ArrayList<String> description()
     {
         ArrayList<String> result = new ArrayList<>();
-        result.add("Take items: " + stackToMatch.stack.getCount() + " " + stackToMatch.stack.getDisplayName());
+        result.add("Take items: " + stackToMatch.value.getCount() + " " + stackToMatch.value.getDisplayName());
         return result;
     }
 

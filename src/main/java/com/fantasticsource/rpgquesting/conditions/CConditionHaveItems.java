@@ -46,10 +46,10 @@ public class CConditionHaveItems extends CCondition
             int i = 0;
             for (ItemStack stack : player.inventory.mainInventory)
             {
-                if (ItemMatcher.stacksMatch(stack, stackToMatch.stack)) i += stack.getCount();
-                if (i >= stackToMatch.stack.getCount()) return result;
+                if (ItemMatcher.stacksMatch(stack, stackToMatch.value)) i += stack.getCount();
+                if (i >= stackToMatch.value.getCount()) return result;
             }
-            result.add("You need at least " + stackToMatch.stack.getCount() + " " + stackToMatch.stack.getDisplayName() + " in your inventory");
+            result.add("You need at least " + stackToMatch.value.getCount() + " " + stackToMatch.value.getDisplayName() + " in your inventory");
         }
         return result;
     }
@@ -58,7 +58,7 @@ public class CConditionHaveItems extends CCondition
     public ArrayList<String> description()
     {
         ArrayList<String> result = new ArrayList<>();
-        result.add("Items: " + stackToMatch.stack.getCount() + " " + stackToMatch.stack.getDisplayName());
+        result.add("Items: " + stackToMatch.value.getCount() + " " + stackToMatch.value.getDisplayName());
         return result;
     }
 

@@ -114,7 +114,7 @@ public class QuestEditorGUI extends GUIScreen
         for (CItemStack reward : quest.rewards)
         {
             rewards.add(new GUIText(this, "\n"));
-            GUIItemStack rewardElement = new GUIItemStack(this, reward.stack);
+            GUIItemStack rewardElement = new GUIItemStack(this, reward.value);
             rewards.add(rewardElement.addClickActions(() ->
             {
                 ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);

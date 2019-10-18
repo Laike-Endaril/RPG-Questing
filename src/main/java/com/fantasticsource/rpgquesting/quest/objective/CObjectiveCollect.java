@@ -82,7 +82,7 @@ public class CObjectiveCollect extends CObjective
         for (int i = inv.getSizeInventory() - 1; i >= 0; i--)
         {
             ItemStack stack = inv.getStackInSlot(i);
-            if (ItemMatcher.stacksMatch(stack, stackToMatch.stack)) result += stack.getCount();
+            if (ItemMatcher.stacksMatch(stack, stackToMatch.value)) result += stack.getCount();
         }
 
         if (result != current.value)
@@ -96,7 +96,7 @@ public class CObjectiveCollect extends CObjective
     @Override
     protected String progressText()
     {
-        int required = stackToMatch.stack.getCount();
+        int required = stackToMatch.value.getCount();
 
         if (required > 1) return "(" + current.value + "/" + required + ")";
         else if (current.value == 1) return "[x]";
@@ -125,7 +125,7 @@ public class CObjectiveCollect extends CObjective
 
 
         //Both sides
-        return current.value >= stackToMatch.stack.getCount();
+        return current.value >= stackToMatch.value.getCount();
     }
 
     @Override

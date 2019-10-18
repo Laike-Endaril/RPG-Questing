@@ -10,10 +10,6 @@ Change quest and dialogue editing buttons to...
 
 
 
-Sounds
-
-
-
 Add dialogue templates, maybe in one or more of these places...
 ...quest editor, related dialogues tab
 ...main editor, dialogues tab
