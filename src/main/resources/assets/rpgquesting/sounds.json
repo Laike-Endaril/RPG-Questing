@@ -1,0 +1,17 @@
+{
+    "objective_complete": {
+        "sounds": [
+            "rpgquesting:objective_complete"
+        ]
+    },
+    "quest_accepted": {
+        "sounds": [
+            "rpgquesting:quest_accepted"
+        ]
+    },
+    "quest_complete": {
+        "sounds": [
+            "rpgquesting:quest_complete"
+        ]
+    }
+}

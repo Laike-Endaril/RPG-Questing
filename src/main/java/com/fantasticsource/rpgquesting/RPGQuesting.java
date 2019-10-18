@@ -49,6 +49,7 @@ public class RPGQuesting
         {
             Keys.init(event);
             MinecraftForge.EVENT_BUS.register(QuestTracker.class);
+            MinecraftForge.EVENT_BUS.register(Sounds.class);
         }
     }
 

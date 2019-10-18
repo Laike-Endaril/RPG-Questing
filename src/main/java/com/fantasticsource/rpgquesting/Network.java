@@ -429,7 +429,7 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(QuestTrackerPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> QuestTracker.startTracking(packet.questName.value, packet.objectives));
+            Minecraft.getMinecraft().addScheduledTask(() -> QuestTracker.updateTracker(packet.questName.value, packet.objectives));
             return null;
         }
     }

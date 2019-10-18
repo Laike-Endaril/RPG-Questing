@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.quest;
 
 import com.fantasticsource.mctools.Render;
+import com.fantasticsource.rpgquesting.Sounds;
 import com.fantasticsource.rpgquesting.gui.JournalGUI;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.Tools;
@@ -30,11 +31,23 @@ public class QuestTracker
 
     public static void stopTracking()
     {
-        startTracking("", new ArrayList<>());
+        updateTracker("", new ArrayList<>());
     }
 
-    public static void startTracking(String questName, ArrayList<CObjective> objectives)
+    public static void updateTracker(String questName, ArrayList<CObjective> objectives)
     {
+        if (questName.equals(QuestTracker.questname) && objectives.size() == QuestTracker.objectives.size())
+        {
+            for (int i = 0; i < objectives.size(); i++)
+            {
+                if (!QuestTracker.objectives.get(i).isDone() && objectives.get(i).isDone())
+                {
+                    System.out.println("Sound");
+                    Minecraft.getMinecraft().getSoundHandler().playSound(Sounds.OBJECTIVE_COMPLETE);
+                }
+            }
+        }
+
         QuestTracker.questname = questName;
         QuestTracker.objectives = objectives;
 
