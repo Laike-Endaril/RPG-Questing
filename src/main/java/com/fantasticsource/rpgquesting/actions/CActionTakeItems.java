@@ -3,11 +3,8 @@ package com.fantasticsource.rpgquesting.actions;
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.items.ItemMatcher;
-import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.Tools;
-import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -70,10 +67,9 @@ public class CActionTakeItems extends CAction
     @Override
     public CActionTakeItems write(ByteBuf buf)
     {
-        stackToMatch.write(buf);
+        super.write(buf);
 
-        new CInt().set(conditions.size()).write(buf);
-        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
+        stackToMatch.write(buf);
 
         return this;
     }
@@ -81,10 +77,9 @@ public class CActionTakeItems extends CAction
     @Override
     public CActionTakeItems read(ByteBuf buf)
     {
-        stackToMatch.read(buf);
+        super.read(buf);
 
-        conditions.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+        stackToMatch.read(buf);
 
         return this;
     }
@@ -92,10 +87,9 @@ public class CActionTakeItems extends CAction
     @Override
     public CActionTakeItems save(OutputStream stream)
     {
-        stackToMatch.save(stream);
+        super.save(stream);
 
-        new CInt().set(conditions.size()).save(stream);
-        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
+        stackToMatch.save(stream);
 
         return this;
     }
@@ -103,10 +97,9 @@ public class CActionTakeItems extends CAction
     @Override
     public CActionTakeItems load(InputStream stream)
     {
-        stackToMatch.load(stream);
+        super.load(stream);
 
-        conditions.clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
+        stackToMatch.load(stream);
 
         return this;
     }

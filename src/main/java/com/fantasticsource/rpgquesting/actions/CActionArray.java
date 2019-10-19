@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.actions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.Component;
@@ -65,8 +64,7 @@ public class CActionArray extends CAction
     @Override
     public CActionArray write(ByteBuf buf)
     {
-        new CInt().set(conditions.size()).write(buf);
-        for (CCondition condition : conditions) Component.writeMarked(buf, condition);
+        super.write(buf);
 
         new CInt().set(actions.size()).write(buf);
         for (CAction action : actions) Component.writeMarked(buf, action);
@@ -77,8 +75,7 @@ public class CActionArray extends CAction
     @Override
     public CActionArray read(ByteBuf buf)
     {
-        conditions.clear();
-        for (int i = new CInt().read(buf).value; i > 0; i--) conditions.add((CCondition) Component.readMarked(buf));
+        super.read(buf);
 
         actions.clear();
         for (int i = new CInt().read(buf).value; i > 0; i--) actions.add((CAction) Component.readMarked(buf));
@@ -89,8 +86,7 @@ public class CActionArray extends CAction
     @Override
     public CActionArray save(OutputStream stream)
     {
-        new CInt().set(conditions.size()).save(stream);
-        for (CCondition condition : conditions) Component.saveMarked(stream, condition);
+        super.save(stream);
 
         new CInt().set(actions.size()).save(stream);
         for (CAction action : actions) Component.saveMarked(stream, action);
@@ -101,8 +97,7 @@ public class CActionArray extends CAction
     @Override
     public CActionArray load(InputStream stream)
     {
-        conditions.clear();
-        for (int i = new CInt().load(stream).value; i > 0; i--) conditions.add((CCondition) Component.loadMarked(stream));
+        super.load(stream);
 
         actions.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) actions.add((CAction) Component.loadMarked(stream));

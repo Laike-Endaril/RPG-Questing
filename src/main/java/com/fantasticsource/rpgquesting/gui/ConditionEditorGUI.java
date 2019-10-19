@@ -322,12 +322,12 @@ public class ConditionEditorGUI extends GUIScreen
             }
             else if (condition instanceof CQuestCondition)
             {
-                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestCondition) condition).name.value, FilterNotEmpty.INSTANCE);
+                GUILabeledTextInput questName = new GUILabeledTextInput(this, "Quest name: ", "" + ((CQuestCondition) condition).questName.value, FilterNotEmpty.INSTANCE);
                 questName.input.addRecalcActions(() ->
                 {
                     if (questName.input.valid())
                     {
-                        ((CQuestCondition) condition).name.set(questName.input.text);
+                        ((CQuestCondition) condition).questName.set(questName.input.text);
                         current.setCondition(condition);
                     }
                 });

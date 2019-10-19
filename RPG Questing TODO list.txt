@@ -10,11 +10,10 @@ Change quest and dialogue editing buttons to...
 
 
 
-Add dialogue templates, maybe in one or more of these places...
-...quest editor, related dialogues tab
-...main editor, dialogues tab
-...a new screen, between main editor and dialogue editor
-...dialogue editor
+Add templates:
+In main editor, "Create from template" creates a quest with accompanying dialogues
+In quest editor, "Create from template" creates a quest
+In dialogue editor, "Create from template" creates a dialogue
 
 
 

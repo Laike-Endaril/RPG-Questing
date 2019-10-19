@@ -6,6 +6,7 @@ import com.fantasticsource.tools.component.CUUID;
 import com.fantasticsource.tools.datastructures.Pair;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,7 +27,7 @@ public abstract class CStateBasedObjective extends CObjective
     {
         if (event.side == Side.CLIENT || event.phase != TickEvent.Phase.END) return;
 
-
+        FMLCommonHandler.instance().getMinecraftServerInstance().profiler.startSection("RPG Questing: State-based objective checks");
         EntityPlayerMP player = (EntityPlayerMP) event.player;
 
         CPlayerQuestData data = CQuests.playerQuestData.get(player.getPersistentID());
@@ -52,6 +53,8 @@ public abstract class CStateBasedObjective extends CObjective
 
         if (changed) data.saveAndSync();
         else if (includesTracked) CQuests.syncTracker(player);
+
+        FMLCommonHandler.instance().getMinecraftServerInstance().profiler.endSection();
     }
 
     public abstract boolean check(EntityPlayerMP player);

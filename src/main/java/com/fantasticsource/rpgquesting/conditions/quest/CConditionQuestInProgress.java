@@ -39,8 +39,8 @@ public class CConditionQuestInProgress extends CQuestCondition
         if (!(entity instanceof EntityPlayerMP)) result.add("Entity must be a player");
         else
         {
-            CQuest quest = CQuests.get(name.value);
-            if (quest == null) result.add("Quest must be in progress (quest does not exist!): \"" + name.value + '"');
+            CQuest quest = CQuests.get(questName.value);
+            if (quest == null) result.add("Quest must be in progress (quest does not exist!): \"" + questName.value + '"');
             else if (!quest.isInProgress((EntityPlayerMP) entity)) result.add("Quest must be in progress (not ready to turn in): \"" + quest.name.value + '"');
         }
         return result;
@@ -50,7 +50,7 @@ public class CConditionQuestInProgress extends CQuestCondition
     public ArrayList<String> description()
     {
         ArrayList<String> result = new ArrayList<>();
-        result.add("Quest in progress (not ready to turn in): " + name.value);
+        result.add("Quest in progress (not ready to turn in): " + questName.value);
         return result;
     }
 
