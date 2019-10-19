@@ -10,19 +10,32 @@ public class GUIAction extends GUIText
 {
     CAction action;
 
+
     public GUIAction(GUIScreen screen, CAction action)
     {
-        super(screen, action == null ? "(Empty Slot)" : process(action.description()));
+        this(screen, action, 1);
+    }
+
+    public GUIAction(GUIScreen screen, CAction action, double scale)
+    {
+        super(screen, action == null ? "(Empty Slot)" : process(action.description()), scale);
 
         this.action = action;
     }
+
 
     public GUIAction(GUIScreen screen, double x, double y, CAction action)
     {
-        super(screen, x, y, action == null ? "(Empty Slot)" : process(action.description()));
+        this(screen, x, y, action, 1);
+    }
+
+    public GUIAction(GUIScreen screen, double x, double y, CAction action, double scale)
+    {
+        super(screen, x, y, action == null ? "(Empty Slot)" : process(action.description()), scale);
 
         this.action = action;
     }
+
 
     private static String process(ArrayList<String> input)
     {

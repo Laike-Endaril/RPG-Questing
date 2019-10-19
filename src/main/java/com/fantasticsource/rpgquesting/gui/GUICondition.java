@@ -10,19 +10,32 @@ public class GUICondition extends GUIText
 {
     CCondition condition;
 
+
     public GUICondition(GUIScreen screen, CCondition condition)
     {
-        super(screen, condition == null ? "(Empty Slot)" : process(condition.description()));
+        this(screen, condition, 1);
+    }
+
+    public GUICondition(GUIScreen screen, CCondition condition, double scale)
+    {
+        super(screen, condition == null ? "(Empty Slot)" : process(condition.description()), scale);
 
         this.condition = condition;
     }
+
 
     public GUICondition(GUIScreen screen, double x, double y, CCondition condition)
     {
-        super(screen, x, y, condition == null ? "(Empty Slot)" : process(condition.description()));
+        this(screen, x, y, condition, 1);
+    }
+
+    public GUICondition(GUIScreen screen, double x, double y, CCondition condition, double scale)
+    {
+        super(screen, x, y, condition == null ? "(Empty Slot)" : process(condition.description()), scale);
 
         this.condition = condition;
     }
+
 
     private static String process(ArrayList<String> input)
     {

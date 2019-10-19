@@ -1,4 +1,21 @@
+Reduce text scaling by half and test
+
+
+
+Add UI hierarchy titles
+
+Combine sets of UIs into fewer UIs
+
+Make it more obvious what is clickable
+
+Global UI navigation system?
+
 Timing conditions for repeatable quests
+
+Add templates:
+In main editor, "Create from template" creates a quest with accompanying dialogues
+In quest editor, "Create from template" creates a quest
+In dialogue editor, "Create from template" creates a dialogue
 
 
 
@@ -7,13 +24,6 @@ Change quest and dialogue editing buttons to...
 ...Close without saving
 ...Delete and close
 ...Duplicate
-
-
-
-Add templates:
-In main editor, "Create from template" creates a quest with accompanying dialogues
-In quest editor, "Create from template" creates a quest
-In dialogue editor, "Create from template" creates a dialogue
 
 
 

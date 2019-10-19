@@ -8,16 +8,28 @@ public class GUIBranch extends GUIText
 {
     CDialogueBranch branch;
 
+
     public GUIBranch(GUIScreen screen, CDialogueBranch branch, String text)
     {
-        super(screen, text);
+        this(screen, branch, text, 1);
+    }
+
+    public GUIBranch(GUIScreen screen, CDialogueBranch branch, String text, double scale)
+    {
+        super(screen, text, scale);
 
         this.branch = branch;
     }
 
+
     public GUIBranch(GUIScreen screen, double x, double y, CDialogueBranch branch, String text)
     {
-        super(screen, x, y, text);
+        this(screen, x, y, branch, text, 1);
+    }
+
+    public GUIBranch(GUIScreen screen, double x, double y, CDialogueBranch branch, String text, double scale)
+    {
+        super(screen, x, y, text, scale);
 
         this.branch = branch;
     }

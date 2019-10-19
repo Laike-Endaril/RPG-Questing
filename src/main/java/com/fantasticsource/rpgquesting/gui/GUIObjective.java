@@ -8,19 +8,32 @@ public class GUIObjective extends GUIText
 {
     CObjective objective;
 
+
     public GUIObjective(GUIScreen screen, CObjective objective)
     {
-        super(screen, objective == null ? "(Empty Slot)" : objective.getFullText());
+        this(screen, objective, 1);
+    }
+
+    public GUIObjective(GUIScreen screen, CObjective objective, double scale)
+    {
+        super(screen, objective == null ? "(Empty Slot)" : objective.getFullText(), scale);
 
         this.objective = objective;
     }
+
 
     public GUIObjective(GUIScreen screen, double x, double y, CObjective objective)
     {
-        super(screen, x, y, objective == null ? "(Empty Slot)" : objective.getFullText());
+        this(screen, x, y, objective, 1);
+    }
+
+    public GUIObjective(GUIScreen screen, double x, double y, CObjective objective, double scale)
+    {
+        super(screen, x, y, objective == null ? "(Empty Slot)" : objective.getFullText(), scale);
 
         this.objective = objective;
     }
+
 
     public GUIObjective setObjective(CObjective objective)
     {
