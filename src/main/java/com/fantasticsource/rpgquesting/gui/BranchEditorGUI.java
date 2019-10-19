@@ -31,6 +31,14 @@ public class BranchEditorGUI extends GUIScreen
 
     public BranchEditorGUI(GUIBranch clickedElement)
     {
+        this(clickedElement, 1);
+    }
+
+    public BranchEditorGUI(GUIBranch clickedElement, double textScale)
+    {
+        super(textScale);
+
+
         if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(this);
         else Minecraft.getMinecraft().displayGuiScreen(this);
 
@@ -69,7 +77,7 @@ public class BranchEditorGUI extends GUIScreen
                 GUIChoice choiceElement = new GUIChoice(this, choice);
                 choicesView.add(choiceElement.addClickActions(() ->
                 {
-                    ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+                    ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement, textScale);
                     gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
                 }));
             }
@@ -81,7 +89,7 @@ public class BranchEditorGUI extends GUIScreen
             choiceElement.text = TextFormatting.DARK_PURPLE + "(Add new choice)";
             choicesView.add(choiceElement.addClickActions(() ->
             {
-                ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+                ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement, textScale);
                 gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
             }));
         }
@@ -186,7 +194,7 @@ public class BranchEditorGUI extends GUIScreen
                     GUIChoice choiceElement = new GUIChoice(this, (CDialogueChoice) newChoice.copy());
                     choicesView.add(index, choiceElement.addClickActions(() ->
                     {
-                        ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+                        ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement, textScale);
                         gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
                     }));
                 }
@@ -229,7 +237,7 @@ public class BranchEditorGUI extends GUIScreen
         choiceElement.text = TextFormatting.DARK_PURPLE + "(Add new choice)";
         choicesView.add(choiceElement.addClickActions(() ->
         {
-            ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement);
+            ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement, textScale);
             gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
         }));
         choicesView.add(new GUIText(this, "\n"));

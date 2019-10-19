@@ -25,13 +25,23 @@ import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class DialogueEditorGUI extends GUIScreen
 {
-    public static final DialogueEditorGUI GUI = new DialogueEditorGUI();
+    public static final DialogueEditorGUI GUI = new DialogueEditorGUI(0.5);
 
     public GUIScrollView main, playerConditions, entityConditions, branches;
     private GUIGradientBorder separator;
     private GUITabView tabView;
     private GUILabeledTextInput name, group;
     private GUIText oldName;
+
+    private DialogueEditorGUI()
+    {
+        this(1);
+    }
+
+    private DialogueEditorGUI(double textScale)
+    {
+        super(textScale);
+    }
 
     public void show(CDialogue dialogue)
     {
@@ -69,7 +79,7 @@ public class DialogueEditorGUI extends GUIScreen
             GUICondition conditionElement = new GUICondition(this, condition);
             playerConditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                 gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
             }));
         }
@@ -80,7 +90,7 @@ public class DialogueEditorGUI extends GUIScreen
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             playerConditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                 gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
             }));
         }
@@ -103,7 +113,7 @@ public class DialogueEditorGUI extends GUIScreen
             GUICondition conditionElement = new GUICondition(this, condition);
             entityConditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                 gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
             }));
         }
@@ -114,7 +124,7 @@ public class DialogueEditorGUI extends GUIScreen
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             entityConditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                 gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
             }));
         }
@@ -138,7 +148,7 @@ public class DialogueEditorGUI extends GUIScreen
             GUIBranch branchElement = new GUIBranch(this, branch, "Branch " + i++);
             branches.add(branchElement.addClickActions(() ->
             {
-                BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+                BranchEditorGUI gui = new BranchEditorGUI(branchElement, textScale);
                 gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
             }));
         }
@@ -148,7 +158,7 @@ public class DialogueEditorGUI extends GUIScreen
             GUIBranch branchElement = new GUIBranch(this, null, TextFormatting.DARK_PURPLE + "(Add new branch)");
             branches.add(branchElement.addClickActions(() ->
             {
-                BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+                BranchEditorGUI gui = new BranchEditorGUI(branchElement, textScale);
                 gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
             }));
         }
@@ -274,7 +284,7 @@ public class DialogueEditorGUI extends GUIScreen
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     playerConditions.add(index, conditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                         gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -319,7 +329,7 @@ public class DialogueEditorGUI extends GUIScreen
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         playerConditions.add(conditionElement.addClickActions(() ->
         {
-            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
         }));
         playerConditions.add(new GUIText(this, "\n"));
@@ -343,7 +353,7 @@ public class DialogueEditorGUI extends GUIScreen
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     entityConditions.add(index, conditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                         gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -388,7 +398,7 @@ public class DialogueEditorGUI extends GUIScreen
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         entityConditions.add(conditionElement.addClickActions(() ->
         {
-            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
         }));
         entityConditions.add(new GUIText(this, "\n"));
@@ -412,7 +422,7 @@ public class DialogueEditorGUI extends GUIScreen
                     GUIBranch branchElement = new GUIBranch(this, (CDialogueBranch) newBranch.copy(), "Branch " + (index / 2));
                     branches.add(index, branchElement.addClickActions(() ->
                     {
-                        BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+                        BranchEditorGUI gui = new BranchEditorGUI(branchElement, textScale);
                         gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
                     }));
                 }
@@ -456,7 +466,7 @@ public class DialogueEditorGUI extends GUIScreen
         GUIBranch branchElement = new GUIBranch(this, null, TextFormatting.DARK_PURPLE + "(Add new branch)");
         branches.add(branchElement.addClickActions(() ->
         {
-            BranchEditorGUI gui = new BranchEditorGUI(branchElement);
+            BranchEditorGUI gui = new BranchEditorGUI(branchElement, textScale);
             gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
         }));
         branches.add(new GUIText(this, "\n"));

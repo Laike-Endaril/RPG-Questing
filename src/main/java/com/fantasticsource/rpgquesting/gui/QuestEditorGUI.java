@@ -31,13 +31,23 @@ import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class QuestEditorGUI extends GUIScreen
 {
-    public static final QuestEditorGUI GUI = new QuestEditorGUI();
+    public static final QuestEditorGUI GUI = new QuestEditorGUI(0.5);
 
     public GUIScrollView main, objectives, rewards, conditions, dialogues;
     private GUIGradientBorder separator;
     private GUITabView tabView;
     private GUILabeledTextInput name, group, level, repeatable, experience;
     private GUIText oldName;
+
+    private QuestEditorGUI()
+    {
+        this(1);
+    }
+
+    private QuestEditorGUI(double textScale)
+    {
+        super(textScale);
+    }
 
     public void show(CQuest quest)
     {
@@ -83,7 +93,7 @@ public class QuestEditorGUI extends GUIScreen
             GUIObjective objectiveElement = new GUIObjective(this, objective);
             objectives.add(objectiveElement.addClickActions(() ->
             {
-                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement, textScale);
                 gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
             }));
         }
@@ -94,7 +104,7 @@ public class QuestEditorGUI extends GUIScreen
             objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
             objectives.add(objectiveElement.addClickActions(() ->
             {
-                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement, textScale);
                 gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
             }));
         }
@@ -117,7 +127,7 @@ public class QuestEditorGUI extends GUIScreen
             GUIItemStack rewardElement = new GUIItemStack(this, reward.value);
             rewards.add(rewardElement.addClickActions(() ->
             {
-                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement, textScale);
                 gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
             }));
         }
@@ -128,7 +138,7 @@ public class QuestEditorGUI extends GUIScreen
             rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
             rewards.add(rewardElement.addClickActions(() ->
             {
-                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement, textScale);
                 gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
             }));
         }
@@ -151,7 +161,7 @@ public class QuestEditorGUI extends GUIScreen
             GUICondition conditionElement = new GUICondition(this, condition);
             conditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                 gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
             }));
         }
@@ -162,7 +172,7 @@ public class QuestEditorGUI extends GUIScreen
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             conditions.add(conditionElement.addClickActions(() ->
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                 gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
             }));
         }
@@ -287,7 +297,7 @@ public class QuestEditorGUI extends GUIScreen
                     GUIObjective objectiveElement = new GUIObjective(this, (CObjective) newObjective.copy());
                     objectives.add(index, objectiveElement.addClickActions(() ->
                     {
-                        ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+                        ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement, textScale);
                         gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
                     }));
                 }
@@ -330,7 +340,7 @@ public class QuestEditorGUI extends GUIScreen
         objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
         objectives.add(objectiveElement.addClickActions(() ->
         {
-            ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement);
+            ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement, textScale);
             gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
         }));
         objectives.add(new GUIText(this, "\n"));
@@ -354,7 +364,7 @@ public class QuestEditorGUI extends GUIScreen
                     GUIItemStack rewardElement = new GUIItemStack(this, newStack.copy());
                     rewards.add(index, rewardElement.addClickActions(() ->
                     {
-                        ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+                        ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement, textScale);
                         gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
                     }));
                 }
@@ -397,7 +407,7 @@ public class QuestEditorGUI extends GUIScreen
         rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
         rewards.add(rewardElement.addClickActions(() ->
         {
-            ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement);
+            ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement, textScale);
             gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
         }));
         rewards.add(new GUIText(this, "\n"));
@@ -421,7 +431,7 @@ public class QuestEditorGUI extends GUIScreen
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     conditions.add(index, conditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                         gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -464,7 +474,7 @@ public class QuestEditorGUI extends GUIScreen
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         conditions.add(conditionElement.addClickActions(() ->
         {
-            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
         conditions.add(new GUIText(this, "\n"));

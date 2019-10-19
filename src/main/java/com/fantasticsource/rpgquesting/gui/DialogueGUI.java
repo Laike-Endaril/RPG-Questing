@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class DialogueGUI extends GUIScreen
 {
-    public static final DialogueGUI GUI = new DialogueGUI();
+    public static final DialogueGUI GUI = new DialogueGUI(0.5);
     private static final Color C_CHOICE = Color.GREEN.copy().setRF(0.2f).setBF(0.2f);
     private static final TextFormatting
             TF_OLD_CHOICE = TextFormatting.DARK_GREEN,
@@ -29,6 +29,12 @@ public class DialogueGUI extends GUIScreen
 
     private DialogueGUI()
     {
+        this(1);
+    }
+
+    private DialogueGUI(double textScale)
+    {
+        super(textScale);
     }
 
     public static void show(DialogueBranchPacket packet)

@@ -38,6 +38,14 @@ public class ObjectiveEditorGUI extends GUIScreen
 
     public ObjectiveEditorGUI(GUIObjective clickedElement)
     {
+        this(clickedElement, 1);
+    }
+
+    public ObjectiveEditorGUI(GUIObjective clickedElement, double textScale)
+    {
+        super(textScale);
+
+
         if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(this);
         else Minecraft.getMinecraft().displayGuiScreen(this);
 
@@ -328,7 +336,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     GUICondition conditionElement = new GUICondition(this, condition);
                     conditions.add(conditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                         gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -339,7 +347,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
                     conditions.add(conditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                         gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -356,7 +364,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 GUIItemStack stackToMatch = new GUIItemStack(this, objectiveCollect.stackToMatch.value);
                 objectiveEditor.add(stackToMatch.addClickActions(() ->
                 {
-                    ItemSelectionGUI gui = new ItemSelectionGUI(stackToMatch);
+                    ItemSelectionGUI gui = new ItemSelectionGUI(stackToMatch, textScale);
                     gui.addOnClosedActions(() ->
                     {
                         stackToMatch.setStack(gui.selection);
@@ -465,7 +473,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     conditions.add(index, conditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                         gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -510,7 +518,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         conditions.add(conditionElement.addClickActions(() ->
         {
-            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
         conditions.add(new GUIText(this, "\n"));

@@ -31,11 +31,17 @@ public class MainEditorGUI extends GUIScreen
 
     private MainEditorGUI()
     {
+        this(1);
+    }
+
+    private MainEditorGUI(double textScale)
+    {
+        super(textScale);
     }
 
     public static void show(EditorPacket packet)
     {
-        MainEditorGUI gui = new MainEditorGUI();
+        MainEditorGUI gui = new MainEditorGUI(0.5);
 
         //Make sure GUI exists
         Minecraft.getMinecraft().displayGuiScreen(gui);

@@ -33,6 +33,14 @@ public class ChoiceEditorGUI extends GUIScreen
 
     public ChoiceEditorGUI(GUIChoice clickedElement)
     {
+        this(clickedElement, 1);
+    }
+
+    public ChoiceEditorGUI(GUIChoice clickedElement, double textScale)
+    {
+        super(textScale);
+
+
         if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(this);
         else Minecraft.getMinecraft().displayGuiScreen(this);
 
@@ -75,7 +83,7 @@ public class ChoiceEditorGUI extends GUIScreen
                 GUICondition conditionElement = new GUICondition(this, condition);
                 conditionsView.add(conditionElement.addClickActions(() ->
                 {
-                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                    ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                     gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
                 }));
             }
@@ -87,7 +95,7 @@ public class ChoiceEditorGUI extends GUIScreen
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             conditionsView.add(conditionElement.addClickActions(() ->
             {
-                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                 gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
             }));
         }
@@ -193,7 +201,7 @@ public class ChoiceEditorGUI extends GUIScreen
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     conditionsView.add(index, conditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
                         gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
                     }));
                 }
@@ -236,7 +244,7 @@ public class ChoiceEditorGUI extends GUIScreen
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         conditionsView.add(conditionElement.addClickActions(() ->
         {
-            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement);
+            ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
         conditionsView.add(new GUIText(this, "\n"));

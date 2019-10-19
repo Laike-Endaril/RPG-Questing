@@ -35,6 +35,14 @@ public class ConditionEditorGUI extends GUIScreen
 
     public ConditionEditorGUI(GUICondition clickedElement)
     {
+        this(clickedElement, 1);
+    }
+
+    public ConditionEditorGUI(GUICondition clickedElement, double textScale)
+    {
+        super(textScale);
+
+
         if (Minecraft.getMinecraft().currentScreen instanceof GUIScreen) GUIScreen.showStacked(this);
         else Minecraft.getMinecraft().displayGuiScreen(this);
 
@@ -310,7 +318,7 @@ public class ConditionEditorGUI extends GUIScreen
                 GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.value);
                 conditionEditor.add(stackElement.addClickActions(() ->
                 {
-                    ItemSelectionGUI gui = new ItemSelectionGUI(stackElement);
+                    ItemSelectionGUI gui = new ItemSelectionGUI(stackElement, textScale);
                     gui.addOnClosedActions(() ->
                     {
                         stackElement.setStack(gui.selection);
@@ -340,7 +348,7 @@ public class ConditionEditorGUI extends GUIScreen
                 GUICondition subConditionElement = new GUICondition(this, not.condition);
                 conditionEditor.add(subConditionElement.addClickActions(() ->
                 {
-                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
+                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement, textScale);
                     gui.addOnClosedActions(() ->
                     {
                         subConditionElement.setCondition(gui.selection);
@@ -359,7 +367,7 @@ public class ConditionEditorGUI extends GUIScreen
                     GUICondition subConditionElement = new GUICondition(this, subCondition);
                     conditionEditor.add(subConditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement, textScale);
                         gui.addOnClosedActions(() ->
                         {
                             if (gui.selection == null)
@@ -383,7 +391,7 @@ public class ConditionEditorGUI extends GUIScreen
                 GUICondition subConditionElement = new GUICondition(this, null);
                 conditionEditor.add(subConditionElement.addClickActions(() ->
                 {
-                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
+                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement, textScale);
                     gui.addOnClosedActions(() ->
                     {
                         if (gui.selection != null)
@@ -394,7 +402,7 @@ public class ConditionEditorGUI extends GUIScreen
                             GUICondition subConditionElement2 = new GUICondition(this, subCondition);
                             conditionEditor.add(index, subConditionElement2.addClickActions(() ->
                             {
-                                ConditionEditorGUI gui2 = new ConditionEditorGUI(subConditionElement2);
+                                ConditionEditorGUI gui2 = new ConditionEditorGUI(subConditionElement2, textScale);
                                 gui2.addOnClosedActions(() ->
                                 {
                                     if (gui2.selection == null)
@@ -430,7 +438,7 @@ public class ConditionEditorGUI extends GUIScreen
                     GUICondition subConditionElement = new GUICondition(this, subCondition);
                     conditionEditor.add(subConditionElement.addClickActions(() ->
                     {
-                        ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
+                        ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement, textScale);
                         gui.addOnClosedActions(() ->
                         {
                             if (gui.selection == null)
@@ -454,7 +462,7 @@ public class ConditionEditorGUI extends GUIScreen
                 GUICondition subConditionElement = new GUICondition(this, null);
                 conditionEditor.add(subConditionElement.addClickActions(() ->
                 {
-                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement);
+                    ConditionEditorGUI gui = new ConditionEditorGUI(subConditionElement, textScale);
                     gui.addOnClosedActions(() ->
                     {
                         if (gui.selection != null)
@@ -465,7 +473,7 @@ public class ConditionEditorGUI extends GUIScreen
                             GUICondition subConditionElement2 = new GUICondition(this, subCondition);
                             conditionEditor.add(index, subConditionElement2.addClickActions(() ->
                             {
-                                ConditionEditorGUI gui2 = new ConditionEditorGUI(subConditionElement2);
+                                ConditionEditorGUI gui2 = new ConditionEditorGUI(subConditionElement2, textScale);
                                 gui2.addOnClosedActions(() ->
                                 {
                                     if (gui2.selection == null)

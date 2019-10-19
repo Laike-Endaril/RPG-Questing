@@ -27,7 +27,7 @@ import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class JournalGUI extends GUIScreen
 {
-    public static final JournalGUI GUI = new JournalGUI();
+    public static final JournalGUI GUI = new JournalGUI(0.5);
     public static CPlayerQuestData data = null;
     public static String viewedQuest = "";
     private static GUITabView navigator;
@@ -42,6 +42,12 @@ public class JournalGUI extends GUIScreen
 
     private JournalGUI()
     {
+        this(1);
+    }
+
+    private JournalGUI(double textScale)
+    {
+        super(textScale);
     }
 
     public static void show(CPlayerQuestData dataIn, String questToView)
