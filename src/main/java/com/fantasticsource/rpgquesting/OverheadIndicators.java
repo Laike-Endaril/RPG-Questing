@@ -46,11 +46,11 @@ public class OverheadIndicators
             FUNC_SET_READY_TO_TURN_IN = 4;
 
     //Client-side
-    private static double SCALE = 1, HOFF2D = 0, VOFF2D = -10, VERTICAL_PERCENT = 1, VERTICAL_OFFSET = 0.5, HORIZONTAL_PERCENT = 0;
-    private static boolean ACCOUNT_FOR_SNEAK = true;
     private static final int SIZE = 32;
     private static final double UV_HALF_PIXEL = 0.5 / SIZE;
     public static LinkedHashMap<Integer, Integer> overheadIndicators = new LinkedHashMap<>();
+    private static double SCALE = 1, HOFF2D = 0, VOFF2D = -10, VERTICAL_PERCENT = 1, VERTICAL_OFFSET = 0.5, HORIZONTAL_PERCENT = 0;
+    private static boolean ACCOUNT_FOR_SNEAK = true;
 
     //Server-side
     @SubscribeEvent

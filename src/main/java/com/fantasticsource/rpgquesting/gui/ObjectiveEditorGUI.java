@@ -353,7 +353,7 @@ public class ObjectiveEditorGUI extends GUIScreen
             else if (cls == CObjectiveCollect.class)
             {
                 CObjectiveCollect objectiveCollect = (CObjectiveCollect) objective;
-                GUIItemStack stackToMatch = new GUIItemStack(this, objectiveCollect.stackToMatch.stack);
+                GUIItemStack stackToMatch = new GUIItemStack(this, objectiveCollect.stackToMatch.value);
                 objectiveEditor.add(stackToMatch.addClickActions(() ->
                 {
                     ItemSelectionGUI gui = new ItemSelectionGUI(stackToMatch);

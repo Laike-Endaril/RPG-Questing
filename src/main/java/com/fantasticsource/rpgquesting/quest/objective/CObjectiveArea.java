@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class CObjectiveArea extends CObjective
+public abstract class CObjectiveArea extends CStateBasedObjective
 {
     public final CInt[] coords = new CInt[6];
 

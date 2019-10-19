@@ -8,34 +8,22 @@ import com.fantasticsource.rpgquesting.gui.GUIObjective;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.tools.component.CInt;
-import com.fantasticsource.tools.component.CUUID;
-import com.fantasticsource.tools.datastructures.Pair;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
-public class CObjectiveCollect extends CObjective
+public class CObjectiveCollect extends CStateBasedObjective
 {
-    static
-    {
-        MinecraftForge.EVENT_BUS.register(CObjectiveCollect.class);
-    }
-
     public CItemStack stackToMatch = new CItemStack();
-    CInt current = new CInt();
+    protected CInt current = new CInt();
 
     public CObjectiveCollect()
     {
@@ -47,35 +35,8 @@ public class CObjectiveCollect extends CObjective
         this.stackToMatch.set(stackToMatch.copy());
     }
 
-    @SubscribeEvent
-    public static void serverPlayerTick(TickEvent.PlayerTickEvent event)
-    {
-        if (event.side != Side.SERVER || event.phase != TickEvent.Phase.END) return;
-
-        EntityPlayerMP player = (EntityPlayerMP) event.player;
-        CPlayerQuestData data = CQuests.playerQuestData.get(player.getPersistentID());
-        if (data == null) return;
-
-
-        boolean changed = false;
-        for (LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map : data.inProgressQuests.values())
-        {
-            for (Pair<CUUID, ArrayList<CObjective>> pair : map.values())
-            {
-                for (CObjective objective : pair.getValue())
-                {
-                    if (objective.getClass() == CObjectiveCollect.class)
-                    {
-                        changed |= ((CObjectiveCollect) objective).serverUpdate(player);
-                    }
-                }
-            }
-        }
-
-        if (changed) data.saveAndSync();
-    }
-
-    private boolean serverUpdate(EntityPlayerMP player)
+    @Override
+    public boolean check(EntityPlayerMP player)
     {
         int result = 0;
         InventoryPlayer inv = player.inventory;
@@ -112,14 +73,18 @@ public class CObjectiveCollect extends CObjective
     @Override
     public boolean isDone()
     {
-        //Server-side only; last-second update before check, to prevent exploits
+        //Server-side only; last-second update before check, to help prevent exploits
         if (owner.value != null)
         {
             PlayerData data = PlayerData.get(owner.value);
             if (data != null)
             {
                 EntityPlayer player = data.player;
-                if (player != null) serverUpdate((EntityPlayerMP) player);
+                if (player != null && check((EntityPlayerMP) player))
+                {
+                    CPlayerQuestData questData = CQuests.playerQuestData.get(player);
+                    if (questData != null) questData.saveAndSync();
+                }
             }
         }
 

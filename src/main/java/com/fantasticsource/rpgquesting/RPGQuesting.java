@@ -84,9 +84,9 @@ public class RPGQuesting
         if (!addedNewStuff)
         {
             addedNewStuff = true;
-            Temp.addKillQuest(false);
-            Temp.addCollectionQuest(true);
-            Temp.addCollectionQuest2(false);
+//            Temp.addKillQuest(false);
+//            Temp.addCollectionQuest(true);
+//            Temp.addCollectionQuest2(false);
         }
     }
 

@@ -307,7 +307,7 @@ public class ConditionEditorGUI extends GUIScreen
             else if (cls == CConditionHaveItems.class)
             {
                 CConditionHaveItems haveItems = (CConditionHaveItems) condition;
-                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.stack);
+                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.value);
                 conditionEditor.add(stackElement.addClickActions(() ->
                 {
                     ItemSelectionGUI gui = new ItemSelectionGUI(stackElement);

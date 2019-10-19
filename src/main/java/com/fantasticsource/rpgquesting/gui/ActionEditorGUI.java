@@ -329,7 +329,7 @@ public class ActionEditorGUI extends GUIScreen
             else if (cls == CActionTakeItems.class)
             {
                 CActionTakeItems haveItems = (CActionTakeItems) action;
-                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.stack);
+                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.value);
                 actionOptionsView.add(stackElement.addClickActions(() ->
                 {
                     ItemSelectionGUI gui = new ItemSelectionGUI(stackElement);
