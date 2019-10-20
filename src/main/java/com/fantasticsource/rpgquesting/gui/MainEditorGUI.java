@@ -50,10 +50,10 @@ public class MainEditorGUI extends GUIScreen
 
         //Quests
         {
-            GUITextSpacer spacer = new GUITextSpacer(gui, 1, gui.textScale, true);
-            gui.navigator.tabViews.get(0).add(spacer);
+            GUITextSpacer spacer = new GUITextSpacer(gui, true);
             gui.questNav = new GUIScrollView(gui, 0.98 - spacer.width * 2, 1);
-            gui.navigator.tabViews.get(0).add(gui.questNav.addRecalcActions(() -> gui.questNav.width = 0.98 - spacer.width * 2));
+            gui.navigator.tabViews.get(0).add(spacer.addRecalcActions(() -> gui.questNav.width = 0.98 - spacer.width * 2));
+            gui.navigator.tabViews.get(0).add(gui.questNav);
             gui.navigator.tabViews.get(0).add(new GUIVerticalScrollbar(gui, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, gui.questNav));
         }
 
@@ -93,10 +93,10 @@ public class MainEditorGUI extends GUIScreen
 
         //Dialogues
         {
-            GUITextSpacer spacer = new GUITextSpacer(gui, 1, gui.textScale, true);
-            gui.navigator.tabViews.get(1).add(spacer);
+            GUITextSpacer spacer = new GUITextSpacer(gui, true);
             gui.dialogueNav = new GUIScrollView(gui, 0.98 - spacer.width * 2, 1);
-            gui.navigator.tabViews.get(1).add(gui.dialogueNav.addRecalcActions(() -> gui.dialogueNav.width = 0.98 - spacer.width * 2));
+            gui.navigator.tabViews.get(1).add(spacer.addRecalcActions(() -> gui.dialogueNav.width = 0.98 - spacer.width * 2));
+            gui.navigator.tabViews.get(1).add(gui.dialogueNav);
             gui.navigator.tabViews.get(1).add(new GUIVerticalScrollbar(gui, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, gui.dialogueNav));
         }
 

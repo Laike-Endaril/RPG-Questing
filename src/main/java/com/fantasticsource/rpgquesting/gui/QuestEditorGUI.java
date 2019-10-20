@@ -57,11 +57,11 @@ public class QuestEditorGUI extends GUIScreen
         //Main tab
         main.clear();
 
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
         name = new GUILabeledTextInput(this, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE);
         main.add(name);
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
         oldName = new GUIText(this, "(Previous Name: " + quest.name.value + ")", BLUE[0]);
         main.add(oldName);
@@ -69,19 +69,19 @@ public class QuestEditorGUI extends GUIScreen
 
         group = new GUILabeledTextInput(this, "Group: ", quest.group.value, FilterNotEmpty.INSTANCE);
         main.add(group);
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
         level = new GUILabeledTextInput(this, "Level: ", "" + quest.level.value, FilterInt.INSTANCE);
         main.add(level);
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
         repeatable = new GUILabeledTextInput(this, "Repeatable: ", "" + quest.repeatable.value, FilterBoolean.INSTANCE);
         main.add(repeatable);
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
         experience = new GUILabeledTextInput(this, "Experience Awarded: ", "" + quest.experience.value, FilterInt.INSTANCE);
         main.add(experience);
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
 
         //Objectives tab
@@ -89,7 +89,7 @@ public class QuestEditorGUI extends GUIScreen
 
         for (CObjective objective : quest.objectives)
         {
-            objectives.add(new GUIText(this, "\n"));
+            objectives.add(new GUITextSpacer(this));
             GUIObjective objectiveElement = new GUIObjective(this, objective);
             objectives.add(objectiveElement.addClickActions(() ->
             {
@@ -99,7 +99,7 @@ public class QuestEditorGUI extends GUIScreen
         }
 
         {
-            objectives.add(new GUIText(this, "\n"));
+            objectives.add(new GUITextSpacer(this));
             GUIObjective objectiveElement = new GUIObjective(this, null);
             objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
             objectives.add(objectiveElement.addClickActions(() ->
@@ -111,11 +111,11 @@ public class QuestEditorGUI extends GUIScreen
 
         if (quest.objectives.size() > 0)
         {
-            objectives.add(new GUIText(this, "\n"));
+            objectives.add(new GUITextSpacer(this));
             objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearObjectives));
         }
 
-        objectives.add(new GUIText(this, "\n"));
+        objectives.add(new GUITextSpacer(this));
 
 
         //Rewards tab
@@ -123,7 +123,7 @@ public class QuestEditorGUI extends GUIScreen
 
         for (CItemStack reward : quest.rewards)
         {
-            rewards.add(new GUIText(this, "\n"));
+            rewards.add(new GUITextSpacer(this));
             GUIItemStack rewardElement = new GUIItemStack(this, reward.value);
             rewards.add(rewardElement.addClickActions(() ->
             {
@@ -133,7 +133,7 @@ public class QuestEditorGUI extends GUIScreen
         }
 
         {
-            rewards.add(new GUIText(this, "\n"));
+            rewards.add(new GUITextSpacer(this));
             GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
             rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
             rewards.add(rewardElement.addClickActions(() ->
@@ -145,11 +145,11 @@ public class QuestEditorGUI extends GUIScreen
 
         if (quest.rewards.size() > 0)
         {
-            rewards.add(new GUIText(this, "\n"));
+            rewards.add(new GUITextSpacer(this));
             rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearRewards));
         }
 
-        rewards.add(new GUIText(this, "\n"));
+        rewards.add(new GUITextSpacer(this));
 
 
         //Conditions tab
@@ -157,7 +157,7 @@ public class QuestEditorGUI extends GUIScreen
 
         for (CCondition condition : quest.conditions)
         {
-            conditions.add(new GUIText(this, "\n"));
+            conditions.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, condition);
             conditions.add(conditionElement.addClickActions(() ->
             {
@@ -167,7 +167,7 @@ public class QuestEditorGUI extends GUIScreen
         }
 
         {
-            conditions.add(new GUIText(this, "\n"));
+            conditions.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, null);
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             conditions.add(conditionElement.addClickActions(() ->
@@ -179,11 +179,11 @@ public class QuestEditorGUI extends GUIScreen
 
         if (quest.conditions.size() > 0)
         {
-            conditions.add(new GUIText(this, "\n"));
+            conditions.add(new GUITextSpacer(this));
             conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
         }
 
-        conditions.add(new GUIText(this, "\n"));
+        conditions.add(new GUITextSpacer(this));
 
 
         //Dialogues tab
@@ -198,29 +198,29 @@ public class QuestEditorGUI extends GUIScreen
             {
                 spoiler = new GUITextSpoiler(this, dialogueEntry.dialogueName.value, WHITE[0], WHITE[1], WHITE[2]);
 
-                dialogues.add(new GUIText(this, "\n"));
+                dialogues.add(new GUITextSpacer(this));
                 dialogues.add(spoiler);
                 dialogueSpoilers.put(dialogueName, spoiler);
 
-                spoiler.add(new GUIText(this, "\n"));
+                spoiler.add(new GUITextSpacer(this));
                 spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
-                spoiler.add(new GUIText(this, "\n"));
+                spoiler.add(new GUITextSpacer(this));
                 spoiler.add(new GUIText(this, "* ", WHITE[0]));
                 spoiler.add(new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
                 spoiler.add(new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
-                spoiler.add(new GUIText(this, "\n"));
+                spoiler.add(new GUITextSpacer(this));
                 spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
-                spoiler.add(new GUIText(this, "\n"));
+                spoiler.add(new GUITextSpacer(this));
             }
             else
             {
                 spoiler.add(spoiler.size() - 2, new GUIText(this, "* ", WHITE[0]));
                 spoiler.add(spoiler.size() - 2, new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
                 spoiler.add(spoiler.size() - 2, new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
-                spoiler.add(spoiler.size() - 2, new GUIText(this, "\n"));
+                spoiler.add(spoiler.size() - 2, new GUITextSpacer(this));
             }
         }
-        dialogues.add(new GUIText(this, "\n"));
+        dialogues.add(new GUITextSpacer(this));
     }
 
     @Override
@@ -248,29 +248,49 @@ public class QuestEditorGUI extends GUIScreen
         root.add(tabView);
 
         //Main tab
-        main = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(0).add(main);
-        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            main = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> main.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(0).add(main);
+            tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
+        }
 
         //Objectives tab
-        objectives = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(1).add(objectives);
-        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectives));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            objectives = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(1).add(spacer.addRecalcActions(() -> objectives.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(1).add(objectives);
+            tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectives));
+        }
 
         //Rewards tab
-        rewards = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(2).add(rewards);
-        tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, rewards));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            rewards = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(2).add(spacer.addRecalcActions(() -> rewards.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(2).add(rewards);
+            tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, rewards));
+        }
 
         //Conditions tab
-        conditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(3).add(conditions);
-        tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditions));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            conditions = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(3).add(spacer.addRecalcActions(() -> conditions.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(3).add(conditions);
+            tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditions));
+        }
 
         //Dialogues tab
-        dialogues = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(4).add(dialogues);
-        tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            dialogues = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(4).add(spacer.addRecalcActions(() -> dialogues.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(4).add(dialogues);
+            tabView.tabViews.get(4).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, dialogues));
+        }
     }
 
 
@@ -293,7 +313,7 @@ public class QuestEditorGUI extends GUIScreen
                 int index = objectives.indexOf(activeObjectiveElement);
 
                 {
-                    objectives.add(index, new GUIText(this, "\n"));
+                    objectives.add(index, new GUITextSpacer(this));
                     GUIObjective objectiveElement = new GUIObjective(this, (CObjective) newObjective.copy());
                     objectives.add(index, objectiveElement.addClickActions(() ->
                     {
@@ -306,7 +326,7 @@ public class QuestEditorGUI extends GUIScreen
                 {
                     //Objectives were empty, but no longer are
                     objectives.add(new GUIText(this, "(Clear all objectives)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearObjectives));
-                    objectives.add(new GUIText(this, "\n"));
+                    objectives.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -335,7 +355,7 @@ public class QuestEditorGUI extends GUIScreen
     {
         objectives.clear();
 
-        objectives.add(new GUIText(this, "\n"));
+        objectives.add(new GUITextSpacer(this));
         GUIObjective objectiveElement = new GUIObjective(this, null);
         objectiveElement.text = TextFormatting.DARK_PURPLE + "(Add new objective)";
         objectives.add(objectiveElement.addClickActions(() ->
@@ -343,7 +363,7 @@ public class QuestEditorGUI extends GUIScreen
             ObjectiveEditorGUI gui = new ObjectiveEditorGUI(objectiveElement, textScale);
             gui.addOnClosedActions(() -> editObjective(objectiveElement, gui.selection));
         }));
-        objectives.add(new GUIText(this, "\n"));
+        objectives.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
@@ -360,7 +380,7 @@ public class QuestEditorGUI extends GUIScreen
                 int index = rewards.indexOf(activeRewardElement);
 
                 {
-                    rewards.add(index, new GUIText(this, "\n"));
+                    rewards.add(index, new GUITextSpacer(this));
                     GUIItemStack rewardElement = new GUIItemStack(this, newStack.copy());
                     rewards.add(index, rewardElement.addClickActions(() ->
                     {
@@ -373,7 +393,7 @@ public class QuestEditorGUI extends GUIScreen
                 {
                     //Rewards were empty, but no longer are
                     rewards.add(new GUIText(this, "(Clear all rewards)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearRewards));
-                    rewards.add(new GUIText(this, "\n"));
+                    rewards.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -402,7 +422,7 @@ public class QuestEditorGUI extends GUIScreen
     {
         rewards.clear();
 
-        rewards.add(new GUIText(this, "\n"));
+        rewards.add(new GUITextSpacer(this));
         GUIItemStack rewardElement = new GUIItemStack(this, ItemStack.EMPTY);
         rewardElement.text = TextFormatting.DARK_PURPLE + "(Add new reward)";
         rewards.add(rewardElement.addClickActions(() ->
@@ -410,7 +430,7 @@ public class QuestEditorGUI extends GUIScreen
             ItemSelectionGUI gui = new ItemSelectionGUI(rewardElement, textScale);
             gui.addOnClosedActions(() -> editReward(rewardElement, gui.selection));
         }));
-        rewards.add(new GUIText(this, "\n"));
+        rewards.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
@@ -427,7 +447,7 @@ public class QuestEditorGUI extends GUIScreen
                 int index = conditions.indexOf(activeObjectiveElement);
 
                 {
-                    conditions.add(index, new GUIText(this, "\n"));
+                    conditions.add(index, new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     conditions.add(index, conditionElement.addClickActions(() ->
                     {
@@ -440,7 +460,7 @@ public class QuestEditorGUI extends GUIScreen
                 {
                     //Conditions were empty, but no longer are
                     conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
-                    conditions.add(new GUIText(this, "\n"));
+                    conditions.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -469,7 +489,7 @@ public class QuestEditorGUI extends GUIScreen
     {
         conditions.clear();
 
-        conditions.add(new GUIText(this, "\n"));
+        conditions.add(new GUITextSpacer(this));
         GUICondition conditionElement = new GUICondition(this, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         conditions.add(conditionElement.addClickActions(() ->
@@ -477,7 +497,7 @@ public class QuestEditorGUI extends GUIScreen
             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
-        conditions.add(new GUIText(this, "\n"));
+        conditions.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
