@@ -65,7 +65,8 @@ public class QuestEditorGUI extends GUIScreen
 
         oldName = new GUIText(this, "(Previous Name: " + quest.name.value + ")", BLUE[0]);
         main.add(oldName);
-        main.add(new GUIText(this, "\n\n"));
+        main.add(new GUITextSpacer(this));
+        main.add(new GUITextSpacer(this));
 
         group = new GUILabeledTextInput(this, "Group: ", quest.group.value, FilterNotEmpty.INSTANCE);
         main.add(group);
@@ -223,13 +224,6 @@ public class QuestEditorGUI extends GUIScreen
         dialogues.add(new GUITextSpacer(this));
     }
 
-    @Override
-    public void onResize(Minecraft mcIn, int w, int h)
-    {
-        super.onResize(mcIn, w, h);
-        tabView.height = 1 - (separator.y + separator.height);
-        tabView.recalc();
-    }
 
     @Override
     protected void init()
@@ -243,8 +237,8 @@ public class QuestEditorGUI extends GUIScreen
 
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separator);
         tabView = new GUITabView(this, 1, 1 - (separator.y + separator.height), "Main", "Objectives", "Rewards", "Availability Conditions", "Related Dialogues");
+        root.add(separator.addRecalcActions(() -> tabView.height = 1 - (separator.y + separator.height)));
         root.add(tabView);
 
         //Main tab

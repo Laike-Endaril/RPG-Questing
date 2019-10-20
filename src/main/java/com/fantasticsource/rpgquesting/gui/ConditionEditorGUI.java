@@ -5,10 +5,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
-import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
-import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
-import com.fantasticsource.mctools.gui.element.text.GUIText;
-import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.*;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
@@ -102,10 +99,10 @@ public class ConditionEditorGUI extends GUIScreen
         originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
-        originalView.add(new GUIText(this, "\n"));
+        originalView.add(new GUITextSpacer(this));
         GUICondition originalElement = new GUICondition(this, current.condition == null ? null : (CCondition) current.condition.copy());
         originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.condition)));
-        originalView.add(new GUIText(this, "\n"));
+        originalView.add(new GUITextSpacer(this));
 
 
         //Current
@@ -116,9 +113,9 @@ public class ConditionEditorGUI extends GUIScreen
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
-        currentView.add(new GUIText(this, "\n"));
+        currentView.add(new GUITextSpacer(this));
         currentView.add(current);
-        currentView.add(new GUIText(this, "\n"));
+        currentView.add(new GUITextSpacer(this));
 
 
         //Tabview
@@ -134,49 +131,49 @@ public class ConditionEditorGUI extends GUIScreen
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector));
 
         //Quest conditions
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionQuestAvailable().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionQuestInProgress().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionQuestReadyToComplete().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionQuestCompleted().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         //Normal conditions
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionNameIs().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionEntityEntryIs().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionClassIs().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionInventorySpace().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionHaveItems().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         //Meta conditions
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionAnd().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionNot().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         conditionSelector.add(new CConditionOr().getChoosableElement(this));
-        conditionSelector.add(new GUIText(this, "\n"));
+        conditionSelector.add(new GUITextSpacer(this));
 
         for (int i = conditionSelector.size() - 1; i >= 0; i--)
         {
@@ -251,7 +248,7 @@ public class ConditionEditorGUI extends GUIScreen
 
         conditionEditor.clear();
 
-        conditionEditor.add(new GUIText(this, "\n"));
+        conditionEditor.add(new GUITextSpacer(this));
 
         if (condition != null)
         {
@@ -268,7 +265,7 @@ public class ConditionEditorGUI extends GUIScreen
                     }
                 });
                 conditionEditor.add(name);
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CConditionEntityEntryIs.class)
             {
@@ -282,7 +279,7 @@ public class ConditionEditorGUI extends GUIScreen
                     }
                 });
                 conditionEditor.add(name);
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CConditionClassIs.class)
             {
@@ -296,7 +293,7 @@ public class ConditionEditorGUI extends GUIScreen
                     }
                 });
                 conditionEditor.add(name);
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CConditionInventorySpace.class)
             {
@@ -310,7 +307,7 @@ public class ConditionEditorGUI extends GUIScreen
                     }
                 });
                 conditionEditor.add(slotCount);
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CConditionHaveItems.class)
             {
@@ -326,7 +323,7 @@ public class ConditionEditorGUI extends GUIScreen
                         current.setCondition(haveItems);
                     });
                 }));
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (condition instanceof CQuestCondition)
             {
@@ -340,7 +337,7 @@ public class ConditionEditorGUI extends GUIScreen
                     }
                 });
                 conditionEditor.add(questName);
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CConditionNot.class)
             {
@@ -356,7 +353,7 @@ public class ConditionEditorGUI extends GUIScreen
                         current.setCondition(not);
                     });
                 }));
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CConditionAnd.class)
             {
@@ -385,7 +382,7 @@ public class ConditionEditorGUI extends GUIScreen
                             current.setCondition(and);
                         });
                     }));
-                    conditionEditor.add(new GUIText(this, "\n"));
+                    conditionEditor.add(new GUITextSpacer(this));
                 }
 
                 GUICondition subConditionElement = new GUICondition(this, null);
@@ -397,7 +394,7 @@ public class ConditionEditorGUI extends GUIScreen
                         if (gui.selection != null)
                         {
                             int index = conditionEditor.size() - 2;
-                            conditionEditor.add(index, new GUIText(this, "\n"));
+                            conditionEditor.add(index, new GUITextSpacer(this));
                             CCondition subCondition = gui.selection;
                             GUICondition subConditionElement2 = new GUICondition(this, subCondition);
                             conditionEditor.add(index, subConditionElement2.addClickActions(() ->
@@ -427,7 +424,7 @@ public class ConditionEditorGUI extends GUIScreen
                     });
                 }));
 
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CConditionOr.class)
             {
@@ -456,7 +453,7 @@ public class ConditionEditorGUI extends GUIScreen
                             current.setCondition(or);
                         });
                     }));
-                    conditionEditor.add(new GUIText(this, "\n"));
+                    conditionEditor.add(new GUITextSpacer(this));
                 }
 
                 GUICondition subConditionElement = new GUICondition(this, null);
@@ -468,7 +465,7 @@ public class ConditionEditorGUI extends GUIScreen
                         if (gui.selection != null)
                         {
                             int index = conditionEditor.size() - 2;
-                            conditionEditor.add(index, new GUIText(this, "\n"));
+                            conditionEditor.add(index, new GUITextSpacer(this));
                             CCondition subCondition = gui.selection;
                             GUICondition subConditionElement2 = new GUICondition(this, subCondition);
                             conditionEditor.add(index, subConditionElement2.addClickActions(() ->
@@ -498,7 +495,7 @@ public class ConditionEditorGUI extends GUIScreen
                     });
                 }));
 
-                conditionEditor.add(new GUIText(this, "\n"));
+                conditionEditor.add(new GUITextSpacer(this));
             }
         }
 
