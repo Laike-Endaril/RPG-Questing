@@ -78,7 +78,7 @@ public class ConditionEditorGUI extends GUIScreen
         }));
 
 
-        double free = 1 - delete.height - 0.02;
+        double oneThird = (1 - delete.height - 0.02) / 3;
 
 
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
@@ -92,11 +92,13 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         //Original
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalView = new GUIScrollView(this, 0.44, free / 3);
+        GUITextSpacer spacer = new GUITextSpacer(this, oneThird, true);
+        originalView = new GUIScrollView(this, 0.48 - spacer.width * 2, oneThird);
+        root.add(spacer.addRecalcActions(() -> originalView.width = 0.48 - spacer.width * 2));
         root.add(originalView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
+        GUITextSpacer spacer2 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer2);
+        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
         originalView.add(new GUITextSpacer(this));
@@ -107,10 +109,10 @@ public class ConditionEditorGUI extends GUIScreen
 
         //Current
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentView = new GUIScrollView(this, 0.44, free / 3);
+        currentView = new GUIScrollView(this, 0.44, oneThird);
         root.add(currentView);
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
+        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
         currentView.add(new GUITextSpacer(this));
@@ -121,7 +123,7 @@ public class ConditionEditorGUI extends GUIScreen
         //Tabview
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
-        tabView = new GUITabView(this, 1, free * 2 / 3, "Base Condition Type", "Condition Options");
+        tabView = new GUITabView(this, 1, oneThird * 2, "Base Condition Type", "Condition Options");
         root.add(tabView);
 
 
@@ -204,25 +206,30 @@ public class ConditionEditorGUI extends GUIScreen
 
         currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
         currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
+
+
+        //Recalc actions
+        delete.addRecalcActions(() ->
+        {
+            double oneThirdHeight = (1 - delete.height - 0.02) / 3;
+
+            //Resize views and scrollbars
+            spacer.height = oneThirdHeight;
+            originalView.height = oneThirdHeight;
+            spacer2.height = oneThirdHeight;
+            originalScrollbar.height = oneThirdHeight;
+
+            currentView.height = oneThirdHeight;
+            currentScrollbar.height = oneThirdHeight;
+
+            tabView.height = oneThirdHeight * 2;
+        });
     }
 
     @Override
     public void onResize(Minecraft mcIn, int w, int h)
     {
         super.onResize(mcIn, w, h);
-
-        double free = 1 - delete.height - 0.02;
-
-
-        //Resize views and scrollbars
-        originalView.height = free / 3;
-        originalScrollbar.height = free / 3;
-
-        currentView.height = free / 3;
-        currentScrollbar.height = free / 3;
-
-        tabView.y = free * 2 / 3;
-        tabView.height = 1 - tabView.y;
 
 
         //Reposition labels
