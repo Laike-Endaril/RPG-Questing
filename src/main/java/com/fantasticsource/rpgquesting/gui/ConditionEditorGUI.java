@@ -109,9 +109,12 @@ public class ConditionEditorGUI extends GUIScreen
 
         //Current
         root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentView = new GUIScrollView(this, 0.44, oneThird);
+        GUITextSpacer spacer3 = new GUITextSpacer(this, oneThird, true);
+        currentView = new GUIScrollView(this, 0.48 - spacer3.width * 2, oneThird);
+        root.add(spacer3.addRecalcActions(() -> currentView.width = 0.48 - spacer3.width * 2));
         root.add(currentView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
+        GUITextSpacer spacer4 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer4);
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
@@ -219,7 +222,9 @@ public class ConditionEditorGUI extends GUIScreen
             spacer2.height = oneThirdHeight;
             originalScrollbar.height = oneThirdHeight;
 
+            spacer3.height = oneThirdHeight;
             currentView.height = oneThirdHeight;
+            spacer4.height = oneThirdHeight;
             currentScrollbar.height = oneThirdHeight;
 
             tabView.height = oneThirdHeight * 2;
