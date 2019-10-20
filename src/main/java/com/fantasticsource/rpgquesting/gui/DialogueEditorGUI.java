@@ -8,6 +8,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.GUITextSpacer;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
@@ -51,7 +52,7 @@ public class DialogueEditorGUI extends GUIScreen
         //Main tab
         main.clear();
 
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
         name = new GUILabeledTextInput(this, "Name: ", dialogue.name.value, FilterNotEmpty.INSTANCE);
         main.add(name.addRecalcActions(() ->
@@ -59,7 +60,7 @@ public class DialogueEditorGUI extends GUIScreen
             //For CActionBranch, way down in DialogueEditorGUI -> BranchEditorGUI -> ChoiceEditorGUI -> ActionEditorGUI
             if (name.input.valid()) CActionBranch.queuedDialogueName = name.input.text;
         }));
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
         oldName = new GUIText(this, "(Previous Name: " + dialogue.name.value + ")", BLUE[0]);
         main.add(oldName);
@@ -67,7 +68,7 @@ public class DialogueEditorGUI extends GUIScreen
 
         group = new GUILabeledTextInput(this, "Group: ", dialogue.group.value, FilterNotEmpty.INSTANCE);
         main.add(group);
-        main.add(new GUIText(this, "\n"));
+        main.add(new GUITextSpacer(this));
 
 
         //Availability conditions (player) tab
@@ -75,7 +76,7 @@ public class DialogueEditorGUI extends GUIScreen
 
         for (CCondition condition : dialogue.playerConditions)
         {
-            playerConditions.add(new GUIText(this, "\n"));
+            playerConditions.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, condition);
             playerConditions.add(conditionElement.addClickActions(() ->
             {
@@ -85,7 +86,7 @@ public class DialogueEditorGUI extends GUIScreen
         }
 
         {
-            playerConditions.add(new GUIText(this, "\n"));
+            playerConditions.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, null);
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             playerConditions.add(conditionElement.addClickActions(() ->
@@ -97,11 +98,11 @@ public class DialogueEditorGUI extends GUIScreen
 
         if (dialogue.playerConditions.size() > 0)
         {
-            playerConditions.add(new GUIText(this, "\n"));
+            playerConditions.add(new GUITextSpacer(this));
             playerConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearPlayerConditions));
         }
 
-        playerConditions.add(new GUIText(this, "\n"));
+        playerConditions.add(new GUITextSpacer(this));
 
 
         //Availability conditions (entity) tab
@@ -109,7 +110,7 @@ public class DialogueEditorGUI extends GUIScreen
 
         for (CCondition condition : dialogue.entityConditions)
         {
-            entityConditions.add(new GUIText(this, "\n"));
+            entityConditions.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, condition);
             entityConditions.add(conditionElement.addClickActions(() ->
             {
@@ -119,7 +120,7 @@ public class DialogueEditorGUI extends GUIScreen
         }
 
         {
-            entityConditions.add(new GUIText(this, "\n"));
+            entityConditions.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, null);
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             entityConditions.add(conditionElement.addClickActions(() ->
@@ -131,11 +132,11 @@ public class DialogueEditorGUI extends GUIScreen
 
         if (dialogue.entityConditions.size() > 0)
         {
-            entityConditions.add(new GUIText(this, "\n"));
+            entityConditions.add(new GUITextSpacer(this));
             entityConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearEntityConditions));
         }
 
-        entityConditions.add(new GUIText(this, "\n"));
+        entityConditions.add(new GUITextSpacer(this));
 
 
         //Branches tab
@@ -144,7 +145,7 @@ public class DialogueEditorGUI extends GUIScreen
         int i = 0;
         for (CDialogueBranch branch : dialogue.branches)
         {
-            branches.add(new GUIText(this, "\n"));
+            branches.add(new GUITextSpacer(this));
             GUIBranch branchElement = new GUIBranch(this, branch, "Branch " + i++);
             branches.add(branchElement.addClickActions(() ->
             {
@@ -154,7 +155,7 @@ public class DialogueEditorGUI extends GUIScreen
         }
 
         {
-            branches.add(new GUIText(this, "\n"));
+            branches.add(new GUITextSpacer(this));
             GUIBranch branchElement = new GUIBranch(this, null, TextFormatting.DARK_PURPLE + "(Add new branch)");
             branches.add(branchElement.addClickActions(() ->
             {
@@ -165,11 +166,11 @@ public class DialogueEditorGUI extends GUIScreen
 
         if (dialogue.branches.size() > 0)
         {
-            branches.add(new GUIText(this, "\n"));
+            branches.add(new GUITextSpacer(this));
             branches.add(new GUIText(this, "(Clear all branches)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearBranches));
         }
 
-        branches.add(new GUIText(this, "\n"));
+        branches.add(new GUITextSpacer(this));
     }
 
     @Override
@@ -204,24 +205,40 @@ public class DialogueEditorGUI extends GUIScreen
         root.add(tabView);
 
         //Main tab
-        main = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(0).add(main);
-        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            main = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> main.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(0).add(main);
+            tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, main));
+        }
 
         //Availability conditions (player) tab
-        playerConditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(1).add(playerConditions);
-        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, playerConditions));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            playerConditions = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(1).add(spacer.addRecalcActions(() -> playerConditions.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(1).add(playerConditions);
+            tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, playerConditions));
+        }
 
         //Availability conditions (entity) tab
-        entityConditions = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(2).add(entityConditions);
-        tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, entityConditions));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            entityConditions = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(2).add(spacer.addRecalcActions(() -> entityConditions.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(2).add(entityConditions);
+            tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, entityConditions));
+        }
 
         //Branches tab
-        branches = new GUIScrollView(this, 0.02, 0, 0.94, 1);
-        tabView.tabViews.get(3).add(branches);
-        tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, branches));
+        {
+            GUITextSpacer spacer = new GUITextSpacer(this, true);
+            branches = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+            tabView.tabViews.get(3).add(spacer.addRecalcActions(() -> branches.width = 0.98 - spacer.width * 2));
+            tabView.tabViews.get(3).add(branches);
+            tabView.tabViews.get(3).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, branches));
+        }
     }
 
 
@@ -280,7 +297,7 @@ public class DialogueEditorGUI extends GUIScreen
                 int index = playerConditions.indexOf(activeConditionElement);
 
                 {
-                    playerConditions.add(index, new GUIText(this, "\n"));
+                    playerConditions.add(index, new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     playerConditions.add(index, conditionElement.addClickActions(() ->
                     {
@@ -293,7 +310,7 @@ public class DialogueEditorGUI extends GUIScreen
                 {
                     //Conditions were empty, but no longer are
                     playerConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearPlayerConditions));
-                    playerConditions.add(new GUIText(this, "\n"));
+                    playerConditions.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -324,7 +341,7 @@ public class DialogueEditorGUI extends GUIScreen
     {
         playerConditions.clear();
 
-        playerConditions.add(new GUIText(this, "\n"));
+        playerConditions.add(new GUITextSpacer(this));
         GUICondition conditionElement = new GUICondition(this, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         playerConditions.add(conditionElement.addClickActions(() ->
@@ -332,7 +349,7 @@ public class DialogueEditorGUI extends GUIScreen
             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editPlayerCondition(conditionElement, gui.selection));
         }));
-        playerConditions.add(new GUIText(this, "\n"));
+        playerConditions.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
@@ -349,7 +366,7 @@ public class DialogueEditorGUI extends GUIScreen
                 int index = entityConditions.indexOf(activeConditionElement);
 
                 {
-                    entityConditions.add(index, new GUIText(this, "\n"));
+                    entityConditions.add(index, new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     entityConditions.add(index, conditionElement.addClickActions(() ->
                     {
@@ -362,7 +379,7 @@ public class DialogueEditorGUI extends GUIScreen
                 {
                     //Conditions were empty, but no longer are
                     entityConditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearEntityConditions));
-                    entityConditions.add(new GUIText(this, "\n"));
+                    entityConditions.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -393,7 +410,7 @@ public class DialogueEditorGUI extends GUIScreen
     {
         entityConditions.clear();
 
-        entityConditions.add(new GUIText(this, "\n"));
+        entityConditions.add(new GUITextSpacer(this));
         GUICondition conditionElement = new GUICondition(this, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         entityConditions.add(conditionElement.addClickActions(() ->
@@ -401,7 +418,7 @@ public class DialogueEditorGUI extends GUIScreen
             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editEntityCondition(conditionElement, gui.selection));
         }));
-        entityConditions.add(new GUIText(this, "\n"));
+        entityConditions.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
@@ -418,7 +435,7 @@ public class DialogueEditorGUI extends GUIScreen
                 int index = branches.indexOf(activeBranchElement);
 
                 {
-                    branches.add(index, new GUIText(this, "\n"));
+                    branches.add(index, new GUITextSpacer(this));
                     GUIBranch branchElement = new GUIBranch(this, (CDialogueBranch) newBranch.copy(), "Branch " + (index / 2));
                     branches.add(index, branchElement.addClickActions(() ->
                     {
@@ -431,7 +448,7 @@ public class DialogueEditorGUI extends GUIScreen
                 {
                     //Branches were empty, but no longer are
                     branches.add(new GUIText(this, "(Clear all branches)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearBranches));
-                    branches.add(new GUIText(this, "\n"));
+                    branches.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -462,14 +479,14 @@ public class DialogueEditorGUI extends GUIScreen
     {
         branches.clear();
 
-        branches.add(new GUIText(this, "\n"));
+        branches.add(new GUITextSpacer(this));
         GUIBranch branchElement = new GUIBranch(this, null, TextFormatting.DARK_PURPLE + "(Add new branch)");
         branches.add(branchElement.addClickActions(() ->
         {
             BranchEditorGUI gui = new BranchEditorGUI(branchElement, textScale);
             gui.addOnClosedActions(() -> editBranch(branchElement, gui.selection));
         }));
-        branches.add(new GUIText(this, "\n"));
+        branches.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
