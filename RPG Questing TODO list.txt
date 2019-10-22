@@ -1,3 +1,9 @@
+Fix spacing of all screens using GUITextSpacer
+
+On the condition editor GUI...the internal scrollbar (bottom-right) recalcs incorrectly for some reason (though the initial height is good and should remain good)
+
+
+
 Add UI hierarchy titles
 
 Combine sets of UIs into fewer UIs

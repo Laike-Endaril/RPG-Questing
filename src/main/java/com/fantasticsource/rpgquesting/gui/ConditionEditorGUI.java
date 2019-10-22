@@ -96,6 +96,7 @@ public class ConditionEditorGUI extends GUIScreen
         originalView = new GUIScrollView(this, 0.48 - spacer.width * 2, oneThird);
         root.add(spacer.addRecalcActions(() -> originalView.width = 0.48 - spacer.width * 2));
         root.add(originalView);
+
         GUITextSpacer spacer2 = new GUITextSpacer(this, oneThird, true);
         root.add(spacer2);
         originalScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
@@ -108,11 +109,11 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         //Current
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
         GUITextSpacer spacer3 = new GUITextSpacer(this, oneThird, true);
         currentView = new GUIScrollView(this, 0.48 - spacer3.width * 2, oneThird);
         root.add(spacer3.addRecalcActions(() -> currentView.width = 0.48 - spacer3.width * 2));
         root.add(currentView);
+
         GUITextSpacer spacer4 = new GUITextSpacer(this, oneThird, true);
         root.add(spacer4);
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
@@ -131,9 +132,13 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         //Condition selector
-        GUIScrollView conditionSelector = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer5 = new GUITextSpacer(this, true);
+        GUIScrollView conditionSelector = new GUIScrollView(this, 0.98 - spacer5.width * 2, 1);
+        tabView.tabViews.get(0).add(spacer5.addRecalcActions(() -> conditionSelector.width = 0.98 - spacer5.width * 2));
         tabView.tabViews.get(0).add(conditionSelector);
-        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector));
+
+        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
+        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionSelector));
 
         //Quest conditions
         conditionSelector.add(new GUITextSpacer(this));
@@ -195,9 +200,13 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         //Condition editor
-        conditionEditor = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer7 = new GUITextSpacer(this, true);
+        conditionEditor = new GUIScrollView(this, 0.98 - spacer7.width * 2, 1);
+        tabView.tabViews.get(1).add(spacer7.addRecalcActions(() -> conditionEditor.width = 0.98 - spacer7.width * 2));
         tabView.tabViews.get(1).add(conditionEditor);
-        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor));
+
+        tabView.tabViews.get(1).add(new GUITextSpacer(this, true));
+        tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionEditor));
 
 
         setCurrent(current.condition);
