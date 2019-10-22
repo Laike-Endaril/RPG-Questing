@@ -5,10 +5,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
-import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
-import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
-import com.fantasticsource.mctools.gui.element.text.GUIText;
-import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.*;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterBoolean;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
@@ -110,10 +107,10 @@ public class ObjectiveEditorGUI extends GUIScreen
         originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
-        originalView.add(new GUIText(this, "\n"));
+        originalView.add(new GUITextSpacer(this));
         GUIObjective originalElement = new GUIObjective(this, current.objective == null ? null : (CObjective) current.objective.copy());
         originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.objective)));
-        originalView.add(new GUIText(this, "\n"));
+        originalView.add(new GUITextSpacer(this));
 
 
         //Current
@@ -124,9 +121,9 @@ public class ObjectiveEditorGUI extends GUIScreen
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
-        currentView.add(new GUIText(this, "\n"));
+        currentView.add(new GUITextSpacer(this));
         currentView.add(current);
-        currentView.add(new GUIText(this, "\n"));
+        currentView.add(new GUITextSpacer(this));
 
 
         separators[2] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
@@ -142,19 +139,19 @@ public class ObjectiveEditorGUI extends GUIScreen
         root.add(objectiveSelectorScrollbar);
 
         //Objective types
-        objectiveSelector.add(new GUIText(this, "\n"));
+        objectiveSelector.add(new GUITextSpacer(this));
 
         objectiveSelector.add(new CObjectiveDialogue().getChoosableElement(this));
-        objectiveSelector.add(new GUIText(this, "\n"));
+        objectiveSelector.add(new GUITextSpacer(this));
 
         objectiveSelector.add(new CObjectiveKill().getChoosableElement(this));
-        objectiveSelector.add(new GUIText(this, "\n"));
+        objectiveSelector.add(new GUITextSpacer(this));
 
         objectiveSelector.add(new CObjectiveCollect().getChoosableElement(this));
-        objectiveSelector.add(new GUIText(this, "\n"));
+        objectiveSelector.add(new GUITextSpacer(this));
 
         objectiveSelector.add(new CObjectiveEnterArea().getChoosableElement(this));
-        objectiveSelector.add(new GUIText(this, "\n"));
+        objectiveSelector.add(new GUITextSpacer(this));
 
 
         for (int i = objectiveSelector.size() - 1; i >= 0; i--)
@@ -248,7 +245,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
         objectiveEditor.clear();
 
-        objectiveEditor.add(new GUIText(this, "\n"));
+        objectiveEditor.add(new GUITextSpacer(this));
 
         if (objective != null)
         {
@@ -262,7 +259,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 }
             });
             objectiveEditor.add(progressIsPrefix);
-            objectiveEditor.add(new GUIText(this, "\n"));
+            objectiveEditor.add(new GUITextSpacer(this));
 
             GUILabeledTextInput text = new GUILabeledTextInput(this, "Text: ", objective.text.value, FilterNotEmpty.INSTANCE);
             text.input.addRecalcActions(() ->
@@ -274,12 +271,12 @@ public class ObjectiveEditorGUI extends GUIScreen
                 }
             });
             objectiveEditor.add(text);
-            objectiveEditor.add(new GUIText(this, "\n"));
+            objectiveEditor.add(new GUITextSpacer(this));
 
             Class cls = objective.getClass();
             if (cls == CObjectiveDialogue.class)
             {
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 CObjectiveDialogue objectiveDialogue = (CObjectiveDialogue) objective;
 
@@ -293,7 +290,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(dialogueName);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 GUILabeledTextInput branchIndex = new GUILabeledTextInput(this, "Branch Index: ", "" + objectiveDialogue.branchIndex.value, FilterInt.INSTANCE);
                 branchIndex.input.addRecalcActions(() ->
@@ -305,11 +302,11 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(branchIndex);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CObjectiveKill.class)
             {
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 CObjectiveKill objectiveKill = (CObjectiveKill) objective;
 
@@ -323,16 +320,17 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(quantity);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
 
-                objectiveEditor.add(new GUIText(this, "\n" + TextFormatting.GOLD + "Conditions...\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
+                objectiveEditor.add(new GUIText(this, TextFormatting.GOLD + "Conditions...\n"));
                 conditions = new GUIAutocroppedView(this);
                 objectiveEditor.add(conditions);
 
                 for (CCondition condition : objectiveKill.conditions)
                 {
-                    conditions.add(new GUIText(this, "\n"));
+                    conditions.add(new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, condition);
                     conditions.add(conditionElement.addClickActions(() ->
                     {
@@ -342,7 +340,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 }
 
                 {
-                    conditions.add(new GUIText(this, "\n"));
+                    conditions.add(new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, null);
                     conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
                     conditions.add(conditionElement.addClickActions(() ->
@@ -354,7 +352,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
                 if (objectiveKill.conditions.size() > 0)
                 {
-                    conditions.add(new GUIText(this, "\n"));
+                    conditions.add(new GUITextSpacer(this));
                     conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                 }
             }
@@ -373,7 +371,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                         objectiveEditor.recalc();
                     });
                 }));
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
             }
             else if (cls == CObjectiveEnterArea.class)
             {
@@ -389,7 +387,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(x1);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 GUILabeledTextInput y1 = new GUILabeledTextInput(this, "Y1: ", "" + objectiveEnterArea.coords[1].value, FilterInt.INSTANCE);
                 y1.input.addRecalcActions(() ->
@@ -401,7 +399,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(y1);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 GUILabeledTextInput z1 = new GUILabeledTextInput(this, "Z1: ", "" + objectiveEnterArea.coords[2].value, FilterInt.INSTANCE);
                 z1.input.addRecalcActions(() ->
@@ -413,7 +411,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(z1);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 GUILabeledTextInput x2 = new GUILabeledTextInput(this, "X2: ", "" + objectiveEnterArea.coords[3].value, FilterInt.INSTANCE);
                 x2.input.addRecalcActions(() ->
@@ -425,7 +423,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(x2);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 GUILabeledTextInput y2 = new GUILabeledTextInput(this, "Y2: ", "" + objectiveEnterArea.coords[4].value, FilterInt.INSTANCE);
                 y2.input.addRecalcActions(() ->
@@ -437,7 +435,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(y2);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
 
                 GUILabeledTextInput z2 = new GUILabeledTextInput(this, "Z2: ", "" + objectiveEnterArea.coords[5].value, FilterInt.INSTANCE);
                 z2.input.addRecalcActions(() ->
@@ -449,11 +447,11 @@ public class ObjectiveEditorGUI extends GUIScreen
                     }
                 });
                 objectiveEditor.add(z2);
-                objectiveEditor.add(new GUIText(this, "\n"));
+                objectiveEditor.add(new GUITextSpacer(this));
             }
         }
 
-        objectiveEditor.add(new GUIText(this, "\n"));
+        objectiveEditor.add(new GUITextSpacer(this));
 
         currentView.recalc();
     }
@@ -469,7 +467,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 int index = conditions.indexOf(activeConditionElement);
 
                 {
-                    conditions.add(index, new GUIText(this, "\n"));
+                    conditions.add(index, new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     conditions.add(index, conditionElement.addClickActions(() ->
                     {
@@ -481,7 +479,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                 if (index == 1)
                 {
                     //Objectives were empty, but no longer are
-                    conditions.add(new GUIText(this, "\n"));
+                    conditions.add(new GUITextSpacer(this));
                     conditions.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
                 }
             }
@@ -513,7 +511,7 @@ public class ObjectiveEditorGUI extends GUIScreen
     {
         conditions.clear();
 
-        conditions.add(new GUIText(this, "\n"));
+        conditions.add(new GUITextSpacer(this));
         GUICondition conditionElement = new GUICondition(this, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         conditions.add(conditionElement.addClickActions(() ->
@@ -521,7 +519,7 @@ public class ObjectiveEditorGUI extends GUIScreen
             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
-        conditions.add(new GUIText(this, "\n"));
+        conditions.add(new GUITextSpacer(this));
 
         objectiveEditor.recalc();
     }
