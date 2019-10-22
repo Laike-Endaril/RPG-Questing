@@ -81,7 +81,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         }));
 
 
-        double free = 1 - delete.height - 0.03;
+        double oneThird = (1 - delete.height - 0.03) / 3;
 
 
         separators[0] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
@@ -100,11 +100,14 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Original
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalView = new GUIScrollView(this, 0.44, free / 3);
+        GUITextSpacer spacer = new GUITextSpacer(this, oneThird, true);
+        originalView = new GUIScrollView(this, 0.48 - spacer.width * 2, oneThird);
+        root.add(spacer.addRecalcActions(() -> originalView.width = 0.48 - spacer.width * 2));
         root.add(originalView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
+
+        GUITextSpacer spacer2 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer2);
+        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
         originalView.add(new GUITextSpacer(this));
@@ -114,11 +117,14 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Current
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentView = new GUIScrollView(this, 0.44, free / 3);
+        GUITextSpacer spacer3 = new GUITextSpacer(this, oneThird, true);
+        currentView = new GUIScrollView(this, 0.48 - spacer3.width * 2, oneThird);
+        root.add(spacer3.addRecalcActions(() -> currentView.width = 0.48 - spacer3.width * 2));
         root.add(currentView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
+
+        GUITextSpacer spacer4 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer4);
+        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
         currentView.add(new GUITextSpacer(this));
@@ -131,11 +137,14 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Objective selector
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        objectiveSelector = new GUIScrollView(this, 0.94, free / 3);
+        GUITextSpacer spacer5 = new GUITextSpacer(this, oneThird, true);
+        objectiveSelector = new GUIScrollView(this, 0.98 - spacer5.width * 2, oneThird);
+        root.add(spacer5.addRecalcActions(() -> objectiveSelector.width = 0.98 - spacer5.width * 2));
         root.add(objectiveSelector);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        objectiveSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveSelector);
+
+        GUITextSpacer spacer6 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer6);
+        objectiveSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveSelector);
         root.add(objectiveSelectorScrollbar);
 
         //Objective types
@@ -169,12 +178,14 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Objective editor
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        objectiveEditor = new GUIScrollView(this, 0.94, free / 3);
+        GUITextSpacer spacer7 = new GUITextSpacer(this, oneThird, true);
+        objectiveEditor = new GUIScrollView(this, 0.98 - spacer7.width * 2, oneThird);
+        root.add(spacer7.addRecalcActions(() -> objectiveEditor.width = 0.98 - spacer7.width * 2));
         root.add(objectiveEditor);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
 
-        objectiveEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveEditor);
+        GUITextSpacer spacer8 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer8);
+        objectiveEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveEditor);
         root.add(objectiveEditorScrollbar);
 
         setCurrent(current.objective);
@@ -192,28 +203,40 @@ public class ObjectiveEditorGUI extends GUIScreen
 
         objectiveEditorLabel.x = objectiveEditor.x + objectiveEditor.width / 2 - objectiveEditorLabel.width / 2;
         objectiveEditorLabel.y = objectiveEditor.y + objectiveEditor.height / 2 - objectiveEditorLabel.height / 2;
+
+
+        //Recalc actions
+        delete.addRecalcActions(() ->
+        {
+            double oneThirdHeight = (1 - delete.height - 0.03) / 3;
+
+            //Resize views and scrollbars
+            spacer.height = oneThirdHeight;
+            originalView.height = oneThirdHeight;
+            spacer2.height = oneThirdHeight;
+            originalScrollbar.height = oneThirdHeight;
+
+            spacer3.height = oneThirdHeight;
+            currentView.height = oneThirdHeight;
+            spacer4.height = oneThirdHeight;
+            currentScrollbar.height = oneThirdHeight;
+
+            spacer5.height = oneThirdHeight;
+            objectiveSelector.height = oneThirdHeight;
+            spacer6.height = oneThirdHeight;
+            objectiveSelectorScrollbar.height = oneThirdHeight;
+
+            spacer7.height = oneThirdHeight;
+            objectiveEditor.height = oneThirdHeight;
+            spacer8.height = oneThirdHeight;
+            objectiveEditorScrollbar.height = oneThirdHeight;
+        });
     }
 
     @Override
     public void onResize(Minecraft mcIn, int w, int h)
     {
         super.onResize(mcIn, w, h);
-
-        double free = 1 - delete.height - 0.03;
-
-
-        //Resize views and scrollbars
-        originalView.height = free / 3;
-        originalScrollbar.height = free / 3;
-
-        currentView.height = free / 3;
-        currentScrollbar.height = free / 3;
-
-        objectiveSelector.height = free / 3;
-        objectiveSelectorScrollbar.height = free / 3;
-
-        objectiveEditor.height = free / 3;
-        objectiveEditorScrollbar.height = free / 3;
 
 
         //Reposition labels
