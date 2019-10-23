@@ -5,10 +5,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
-import com.fantasticsource.mctools.gui.element.text.GUIItemStack;
-import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
-import com.fantasticsource.mctools.gui.element.text.GUIText;
-import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.*;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterInt;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
@@ -113,10 +110,10 @@ public class ActionEditorGUI extends GUIScreen
         originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
-        originalView.add(new GUIText(this, "\n"));
+        originalView.add(new GUITextSpacer(this));
         GUIAction originalElement = new GUIAction(this, current.action == null ? null : (CAction) current.action.copy());
         originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.action)));
-        originalView.add(new GUIText(this, "\n"));
+        originalView.add(new GUITextSpacer(this));
 
 
         //Current
@@ -127,9 +124,9 @@ public class ActionEditorGUI extends GUIScreen
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
-        currentView.add(new GUIText(this, "\n"));
+        currentView.add(new GUITextSpacer(this));
         currentView.add(current);
-        currentView.add(new GUIText(this, "\n"));
+        currentView.add(new GUITextSpacer(this));
 
 
         //Tabview
@@ -145,34 +142,34 @@ public class ActionEditorGUI extends GUIScreen
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionTypeView));
 
         //Dialogue actions
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         actionTypeView.add(new CActionBranch().getChoosableElement(this));
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         actionTypeView.add(new CActionEndDialogue().getChoosableElement(this));
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         //Quest actions
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         actionTypeView.add(new CActionStartQuest().getChoosableElement(this));
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         actionTypeView.add(new CActionCompleteQuest().getChoosableElement(this));
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         //Normal actions
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         actionTypeView.add(new CActionTakeItems().getChoosableElement(this));
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         //Meta actions
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         actionTypeView.add(new CActionArray().getChoosableElement(this));
-        actionTypeView.add(new GUIText(this, "\n"));
+        actionTypeView.add(new GUITextSpacer(this));
 
         for (int i = actionTypeView.size() - 1; i >= 0; i--)
         {
@@ -205,7 +202,7 @@ public class ActionEditorGUI extends GUIScreen
         {
             for (CCondition condition : selection.conditions)
             {
-                requiredConditionsView.add(new GUIText(this, "\n"));
+                requiredConditionsView.add(new GUITextSpacer(this));
                 GUICondition conditionElement = new GUICondition(this, condition);
                 requiredConditionsView.add(conditionElement.addClickActions(() ->
                 {
@@ -216,7 +213,7 @@ public class ActionEditorGUI extends GUIScreen
         }
 
         {
-            requiredConditionsView.add(new GUIText(this, "\n"));
+            requiredConditionsView.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, null);
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             requiredConditionsView.add(conditionElement.addClickActions(() ->
@@ -228,11 +225,11 @@ public class ActionEditorGUI extends GUIScreen
 
         if (selection != null && selection.conditions.size() > 0)
         {
-            requiredConditionsView.add(new GUIText(this, "\n"));
+            requiredConditionsView.add(new GUITextSpacer(this));
             requiredConditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
         }
 
-        requiredConditionsView.add(new GUIText(this, "\n"));
+        requiredConditionsView.add(new GUITextSpacer(this));
 
 
         //Reposition labels
@@ -284,7 +281,7 @@ public class ActionEditorGUI extends GUIScreen
 
         actionOptionsView.clear();
 
-        actionOptionsView.add(new GUIText(this, "\n"));
+        actionOptionsView.add(new GUITextSpacer(this));
 
         if (action != null)
         {
@@ -292,7 +289,7 @@ public class ActionEditorGUI extends GUIScreen
             if (cls == CActionEndDialogue.class)
             {
                 actionOptionsView.add(new GUIText(this, "(No options)\n"));
-                actionOptionsView.add(new GUIText(this, "\n"));
+                actionOptionsView.add(new GUITextSpacer(this));
             }
             else if (cls == CActionBranch.class)
             {
@@ -306,7 +303,7 @@ public class ActionEditorGUI extends GUIScreen
                     }
                 });
                 actionOptionsView.add(dialogueName);
-                actionOptionsView.add(new GUIText(this, "\n"));
+                actionOptionsView.add(new GUITextSpacer(this));
 
                 GUILabeledTextInput branchIndex = new GUILabeledTextInput(this, "Branch Index: ", "" + ((CActionBranch) action).branchIndex.value, FilterInt.INSTANCE);
                 branchIndex.input.addRecalcActions(() ->
@@ -318,7 +315,7 @@ public class ActionEditorGUI extends GUIScreen
                     }
                 });
                 actionOptionsView.add(branchIndex);
-                actionOptionsView.add(new GUIText(this, "\n"));
+                actionOptionsView.add(new GUITextSpacer(this));
             }
             else if (action instanceof CQuestAction)
             {
@@ -332,7 +329,7 @@ public class ActionEditorGUI extends GUIScreen
                     }
                 });
                 actionOptionsView.add(questName);
-                actionOptionsView.add(new GUIText(this, "\n"));
+                actionOptionsView.add(new GUITextSpacer(this));
             }
             else if (cls == CActionTakeItems.class)
             {
@@ -348,7 +345,7 @@ public class ActionEditorGUI extends GUIScreen
                         current.setAction(haveItems);
                     });
                 }));
-                actionOptionsView.add(new GUIText(this, "\n"));
+                actionOptionsView.add(new GUITextSpacer(this));
             }
             else if (cls == CActionArray.class)
             {
@@ -377,7 +374,7 @@ public class ActionEditorGUI extends GUIScreen
                             current.setAction(and);
                         });
                     }));
-                    actionOptionsView.add(new GUIText(this, "\n"));
+                    actionOptionsView.add(new GUITextSpacer(this));
                 }
 
                 GUIAction subActionElement = new GUIAction(this, null);
@@ -389,7 +386,7 @@ public class ActionEditorGUI extends GUIScreen
                         if (gui.selection != null)
                         {
                             int index = actionOptionsView.size() - 2;
-                            actionOptionsView.add(index, new GUIText(this, "\n"));
+                            actionOptionsView.add(index, new GUITextSpacer(this));
                             CAction subAction = gui.selection;
                             GUIAction subActionElement2 = new GUIAction(this, subAction);
                             actionOptionsView.add(index, subActionElement2.addClickActions(() ->
@@ -419,7 +416,7 @@ public class ActionEditorGUI extends GUIScreen
                     });
                 }));
 
-                actionOptionsView.add(new GUIText(this, "\n"));
+                actionOptionsView.add(new GUITextSpacer(this));
             }
         }
 
@@ -438,7 +435,7 @@ public class ActionEditorGUI extends GUIScreen
                 int index = requiredConditionsView.indexOf(activeObjectiveElement);
 
                 {
-                    requiredConditionsView.add(index, new GUIText(this, "\n"));
+                    requiredConditionsView.add(index, new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     requiredConditionsView.add(index, conditionElement.addClickActions(() ->
                     {
@@ -451,7 +448,7 @@ public class ActionEditorGUI extends GUIScreen
                 {
                     //Objectives were empty, but no longer are
                     requiredConditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
-                    requiredConditionsView.add(new GUIText(this, "\n"));
+                    requiredConditionsView.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -480,7 +477,7 @@ public class ActionEditorGUI extends GUIScreen
     {
         requiredConditionsView.clear();
 
-        requiredConditionsView.add(new GUIText(this, "\n"));
+        requiredConditionsView.add(new GUITextSpacer(this));
         GUICondition conditionElement = new GUICondition(this, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         requiredConditionsView.add(conditionElement.addClickActions(() ->
@@ -488,7 +485,7 @@ public class ActionEditorGUI extends GUIScreen
             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
-        requiredConditionsView.add(new GUIText(this, "\n"));
+        requiredConditionsView.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
