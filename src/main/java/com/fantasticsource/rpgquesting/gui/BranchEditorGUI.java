@@ -175,8 +175,7 @@ public class BranchEditorGUI extends GUIScreen
         tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> paragraphView.width = 0.98 - spacer.width * 2));
         tabView.tabViews.get(0).add(paragraphView);
 
-        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
-        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, paragraphView));
+        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, paragraphView));
 
         tabView.tabs.get(0).addClickActions(() -> paragraph.setActive(true));
 
@@ -187,7 +186,6 @@ public class BranchEditorGUI extends GUIScreen
         tabView.tabViews.get(1).add(spacer2.addRecalcActions(() -> choicesView.width = 0.98 - spacer2.width * 2));
         tabView.tabViews.get(1).add(choicesView);
 
-        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, choicesView));
     }
 

@@ -183,7 +183,6 @@ public class ChoiceEditorGUI extends GUIScreen
         tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> mainView.width = 0.98 - spacer.width * 2));
         tabView.tabViews.get(0).add(mainView);
 
-        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, mainView));
 
 
@@ -193,7 +192,6 @@ public class ChoiceEditorGUI extends GUIScreen
         tabView.tabViews.get(1).add(spacer2.addRecalcActions(() -> conditionsView.width = 0.98 - spacer2.width * 2));
         tabView.tabViews.get(1).add(conditionsView);
 
-        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionsView));
     }
 
