@@ -178,14 +178,22 @@ public class ChoiceEditorGUI extends GUIScreen
 
 
         //Main tab
-        mainView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer = new GUITextSpacer(this, true);
+        mainView = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+        tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> mainView.width = 0.98 - spacer.width * 2));
         tabView.tabViews.get(0).add(mainView);
+
+        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, mainView));
 
 
         //Conditions tab
-        conditionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer2 = new GUITextSpacer(this, true);
+        conditionsView = new GUIScrollView(this, 0.98 - spacer2.width * 2, 1);
+        tabView.tabViews.get(1).add(spacer2.addRecalcActions(() -> conditionsView.width = 0.98 - spacer2.width * 2));
         tabView.tabViews.get(1).add(conditionsView);
+
+        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, conditionsView));
     }
 
