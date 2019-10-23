@@ -32,6 +32,8 @@ public class CQuest extends Component implements IObfuscatedComponent
 
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
+    public boolean recursion = false;
+
 
     public CQuest()
     {
@@ -80,7 +82,13 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         if (!repeatable.value && isCompleted(player)) return false;
 
+        if (recursion) return true;
+
+
+        recursion = true;
         for (CCondition condition : conditions) if (condition.unmetConditions(player).size() > 0) return false;
+        recursion = false;
+
         return true;
     }
 
