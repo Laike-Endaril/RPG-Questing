@@ -8,6 +8,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUIMultilineTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.GUITextSpacer;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNone;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
@@ -52,11 +53,15 @@ public class BranchEditorGUI extends GUIScreen
 
         //Paragraph tab
         paragraph = new GUIMultilineTextInput(this, original == null ? "(Replace this with dialogue text)" : original.paragraph.value, FilterNone.INSTANCE);
+        paragraphView.addRecalcActions(() -> System.out.println("Recalc paragraph view"));
         paragraphView.add(paragraph.addRecalcActions(() ->
         {
+            System.out.println("Recalc paragraph");
             paragraphView.recalcThisOnly();
 
 
+            //Focus on current line
+            //TODO change this code to account for other elements in the view, then add spacers above and below the paragraph
             int line = paragraph.cursorLine();
             double ratio = 1d / paragraph.fullLineCount();
             double lineTop = line * ratio * paragraphView.internalHeight;
@@ -73,7 +78,7 @@ public class BranchEditorGUI extends GUIScreen
         {
             for (CDialogueChoice choice : original.choices)
             {
-                choicesView.add(new GUIText(this, "\n"));
+                choicesView.add(new GUITextSpacer(this));
                 GUIChoice choiceElement = new GUIChoice(this, choice);
                 choicesView.add(choiceElement.addClickActions(() ->
                 {
@@ -84,7 +89,7 @@ public class BranchEditorGUI extends GUIScreen
         }
 
         {
-            choicesView.add(new GUIText(this, "\n"));
+            choicesView.add(new GUITextSpacer(this));
             GUIChoice choiceElement = new GUIChoice(this, null);
             choiceElement.text = TextFormatting.DARK_PURPLE + "(Add new choice)";
             choicesView.add(choiceElement.addClickActions(() ->
@@ -96,11 +101,11 @@ public class BranchEditorGUI extends GUIScreen
 
         if (original != null && original.choices.size() > 0)
         {
-            choicesView.add(new GUIText(this, "\n"));
+            choicesView.add(new GUITextSpacer(this));
             choicesView.add(new GUIText(this, "(Clear all choices)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearChoices));
         }
 
-        choicesView.add(new GUIText(this, "\n"));
+        choicesView.add(new GUITextSpacer(this));
     }
 
     @Override
@@ -165,16 +170,24 @@ public class BranchEditorGUI extends GUIScreen
 
 
         //Paragraph tab
-        paragraphView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer = new GUITextSpacer(this, true);
+        paragraphView = new GUIScrollView(this, 0.98 - spacer.width * 2, 1);
+        tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> paragraphView.width = 0.98 - spacer.width * 2));
         tabView.tabViews.get(0).add(paragraphView);
-        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, paragraphView));
+
+        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
+        tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, paragraphView));
 
         tabView.tabs.get(0).addClickActions(() -> paragraph.setActive(true));
 
 
         //Choices tab
-        choicesView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer2 = new GUITextSpacer(this, true);
+        choicesView = new GUIScrollView(this, 0.98 - spacer2.width * 2, 1);
+        tabView.tabViews.get(1).add(spacer2.addRecalcActions(() -> choicesView.width = 0.98 - spacer2.width * 2));
         tabView.tabViews.get(1).add(choicesView);
+
+        tabView.tabViews.get(0).add(new GUITextSpacer(this, true));
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, choicesView));
     }
 
@@ -190,7 +203,7 @@ public class BranchEditorGUI extends GUIScreen
                 int index = choicesView.indexOf(activeChoiceElement);
 
                 {
-                    choicesView.add(index, new GUIText(this, "\n"));
+                    choicesView.add(index, new GUITextSpacer(this));
                     GUIChoice choiceElement = new GUIChoice(this, (CDialogueChoice) newChoice.copy());
                     choicesView.add(index, choiceElement.addClickActions(() ->
                     {
@@ -203,7 +216,7 @@ public class BranchEditorGUI extends GUIScreen
                 {
                     //Choices were empty, but no longer are
                     choicesView.add(new GUIText(this, "(Clear all choices)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearChoices));
-                    choicesView.add(new GUIText(this, "\n"));
+                    choicesView.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -232,7 +245,7 @@ public class BranchEditorGUI extends GUIScreen
     {
         choicesView.clear();
 
-        choicesView.add(new GUIText(this, "\n"));
+        choicesView.add(new GUITextSpacer(this));
         GUIChoice choiceElement = new GUIChoice(this, null);
         choiceElement.text = TextFormatting.DARK_PURPLE + "(Add new choice)";
         choicesView.add(choiceElement.addClickActions(() ->
@@ -240,7 +253,7 @@ public class BranchEditorGUI extends GUIScreen
             ChoiceEditorGUI gui = new ChoiceEditorGUI(choiceElement, textScale);
             gui.addOnClosedActions(() -> editChoice(choiceElement, gui.selection));
         }));
-        choicesView.add(new GUIText(this, "\n"));
+        choicesView.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }
