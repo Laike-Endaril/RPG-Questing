@@ -253,7 +253,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         objectiveEditorLabel.y = objectiveEditor.y + objectiveEditor.height / 2 - objectiveEditorLabel.height / 2;
 
 
-        root.recalc();
+        root.recalc(0);
     }
 
     @Override
@@ -391,7 +391,7 @@ public class ObjectiveEditorGUI extends GUIScreen
                         stackToMatch.setStack(gui.selection);
                         objectiveCollect.stackToMatch.set(gui.selection);
                         current.setObjective(objectiveCollect);
-                        objectiveEditor.recalc();
+                        objectiveEditor.recalc(0);
                     });
                 }));
                 objectiveEditor.add(new GUITextSpacer(this));
@@ -476,7 +476,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
         objectiveEditor.add(new GUITextSpacer(this));
 
-        currentView.recalc();
+        currentView.recalc(0);
     }
 
     private void editCondition(GUICondition activeConditionElement, CCondition newCondition)
@@ -527,7 +527,7 @@ public class ObjectiveEditorGUI extends GUIScreen
             }
         }
 
-        objectiveEditor.recalc();
+        objectiveEditor.recalc(0);
     }
 
     private void clearConditions()
@@ -544,6 +544,6 @@ public class ObjectiveEditorGUI extends GUIScreen
         }));
         conditions.add(new GUITextSpacer(this));
 
-        objectiveEditor.recalc();
+        objectiveEditor.recalc(0);
     }
 }

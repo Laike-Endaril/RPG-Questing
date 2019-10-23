@@ -359,7 +359,7 @@ public class QuestEditorGUI extends GUIScreen
         }));
         objectives.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
 
@@ -426,7 +426,7 @@ public class QuestEditorGUI extends GUIScreen
         }));
         rewards.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
 
@@ -493,7 +493,7 @@ public class QuestEditorGUI extends GUIScreen
         }));
         conditions.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
     private void trySave()

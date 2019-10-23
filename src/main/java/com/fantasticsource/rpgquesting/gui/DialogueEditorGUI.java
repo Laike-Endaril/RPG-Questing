@@ -327,7 +327,7 @@ public class DialogueEditorGUI extends GUIScreen
             }
         }
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
     private void clearPlayerConditions()
@@ -344,7 +344,7 @@ public class DialogueEditorGUI extends GUIScreen
         }));
         playerConditions.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
 
@@ -396,7 +396,7 @@ public class DialogueEditorGUI extends GUIScreen
             }
         }
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
     private void clearEntityConditions()
@@ -413,7 +413,7 @@ public class DialogueEditorGUI extends GUIScreen
         }));
         entityConditions.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
 
@@ -465,7 +465,7 @@ public class DialogueEditorGUI extends GUIScreen
             }
         }
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 
     private void clearBranches()
@@ -481,6 +481,6 @@ public class DialogueEditorGUI extends GUIScreen
         }));
         branches.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 }

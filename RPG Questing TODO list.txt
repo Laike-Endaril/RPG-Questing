@@ -1,5 +1,4 @@
-Fix spacing of...
-...action editor
+Fix scaled text scissor issue
 
 
 

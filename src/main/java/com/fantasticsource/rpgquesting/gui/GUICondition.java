@@ -55,7 +55,7 @@ public class GUICondition extends GUIText
 
         this.condition = condition;
 
-        recalc();
+        recalc(0);
 
         return this;
     }

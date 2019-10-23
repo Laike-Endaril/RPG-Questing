@@ -46,7 +46,7 @@ public class GUIBranch extends GUIText
 
         this.branch = branch;
 
-        recalc();
+        recalc(0);
 
         return this;
     }

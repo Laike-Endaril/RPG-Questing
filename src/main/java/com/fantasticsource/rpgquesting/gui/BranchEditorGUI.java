@@ -119,7 +119,7 @@ public class BranchEditorGUI extends GUIScreen
         tabView.height = 1 - tabView.y;
 
 
-        root.recalc();
+        root.recalc(0);
     }
 
     @Override
@@ -253,6 +253,6 @@ public class BranchEditorGUI extends GUIScreen
         }));
         choicesView.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 }

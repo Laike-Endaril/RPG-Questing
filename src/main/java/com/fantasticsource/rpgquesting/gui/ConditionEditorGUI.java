@@ -254,7 +254,7 @@ public class ConditionEditorGUI extends GUIScreen
         currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
 
 
-        root.recalc();
+        root.recalc(0);
     }
 
     @Override
@@ -520,6 +520,6 @@ public class ConditionEditorGUI extends GUIScreen
             }
         }
 
-        currentView.recalc();
+        currentView.recalc(0);
     }
 }

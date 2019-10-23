@@ -89,7 +89,7 @@ public class ActionEditorGUI extends GUIScreen
         }));
 
 
-        double free = 1 - delete.height - 0.02;
+        double oneThird = (1 - delete.height - 0.02) / 3;
 
 
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
@@ -103,11 +103,14 @@ public class ActionEditorGUI extends GUIScreen
 
 
         //Original
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalView = new GUIScrollView(this, 0.44, free / 3);
+        GUITextSpacer spacer = new GUITextSpacer(this, oneThird, true);
+        originalView = new GUIScrollView(this, 0.48 - spacer.width * 2, oneThird);
+        root.add(spacer.addRecalcActions(() -> originalView.width = 0.48 - spacer.width * 2));
         root.add(originalView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
+
+        GUITextSpacer spacer2 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer2);
+        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
         root.add(originalScrollbar);
 
         originalView.add(new GUITextSpacer(this));
@@ -117,11 +120,14 @@ public class ActionEditorGUI extends GUIScreen
 
 
         //Current
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentView = new GUIScrollView(this, 0.44, free / 3);
+        GUITextSpacer spacer3 = new GUITextSpacer(this, oneThird, true);
+        currentView = new GUIScrollView(this, 0.48 - spacer3.width * 2, oneThird);
+        root.add(spacer.addRecalcActions(() -> currentView.width = 0.48 - spacer3.width * 2));
         root.add(currentView);
-        root.add(new GUIGradient(this, 0.02, 0.01, Color.BLANK));
-        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, free / 3, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
+
+        GUITextSpacer spacer4 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer4);
+        currentScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
         currentView.add(new GUITextSpacer(this));
@@ -132,13 +138,16 @@ public class ActionEditorGUI extends GUIScreen
         //Tabview
         root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
-        tabView = new GUITabView(this, 1, free * 2 / 3, "Base Action Type", "Action Options", "Required Conditions");
+        tabView = new GUITabView(this, 1, oneThird * 2, "Base Action Type", "Action Options", "Required Conditions");
         root.add(tabView);
 
 
         //Base Action Type tab
-        GUIScrollView actionTypeView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer5 = new GUITextSpacer(this, true);
+        GUIScrollView actionTypeView = new GUIScrollView(this, 0.98 - spacer5.width * 2, 1);
+        tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> actionTypeView.width = 0.98 - spacer5.width * 2));
         tabView.tabViews.get(0).add(actionTypeView);
+
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionTypeView));
 
         //Dialogue actions
@@ -186,16 +195,22 @@ public class ActionEditorGUI extends GUIScreen
 
 
         //Action Options tab
-        actionOptionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer6 = new GUITextSpacer(this, true);
+        actionOptionsView = new GUIScrollView(this, 0.98 - spacer6.width * 2, 1);
+        tabView.tabViews.get(1).add(spacer6.addRecalcActions(() -> actionOptionsView.width = 0.98 - spacer6.width * 2));
         tabView.tabViews.get(1).add(actionOptionsView);
+
         tabView.tabViews.get(1).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionOptionsView));
 
         setCurrent(selection);
 
 
         //Required Conditions tab
-        requiredConditionsView = new GUIScrollView(this, 0.02, 0, 0.94, 1);
+        GUITextSpacer spacer7 = new GUITextSpacer(this, true);
+        requiredConditionsView = new GUIScrollView(this, 0.98 - spacer7.width * 2, 1);
+        tabView.tabViews.get(2).add(spacer7.addRecalcActions(() -> requiredConditionsView.width = 0.98 - spacer7.width * 2));
         tabView.tabViews.get(2).add(requiredConditionsView);
+
         tabView.tabViews.get(2).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, requiredConditionsView));
 
         if (selection != null)
@@ -238,24 +253,33 @@ public class ActionEditorGUI extends GUIScreen
 
         currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
         currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
+
+
+        //Recalc actions
+        delete.addRecalcActions(() ->
+        {
+            double oneThirdSpace = (1 - delete.height - 0.02) / 3;
+
+
+            //Resize views and scrollbars
+            spacer.height = oneThirdSpace;
+            originalView.height = oneThirdSpace;
+            spacer2.height = oneThirdSpace;
+            originalScrollbar.height = oneThirdSpace;
+
+            spacer3.height = oneThirdSpace;
+            currentView.height = oneThirdSpace;
+            spacer4.height = oneThirdSpace;
+            currentScrollbar.height = oneThirdSpace;
+
+            tabView.height = oneThirdSpace * 2;
+        });
     }
 
     @Override
     public void onResize(Minecraft mcIn, int w, int h)
     {
         super.onResize(mcIn, w, h);
-
-        double free = 1 - delete.height - 0.02;
-
-
-        //Resize views and scrollbars
-        originalView.height = free / 3;
-        originalScrollbar.height = free / 3;
-
-        currentView.height = free / 3;
-        currentScrollbar.height = free / 3;
-
-        tabView.height = free * 2 / 3;
 
 
         //Reposition labels
@@ -266,7 +290,7 @@ public class ActionEditorGUI extends GUIScreen
         currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
 
 
-        root.recalc();
+        root.recalc(0);
     }
 
     @Override
@@ -420,7 +444,7 @@ public class ActionEditorGUI extends GUIScreen
             }
         }
 
-        currentView.recalc();
+        currentView.recalc(0);
     }
 
 
@@ -487,6 +511,6 @@ public class ActionEditorGUI extends GUIScreen
         }));
         requiredConditionsView.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 }

@@ -41,7 +41,7 @@ public class GUIObjective extends GUIText
 
         this.objective = objective;
 
-        recalc();
+        recalc(0);
 
         return this;
     }

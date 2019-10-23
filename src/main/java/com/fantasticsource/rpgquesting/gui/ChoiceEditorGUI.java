@@ -69,7 +69,7 @@ public class ChoiceEditorGUI extends GUIScreen
             gui.addOnClosedActions(() ->
             {
                 action.setAction(gui.selection);
-                mainView.recalc();
+                mainView.recalc(0);
             });
         }));
 
@@ -124,7 +124,7 @@ public class ChoiceEditorGUI extends GUIScreen
         tabView.height = 1 - tabView.y;
 
 
-        root.recalc();
+        root.recalc(0);
     }
 
     @Override
@@ -259,6 +259,6 @@ public class ChoiceEditorGUI extends GUIScreen
         }));
         conditionsView.add(new GUITextSpacer(this));
 
-        tabView.recalc();
+        tabView.recalc(0);
     }
 }

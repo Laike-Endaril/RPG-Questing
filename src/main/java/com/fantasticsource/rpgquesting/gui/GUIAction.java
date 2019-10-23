@@ -55,7 +55,7 @@ public class GUIAction extends GUIText
 
         this.action = action;
 
-        recalc();
+        recalc(0);
 
         return this;
     }

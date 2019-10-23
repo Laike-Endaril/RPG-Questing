@@ -41,7 +41,7 @@ public class GUIChoice extends GUIText
 
         this.choice = choice;
 
-        recalc();
+        recalc(0);
 
         return this;
     }
