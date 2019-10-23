@@ -82,7 +82,11 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         if (!repeatable.value && isCompleted(player)) return false;
 
-        if (recursion) return true;
+        if (recursion)
+        {
+            System.err.println("ERROR: infinite recursion detected in quest availability conditions for quest: " + name.value);
+            return false;
+        }
 
 
         recursion = true;
