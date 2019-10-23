@@ -8,6 +8,7 @@ import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
 import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextButton;
+import com.fantasticsource.mctools.gui.element.text.GUITextSpacer;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
@@ -53,11 +54,14 @@ public class ChoiceEditorGUI extends GUIScreen
 
         //Main tab
         mainView.clear();
-        mainView.add(new GUIText(this, "\n"));
+        mainView.add(new GUITextSpacer(this));
         text = new GUILabeledTextInput(this, "Text: ", selection == null ? "" : selection.text.value, FilterNotEmpty.INSTANCE);
         mainView.add(text);
 
-        mainView.add(new GUIText(this, "\n\nAction...\n\n"));
+        mainView.add(new GUITextSpacer(this));
+        mainView.add(new GUITextSpacer(this));
+        mainView.add(new GUIText(this, "Action...\n"));
+        mainView.add(new GUITextSpacer(this));
         action = selection == null ? new GUIAction(this, new CActionArray()) : new GUIAction(this, selection.action);
         mainView.add(action.addClickActions(() ->
         {
@@ -69,7 +73,7 @@ public class ChoiceEditorGUI extends GUIScreen
             });
         }));
 
-        mainView.add(new GUIText(this, "\n"));
+        mainView.add(new GUITextSpacer(this));
 
 
         //Conditions tab
@@ -79,7 +83,7 @@ public class ChoiceEditorGUI extends GUIScreen
         {
             for (CCondition condition : selection.availabilityConditions)
             {
-                conditionsView.add(new GUIText(this, "\n"));
+                conditionsView.add(new GUITextSpacer(this));
                 GUICondition conditionElement = new GUICondition(this, condition);
                 conditionsView.add(conditionElement.addClickActions(() ->
                 {
@@ -90,7 +94,7 @@ public class ChoiceEditorGUI extends GUIScreen
         }
 
         {
-            conditionsView.add(new GUIText(this, "\n"));
+            conditionsView.add(new GUITextSpacer(this));
             GUICondition conditionElement = new GUICondition(this, null);
             conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
             conditionsView.add(conditionElement.addClickActions(() ->
@@ -102,11 +106,11 @@ public class ChoiceEditorGUI extends GUIScreen
 
         if (selection != null && selection.availabilityConditions.size() > 0)
         {
-            conditionsView.add(new GUIText(this, "\n"));
+            conditionsView.add(new GUITextSpacer(this));
             conditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
         }
 
-        conditionsView.add(new GUIText(this, "\n"));
+        conditionsView.add(new GUITextSpacer(this));
     }
 
     @Override
@@ -197,7 +201,7 @@ public class ChoiceEditorGUI extends GUIScreen
                 int index = conditionsView.indexOf(activeObjectiveElement);
 
                 {
-                    conditionsView.add(index, new GUIText(this, "\n"));
+                    conditionsView.add(index, new GUITextSpacer(this));
                     GUICondition conditionElement = new GUICondition(this, (CCondition) newCondition.copy());
                     conditionsView.add(index, conditionElement.addClickActions(() ->
                     {
@@ -210,7 +214,7 @@ public class ChoiceEditorGUI extends GUIScreen
                 {
                     //Objectives were empty, but no longer are
                     conditionsView.add(new GUIText(this, "(Clear all conditions)\n", RED[0], RED[1], RED[2]).addClickActions(this::clearConditions));
-                    conditionsView.add(new GUIText(this, "\n"));
+                    conditionsView.add(new GUITextSpacer(this));
                 }
             }
         }
@@ -239,7 +243,7 @@ public class ChoiceEditorGUI extends GUIScreen
     {
         conditionsView.clear();
 
-        conditionsView.add(new GUIText(this, "\n"));
+        conditionsView.add(new GUITextSpacer(this));
         GUICondition conditionElement = new GUICondition(this, null);
         conditionElement.text = TextFormatting.DARK_PURPLE + "(Add new condition)";
         conditionsView.add(conditionElement.addClickActions(() ->
@@ -247,7 +251,7 @@ public class ChoiceEditorGUI extends GUIScreen
             ConditionEditorGUI gui = new ConditionEditorGUI(conditionElement, textScale);
             gui.addOnClosedActions(() -> editCondition(conditionElement, gui.selection));
         }));
-        conditionsView.add(new GUIText(this, "\n"));
+        conditionsView.add(new GUITextSpacer(this));
 
         tabView.recalc();
     }

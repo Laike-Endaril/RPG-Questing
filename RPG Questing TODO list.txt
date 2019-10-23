@@ -1,4 +1,6 @@
-Fix spacing of all screens using GUITextSpacer
+Fix spacing of...
+...choice editor
+...action editor
 
 
 
