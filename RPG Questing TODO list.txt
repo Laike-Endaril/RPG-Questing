@@ -1,7 +1,3 @@
-Fix scaled text scissor issue
-
-
-
 Add UI hierarchy titles
 
 Combine sets of UIs into fewer UIs
