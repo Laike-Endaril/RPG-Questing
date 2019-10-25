@@ -30,11 +30,6 @@ public class BranchEditorGUI extends GUIScreen
     private GUIScrollView paragraphView, choicesView;
     private GUIMultilineTextInput paragraph;
 
-    public BranchEditorGUI(GUIBranch clickedElement)
-    {
-        this(clickedElement, 1);
-    }
-
     public BranchEditorGUI(GUIBranch clickedElement, double textScale)
     {
         super(textScale);

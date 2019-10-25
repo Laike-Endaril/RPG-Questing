@@ -30,11 +30,6 @@ public class ConditionEditorGUI extends GUIScreen
     private GUIScrollView conditionEditor, originalView, currentView;
     private GUIVerticalScrollbar originalScrollbar, currentScrollbar;
 
-    public ConditionEditorGUI(GUICondition clickedElement)
-    {
-        this(clickedElement, 1);
-    }
-
     public ConditionEditorGUI(GUICondition clickedElement, double textScale)
     {
         super(textScale);

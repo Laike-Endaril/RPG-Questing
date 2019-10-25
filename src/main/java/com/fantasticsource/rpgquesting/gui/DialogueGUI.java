@@ -27,11 +27,6 @@ public class DialogueGUI extends GUIScreen
     private static ArrayList<String> lines = new ArrayList<>();
     private static ArrayList<GUIText> errorLines = new ArrayList<>();
 
-    private DialogueGUI()
-    {
-        this(1);
-    }
-
     private DialogueGUI(double textScale)
     {
         super(textScale);

@@ -33,11 +33,6 @@ public class ObjectiveEditorGUI extends GUIScreen
     private GUIVerticalScrollbar objectiveSelectorScrollbar, objectiveEditorScrollbar, originalScrollbar, currentScrollbar;
     private GUIAutocroppedView conditions;
 
-    public ObjectiveEditorGUI(GUIObjective clickedElement)
-    {
-        this(clickedElement, 1);
-    }
-
     public ObjectiveEditorGUI(GUIObjective clickedElement, double textScale)
     {
         super(textScale);

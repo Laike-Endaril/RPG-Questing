@@ -32,11 +32,6 @@ public class ChoiceEditorGUI extends GUIScreen
     private GUILabeledTextInput text;
     private GUIAction action;
 
-    public ChoiceEditorGUI(GUIChoice clickedElement)
-    {
-        this(clickedElement, 1);
-    }
-
     public ChoiceEditorGUI(GUIChoice clickedElement, double textScale)
     {
         super(textScale);
@@ -65,7 +60,7 @@ public class ChoiceEditorGUI extends GUIScreen
         action = selection == null ? new GUIAction(this, new CActionArray()) : new GUIAction(this, selection.action);
         mainView.add(action.addClickActions(() ->
         {
-            ActionEditorGUI gui = new ActionEditorGUI(action);
+            ActionEditorGUI gui = new ActionEditorGUI(action, textScale);
             gui.addOnClosedActions(() ->
             {
                 action.setAction(gui.selection);

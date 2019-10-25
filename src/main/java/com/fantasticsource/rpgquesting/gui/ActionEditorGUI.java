@@ -34,11 +34,6 @@ public class ActionEditorGUI extends GUIScreen
     private GUIScrollView originalView, currentView, actionOptionsView, requiredConditionsView;
     private GUIVerticalScrollbar originalScrollbar, currentScrollbar;
 
-    public ActionEditorGUI(GUIAction clickedElement)
-    {
-        this(clickedElement, 1);
-    }
-
     public ActionEditorGUI(GUIAction clickedElement, double textScale)
     {
         super(textScale);

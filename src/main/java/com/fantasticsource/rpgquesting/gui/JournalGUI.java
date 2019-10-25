@@ -40,11 +40,6 @@ public class JournalGUI extends GUIScreen
     private static LinkedHashMap<GUITextSpoiler, String> completedGroupElementToName = new LinkedHashMap<>();
     private static GUIText viewTracked = null;
 
-    private JournalGUI()
-    {
-        this(1);
-    }
-
     private JournalGUI(double textScale)
     {
         super(textScale);

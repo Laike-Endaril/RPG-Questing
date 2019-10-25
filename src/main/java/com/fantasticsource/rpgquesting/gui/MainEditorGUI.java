@@ -30,11 +30,6 @@ public class MainEditorGUI extends GUIScreen
 
     private LinkedHashMap<String, GUITextSpoiler> allNameToDialogueGroupElement = new LinkedHashMap<>();
 
-    private MainEditorGUI()
-    {
-        this(1);
-    }
-
     private MainEditorGUI(double textScale)
     {
         super(textScale);

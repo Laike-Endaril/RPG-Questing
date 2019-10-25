@@ -34,11 +34,6 @@ public class DialogueEditorGUI extends GUIScreen
     private GUILabeledTextInput name, group;
     private GUIText oldName;
 
-    private DialogueEditorGUI()
-    {
-        this(1);
-    }
-
     private DialogueEditorGUI(double textScale)
     {
         super(textScale);

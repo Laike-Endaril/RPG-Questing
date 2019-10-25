@@ -19,11 +19,6 @@ public class DialoguesGUI extends GUIScreen
     public static final DialoguesGUI GUI = new DialoguesGUI(0.5);
     private static GUIScrollView scrollView;
 
-    private DialoguesGUI()
-    {
-        this(1);
-    }
-
     private DialoguesGUI(double textScale)
     {
         super(textScale);

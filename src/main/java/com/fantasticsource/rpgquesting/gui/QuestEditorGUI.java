@@ -39,11 +39,6 @@ public class QuestEditorGUI extends GUIScreen
     private GUILabeledTextInput name, group, level, repeatable, experience;
     private GUIText oldName;
 
-    private QuestEditorGUI()
-    {
-        this(1);
-    }
-
     private QuestEditorGUI(double textScale)
     {
         super(textScale);
