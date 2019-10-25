@@ -62,6 +62,9 @@ public class CDialogues extends Component
 
     private static void start(EntityPlayerMP player, Entity target, CDialogue dialogue)
     {
+        if (dialogue.branches.size() == 0) return;
+
+
         CDialogueBranch branch = dialogue.branches.get(0);
         CURRENT_PLAYER_BRANCHES.put(player, new Pair<>(target, branch));
         Network.branch(player, true, branch);
