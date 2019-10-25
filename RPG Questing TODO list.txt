@@ -1,4 +1,7 @@
-Fix related dialogues not being retained correctly
+Related dialogues are not being synced correctly from server to client the first time after an edit
+Related dialogues are not generated for player/entity conditions if no branches exist
+
+
 
 Add commands for altering player quest progression
 

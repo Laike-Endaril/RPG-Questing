@@ -131,6 +131,7 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         buf.writeInt(relatedDialogues.size());
         for (CRelatedDialogueEntry dialogueEntry : relatedDialogues) dialogueEntry.write(buf);
+//        System.out.println(relatedDialogues.size() + " (write: " + name.value + ")");
 
         return this;
     }
@@ -155,6 +156,7 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         relatedDialogues.clear();
         for (int i = buf.readInt(); i > 0; i--) relatedDialogues.add(new CRelatedDialogueEntry().read(buf));
+//        System.out.println(relatedDialogues.size() + " (read: " + name.value + ")");
 
         return this;
     }
@@ -180,6 +182,7 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         new CInt().set(relatedDialogues.size()).save(stream);
         for (CRelatedDialogueEntry dialogueEntry : relatedDialogues) dialogueEntry.save(stream);
+//        System.out.println(relatedDialogues.size() + " (save: " + name.value + ")");
 
         return this;
     }
@@ -205,6 +208,7 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         relatedDialogues.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--) relatedDialogues.add(new CRelatedDialogueEntry().load(stream));
+//        System.out.println(relatedDialogues.size() + " (load: " + name.value + ")");
 
         return this;
     }

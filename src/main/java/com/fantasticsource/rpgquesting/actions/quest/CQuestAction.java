@@ -42,6 +42,12 @@ public abstract class CQuestAction extends CAction
 
 
     @Override
+    public void setDialogueName(String name)
+    {
+        dialogueName.set(name);
+    }
+
+    @Override
     public CQuestAction write(ByteBuf buf)
     {
         super.write(buf);

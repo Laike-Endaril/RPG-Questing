@@ -37,6 +37,10 @@ public abstract class CAction extends Component
 
     public abstract ArrayList<String> description();
 
+    public void setDialogueName(String name)
+    {
+    }
+
     @SideOnly(Side.CLIENT)
     public abstract GUIAction getChoosableElement(GUIScreen screen);
 
@@ -75,5 +79,4 @@ public abstract class CAction extends Component
 
         return this;
     }
-
 }

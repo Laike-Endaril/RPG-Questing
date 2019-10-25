@@ -40,6 +40,12 @@ public abstract class CQuestCondition extends CCondition
 
     public abstract String relation();
 
+    @Override
+    public void setDialogueData(String dialogueName, int branchIndex)
+    {
+        this.dialogueName.set(dialogueName);
+        this.branchIndex.set(branchIndex);
+    }
 
     @Override
     public CQuestCondition write(ByteBuf buf)

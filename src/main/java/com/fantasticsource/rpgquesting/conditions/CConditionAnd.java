@@ -67,6 +67,12 @@ public class CConditionAnd extends CCondition
     }
 
     @Override
+    public void setDialogueData(String dialogueName, int branchIndex)
+    {
+        for (CCondition condition : conditions) condition.setDialogueData(dialogueName, branchIndex);
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public GUICondition getChoosableElement(GUIScreen screen)
     {

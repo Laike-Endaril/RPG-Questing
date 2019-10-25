@@ -1,5 +1,7 @@
 package com.fantasticsource.rpgquesting;
 
+import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.conditions.quest.CQuestCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
@@ -782,6 +784,14 @@ public class Network
         public void fromBytes(ByteBuf buf)
         {
             dialogue.read(buf);
+
+            for (CCondition condition : dialogue.playerConditions)
+            {
+                if (condition instanceof CQuestCondition)
+                {
+                    System.out.println(((CQuestCondition) condition).dialogueName.value);
+                }
+            }
         }
     }
 

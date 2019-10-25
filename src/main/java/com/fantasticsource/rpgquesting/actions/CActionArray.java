@@ -62,6 +62,12 @@ public class CActionArray extends CAction
     }
 
     @Override
+    public void setDialogueName(String name)
+    {
+        for (CAction action : actions) action.setDialogueName(name);
+    }
+
+    @Override
     public CActionArray write(ByteBuf buf)
     {
         super.write(buf);
