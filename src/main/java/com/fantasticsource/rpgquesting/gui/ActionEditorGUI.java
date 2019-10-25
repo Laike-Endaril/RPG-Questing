@@ -117,7 +117,7 @@ public class ActionEditorGUI extends GUIScreen
         //Current
         GUITextSpacer spacer3 = new GUITextSpacer(this, oneThird, true);
         currentView = new GUIScrollView(this, 0.48 - spacer3.width * 2, oneThird);
-        root.add(spacer.addRecalcActions(() -> currentView.width = 0.48 - spacer3.width * 2));
+        root.add(spacer3.addRecalcActions(() -> currentView.width = 0.48 - spacer3.width * 2));
         root.add(currentView);
 
         GUITextSpacer spacer4 = new GUITextSpacer(this, oneThird, true);
@@ -140,7 +140,7 @@ public class ActionEditorGUI extends GUIScreen
         //Base Action Type tab
         GUITextSpacer spacer5 = new GUITextSpacer(this, true);
         GUIScrollView actionTypeView = new GUIScrollView(this, 0.98 - spacer5.width * 2, 1);
-        tabView.tabViews.get(0).add(spacer.addRecalcActions(() -> actionTypeView.width = 0.98 - spacer5.width * 2));
+        tabView.tabViews.get(0).add(spacer5.addRecalcActions(() -> actionTypeView.width = 0.98 - spacer5.width * 2));
         tabView.tabViews.get(0).add(actionTypeView);
 
         tabView.tabViews.get(0).add(new GUIVerticalScrollbar(this, 0.98, 0, 0.02, 1, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, actionTypeView));

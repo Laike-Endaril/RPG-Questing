@@ -1,4 +1,11 @@
-Related dialogues are not being retained correctly
+Fix related dialogues not being retained correctly
+
+Add commands for altering player quest progression
+
+Auto-populate objective text if it is still set to default...
+...kill objectives
+...collect objetives
+...talk objectives
 
 
 
