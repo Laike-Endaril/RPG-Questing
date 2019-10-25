@@ -48,10 +48,8 @@ public class BranchEditorGUI extends GUIScreen
 
         //Paragraph tab
         paragraph = new GUIMultilineTextInput(this, original == null ? "(Replace this with dialogue text)" : original.paragraph.value, FilterNone.INSTANCE);
-        paragraphView.addRecalcActions(() -> System.out.println("Recalc paragraph view"));
         paragraphView.add(paragraph.addRecalcActions(() ->
         {
-            System.out.println("Recalc paragraph");
             paragraphView.recalcThisOnly();
 
 
