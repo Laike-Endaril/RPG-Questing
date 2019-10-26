@@ -45,6 +45,12 @@ public class QuestEditorGUI extends GUIScreen
         super(textScale);
     }
 
+    @Override
+    public String title()
+    {
+        return quest.name.value + " (quest)";
+    }
+
     public void show(CQuest quest)
     {
         this.quest = quest;
@@ -227,7 +233,11 @@ public class QuestEditorGUI extends GUIScreen
     @Override
     protected void init()
     {
+        //Background
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
+
+        //Navbar
+        root.add(new GUINavbar(this, Color.AQUA));
 
         //Management
         root.add(new GUITextButton(this, "Save and Close", GREEN[0])).addClickActions(() ->

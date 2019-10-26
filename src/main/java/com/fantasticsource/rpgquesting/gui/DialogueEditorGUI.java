@@ -5,10 +5,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
-import com.fantasticsource.mctools.gui.element.text.GUILabeledTextInput;
-import com.fantasticsource.mctools.gui.element.text.GUIText;
-import com.fantasticsource.mctools.gui.element.text.GUITextButton;
-import com.fantasticsource.mctools.gui.element.text.GUITextSpacer;
+import com.fantasticsource.mctools.gui.element.text.*;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNotEmpty;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
@@ -38,6 +35,12 @@ public class DialogueEditorGUI extends GUIScreen
     private DialogueEditorGUI(double textScale)
     {
         super(textScale);
+    }
+
+    @Override
+    public String title()
+    {
+        return dialogue.name.value + " (dialogue)";
     }
 
     public void show(CDialogue dialogue)
@@ -183,7 +186,11 @@ public class DialogueEditorGUI extends GUIScreen
     @Override
     protected void init()
     {
+        //Background
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
+
+        //Navbar
+        root.add(new GUINavbar(this, Color.AQUA));
 
         //Management
         root.add(new GUITextButton(this, "Save and Close", GREEN[0])).addClickActions(() ->

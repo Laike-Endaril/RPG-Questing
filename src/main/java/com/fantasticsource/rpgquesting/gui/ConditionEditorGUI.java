@@ -46,8 +46,11 @@ public class ConditionEditorGUI extends GUIScreen
         selection = original;
 
 
+        //Background
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
+        //Navbar
+        root.add(new GUINavbar(this, Color.AQUA));
 
         //Management
         current = new GUICondition(this, original == null ? null : (CCondition) original.copy());
@@ -250,6 +253,12 @@ public class ConditionEditorGUI extends GUIScreen
 
 
         root.recalc(0);
+    }
+
+    @Override
+    public String title()
+    {
+        return "Condition";
     }
 
     @Override

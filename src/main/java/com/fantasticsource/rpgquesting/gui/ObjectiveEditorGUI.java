@@ -48,7 +48,12 @@ public class ObjectiveEditorGUI extends GUIScreen
         selection = original == null ? null : (CObjective) original.copy();
 
 
+        //Background
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
+
+
+        //Navbar
+        root.add(new GUINavbar(this, Color.AQUA));
 
 
         //Management
@@ -245,6 +250,12 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         root.recalc(0);
+    }
+
+    @Override
+    public String title()
+    {
+        return "Objective";
     }
 
     @Override

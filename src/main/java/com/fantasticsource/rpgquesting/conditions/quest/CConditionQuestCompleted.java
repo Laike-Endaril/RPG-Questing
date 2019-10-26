@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.conditions.quest;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.gui.GUICondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;

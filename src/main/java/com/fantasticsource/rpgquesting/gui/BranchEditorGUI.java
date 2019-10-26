@@ -5,10 +5,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIGradientBorder;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
-import com.fantasticsource.mctools.gui.element.text.GUIMultilineTextInput;
-import com.fantasticsource.mctools.gui.element.text.GUIText;
-import com.fantasticsource.mctools.gui.element.text.GUITextButton;
-import com.fantasticsource.mctools.gui.element.text.GUITextSpacer;
+import com.fantasticsource.mctools.gui.element.text.*;
 import com.fantasticsource.mctools.gui.element.text.filter.FilterNone;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
@@ -116,9 +113,20 @@ public class BranchEditorGUI extends GUIScreen
     }
 
     @Override
+    public String title()
+    {
+        return "Branch";
+    }
+
+    @Override
     protected void init()
     {
+        //Background
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
+
+
+        //Navbar
+        root.add(new GUINavbar(this, Color.AQUA));
 
 
         //Management

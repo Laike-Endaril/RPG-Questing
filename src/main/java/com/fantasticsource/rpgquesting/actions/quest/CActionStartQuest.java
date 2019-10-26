@@ -1,7 +1,6 @@
 package com.fantasticsource.rpgquesting.actions.quest;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.gui.GUIAction;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;

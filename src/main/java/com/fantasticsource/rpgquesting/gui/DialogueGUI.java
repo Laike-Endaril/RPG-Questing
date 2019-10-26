@@ -108,6 +108,12 @@ public class DialogueGUI extends GUIScreen
     }
 
     @Override
+    public String title()
+    {
+        return "Dialogue";
+    }
+
+    @Override
     protected void init()
     {
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));

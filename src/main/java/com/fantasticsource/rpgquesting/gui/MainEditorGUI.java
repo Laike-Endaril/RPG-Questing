@@ -3,6 +3,7 @@ package com.fantasticsource.rpgquesting.gui;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
 import com.fantasticsource.mctools.gui.element.other.GUIVerticalScrollbar;
+import com.fantasticsource.mctools.gui.element.text.GUINavbar;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpacer;
 import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
@@ -21,17 +22,13 @@ import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class MainEditorGUI extends GUIScreen
 {
-    private static int lastTab = 0;
-
-    private GUITabView navigator;
-    private GUIScrollView questNav = null, dialogueNav = null;
-
-    private LinkedHashMap<String, GUITextSpoiler> allNameToQuestGroupElement = new LinkedHashMap<>();
-
-    private LinkedHashMap<String, GUITextSpoiler> allNameToDialogueGroupElement = new LinkedHashMap<>();
-
     public static CQuest duplicateQuest = null;
     public static CDialogue duplicateDialogue = null;
+    private static int lastTab = 0;
+    private GUITabView navigator;
+    private GUIScrollView questNav = null, dialogueNav = null;
+    private LinkedHashMap<String, GUITextSpoiler> allNameToQuestGroupElement = new LinkedHashMap<>();
+    private LinkedHashMap<String, GUITextSpoiler> allNameToDialogueGroupElement = new LinkedHashMap<>();
 
     private MainEditorGUI(double textScale)
     {
@@ -150,12 +147,23 @@ public class MainEditorGUI extends GUIScreen
     }
 
     @Override
+    public String title()
+    {
+        return "Main";
+    }
+
+    @Override
     protected void init()
     {
         root.add(new GUIGradient(this, 0, 0, 1, 1, T_BLACK));
 
-        navigator = new GUITabView(this, 1, 1, "All Quests", "All Dialogues");
+        GUINavbar navbar = new GUINavbar(this, Color.AQUA);
+        root.add(navbar);
+
+        navigator = new GUITabView(this, 1, 1 - navbar.height, "All Quests", "All Dialogues");
         root.add(navigator);
+
+        navbar.addRecalcActions(() -> navigator.height = 1 - navbar.height);
     }
 
     @Override
