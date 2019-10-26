@@ -15,7 +15,6 @@ import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.*;
-import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -329,13 +328,26 @@ public class ObjectiveEditorGUI extends GUIScreen
 
                 CObjectiveKill objectiveKill = (CObjectiveKill) objective;
 
+
+                if (text.input.text.equals(objectiveKill.getChoosableElement(this).text.replace("(0/X) ", "")))
+                {
+                    text.input.text = text.input.text.replace("X", "" + objectiveKill.required.value);
+                }
+
+
                 GUILabeledTextInput quantity = new GUILabeledTextInput(this, "Quantity: ", "" + objectiveKill.required.value, FilterInt.INSTANCE);
                 quantity.input.addRecalcActions(() ->
                 {
                     if (quantity.input.valid())
                     {
-                        objectiveKill.required.set(FilterInt.INSTANCE.parse(quantity.input.text));
+                        int prevCount = objectiveKill.required.value;
+                        int count = FilterInt.INSTANCE.parse(quantity.input.text);
+
+                        objectiveKill.required.set(count);
                         current.setObjective(objectiveKill);
+
+                        text.input.text = text.input.text.replaceAll("" + prevCount, "" + count);
+                        text.recalc(0);
                     }
                 });
                 objectiveEditor.add(quantity);
@@ -380,17 +392,6 @@ public class ObjectiveEditorGUI extends GUIScreen
                 CObjectiveCollect objectiveCollect = (CObjectiveCollect) objective;
 
 
-                String t = text.input.text;
-                CBoolean def = new CBoolean().set(t.equals(objectiveCollect.getChoosableElement(this).text));
-                if (def.value)
-                {
-                    text.input.text = t.replace("X", "" + objectiveCollect.stackToMatch.value.getCount()).replace("items", objectiveCollect.stackToMatch.value.getDisplayName());
-                    text.recalc(0);
-                }
-
-                text.addRecalcActions(() -> def.set(text.input.text.equals(objectiveCollect.getChoosableElement(this).text)));
-
-
                 GUIItemStack stackToMatch = new GUIItemStack(this, objectiveCollect.stackToMatch.value);
                 objectiveEditor.add(stackToMatch);
                 objectiveEditor.add(new GUITextSpacer(this));
@@ -403,11 +404,13 @@ public class ObjectiveEditorGUI extends GUIScreen
                     {
                         int prevCount = objectiveCollect.stackToMatch.value.getCount();
                         int count = FilterInt.INSTANCE.parse(quantity.input.text);
+
                         objectiveCollect.stackToMatch.value.setCount(count);
                         stackToMatch.setStack(objectiveCollect.stackToMatch.value);
                         stackToMatch.recalc(0);
                         current.setObjective(objectiveCollect);
-                        text.input.text = text.input.text.replace(prevCount + " ", count + " ");
+
+                        text.input.text = text.input.text.replaceAll("" + prevCount, "" + count);
                         text.recalc(0);
                     }
                 });
@@ -424,9 +427,8 @@ public class ObjectiveEditorGUI extends GUIScreen
                         objectiveCollect.stackToMatch.set(gui.selection);
                         quantity.input.text = "" + gui.selection.getCount();
                         current.setObjective(objectiveCollect);
-                        text.input.text = t.replace("X", "" + gui.selection.getCount()).replace("items", gui.selection.getDisplayName());
+                        text.input.text = objectiveCollect.getChoosableElement(this).text.replace("(0/X) ", "").replace("X", "" + gui.selection.getCount()).replace("items", gui.selection.getDisplayName());
                         objectiveEditor.recalc(0);
-                        def.set(true);
                     });
                 });
             }

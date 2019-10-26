@@ -6,12 +6,6 @@ Change quest and dialogue editing buttons to...
 
 
 
-Auto-populate objective text if it is still set to default...
-...kill objectives
-...talk objectives
-
-
-
 Add UI hierarchy titles
 
 Combine sets of UIs into fewer UIs
