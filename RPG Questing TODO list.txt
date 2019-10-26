@@ -1,3 +1,9 @@
+Change navbar when changing dialogue/quest names
+
+Fix commands to properly support quest / dialogue names with spaces in them
+
+
+
 Combine sets of UIs into fewer UIs
 
 Make it more obvious what is clickable

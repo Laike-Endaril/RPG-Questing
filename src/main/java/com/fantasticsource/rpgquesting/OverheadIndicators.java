@@ -133,10 +133,10 @@ public class OverheadIndicators
                     break;
                 }
             }
-            else
-            {
-                if (maxFunc >= FUNC_SET_NONE) continue;
 
+
+            if (maxFunc < FUNC_SET_NONE)
+            {
                 for (CRelatedDialogueEntry dialogueEntry : quest.relatedDialogues)
                 {
                     CDialogue dialogue = CDialogues.get(dialogueEntry.dialogueName.value);
