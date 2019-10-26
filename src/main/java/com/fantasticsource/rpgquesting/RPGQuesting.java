@@ -53,6 +53,12 @@ public class RPGQuesting
         }
     }
 
+    @Mod.EventHandler
+    public static void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new Commands());
+    }
+
     @SubscribeEvent
     public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
     {

@@ -1,3 +1,7 @@
 rpgquesting.keyCategory=RPG Questing
 rpgquesting.key.journal=Journal
 rpgquesting.key.editor=Editor
+
+
+rpgquesting.cmd.get.comment=§dShows the current status of a player in regards to a specific quest
+rpgquesting.cmd.set.comment=§dSets the current status of a player in regards to a specific quest

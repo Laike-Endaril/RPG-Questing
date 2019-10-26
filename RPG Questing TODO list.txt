@@ -1,4 +1,4 @@
-Add commands for altering player quest progression
+Save global quest and dialogue data immediately upon edit / delete
 
 Auto-populate objective text if it is still set to default...
 ...kill objectives

@@ -227,6 +227,52 @@ public class CQuests extends Component
         return true;
     }
 
+    public static boolean forceCompleteNoReward(EntityPlayerMP player, String name)
+    {
+        CQuest quest = get(name);
+        if (quest == null) return false;
+
+        CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
+
+        String group = quest.group.value;
+        LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(group);
+        if (map != null)
+        {
+            map.remove(name);
+            if (map.size() == 0) data.inProgressQuests.remove(group);
+        }
+
+        ArrayList<String> list = data.completedQuests.computeIfAbsent(group, o -> new ArrayList<>());
+        if (!list.contains(name)) list.add(name);
+
+
+        if (data.trackedQuestName.value.equals(name)) data.trackedQuestName.set("");
+        data.saveAndSync();
+
+        return true;
+    }
+
+    public static boolean uncomplete(EntityPlayerMP player, String name)
+    {
+        CQuest quest = get(name);
+        if (quest == null) return false;
+
+        CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
+        if (data == null) return false;
+
+        String group = quest.group.value;
+        ArrayList<String> list = data.completedQuests.get(group);
+        if (list == null) return false;
+
+        list.remove(name);
+        if (list.size() == 0) data.completedQuests.remove(group);
+
+
+        data.saveAndSync();
+
+        return true;
+    }
+
 
     public static void loadPlayerQuestData(EntityPlayerMP player) throws IOException
     {
