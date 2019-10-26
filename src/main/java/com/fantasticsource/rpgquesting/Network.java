@@ -560,27 +560,31 @@ public class Network
     public static class RequestSaveQuestPacket implements IMessage
     {
         CQuest quest = new CQuest();
+        CStringUTF8 oldName = new CStringUTF8();
 
         public RequestSaveQuestPacket()
         {
             //Required
         }
 
-        public RequestSaveQuestPacket(CQuest quest)
+        public RequestSaveQuestPacket(CQuest quest, String oldName)
         {
             this.quest = quest;
+            this.oldName.set(oldName);
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
             quest.write(buf);
+            oldName.write(buf);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
             quest.read(buf);
+            oldName.read(buf);
         }
     }
 
@@ -593,6 +597,7 @@ public class Network
             {
                 if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
                 {
+                    CQuests.delete(packet.oldName.value);
                     CQuests.saveQuest(packet.quest);
                 }
             });
@@ -770,27 +775,31 @@ public class Network
     public static class RequestSaveDialoguePacket implements IMessage
     {
         CDialogue dialogue = new CDialogue();
+        CStringUTF8 oldName = new CStringUTF8();
 
         public RequestSaveDialoguePacket()
         {
             //Required
         }
 
-        public RequestSaveDialoguePacket(CDialogue quest)
+        public RequestSaveDialoguePacket(CDialogue quest, String oldName)
         {
             this.dialogue = quest;
+            this.oldName.set(oldName);
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
             dialogue.write(buf);
+            oldName.write(buf);
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
             dialogue.read(buf);
+            oldName.read(buf);
         }
     }
 
@@ -803,6 +812,7 @@ public class Network
             {
                 if (ctx.getServerHandler().player.interactionManager.getGameType() == GameType.CREATIVE)
                 {
+                    CDialogues.delete(packet.oldName.value);
                     CDialogues.saveDialogue(packet.dialogue);
                 }
             });

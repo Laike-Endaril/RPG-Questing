@@ -1,11 +1,3 @@
-Change quest and dialogue editing buttons to...
-...Save and close
-...Close without saving
-...Delete and close
-...Duplicate
-
-
-
 Add UI hierarchy titles
 
 Combine sets of UIs into fewer UIs

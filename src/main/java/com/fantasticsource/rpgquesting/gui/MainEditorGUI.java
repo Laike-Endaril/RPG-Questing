@@ -30,6 +30,9 @@ public class MainEditorGUI extends GUIScreen
 
     private LinkedHashMap<String, GUITextSpoiler> allNameToDialogueGroupElement = new LinkedHashMap<>();
 
+    public static CQuest duplicateQuest = null;
+    public static CDialogue duplicateDialogue = null;
+
     private MainEditorGUI(double textScale)
     {
         super(textScale);
@@ -37,6 +40,21 @@ public class MainEditorGUI extends GUIScreen
 
     public static void show(EditorPacket packet)
     {
+        if (duplicateQuest != null)
+        {
+            QuestEditorGUI.GUI.show(duplicateQuest);
+            duplicateQuest = null;
+            return;
+        }
+
+        if (duplicateDialogue != null)
+        {
+            DialogueEditorGUI.GUI.show(duplicateDialogue);
+            duplicateDialogue = null;
+            return;
+        }
+
+
         MainEditorGUI gui = new MainEditorGUI(0.5);
 
         //Make sure GUI exists

@@ -33,6 +33,7 @@ public class DialogueEditorGUI extends GUIScreen
     private GUITabView tabView;
     private GUILabeledTextInput name, group;
     private GUIText oldName;
+    private CDialogue dialogue;
 
     private DialogueEditorGUI(double textScale)
     {
@@ -41,6 +42,9 @@ public class DialogueEditorGUI extends GUIScreen
 
     public void show(CDialogue dialogue)
     {
+        this.dialogue = dialogue;
+
+
         Minecraft.getMinecraft().displayGuiScreen(this);
 
 
@@ -182,9 +186,22 @@ public class DialogueEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
         //Management
-        root.add(new GUITextButton(this, "Save", GREEN[0])).addClickActions(this::trySave);
-        root.add(new GUITextButton(this, "Close Editor").addClickActions(this::close));
-        root.add(new GUITextButton(this, "Delete Dialogue", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteDialoguePacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")))));
+        root.add(new GUITextButton(this, "Save and Close", GREEN[0])).addClickActions(() ->
+        {
+            if (trySave()) close();
+        });
+        root.add(new GUITextButton(this, "Close Without Saving").addClickActions(this::close));
+        root.add(new GUITextButton(this, "Delete Dialogue and Close", RED[0]).addClickActions(() ->
+        {
+            Network.WRAPPER.sendToServer(new Network.RequestDeleteDialoguePacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")));
+            close();
+        }));
+        root.add(new GUITextButton(this, "Duplicate This Dialogue").addClickActions(() ->
+        {
+            dialogue.name.set(dialogue.name.value + " (copy)");
+            MainEditorGUI.duplicateDialogue = dialogue;
+            close();
+        }));
 
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
@@ -230,10 +247,10 @@ public class DialogueEditorGUI extends GUIScreen
     }
 
 
-    private void trySave()
+    private boolean trySave()
     {
         //TODO Add error messages here?
-        if (!name.input.valid() || !group.input.valid()) return;
+        if (!name.input.valid() || !group.input.valid()) return false;
 
 
         CDialogue dialogue = new CDialogue(name.input.text, group.input.text);
@@ -270,7 +287,9 @@ public class DialogueEditorGUI extends GUIScreen
             dialogue.branches.add(branch);
         }
 
-        Network.WRAPPER.sendToServer(new Network.RequestSaveDialoguePacket(dialogue));
+        Network.WRAPPER.sendToServer(new Network.RequestSaveDialoguePacket(dialogue, this.dialogue.name.value));
+
+        return true;
     }
 
 

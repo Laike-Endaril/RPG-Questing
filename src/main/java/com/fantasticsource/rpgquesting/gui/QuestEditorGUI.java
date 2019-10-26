@@ -38,6 +38,7 @@ public class QuestEditorGUI extends GUIScreen
     private GUITabView tabView;
     private GUILabeledTextInput name, group, level, repeatable, experience;
     private GUIText oldName;
+    private CQuest quest;
 
     private QuestEditorGUI(double textScale)
     {
@@ -46,6 +47,9 @@ public class QuestEditorGUI extends GUIScreen
 
     public void show(CQuest quest)
     {
+        this.quest = quest;
+
+
         Minecraft.getMinecraft().displayGuiScreen(this);
 
 
@@ -226,9 +230,22 @@ public class QuestEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
         //Management
-        root.add(new GUITextButton(this, "Save", GREEN[0])).addClickActions(this::trySave);
-        root.add(new GUITextButton(this, "Close Editor").addClickActions(this::close));
-        root.add(new GUITextButton(this, "Delete Quest", RED[0]).addClickActions(() -> Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")))));
+        root.add(new GUITextButton(this, "Save and Close", GREEN[0])).addClickActions(() ->
+        {
+            if (trySave()) close();
+        });
+        root.add(new GUITextButton(this, "Close Without Saving").addClickActions(this::close));
+        root.add(new GUITextButton(this, "Delete Quest and Close", RED[0]).addClickActions(() ->
+        {
+            Network.WRAPPER.sendToServer(new Network.RequestDeleteQuestPacket(oldName.text.substring(0, oldName.text.length() - 1).replace("(Previous Name: ", "")));
+            close();
+        }));
+        root.add(new GUITextButton(this, "Duplicate This Quest").addClickActions(() ->
+        {
+            quest.name.set(quest.name.value + " (copy)");
+            MainEditorGUI.duplicateQuest = quest;
+            close();
+        }));
 
         //Tabview
         separator = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
@@ -491,10 +508,10 @@ public class QuestEditorGUI extends GUIScreen
         tabView.recalc(0);
     }
 
-    private void trySave()
+    private boolean trySave()
     {
         //TODO Add error messages here?
-        if (!name.input.valid() || !group.input.valid() || !level.input.valid() || !repeatable.input.valid() || !experience.input.valid()) return;
+        if (!name.input.valid() || !group.input.valid() || !level.input.valid() || !repeatable.input.valid() || !experience.input.valid()) return false;
 
 
         CQuest quest = new CQuest(name.input.text, group.input.text, FilterInt.INSTANCE.parse(level.input.text), FilterBoolean.INSTANCE.parse(repeatable.input.text));
@@ -530,6 +547,8 @@ public class QuestEditorGUI extends GUIScreen
             quest.addConditions(condition);
         }
 
-        Network.WRAPPER.sendToServer(new Network.RequestSaveQuestPacket(quest));
+        Network.WRAPPER.sendToServer(new Network.RequestSaveQuestPacket(quest, this.quest.name.value));
+
+        return true;
     }
 }
