@@ -67,9 +67,9 @@ public class CConditionAnd extends CCondition
     }
 
     @Override
-    public void setDialogueData(String dialogueName, int branchIndex)
+    public void updateRelations(String dialogueName, int type, int index)
     {
-        for (CCondition condition : conditions) condition.setDialogueData(dialogueName, branchIndex);
+        super.updateRelations(dialogueName, type, index);
     }
 
     @Override

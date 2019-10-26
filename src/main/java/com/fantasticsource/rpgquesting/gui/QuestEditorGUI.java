@@ -202,7 +202,7 @@ public class QuestEditorGUI extends GUIScreen
                 spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
                 spoiler.add(new GUITextSpacer(this));
                 spoiler.add(new GUIText(this, "* ", WHITE[0]));
-                spoiler.add(new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
+                spoiler.add(new GUIText(this, dialogueEntry.getSource(), BLUE[0], BLUE[1], BLUE[2]));
                 spoiler.add(new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
                 spoiler.add(new GUITextSpacer(this));
                 spoiler.add(new GUIText(this, "========================================================================================================================================================================================", WHITE[0]));
@@ -211,7 +211,7 @@ public class QuestEditorGUI extends GUIScreen
             else
             {
                 spoiler.add(spoiler.size() - 2, new GUIText(this, "* ", WHITE[0]));
-                spoiler.add(spoiler.size() - 2, new GUIText(this, "Branch " + dialogueEntry.branchIndex.value, BLUE[0], BLUE[1], BLUE[2]));
+                spoiler.add(spoiler.size() - 2, new GUIText(this, dialogueEntry.getSource(), BLUE[0], BLUE[1], BLUE[2]));
                 spoiler.add(spoiler.size() - 2, new GUIText(this, " " + dialogueEntry.relation.value, WHITE[0]));
                 spoiler.add(spoiler.size() - 2, new GUITextSpacer(this));
             }

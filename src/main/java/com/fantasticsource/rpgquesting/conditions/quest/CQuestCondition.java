@@ -2,12 +2,10 @@ package com.fantasticsource.rpgquesting.conditions.quest;
 
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
-import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 
@@ -16,73 +14,53 @@ import java.io.OutputStream;
 
 public abstract class CQuestCondition extends CCondition
 {
-    public CStringUTF8 questName = new CStringUTF8(), dialogueName = new CStringUTF8().set("");
-    public CInt branchIndex = new CInt();
+    public CStringUTF8 questName = new CStringUTF8();
 
 
     public CQuestCondition()
     {
     }
 
-    public CQuestCondition(CQuest quest, CDialogueBranch branch)
+    public CQuestCondition(CQuest quest)
     {
         questName.set(quest.name.value);
-
-        if (branch != null)
-        {
-            dialogueName.set(branch.dialogueName.value);
-            branchIndex.set(CDialogues.get(dialogueName.value).branches.indexOf(branch));
-        }
     }
 
 
     public abstract String relation();
 
 
-    public void updateRelations()
+    @Override
+    public void updateRelations(String dialogueName, int type, int index)
     {
         CQuest quest = CQuests.get(questName.value);
         if (quest != null)
         {
-            CDialogue dialogue = CDialogues.get(dialogueName.value);
-            if (dialogue != null && branchIndex.value >= 0 && branchIndex.value < dialogue.branches.size())
+            CDialogue dialogue = CDialogues.get(dialogueName);
+            if (dialogue != null)
             {
-                CDialogueBranch branch = dialogue.branches.get(branchIndex.value);
-                CRelatedDialogueEntry newEntry = new CRelatedDialogueEntry(branch, relation());
+                CRelatedDialogueEntry newEntry = new CRelatedDialogueEntry(dialogueName, type, index, relation());
 
                 boolean found = false;
                 for (CRelatedDialogueEntry entry : quest.relatedDialogues)
                 {
-                    if (entry.branchIndex.value == newEntry.branchIndex.value && entry.dialogueName.value.equals(newEntry.dialogueName.value) && entry.relation.value.equals(newEntry.relation.value))
+                    if (entry.index.value == newEntry.index.value && entry.dialogueName.value.equals(newEntry.dialogueName.value) && entry.relation.value.equals(newEntry.relation.value))
                     {
                         found = true;
                         break;
                     }
                 }
 
-                if (!found)
-                {
-                    quest.relatedDialogues.add(newEntry);
-                }
+                if (!found) quest.relatedDialogues.add(newEntry);
             }
         }
     }
 
 
     @Override
-    public void setDialogueData(String dialogueName, int branchIndex)
-    {
-        this.dialogueName.set(dialogueName);
-        this.branchIndex.set(branchIndex);
-    }
-
-    @Override
     public CQuestCondition write(ByteBuf buf)
     {
         questName.write(buf);
-        dialogueName.write(buf);
-        branchIndex.write(buf);
-
         return this;
     }
 
@@ -90,9 +68,6 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition read(ByteBuf buf)
     {
         questName.read(buf);
-        dialogueName.read(buf);
-        branchIndex.read(buf);
-
         return this;
     }
 
@@ -100,9 +75,6 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition save(OutputStream stream)
     {
         questName.save(stream);
-        dialogueName.save(stream);
-        branchIndex.save(stream);
-
         return this;
     }
 
@@ -110,9 +82,6 @@ public abstract class CQuestCondition extends CCondition
     public CQuestCondition load(InputStream stream)
     {
         questName.load(stream);
-        dialogueName.load(stream);
-        branchIndex.load(stream);
-
         return this;
     }
 }

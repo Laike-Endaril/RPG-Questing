@@ -19,9 +19,9 @@ public class CConditionQuestReadyToComplete extends CQuestCondition
         super();
     }
 
-    public CConditionQuestReadyToComplete(CQuest quest, CDialogueBranch branch)
+    public CConditionQuestReadyToComplete(CQuest quest)
     {
-        super(quest, branch);
+        super(quest);
     }
 
     @Override
@@ -60,6 +60,6 @@ public class CConditionQuestReadyToComplete extends CQuestCondition
     {
         CQuest quest = new CQuest();
         quest.name.set("Quest Name");
-        return new GUICondition(screen, new CConditionQuestReadyToComplete(quest, null));
+        return new GUICondition(screen, new CConditionQuestReadyToComplete(quest));
     }
 }

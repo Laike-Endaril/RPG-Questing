@@ -19,9 +19,9 @@ public class CConditionQuestAvailable extends CQuestCondition
         super();
     }
 
-    public CConditionQuestAvailable(CQuest quest, CDialogueBranch branch)
+    public CConditionQuestAvailable(CQuest quest)
     {
-        super(quest, branch);
+        super(quest);
     }
 
     @Override
@@ -60,6 +60,6 @@ public class CConditionQuestAvailable extends CQuestCondition
     {
         CQuest quest = new CQuest();
         quest.name.set("Quest Name");
-        return new GUICondition(screen, new CConditionQuestAvailable(quest, null));
+        return new GUICondition(screen, new CConditionQuestAvailable(quest));
     }
 }

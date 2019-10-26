@@ -37,11 +37,7 @@ public abstract class CAction extends Component
 
     public abstract ArrayList<String> description();
 
-    public void setDialogueName(String name)
-    {
-    }
-
-    public void updateRelations()
+    public void updateRelations(String dialogueName, int type, int index)
     {
     }
 

@@ -19,9 +19,9 @@ public class CActionStartQuest extends CQuestAction
         super();
     }
 
-    public CActionStartQuest(CQuest quest, CDialogueBranch branch)
+    public CActionStartQuest(CQuest quest)
     {
-        super(quest, branch);
+        super(quest);
     }
 
     @Override
@@ -51,6 +51,6 @@ public class CActionStartQuest extends CQuestAction
     {
         CQuest quest = new CQuest();
         quest.name.set("Quest Name");
-        return new GUIAction(screen, new CActionStartQuest(quest, null));
+        return new GUIAction(screen, new CActionStartQuest(quest));
     }
 }

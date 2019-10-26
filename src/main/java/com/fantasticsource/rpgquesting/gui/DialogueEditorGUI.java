@@ -18,7 +18,6 @@ import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueChoice;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -246,8 +245,6 @@ public class DialogueEditorGUI extends GUIScreen
             CCondition condition = ((GUICondition) element).condition;
             if (condition == null) continue;
 
-            condition.setDialogueData(dialogue.name.value, 0);
-
             dialogue.addPlayerConditions(condition);
         }
 
@@ -257,8 +254,6 @@ public class DialogueEditorGUI extends GUIScreen
 
             CCondition condition = ((GUICondition) element).condition;
             if (condition == null) continue;
-
-            condition.setDialogueData(dialogue.name.value, 0);
 
             dialogue.addEntityConditions(condition);
         }
@@ -271,19 +266,6 @@ public class DialogueEditorGUI extends GUIScreen
             if (branch == null) continue;
 
             branch.dialogueName.set(name.input.text);
-
-            int index = 0;
-            for (CDialogueChoice choice : branch.choices)
-            {
-                for (CCondition condition : choice.availabilityConditions)
-                {
-                    condition.setDialogueData(dialogue.name.value, index);
-                }
-
-                choice.action.setDialogueName(dialogue.name.value);
-
-                index++;
-            }
 
             dialogue.branches.add(branch);
         }

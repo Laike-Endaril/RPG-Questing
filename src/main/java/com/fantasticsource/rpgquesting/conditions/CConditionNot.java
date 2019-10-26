@@ -65,9 +65,9 @@ public class CConditionNot extends CCondition
     }
 
     @Override
-    public void setDialogueData(String dialogueName, int branchIndex)
+    public void updateRelations(String dialogueName, int type, int index)
     {
-        condition.setDialogueData(dialogueName, branchIndex);
+        condition.updateRelations(dialogueName, type, index);
     }
 
     @Override

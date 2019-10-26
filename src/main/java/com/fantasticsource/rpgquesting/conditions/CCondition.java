@@ -18,7 +18,7 @@ public abstract class CCondition extends Component
     @SideOnly(Side.CLIENT)
     public abstract GUICondition getChoosableElement(GUIScreen screen);
 
-    public void setDialogueData(String dialogueName, int branchIndex)
+    public void updateRelations(String dialogueName, int type, int index)
     {
     }
 }

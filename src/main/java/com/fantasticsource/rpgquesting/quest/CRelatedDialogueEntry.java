@@ -1,7 +1,5 @@
 package com.fantasticsource.rpgquesting.quest;
 
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
-import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
@@ -12,18 +10,42 @@ import java.io.OutputStream;
 
 public class CRelatedDialogueEntry extends Component
 {
+    public static final int
+            TYPE_BRANCH = 0,
+            TYPE_PLAYER_CONDITION = 1,
+            TYPE_ENTITY_CONDITION = 2;
+
+
     public CStringUTF8 dialogueName = new CStringUTF8(), relation = new CStringUTF8();
-    public CInt branchIndex = new CInt();
+    public CInt type = new CInt(), index = new CInt();
 
     public CRelatedDialogueEntry()
     {
     }
 
-    public CRelatedDialogueEntry(CDialogueBranch branch, String relation)
+    public CRelatedDialogueEntry(String dialogueName, int type, int index, String relation)
     {
-        dialogueName.set(branch.dialogueName.value);
-        branchIndex.set(CDialogues.get(dialogueName.value).branches.indexOf(branch));
+        this.dialogueName.set(dialogueName);
+        this.type.set(type);
+        this.index.set(index);
         this.relation.set(relation);
+    }
+
+    public String getSource()
+    {
+        switch (type.value)
+        {
+            case TYPE_BRANCH:
+                return "Branch " + index.value;
+
+            case TYPE_PLAYER_CONDITION:
+                return "Player Condition " + index.value;
+
+            case TYPE_ENTITY_CONDITION:
+                return "Entity Condition " + index.value;
+        }
+
+        return null;
     }
 
     @Override
@@ -31,7 +53,8 @@ public class CRelatedDialogueEntry extends Component
     {
         dialogueName.write(buf);
         relation.write(buf);
-        branchIndex.write(buf);
+        type.write(buf);
+        index.write(buf);
 
         return this;
     }
@@ -41,7 +64,8 @@ public class CRelatedDialogueEntry extends Component
     {
         dialogueName.read(buf);
         relation.read(buf);
-        branchIndex.read(buf);
+        type.read(buf);
+        index.read(buf);
 
         return this;
     }
@@ -51,7 +75,8 @@ public class CRelatedDialogueEntry extends Component
     {
         dialogueName.save(stream);
         relation.save(stream);
-        branchIndex.save(stream);
+        type.save(stream);
+        index.save(stream);
 
         return this;
     }
@@ -61,7 +86,8 @@ public class CRelatedDialogueEntry extends Component
     {
         dialogueName.load(stream);
         relation.load(stream);
-        branchIndex.load(stream);
+        type.load(stream);
+        index.load(stream);
 
         return this;
     }

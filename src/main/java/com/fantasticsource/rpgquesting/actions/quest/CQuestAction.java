@@ -2,12 +2,10 @@ package com.fantasticsource.rpgquesting.actions.quest;
 
 import com.fantasticsource.rpgquesting.actions.CAction;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
-import com.fantasticsource.rpgquesting.dialogue.CDialogueBranch;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
-import com.fantasticsource.tools.component.CInt;
 import com.fantasticsource.tools.component.CStringUTF8;
 import io.netty.buffer.ByteBuf;
 
@@ -16,25 +14,16 @@ import java.io.OutputStream;
 
 public abstract class CQuestAction extends CAction
 {
-    public CStringUTF8 questName = new CStringUTF8(), dialogueName = new CStringUTF8().set("");
-    public CInt branchIndex = new CInt();
+    public CStringUTF8 questName = new CStringUTF8();
 
 
     public CQuestAction()
     {
     }
 
-    public CQuestAction(CQuest quest, CDialogueBranch branch)
+    public CQuestAction(CQuest quest)
     {
         questName.set(quest.name.value);
-
-        if (branch != null)
-        {
-            dialogueName.set(branch.dialogueName.value);
-            branchIndex.set(CDialogues.get(dialogueName.value).branches.indexOf(branch));
-
-            quest.relatedDialogues.add(new CRelatedDialogueEntry(branch, relation()));
-        }
     }
 
 
@@ -42,21 +31,20 @@ public abstract class CQuestAction extends CAction
 
 
     @Override
-    public void updateRelations()
+    public void updateRelations(String dialogueName, int type, int index)
     {
         CQuest quest = CQuests.get(questName.value);
         if (quest != null)
         {
-            CDialogue dialogue = CDialogues.get(dialogueName.value);
-            if (dialogue != null && branchIndex.value >= 0 && branchIndex.value < dialogue.branches.size())
+            CDialogue dialogue = CDialogues.get(dialogueName);
+            if (dialogue != null)
             {
-                CDialogueBranch branch = dialogue.branches.get(branchIndex.value);
-                CRelatedDialogueEntry newEntry = new CRelatedDialogueEntry(branch, relation());
+                CRelatedDialogueEntry newEntry = new CRelatedDialogueEntry(dialogueName, type, index, relation());
 
                 boolean found = false;
                 for (CRelatedDialogueEntry entry : quest.relatedDialogues)
                 {
-                    if (entry.branchIndex.value == newEntry.branchIndex.value && entry.dialogueName.value.equals(newEntry.dialogueName.value) && entry.relation.value.equals(newEntry.relation.value))
+                    if (entry.index.value == newEntry.index.value && entry.dialogueName.value.equals(newEntry.dialogueName.value) && entry.relation.value.equals(newEntry.relation.value))
                     {
                         found = true;
                         break;
@@ -70,20 +58,10 @@ public abstract class CQuestAction extends CAction
 
 
     @Override
-    public void setDialogueName(String name)
-    {
-        dialogueName.set(name);
-    }
-
-    @Override
     public CQuestAction write(ByteBuf buf)
     {
         super.write(buf);
-
         questName.write(buf);
-        dialogueName.write(buf);
-        branchIndex.write(buf);
-
         return this;
     }
 
@@ -91,11 +69,7 @@ public abstract class CQuestAction extends CAction
     public CQuestAction read(ByteBuf buf)
     {
         super.read(buf);
-
         questName.read(buf);
-        dialogueName.read(buf);
-        branchIndex.read(buf);
-
         return this;
     }
 
@@ -103,11 +77,7 @@ public abstract class CQuestAction extends CAction
     public CQuestAction save(OutputStream stream)
     {
         super.save(stream);
-
         questName.save(stream);
-        dialogueName.save(stream);
-        branchIndex.save(stream);
-
         return this;
     }
 
@@ -115,11 +85,7 @@ public abstract class CQuestAction extends CAction
     public CQuestAction load(InputStream stream)
     {
         super.load(stream);
-
         questName.load(stream);
-        dialogueName.load(stream);
-        branchIndex.load(stream);
-
         return this;
     }
 }

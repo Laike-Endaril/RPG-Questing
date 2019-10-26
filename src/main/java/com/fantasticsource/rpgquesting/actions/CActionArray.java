@@ -62,15 +62,9 @@ public class CActionArray extends CAction
     }
 
     @Override
-    public void setDialogueName(String name)
+    public void updateRelations(String dialogueName, int type, int index)
     {
-        for (CAction action : actions) action.setDialogueName(name);
-    }
-
-    @Override
-    public void updateRelations()
-    {
-        for (CAction action : actions) action.updateRelations();
+        for (CAction action : actions) action.updateRelations(dialogueName, type, index);
     }
 
     @Override

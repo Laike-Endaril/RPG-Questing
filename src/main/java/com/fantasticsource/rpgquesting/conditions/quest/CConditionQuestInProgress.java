@@ -19,9 +19,9 @@ public class CConditionQuestInProgress extends CQuestCondition
         super();
     }
 
-    public CConditionQuestInProgress(CQuest quest, CDialogueBranch branch)
+    public CConditionQuestInProgress(CQuest quest)
     {
-        super(quest, branch);
+        super(quest);
     }
 
     @Override
@@ -60,6 +60,6 @@ public class CConditionQuestInProgress extends CQuestCondition
     {
         CQuest quest = new CQuest();
         quest.name.set("Quest Name");
-        return new GUICondition(screen, new CConditionQuestInProgress(quest, null));
+        return new GUICondition(screen, new CConditionQuestInProgress(quest));
     }
 }
