@@ -39,6 +39,7 @@ public class QuestEditorGUI extends GUIScreen
     private GUILabeledTextInput name, group, level, repeatable, experience;
     private GUIText oldName;
     private CQuest quest;
+    private GUINavbar navbar;
 
     private QuestEditorGUI(double textScale)
     {
@@ -48,7 +49,8 @@ public class QuestEditorGUI extends GUIScreen
     @Override
     public String title()
     {
-        return quest.name.value + " (quest)";
+        if (name == null) return quest.name.value + " (quest)";
+        return name.input.text + " (quest)";
     }
 
     public void show(CQuest quest)
@@ -66,6 +68,15 @@ public class QuestEditorGUI extends GUIScreen
 
         name = new GUILabeledTextInput(this, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE);
         main.add(name);
+        name.input.addRecalcActions(() ->
+        {
+            if (name.input.valid())
+            {
+                GUIText navText = (GUIText) navbar.children.get(1);
+                navText.text = navText.text.substring(0, navText.text.lastIndexOf(">") + 1) + title();
+                navbar.recalc(0);
+            }
+        });
         main.add(new GUITextSpacer(this));
 
         oldName = new GUIText(this, "(Previous Name: " + quest.name.value + ")", BLUE[0]);
@@ -237,7 +248,8 @@ public class QuestEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
         //Navbar
-        root.add(new GUINavbar(this, Color.AQUA));
+        navbar = new GUINavbar(this, Color.AQUA);
+        root.add(navbar);
 
         //Management
         root.add(new GUITextButton(this, "Save and Close", GREEN[0])).addClickActions(() ->

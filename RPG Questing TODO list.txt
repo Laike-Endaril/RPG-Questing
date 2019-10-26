@@ -1,5 +1,3 @@
-Change navbar when changing dialogue/quest names
-
 Fix commands to properly support quest / dialogue names with spaces in them
 
 

@@ -31,6 +31,7 @@ public class DialogueEditorGUI extends GUIScreen
     private GUILabeledTextInput name, group;
     private GUIText oldName;
     private CDialogue dialogue;
+    private GUINavbar navbar;
 
     private DialogueEditorGUI(double textScale)
     {
@@ -40,7 +41,8 @@ public class DialogueEditorGUI extends GUIScreen
     @Override
     public String title()
     {
-        return dialogue.name.value + " (dialogue)";
+        if (name == null) return dialogue.name.value + " (dialogue)";
+        return name.input.text + " (dialogue)";
     }
 
     public void show(CDialogue dialogue)
@@ -57,11 +59,19 @@ public class DialogueEditorGUI extends GUIScreen
         main.add(new GUITextSpacer(this));
 
         name = new GUILabeledTextInput(this, "Name: ", dialogue.name.value, FilterNotEmpty.INSTANCE);
-        main.add(name.addRecalcActions(() ->
+        main.add(name);
+        name.input.addRecalcActions(() ->
         {
-            //For CActionBranch, way down in DialogueEditorGUI -> BranchEditorGUI -> ChoiceEditorGUI -> ActionEditorGUI
-            if (name.input.valid()) CActionBranch.queuedDialogueName = name.input.text;
-        }));
+            if (name.input.valid())
+            {
+                //For CActionBranch, way down in DialogueEditorGUI -> BranchEditorGUI -> ChoiceEditorGUI -> ActionEditorGUI
+                CActionBranch.queuedDialogueName = name.input.text;
+
+                GUIText navText = (GUIText) navbar.children.get(1);
+                navText.text = navText.text.substring(0, navText.text.lastIndexOf(">") + 1) + title();
+                navbar.recalc(0);
+            }
+        });
         main.add(new GUITextSpacer(this));
 
         oldName = new GUIText(this, "(Previous Name: " + dialogue.name.value + ")", BLUE[0]);
@@ -190,7 +200,8 @@ public class DialogueEditorGUI extends GUIScreen
         root.add(new GUIGradient(this, 0, 0, 1, 1, Colors.T_BLACK));
 
         //Navbar
-        root.add(new GUINavbar(this, Color.AQUA));
+        navbar = new GUINavbar(this, Color.AQUA);
+        root.add(navbar);
 
         //Management
         root.add(new GUITextButton(this, "Save and Close", GREEN[0])).addClickActions(() ->
