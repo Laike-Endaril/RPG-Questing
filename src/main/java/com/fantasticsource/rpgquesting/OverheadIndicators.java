@@ -118,6 +118,17 @@ public class OverheadIndicators
                     CDialogue dialogue = CDialogues.get(dialogueEntry.dialogueName.value);
                     if (dialogue.isAvailable(player, entity)) continue;
 
+                    boolean cancel = false;
+                    for (CCondition condition : dialogue.entityConditions)
+                    {
+                        if (condition.unmetConditions(entity).size() > 0)
+                        {
+                            cancel = true;
+                            break;
+                        }
+                    }
+                    if (cancel) continue;
+
                     maxFunc = FUNC_SET_IN_PROGRESS;
                     break;
                 }
