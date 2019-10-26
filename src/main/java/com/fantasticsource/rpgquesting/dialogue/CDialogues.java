@@ -4,6 +4,8 @@ import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.actions.CActionEndDialogue;
+import com.fantasticsource.rpgquesting.conditions.CCondition;
+import com.fantasticsource.rpgquesting.conditions.quest.CQuestCondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
@@ -103,6 +105,38 @@ public class CDialogues extends Component
     {
         dialogues.put(dialogue.name.value, dialogue);
         dialoguesByGroup.computeIfAbsent(dialogue.group.value, o -> new LinkedHashMap<>()).put(dialogue.name.value, dialogue);
+
+        for (CCondition condition : dialogue.playerConditions)
+        {
+            if (condition instanceof CQuestCondition)
+            {
+                ((CQuestCondition) condition).updateRelations();
+            }
+        }
+
+        for (CCondition condition : dialogue.entityConditions)
+        {
+            if (condition instanceof CQuestCondition)
+            {
+                ((CQuestCondition) condition).updateRelations();
+            }
+        }
+
+        for (CDialogueBranch branch : dialogue.branches)
+        {
+            for (CDialogueChoice choice : branch.choices)
+            {
+                for (CCondition condition : choice.availabilityConditions)
+                {
+                    if (condition instanceof CQuestCondition)
+                    {
+                        ((CQuestCondition) condition).updateRelations();
+                    }
+                }
+
+                choice.action.updateRelations();
+            }
+        }
     }
 
     public static CDialogue get(String name)

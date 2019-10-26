@@ -42,6 +42,34 @@ public abstract class CQuestAction extends CAction
 
 
     @Override
+    public void updateRelations()
+    {
+        CQuest quest = CQuests.get(questName.value);
+        if (quest != null)
+        {
+            CDialogue dialogue = CDialogues.get(dialogueName.value);
+            if (dialogue != null && branchIndex.value >= 0 && branchIndex.value < dialogue.branches.size())
+            {
+                CDialogueBranch branch = dialogue.branches.get(branchIndex.value);
+                CRelatedDialogueEntry newEntry = new CRelatedDialogueEntry(branch, relation());
+
+                boolean found = false;
+                for (CRelatedDialogueEntry entry : quest.relatedDialogues)
+                {
+                    if (entry.branchIndex.value == newEntry.branchIndex.value && entry.dialogueName.value.equals(newEntry.dialogueName.value) && entry.relation.value.equals(newEntry.relation.value))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) quest.relatedDialogues.add(newEntry);
+            }
+        }
+    }
+
+
+    @Override
     public void setDialogueName(String name)
     {
         dialogueName.set(name);
@@ -68,29 +96,6 @@ public abstract class CQuestAction extends CAction
         dialogueName.read(buf);
         branchIndex.read(buf);
 
-        CQuest quest = CQuests.get(questName.value);
-        if (quest != null)
-        {
-            CDialogue dialogue = CDialogues.get(dialogueName.value);
-            if (dialogue != null && branchIndex.value >= 0 && branchIndex.value < dialogue.branches.size())
-            {
-                CDialogueBranch branch = dialogue.branches.get(branchIndex.value);
-                CRelatedDialogueEntry newEntry = new CRelatedDialogueEntry(branch, relation());
-
-                boolean found = false;
-                for (CRelatedDialogueEntry entry : quest.relatedDialogues)
-                {
-                    if (entry.branchIndex.value == newEntry.branchIndex.value && entry.dialogueName.value.equals(newEntry.dialogueName.value) && entry.relation.value.equals(newEntry.relation.value))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) quest.relatedDialogues.add(newEntry);
-            }
-        }
-
         return this;
     }
 
@@ -114,29 +119,6 @@ public abstract class CQuestAction extends CAction
         questName.load(stream);
         dialogueName.load(stream);
         branchIndex.load(stream);
-
-        CQuest quest = CQuests.get(questName.value);
-        if (quest != null)
-        {
-            CDialogue dialogue = CDialogues.get(dialogueName.value);
-            if (dialogue != null && branchIndex.value >= 0 && branchIndex.value < dialogue.branches.size())
-            {
-                CDialogueBranch branch = dialogue.branches.get(branchIndex.value);
-                CRelatedDialogueEntry newEntry = new CRelatedDialogueEntry(branch, relation());
-
-                boolean found = false;
-                for (CRelatedDialogueEntry entry : quest.relatedDialogues)
-                {
-                    if (entry.branchIndex.value == newEntry.branchIndex.value && entry.dialogueName.value.equals(newEntry.dialogueName.value) && entry.relation.value.equals(newEntry.relation.value))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) quest.relatedDialogues.add(newEntry);
-            }
-        }
 
         return this;
     }

@@ -41,6 +41,10 @@ public abstract class CAction extends Component
     {
     }
 
+    public void updateRelations()
+    {
+    }
+
     @SideOnly(Side.CLIENT)
     public abstract GUIAction getChoosableElement(GUIScreen screen);
 

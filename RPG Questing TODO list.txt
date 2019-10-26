@@ -1,5 +1,5 @@
-Related dialogues are not being synced correctly from server to client the first time after an edit
 Related dialogues are not generated for player/entity conditions if no branches exist
+Related dialogues incorrectly point at branch 0 when they actually exist in player conditions or entity conditions
 
 
 

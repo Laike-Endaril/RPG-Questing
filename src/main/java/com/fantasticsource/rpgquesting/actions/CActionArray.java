@@ -68,6 +68,12 @@ public class CActionArray extends CAction
     }
 
     @Override
+    public void updateRelations()
+    {
+        for (CAction action : actions) action.updateRelations();
+    }
+
+    @Override
     public CActionArray write(ByteBuf buf)
     {
         super.write(buf);
