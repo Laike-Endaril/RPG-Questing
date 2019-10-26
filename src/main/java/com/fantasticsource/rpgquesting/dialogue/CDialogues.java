@@ -170,6 +170,16 @@ public class CDialogues extends Component
         LinkedHashMap<String, CDialogue> group = dialoguesByGroup.get(dialogue.group.value);
         group.remove(dialogueName);
         if (group.size() == 0) dialoguesByGroup.remove(dialogue.group.value);
+
+
+        try
+        {
+            DIALOGUES.save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void saveDialogue(CDialogue dialogue)
@@ -177,6 +187,16 @@ public class CDialogues extends Component
         //Cleanly remove old one if it exists, then add the new version
         delete(dialogue.name.value);
         add(dialogue);
+
+
+        try
+        {
+            DIALOGUES.save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public CDialogues save() throws IOException

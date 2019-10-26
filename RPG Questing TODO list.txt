@@ -1,5 +1,3 @@
-Save global quest and dialogue data immediately upon edit / delete
-
 Auto-populate objective text if it is still set to default...
 ...kill objectives
 ...collect objetives

@@ -136,6 +136,16 @@ public class CQuests extends Component
             group.remove(questname);
             if (group.size() == 0) QUESTS.worldQuestDataByGroup.remove(quest.group.value);
         }
+
+
+        try
+        {
+            QUESTS.save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void saveQuest(CQuest quest)
@@ -143,6 +153,16 @@ public class CQuests extends Component
         //Cleanly remove old one if it exists, then add the new version
         delete(quest.name.value);
         add(quest);
+
+
+        try
+        {
+            QUESTS.save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void syncJournal(EntityPlayerMP player, String questToView, boolean openGUI)
