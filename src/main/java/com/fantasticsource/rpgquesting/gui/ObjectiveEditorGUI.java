@@ -15,6 +15,7 @@ import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.*;
+import com.fantasticsource.tools.component.CBoolean;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -28,7 +29,6 @@ public class ObjectiveEditorGUI extends GUIScreen
     public GUIObjective current;
     private GUITextButton delete;
     private GUIText originalLabel, currentLabel, objectiveSelectorLabel, objectiveEditorLabel;
-    private GUIGradientBorder[] separators = new GUIGradientBorder[4];
     private GUIScrollView objectiveSelector, objectiveEditor, originalView, currentView;
     private GUIVerticalScrollbar objectiveSelectorScrollbar, objectiveEditorScrollbar, originalScrollbar, currentScrollbar;
     private GUIAutocroppedView conditions;
@@ -79,8 +79,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         double oneThird = (1 - delete.height - 0.03) / 3;
 
 
-        separators[0] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[0]);
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
 
         //Labels
@@ -127,8 +126,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         currentView.add(new GUITextSpacer(this));
 
 
-        separators[2] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[2]);
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
 
         //Objective selector
@@ -168,8 +166,7 @@ public class ObjectiveEditorGUI extends GUIScreen
         }
 
 
-        separators[3] = new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f));
-        root.add(separators[3]);
+        root.add(new GUIGradientBorder(this, 1, 0.01, 0.3, Color.GRAY, Color.GRAY.copy().setAF(0.3f)));
 
 
         //Objective editor
@@ -291,6 +288,10 @@ public class ObjectiveEditorGUI extends GUIScreen
             objectiveEditor.add(text);
             objectiveEditor.add(new GUITextSpacer(this));
 
+
+            objectiveEditor.add(new GUITextSpacer(this));
+
+
             Class cls = objective.getClass();
             if (cls == CObjectiveDialogue.class)
             {
@@ -377,19 +378,57 @@ public class ObjectiveEditorGUI extends GUIScreen
             else if (cls == CObjectiveCollect.class)
             {
                 CObjectiveCollect objectiveCollect = (CObjectiveCollect) objective;
+
+
+                String t = text.input.text;
+                CBoolean def = new CBoolean().set(t.equals(objectiveCollect.getChoosableElement(this).text));
+                if (def.value)
+                {
+                    text.input.text = t.replace("X", "" + objectiveCollect.stackToMatch.value.getCount()).replace("items", objectiveCollect.stackToMatch.value.getDisplayName());
+                    text.recalc(0);
+                }
+
+                text.addRecalcActions(() -> def.set(text.input.text.equals(objectiveCollect.getChoosableElement(this).text)));
+
+
                 GUIItemStack stackToMatch = new GUIItemStack(this, objectiveCollect.stackToMatch.value);
-                objectiveEditor.add(stackToMatch.addClickActions(() ->
+                objectiveEditor.add(stackToMatch);
+                objectiveEditor.add(new GUITextSpacer(this));
+
+
+                GUILabeledTextInput quantity = new GUILabeledTextInput(this, "Quantity: ", "" + objectiveCollect.stackToMatch.value.getCount(), FilterInt.INSTANCE);
+                quantity.input.addRecalcActions(() ->
+                {
+                    if (quantity.input.valid())
+                    {
+                        int prevCount = objectiveCollect.stackToMatch.value.getCount();
+                        int count = FilterInt.INSTANCE.parse(quantity.input.text);
+                        objectiveCollect.stackToMatch.value.setCount(count);
+                        stackToMatch.setStack(objectiveCollect.stackToMatch.value);
+                        stackToMatch.recalc(0);
+                        current.setObjective(objectiveCollect);
+                        text.input.text = text.input.text.replace(prevCount + " ", count + " ");
+                        text.recalc(0);
+                    }
+                });
+                objectiveEditor.add(quantity);
+                objectiveEditor.add(new GUITextSpacer(this));
+
+
+                stackToMatch.addClickActions(() ->
                 {
                     ItemSelectionGUI gui = new ItemSelectionGUI(stackToMatch, textScale);
                     gui.addOnClosedActions(() ->
                     {
                         stackToMatch.setStack(gui.selection);
                         objectiveCollect.stackToMatch.set(gui.selection);
+                        quantity.input.text = "" + gui.selection.getCount();
                         current.setObjective(objectiveCollect);
+                        text.input.text = t.replace("X", "" + gui.selection.getCount()).replace("items", gui.selection.getDisplayName());
                         objectiveEditor.recalc(0);
+                        def.set(true);
                     });
-                }));
-                objectiveEditor.add(new GUITextSpacer(this));
+                });
             }
             else if (cls == CObjectiveEnterArea.class)
             {

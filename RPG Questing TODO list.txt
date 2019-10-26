@@ -8,7 +8,6 @@ Change quest and dialogue editing buttons to...
 
 Auto-populate objective text if it is still set to default...
 ...kill objectives
-...collect objetives
 ...talk objectives
 
 
