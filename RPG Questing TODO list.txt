@@ -1,4 +1,8 @@
-Fix commands to properly support quest / dialogue names with spaces in them
+Add client config for text scaling
+
+Remove "original" GUI elements
+
+Disallow _ in quest names
 
 
 

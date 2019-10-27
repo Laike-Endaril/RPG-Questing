@@ -112,7 +112,7 @@ public class Commands extends CommandBase
                 {
                     case "get":
                     case "set":
-                        for (CQuest quest : CQuests.QUESTS.worldQuestData.values()) result.add(quest.name.value);
+                        for (CQuest quest : CQuests.QUESTS.worldQuestData.values()) result.add(quest.name.value.replaceAll(" ", "_"));
                         break;
                 }
                 break;
@@ -140,7 +140,7 @@ public class Commands extends CommandBase
                 if (args.length == 3)
                 {
                     PlayerData data = PlayerData.get(args[1]);
-                    CQuest quest = CQuests.get(args[2]);
+                    CQuest quest = CQuests.get(args[2].replaceAll("_", " "));
                     if (data == null || data.player == null || quest == null)
                     {
                         notifyCommandListener(sender, this, subUsage(cmd));
@@ -178,7 +178,7 @@ public class Commands extends CommandBase
                 if (args.length == 4)
                 {
                     PlayerData data = PlayerData.get(args[1]);
-                    CQuest quest = CQuests.get(args[2]);
+                    CQuest quest = CQuests.get(args[2].replaceAll("_", " "));
                     if (data == null || data.player == null || quest == null || !(args[3].equals("unstarted") || args[3].equals("started") || args[3].equals("uncompleted") || args[3].equals("completed")))
                     {
                         notifyCommandListener(sender, this, subUsage(cmd));
