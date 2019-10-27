@@ -14,6 +14,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.mctools.gui.screen.ItemSelectionGUI;
 import com.fantasticsource.rpgquesting.Colors;
+import com.fantasticsource.rpgquesting.FilterQuestname;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.RequestEditorDataPacket;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
@@ -66,7 +67,7 @@ public class QuestEditorGUI extends GUIScreen
 
         main.add(new GUITextSpacer(this));
 
-        name = new GUILabeledTextInput(this, "Name: ", quest.name.value, FilterNotEmpty.INSTANCE);
+        name = new GUILabeledTextInput(this, "Name: ", quest.name.value, FilterQuestname.INSTANCE);
         main.add(name);
         name.input.addRecalcActions(() ->
         {

@@ -2,8 +2,6 @@ Add client config for text scaling
 
 Remove "original" GUI elements
 
-Disallow _ in quest names
-
 
 
 Combine sets of UIs into fewer UIs
