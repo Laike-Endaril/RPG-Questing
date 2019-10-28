@@ -36,7 +36,6 @@ public class RPGQuesting
     public static final String VERSION = "1.12.2.000g";
 
     public static File worldDataFolder, playerDataFolder;
-    public static boolean addedNewStuff = false;
 
     public static final double TEXT_SCALE = 1;
 
