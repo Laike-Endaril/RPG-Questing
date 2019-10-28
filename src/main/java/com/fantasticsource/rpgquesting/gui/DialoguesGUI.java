@@ -9,6 +9,7 @@ import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ChooseDialoguePacket;
 import com.fantasticsource.rpgquesting.Network.MultipleDialoguesPacket;
+import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 
@@ -16,7 +17,7 @@ import static com.fantasticsource.mctools.gui.element.GUIElement.AP_CENTERED_H_T
 
 public class DialoguesGUI extends GUIScreen
 {
-    public static final DialoguesGUI GUI = new DialoguesGUI(0.5);
+    public static final DialoguesGUI GUI = new DialoguesGUI(RPGQuesting.TEXT_SCALE);
     private static GUIScrollView scrollView;
 
     private DialoguesGUI(double textScale)

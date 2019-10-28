@@ -38,6 +38,8 @@ public class RPGQuesting
     public static File worldDataFolder, playerDataFolder;
     public static boolean addedNewStuff = false;
 
+    public static final double TEXT_SCALE = 1;
+
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
     {

@@ -11,6 +11,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
+import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
@@ -27,7 +28,7 @@ import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class JournalGUI extends GUIScreen
 {
-    public static final JournalGUI GUI = new JournalGUI(0.5);
+    public static final JournalGUI GUI = new JournalGUI(RPGQuesting.TEXT_SCALE);
     public static CPlayerQuestData data = null;
     public static String viewedQuest = "";
     private static GUITabView navigator;

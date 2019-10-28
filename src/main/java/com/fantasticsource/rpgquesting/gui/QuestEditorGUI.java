@@ -17,6 +17,7 @@ import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.FilterQuestname;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.RequestEditorDataPacket;
+import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CRelatedDialogueEntry;
@@ -32,7 +33,7 @@ import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class QuestEditorGUI extends GUIScreen
 {
-    public static final QuestEditorGUI GUI = new QuestEditorGUI(0.5);
+    public static final QuestEditorGUI GUI = new QuestEditorGUI(RPGQuesting.TEXT_SCALE);
 
     public GUIScrollView main, objectives, rewards, conditions, dialogues;
     private GUIGradientBorder separator;

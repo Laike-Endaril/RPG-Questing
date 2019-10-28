@@ -11,6 +11,7 @@ import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
+import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.actions.CActionBranch;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
@@ -23,7 +24,7 @@ import static com.fantasticsource.rpgquesting.Colors.*;
 
 public class DialogueEditorGUI extends GUIScreen
 {
-    public static final DialogueEditorGUI GUI = new DialogueEditorGUI(0.5);
+    public static final DialogueEditorGUI GUI = new DialogueEditorGUI(RPGQuesting.TEXT_SCALE);
 
     public GUIScrollView main, playerConditions, entityConditions, branches;
     private GUIGradientBorder separator;

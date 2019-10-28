@@ -10,6 +10,7 @@ import com.fantasticsource.mctools.gui.element.text.GUITextSpoiler;
 import com.fantasticsource.mctools.gui.element.view.GUIScrollView;
 import com.fantasticsource.mctools.gui.element.view.GUITabView;
 import com.fantasticsource.rpgquesting.Network.EditorPacket;
+import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.dialogue.CDialogue;
 import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.tools.datastructures.Color;
@@ -52,7 +53,7 @@ public class MainEditorGUI extends GUIScreen
         }
 
 
-        MainEditorGUI gui = new MainEditorGUI(0.5);
+        MainEditorGUI gui = new MainEditorGUI(RPGQuesting.TEXT_SCALE);
 
         //Make sure GUI exists
         Minecraft.getMinecraft().displayGuiScreen(gui);

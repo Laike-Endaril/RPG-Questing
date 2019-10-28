@@ -9,6 +9,7 @@ import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.Network.ActionErrorPacket;
 import com.fantasticsource.rpgquesting.Network.DialogueBranchPacket;
+import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 public class DialogueGUI extends GUIScreen
 {
-    public static final DialogueGUI GUI = new DialogueGUI(0.5);
+    public static final DialogueGUI GUI = new DialogueGUI(RPGQuesting.TEXT_SCALE);
     private static final Color C_CHOICE = Color.GREEN.copy().setRF(0.2f).setBF(0.2f);
     private static final TextFormatting
             TF_OLD_CHOICE = TextFormatting.DARK_GREEN,
