@@ -28,12 +28,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 import java.io.IOException;
 
-@Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.025c,)")
+@Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.025e,)")
 public class RPGQuesting
 {
     public static final String MODID = "rpgquesting";
     public static final String NAME = "RPG Questing";
-    public static final String VERSION = "1.12.2.000f";
+    public static final String VERSION = "1.12.2.000g";
 
     public static File worldDataFolder, playerDataFolder;
     public static boolean addedNewStuff = false;
