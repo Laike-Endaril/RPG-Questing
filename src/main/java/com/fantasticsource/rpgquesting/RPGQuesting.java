@@ -86,16 +86,6 @@ public class RPGQuesting
         playerDataFolder = new File(MCTools.getPlayerDataDir(event.getServer()));
         CQuests.QUESTS.load();
         CDialogues.DIALOGUES.load();
-
-
-        //TODO test code here
-        if (!addedNewStuff)
-        {
-            addedNewStuff = true;
-//            Temp.addKillQuest(false);
-//            Temp.addCollectionQuest(true);
-//            Temp.addCollectionQuest2(false);
-        }
     }
 
     @Mod.EventHandler
