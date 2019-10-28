@@ -27,9 +27,9 @@ public class ObjectiveEditorGUI extends GUIScreen
     public CObjective original, selection;
     public GUIObjective current;
     private GUITextButton delete;
-    private GUIText originalLabel, currentLabel, objectiveSelectorLabel, objectiveEditorLabel;
-    private GUIScrollView objectiveSelector, objectiveEditor, originalView, currentView;
-    private GUIVerticalScrollbar objectiveSelectorScrollbar, objectiveEditorScrollbar, originalScrollbar, currentScrollbar;
+    private GUIText objectiveSelectorLabel, objectiveEditorLabel;
+    private GUIScrollView objectiveSelector, objectiveEditor, currentView;
+    private GUIVerticalScrollbar objectiveSelectorScrollbar, objectiveEditorScrollbar, currentScrollbar;
     private GUIAutocroppedView conditions;
 
     public ObjectiveEditorGUI(GUIObjective clickedElement, double textScale)
@@ -87,44 +87,25 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Labels
-        originalLabel = new GUIText(this, 0, 0, "ORIGINAL", Color.YELLOW.copy().setVF(0.2f));
-        root.add(originalLabel);
-        currentLabel = new GUIText(this, 0, 0, "CURRENT", Color.YELLOW.copy().setVF(0.2f));
-        root.add(currentLabel);
         objectiveSelectorLabel = new GUIText(this, 0, 0, "OBJECTIVE SELECTION", Color.YELLOW.copy().setVF(0.2f));
         root.add(objectiveSelectorLabel);
         objectiveEditorLabel = new GUIText(this, 0, 0, "OBJECTIVE EDITING", Color.YELLOW.copy().setVF(0.2f));
         root.add(objectiveEditorLabel);
 
 
-        //Original
+        //Current
         GUITextSpacer spacer = new GUITextSpacer(this, oneThird, true);
-        originalView = new GUIScrollView(this, 0.48 - spacer.width * 2, oneThird);
-        root.add(spacer.addRecalcActions(() -> originalView.width = 0.48 - spacer.width * 2));
-        root.add(originalView);
+        currentView = new GUIScrollView(this, 0.98 - spacer.width * 2, oneThird);
+        root.add(spacer.addRecalcActions(() -> currentView.width = 0.98 - spacer.width * 2));
+        root.add(currentView);
 
         GUITextSpacer spacer2 = new GUITextSpacer(this, oneThird, true);
         root.add(spacer2);
-        originalScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, originalView);
-        root.add(originalScrollbar);
-
-        originalView.add(new GUITextSpacer(this));
-        GUIObjective originalElement = new GUIObjective(this, current.objective == null ? null : (CObjective) current.objective.copy());
-        originalView.add(originalElement.addClickActions(() -> setCurrent(originalElement.objective)));
-        originalView.add(new GUITextSpacer(this));
-
-
-        //Current
-        GUITextSpacer spacer3 = new GUITextSpacer(this, oneThird, true);
-        currentView = new GUIScrollView(this, 0.48 - spacer3.width * 2, oneThird);
-        root.add(spacer3.addRecalcActions(() -> currentView.width = 0.48 - spacer3.width * 2));
-        root.add(currentView);
-
-        GUITextSpacer spacer4 = new GUITextSpacer(this, oneThird, true);
-        root.add(spacer4);
         currentScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, currentView);
         root.add(currentScrollbar);
 
+        currentView.add(new GUITextSpacer(this));
+        currentView.add(new GUIText(this, TextFormatting.GOLD + "CURRENT OBJECTIVE..."));
         currentView.add(new GUITextSpacer(this));
         currentView.add(current);
         currentView.add(new GUITextSpacer(this));
@@ -134,13 +115,13 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Objective selector
-        GUITextSpacer spacer5 = new GUITextSpacer(this, oneThird, true);
-        objectiveSelector = new GUIScrollView(this, 0.98 - spacer5.width * 2, oneThird);
-        root.add(spacer5.addRecalcActions(() -> objectiveSelector.width = 0.98 - spacer5.width * 2));
+        GUITextSpacer spacer3 = new GUITextSpacer(this, oneThird, true);
+        objectiveSelector = new GUIScrollView(this, 0.98 - spacer3.width * 2, oneThird);
+        root.add(spacer3.addRecalcActions(() -> objectiveSelector.width = 0.98 - spacer3.width * 2));
         root.add(objectiveSelector);
 
-        GUITextSpacer spacer6 = new GUITextSpacer(this, oneThird, true);
-        root.add(spacer6);
+        GUITextSpacer spacer4 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer4);
         objectiveSelectorScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveSelector);
         root.add(objectiveSelectorScrollbar);
 
@@ -174,13 +155,13 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Objective editor
-        GUITextSpacer spacer7 = new GUITextSpacer(this, oneThird, true);
-        objectiveEditor = new GUIScrollView(this, 0.98 - spacer7.width * 2, oneThird);
-        root.add(spacer7.addRecalcActions(() -> objectiveEditor.width = 0.98 - spacer7.width * 2));
+        GUITextSpacer spacer5 = new GUITextSpacer(this, oneThird, true);
+        objectiveEditor = new GUIScrollView(this, 0.98 - spacer5.width * 2, oneThird);
+        root.add(spacer5.addRecalcActions(() -> objectiveEditor.width = 0.98 - spacer5.width * 2));
         root.add(objectiveEditor);
 
-        GUITextSpacer spacer8 = new GUITextSpacer(this, oneThird, true);
-        root.add(spacer8);
+        GUITextSpacer spacer6 = new GUITextSpacer(this, oneThird, true);
+        root.add(spacer6);
         objectiveEditorScrollbar = new GUIVerticalScrollbar(this, 0.02, oneThird, Color.GRAY, Color.BLANK, Color.WHITE, Color.BLANK, objectiveEditor);
         root.add(objectiveEditorScrollbar);
 
@@ -188,12 +169,6 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Reposition labels
-        originalLabel.x = originalView.x + originalView.width / 2 - originalLabel.width / 2;
-        originalLabel.y = originalView.y + originalView.height / 2 - originalLabel.height / 2;
-
-        currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
-        currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
-
         objectiveSelectorLabel.x = objectiveSelector.x + objectiveSelector.width / 2 - objectiveSelectorLabel.width / 2;
         objectiveSelectorLabel.y = objectiveSelector.y + objectiveSelector.height / 2 - objectiveSelectorLabel.height / 2;
 
@@ -208,23 +183,18 @@ public class ObjectiveEditorGUI extends GUIScreen
 
             //Resize views and scrollbars
             spacer.height = oneThirdHeight;
-            originalView.height = oneThirdHeight;
-            spacer2.height = oneThirdHeight;
-            originalScrollbar.height = oneThirdHeight;
-
-            spacer3.height = oneThirdHeight;
             currentView.height = oneThirdHeight;
-            spacer4.height = oneThirdHeight;
+            spacer2.height = oneThirdHeight;
             currentScrollbar.height = oneThirdHeight;
 
-            spacer5.height = oneThirdHeight;
+            spacer3.height = oneThirdHeight;
             objectiveSelector.height = oneThirdHeight;
-            spacer6.height = oneThirdHeight;
+            spacer4.height = oneThirdHeight;
             objectiveSelectorScrollbar.height = oneThirdHeight;
 
-            spacer7.height = oneThirdHeight;
+            spacer5.height = oneThirdHeight;
             objectiveEditor.height = oneThirdHeight;
-            spacer8.height = oneThirdHeight;
+            spacer6.height = oneThirdHeight;
             objectiveEditorScrollbar.height = oneThirdHeight;
         });
     }
@@ -236,12 +206,6 @@ public class ObjectiveEditorGUI extends GUIScreen
 
 
         //Reposition labels
-        originalLabel.x = originalView.x + originalView.width / 2 - originalLabel.width / 2;
-        originalLabel.y = originalView.y + originalView.height / 2 - originalLabel.height / 2;
-
-        currentLabel.x = currentView.x + currentView.width / 2 - currentLabel.width / 2;
-        currentLabel.y = currentView.y + currentView.height / 2 - currentLabel.height / 2;
-
         objectiveSelectorLabel.x = objectiveSelector.x + objectiveSelector.width / 2 - objectiveSelectorLabel.width / 2;
         objectiveSelectorLabel.y = objectiveSelector.y + objectiveSelector.height / 2 - objectiveSelectorLabel.height / 2;
 

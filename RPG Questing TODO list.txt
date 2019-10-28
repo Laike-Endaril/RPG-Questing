@@ -1,4 +1,5 @@
-Remove "original" GUI elements
+Change objective editor layout to match that of condition editor
+
 Combine sets of UIs into fewer UIs
 
 
