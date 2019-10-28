@@ -1,8 +1,7 @@
 Remove "original" GUI elements
-
-
-
 Combine sets of UIs into fewer UIs
+
+
 
 Make it more obvious what is clickable
 
