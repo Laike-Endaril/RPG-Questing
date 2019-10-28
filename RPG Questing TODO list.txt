@@ -22,7 +22,7 @@ Link quest editor and dialogue editor to each other
 
 Quest indicator color config; each is a level difference and a color
 Eg. "0, FFFF00" would mean that a level difference of 0 makes the indicator yellow
-Based on BlueRPG level
+Based on Tiamat RPG level
 
 
 
