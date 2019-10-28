@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting.quest;
 
+import com.fantasticsource.mctools.ServerTickTimer;
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.rpgquesting.conditions.CCondition;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
@@ -32,7 +33,8 @@ public class CQuest extends Component implements IObfuscatedComponent
 
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
-    public boolean recursion = false;
+    private boolean recursion = false;
+    private long recursionTime = -1;
 
 
     public CQuest()
@@ -84,7 +86,13 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         if (recursion)
         {
-            System.err.println("ERROR: infinite recursion detected in quest availability conditions for quest: " + name.value);
+            if ((recursionTime == -1 || ServerTickTimer.currentTick() - recursionTime > 1200))
+            {
+                System.err.println("ERROR: infinite recursion detected in quest availability conditions for quest: " + name.value);
+                System.err.println("This happens when you require a quest be available in its own availability conditions (which is redundant), or have an indirect loop of 2 or more quests requiring each other be available");
+                System.err.println("Edit quest availability conditions to remove this error message");
+                recursionTime = ServerTickTimer.currentTick();
+            }
             return false;
         }
 
