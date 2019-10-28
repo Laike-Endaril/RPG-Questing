@@ -4,6 +4,11 @@ Combine sets of UIs into fewer UIs
 
 
 
+Add warning when closing quest or dialogue editor without saving
+Link quest editor and dialogue editor to each other
+
+
+
 Make it more obvious what is clickable
 
 Global UI navigation system?
@@ -14,11 +19,6 @@ Add templates:
 In main editor, "Create from template" creates a quest with accompanying dialogues
 In quest editor, "Create from template" creates a quest
 In dialogue editor, "Create from template" creates a dialogue
-
-
-
-Link quest editor and dialogue editor to each other
-
 
 
 Quest indicator color config; each is a level difference and a color
