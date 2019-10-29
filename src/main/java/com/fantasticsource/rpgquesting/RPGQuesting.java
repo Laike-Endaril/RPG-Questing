@@ -33,11 +33,9 @@ public class RPGQuesting
 {
     public static final String MODID = "rpgquesting";
     public static final String NAME = "RPG Questing";
-    public static final String VERSION = "1.12.2.000g";
-
-    public static File worldDataFolder, playerDataFolder;
-
+    public static final String VERSION = "1.12.2.000h";
     public static final double TEXT_SCALE = 1;
+    public static File worldDataFolder, playerDataFolder;
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
