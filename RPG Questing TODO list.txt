@@ -41,8 +41,8 @@ Quest attributes
 
 
 
-Objectives types
-* Survive
+Failable objectives
+eg. don't let x die (could be yourself, for arena survival)
 
 
 
