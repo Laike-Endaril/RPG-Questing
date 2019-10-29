@@ -151,6 +151,9 @@ public class ActionEditorGUI extends GUIScreen
         actionTypeView.add(new CActionTakeItems().getChoosableElement(this));
         actionTypeView.add(new GUITextSpacer(this));
 
+        actionTypeView.add(new CActionCommand().getChoosableElement(this));
+        actionTypeView.add(new GUITextSpacer(this));
+
         //Meta actions
         actionTypeView.add(new GUITextSpacer(this));
 
@@ -310,18 +313,32 @@ public class ActionEditorGUI extends GUIScreen
             }
             else if (cls == CActionTakeItems.class)
             {
-                CActionTakeItems haveItems = (CActionTakeItems) action;
-                GUIItemStack stackElement = new GUIItemStack(this, haveItems.stackToMatch.value);
+                CActionTakeItems takeItems = (CActionTakeItems) action;
+                GUIItemStack stackElement = new GUIItemStack(this, takeItems.stackToMatch.value);
                 actionOptionsView.add(stackElement.addClickActions(() ->
                 {
                     ItemSelectionGUI gui = new ItemSelectionGUI(stackElement, textScale);
                     gui.addOnClosedActions(() ->
                     {
                         stackElement.setStack(gui.selection);
-                        haveItems.set(gui.selection);
-                        current.setAction(haveItems);
+                        takeItems.set(gui.selection);
+                        current.setAction(takeItems);
                     });
                 }));
+                actionOptionsView.add(new GUITextSpacer(this));
+            }
+            else if (cls == CActionCommand.class)
+            {
+                GUILabeledTextInput command = new GUILabeledTextInput(this, "Command: ", "" + ((CActionCommand) action).command.value, FilterNotEmpty.INSTANCE);
+                command.input.addRecalcActions(() ->
+                {
+                    if (command.input.valid())
+                    {
+                        ((CActionCommand) action).command.set(command.input.text);
+                        current.setAction(action);
+                    }
+                });
+                actionOptionsView.add(command);
                 actionOptionsView.add(new GUITextSpacer(this));
             }
             else if (cls == CActionArray.class)
