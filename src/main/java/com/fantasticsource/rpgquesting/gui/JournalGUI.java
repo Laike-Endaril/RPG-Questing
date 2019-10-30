@@ -14,7 +14,7 @@ import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
-import com.fantasticsource.rpgquesting.quest.CQuestCompletionData;
+import com.fantasticsource.rpgquesting.quest.CQuestTimestamp;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CUUID;
@@ -293,7 +293,7 @@ public class JournalGUI extends GUIScreen
 
 
                 //Add completion note
-                CQuestCompletionData completionData = data.completionData.get(questName);
+                CQuestTimestamp completionData = data.completionData.get(questName);
                 MCTimestamp timestamp = completionData.timestamp.value;
                 questView.add(new GUIText(GUI, "Completed on " + timestamp.toString(true, false, false).replaceAll("-", "/"), BLUE[0]));
                 questView.add(new GUIText(GUI, "At " + timestamp.toString(false, true, false), BLUE[0]));

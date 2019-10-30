@@ -5,25 +5,31 @@ import com.fantasticsource.mctools.component.CMCTimestamp;
 import com.fantasticsource.tools.component.CStringUTF8;
 import com.fantasticsource.tools.component.Component;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.world.World;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class CQuestCompletionData extends Component
+public class CQuestTimestamp extends Component
 {
     public CStringUTF8 questName = new CStringUTF8();
     public CMCTimestamp timestamp = new CMCTimestamp();
 
-    public CQuestCompletionData()
+    public CQuestTimestamp()
     {
     }
 
-    public CQuestCompletionData(String questName, MCTimestamp timestamp)
+    public CQuestTimestamp(String questName, World world)
+    {
+        set(questName, new MCTimestamp(world));
+    }
+
+    public CQuestTimestamp(String questName, MCTimestamp timestamp)
     {
         set(questName, timestamp);
     }
 
-    public CQuestCompletionData set(String questName, MCTimestamp timestamp)
+    public CQuestTimestamp set(String questName, MCTimestamp timestamp)
     {
         this.questName.set(questName);
         this.timestamp.set(timestamp);
@@ -32,7 +38,7 @@ public class CQuestCompletionData extends Component
     }
 
     @Override
-    public CQuestCompletionData write(ByteBuf buf)
+    public CQuestTimestamp write(ByteBuf buf)
     {
         questName.write(buf);
         timestamp.write(buf);
@@ -41,7 +47,7 @@ public class CQuestCompletionData extends Component
     }
 
     @Override
-    public CQuestCompletionData read(ByteBuf buf)
+    public CQuestTimestamp read(ByteBuf buf)
     {
         questName.read(buf);
         timestamp.read(buf);
@@ -50,7 +56,7 @@ public class CQuestCompletionData extends Component
     }
 
     @Override
-    public CQuestCompletionData save(OutputStream stream)
+    public CQuestTimestamp save(OutputStream stream)
     {
         questName.save(stream);
         timestamp.save(stream);
@@ -59,7 +65,7 @@ public class CQuestCompletionData extends Component
     }
 
     @Override
-    public CQuestCompletionData load(InputStream stream)
+    public CQuestTimestamp load(InputStream stream)
     {
         questName.load(stream);
         timestamp.load(stream);

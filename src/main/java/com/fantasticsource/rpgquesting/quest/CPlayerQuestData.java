@@ -19,7 +19,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
     public EntityPlayerMP player;
     public CStringUTF8 trackedQuestName = new CStringUTF8().set("");
     public LinkedHashMap<String, ArrayList<String>> completedQuests = new LinkedHashMap<>();
-    public LinkedHashMap<String, CQuestCompletionData> completionData = new LinkedHashMap<>();
+    public LinkedHashMap<String, CQuestTimestamp> startData = new LinkedHashMap<>(), completionData = new LinkedHashMap<>();
     public LinkedHashMap<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> inProgressQuests = new LinkedHashMap<>();
 
 
@@ -103,6 +103,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
                 if (quest == null || !quest.permanentID.value.equals(questEntry.getValue().getKey().value))
                 {
                     groupQuests.remove(questName);
+                    startData.remove(questName);
                     if (groupQuests.size() == 0) inProgressQuests.remove(groupName);
                 }
             }
@@ -141,7 +142,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
         }
 
         new CInt().set(completionData.size()).save(stream);
-        for (Map.Entry<String, CQuestCompletionData> entry : completionData.entrySet())
+        for (Map.Entry<String, CQuestTimestamp> entry : completionData.entrySet())
         {
             new CStringUTF8().set(entry.getKey()).save(stream);
             entry.getValue().save(stream);
@@ -169,6 +170,13 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
             }
         }
 
+        new CInt().set(startData.size()).save(stream);
+        for (Map.Entry<String, CQuestTimestamp> entry : startData.entrySet())
+        {
+            new CStringUTF8().set(entry.getKey()).save(stream);
+            entry.getValue().save(stream);
+        }
+
 
         return this;
     }
@@ -194,7 +202,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
         completionData.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
         {
-            completionData.put(new CStringUTF8().load(stream).value, new CQuestCompletionData().load(stream));
+            completionData.put(new CStringUTF8().load(stream).value, new CQuestTimestamp().load(stream));
         }
 
 
@@ -215,6 +223,12 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
                     objectives.add((CObjective) Component.loadMarked(stream));
                 }
             }
+        }
+
+        startData.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--)
+        {
+            startData.put(new CStringUTF8().load(stream).value, new CQuestTimestamp().load(stream));
         }
 
 
@@ -239,7 +253,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
         }
 
         new CInt().set(completionData.size()).write(buf);
-        for (Map.Entry<String, CQuestCompletionData> entry : completionData.entrySet())
+        for (Map.Entry<String, CQuestTimestamp> entry : completionData.entrySet())
         {
             new CStringUTF8().set(entry.getKey()).write(buf);
             entry.getValue().write(buf);
@@ -263,6 +277,13 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
 
                 for (CObjective objective : objectives) Component.writeMarked(buf, objective);
             }
+        }
+
+        new CInt().set(startData.size()).write(buf);
+        for (Map.Entry<String, CQuestTimestamp> entry : startData.entrySet())
+        {
+            new CStringUTF8().set(entry.getKey()).write(buf);
+            entry.getValue().write(buf);
         }
 
 
@@ -290,7 +311,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
         completionData.clear();
         for (int i = new CInt().read(buf).value; i > 0; i--)
         {
-            completionData.put(new CStringUTF8().read(buf).value, new CQuestCompletionData().read(buf));
+            completionData.put(new CStringUTF8().read(buf).value, new CQuestTimestamp().read(buf));
         }
 
 
@@ -310,6 +331,12 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
                     objectives.add((CObjective) Component.readMarked(buf));
                 }
             }
+        }
+
+        startData.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--)
+        {
+            startData.put(new CStringUTF8().read(buf).value, new CQuestTimestamp().read(buf));
         }
 
 

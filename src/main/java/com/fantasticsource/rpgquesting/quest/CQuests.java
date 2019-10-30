@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.quest;
 
-import com.fantasticsource.mctools.MCTimestamp;
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.sound.SimpleSound;
 import com.fantasticsource.rpgquesting.Network;
@@ -67,6 +66,9 @@ public class CQuests extends Component
         if (quest == null) return;
 
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
+
+        data.startData.put(name, new CQuestTimestamp(name, player.world));
+
         LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.computeIfAbsent(quest.group.value, o -> new LinkedHashMap<>());
         Pair<CUUID, ArrayList<CObjective>> pair = map.computeIfAbsent(name, o -> new Pair<>(new CUUID().set(quest.permanentID.value), new ArrayList<>()));
         ArrayList<CObjective> objectives = pair.getValue();
@@ -102,6 +104,8 @@ public class CQuests extends Component
     {
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return;
+
+        data.startData.remove(questName);
 
         if (data.trackedQuestName.value.equals(questName)) track(player, "");
 
@@ -224,6 +228,8 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
+        data.startData.remove(name);
+
         String group = quest.group.value;
         LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(group);
         if (map == null || map.remove(name) == null) return false;
@@ -232,7 +238,7 @@ public class CQuests extends Component
 
         ArrayList<String> list = data.completedQuests.computeIfAbsent(group, o -> new ArrayList<>());
         if (!list.contains(name)) list.add(name);
-        data.completionData.put(name, new CQuestCompletionData(name, new MCTimestamp(player.world)));
+        data.completionData.put(name, new CQuestTimestamp(name, player.world));
 
         player.addExperience(quest.experience.value);
         for (CItemStack stack : quest.rewards)
@@ -256,6 +262,8 @@ public class CQuests extends Component
 
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
 
+        data.startData.remove(name);
+
         String group = quest.group.value;
         LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(group);
         if (map != null)
@@ -266,7 +274,7 @@ public class CQuests extends Component
 
         ArrayList<String> list = data.completedQuests.computeIfAbsent(group, o -> new ArrayList<>());
         if (!list.contains(name)) list.add(name);
-        data.completionData.put(name, new CQuestCompletionData(name, new MCTimestamp(player.world)));
+        data.completionData.put(name, new CQuestTimestamp(name, player.world));
 
 
         if (data.trackedQuestName.value.equals(name)) data.trackedQuestName.set("");
@@ -282,7 +290,8 @@ public class CQuests extends Component
 
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
-        if (data.completionData != null) data.completionData.remove(name);
+
+        data.completionData.remove(name);
 
         String group = quest.group.value;
         ArrayList<String> list = data.completedQuests.get(group);
