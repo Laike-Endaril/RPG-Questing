@@ -19,6 +19,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
     public EntityPlayerMP player;
     public CStringUTF8 trackedQuestName = new CStringUTF8().set("");
     public LinkedHashMap<String, ArrayList<String>> completedQuests = new LinkedHashMap<>();
+    public LinkedHashMap<String, CQuestCompletionData> completionData = new LinkedHashMap<>();
     public LinkedHashMap<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> inProgressQuests = new LinkedHashMap<>();
 
 
@@ -127,6 +128,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
     {
         trackedQuestName.save(stream);
 
+
         new CInt().set(completedQuests.size()).save(stream);
         for (Map.Entry<String, ArrayList<String>> entry : completedQuests.entrySet())
         {
@@ -137,6 +139,14 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
 
             for (String name : groupQuests) new CStringUTF8().set(name).save(stream);
         }
+
+        new CInt().set(completionData.size()).save(stream);
+        for (Map.Entry<String, CQuestCompletionData> entry : completionData.entrySet())
+        {
+            new CStringUTF8().set(entry.getKey()).save(stream);
+            entry.getValue().save(stream);
+        }
+
 
         new CInt().set(inProgressQuests.size()).save(stream);
         for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> entry : inProgressQuests.entrySet())
@@ -159,6 +169,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
             }
         }
 
+
         return this;
     }
 
@@ -166,6 +177,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
     public CPlayerQuestData load(InputStream stream)
     {
         trackedQuestName.load(stream);
+
 
         completedQuests.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
@@ -178,6 +190,13 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
                 list.add(new CStringUTF8().load(stream).value);
             }
         }
+
+        completionData.clear();
+        for (int i = new CInt().load(stream).value; i > 0; i--)
+        {
+            completionData.put(new CStringUTF8().load(stream).value, new CQuestCompletionData().load(stream));
+        }
+
 
         inProgressQuests.clear();
         for (int i = new CInt().load(stream).value; i > 0; i--)
@@ -198,6 +217,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
             }
         }
 
+
         return this;
     }
 
@@ -205,6 +225,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
     public Component writeObf(ByteBuf buf)
     {
         trackedQuestName.write(buf);
+
 
         buf.writeInt(completedQuests.size());
         for (Map.Entry<String, ArrayList<String>> entry : completedQuests.entrySet())
@@ -216,6 +237,14 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
 
             for (String name : groupQuests) new CStringUTF8().set(name).write(buf);
         }
+
+        new CInt().set(completionData.size()).write(buf);
+        for (Map.Entry<String, CQuestCompletionData> entry : completionData.entrySet())
+        {
+            new CStringUTF8().set(entry.getKey()).write(buf);
+            entry.getValue().write(buf);
+        }
+
 
         buf.writeInt(inProgressQuests.size());
         for (Map.Entry<String, LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>>> entry : inProgressQuests.entrySet())
@@ -236,6 +265,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
             }
         }
 
+
         return this;
     }
 
@@ -243,6 +273,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
     public Component readObf(ByteBuf buf)
     {
         trackedQuestName.read(buf);
+
 
         completedQuests.clear();
         for (int i = buf.readInt(); i > 0; i--)
@@ -255,6 +286,13 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
                 list.add(new CStringUTF8().read(buf).value);
             }
         }
+
+        completionData.clear();
+        for (int i = new CInt().read(buf).value; i > 0; i--)
+        {
+            completionData.put(new CStringUTF8().read(buf).value, new CQuestCompletionData().read(buf));
+        }
+
 
         inProgressQuests.clear();
         for (int i = buf.readInt(); i > 0; i--)
@@ -273,6 +311,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
                 }
             }
         }
+
 
         return this;
     }

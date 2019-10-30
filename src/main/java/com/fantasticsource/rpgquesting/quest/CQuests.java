@@ -1,5 +1,6 @@
 package com.fantasticsource.rpgquesting.quest;
 
+import com.fantasticsource.mctools.MCTimestamp;
 import com.fantasticsource.mctools.component.CItemStack;
 import com.fantasticsource.mctools.sound.SimpleSound;
 import com.fantasticsource.rpgquesting.Network;
@@ -231,6 +232,7 @@ public class CQuests extends Component
 
         ArrayList<String> list = data.completedQuests.computeIfAbsent(group, o -> new ArrayList<>());
         if (!list.contains(name)) list.add(name);
+        data.completionData.put(name, new CQuestCompletionData(name, new MCTimestamp(player.world)));
 
         player.addExperience(quest.experience.value);
         for (CItemStack stack : quest.rewards)
@@ -264,6 +266,7 @@ public class CQuests extends Component
 
         ArrayList<String> list = data.completedQuests.computeIfAbsent(group, o -> new ArrayList<>());
         if (!list.contains(name)) list.add(name);
+        data.completionData.put(name, new CQuestCompletionData(name, new MCTimestamp(player.world)));
 
 
         if (data.trackedQuestName.value.equals(name)) data.trackedQuestName.set("");
@@ -279,6 +282,7 @@ public class CQuests extends Component
 
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
+        if (data.completionData != null) data.completionData.remove(name);
 
         String group = quest.group.value;
         ArrayList<String> list = data.completedQuests.get(group);
