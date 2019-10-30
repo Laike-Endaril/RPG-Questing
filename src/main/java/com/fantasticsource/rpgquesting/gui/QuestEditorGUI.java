@@ -38,7 +38,7 @@ public class QuestEditorGUI extends GUIScreen
     public GUIScrollView main, objectives, rewards, conditions, dialogues;
     private GUIGradientBorder separator;
     private GUITabView tabView;
-    private GUILabeledTextInput name, group, level, repeatable, experience;
+    public GUILabeledTextInput name, group, level, repeatable, experience;
     private GUIText oldName;
     private CQuest quest;
     private GUINavbar navbar;

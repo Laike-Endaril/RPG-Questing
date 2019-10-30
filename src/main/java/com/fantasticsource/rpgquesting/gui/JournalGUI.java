@@ -1,6 +1,5 @@
 package com.fantasticsource.rpgquesting.gui;
 
-import com.fantasticsource.mctools.MCTimestamp;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIGradient;
@@ -14,7 +13,6 @@ import com.fantasticsource.rpgquesting.Colors;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
-import com.fantasticsource.rpgquesting.quest.CQuestTimestamp;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
 import com.fantasticsource.rpgquesting.quest.objective.CObjective;
 import com.fantasticsource.tools.component.CUUID;
@@ -293,15 +291,7 @@ public class JournalGUI extends GUIScreen
 
 
                 //Add completion note
-                CQuestTimestamp completionData = data.completionData.get(questName);
-                MCTimestamp timestamp = completionData.timestamp.value;
-                questView.add(new GUIText(GUI, "Completed on " + timestamp.toString(true, false, false).replaceAll("-", "/"), BLUE[0]));
-                questView.add(new GUIText(GUI, "At " + timestamp.toString(false, true, false), BLUE[0]));
-                questView.add(new GUIText(GUI, "\n"));
-                questView.add(new GUIText(GUI, "On in-game day " + timestamp.getGameYear() + " / " + timestamp.getGameMonth() + " / " + timestamp.getGameDay(), BLUE[0]));
-                int minute = timestamp.getGameMinute();
-                int second = timestamp.getGameSecond();
-                questView.add(new GUIText(GUI, "At " + timestamp.getGameHour() + ":" + (minute < 10 ? "0" + minute : minute) + ":" + (second < 10 ? "0" + second : second), BLUE[0]));
+                questView.add(new GUIText(GUI, "Quest Completed!", BLUE[0]));
                 questView.add(new GUIText(GUI, "\n"));
 
 

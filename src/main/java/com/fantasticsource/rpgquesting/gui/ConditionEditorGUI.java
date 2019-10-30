@@ -131,6 +131,12 @@ public class ConditionEditorGUI extends GUIScreen
         conditionSelector.add(new CConditionQuestCompleted().getChoosableElement(this));
         conditionSelector.add(new GUITextSpacer(this));
 
+        conditionSelector.add(new CConditionQuestDaily().getChoosableElement(this));
+        conditionSelector.add(new GUITextSpacer(this));
+
+        conditionSelector.add(new CConditionQuestWeekly().getChoosableElement(this));
+        conditionSelector.add(new GUITextSpacer(this));
+
         //Normal conditions
         conditionSelector.add(new GUITextSpacer(this));
 
@@ -311,6 +317,39 @@ public class ConditionEditorGUI extends GUIScreen
                 });
                 conditionEditor.add(questName);
                 conditionEditor.add(new GUITextSpacer(this));
+
+                if (cls == CConditionQuestDaily.class)
+                {
+                    GUILabeledTextInput hourOffset = new GUILabeledTextInput(this, "Reset hour (12 is noon): ", "" + ((CConditionQuestDaily) condition).hourOffset.value, FilterInt.INSTANCE);
+                    hourOffset.input.addRecalcActions(() ->
+                    {
+                        if (hourOffset.input.valid())
+                        {
+                            ((CConditionQuestDaily) condition).hourOffset.set(Integer.parseInt(hourOffset.input.text));
+                            current.setCondition(condition);
+                        }
+                    });
+                    conditionEditor.add(hourOffset);
+                    conditionEditor.add(new GUITextSpacer(this));
+
+                    questName.input.text = QuestEditorGUI.GUI.name.input.text;
+                }
+                else if (cls == CConditionQuestWeekly.class)
+                {
+                    GUILabeledTextInput hourOffset = new GUILabeledTextInput(this, "Reset hour (12 is noon Monday, 36 is noon Tuesday): ", "" + ((CConditionQuestWeekly) condition).hourOffset.value, FilterInt.INSTANCE);
+                    hourOffset.input.addRecalcActions(() ->
+                    {
+                        if (hourOffset.input.valid())
+                        {
+                            ((CConditionQuestWeekly) condition).hourOffset.set(Integer.parseInt(hourOffset.input.text));
+                            current.setCondition(condition);
+                        }
+                    });
+                    conditionEditor.add(hourOffset);
+                    conditionEditor.add(new GUITextSpacer(this));
+
+                    questName.input.text = QuestEditorGUI.GUI.name.input.text;
+                }
             }
             else if (cls == CConditionNot.class)
             {
