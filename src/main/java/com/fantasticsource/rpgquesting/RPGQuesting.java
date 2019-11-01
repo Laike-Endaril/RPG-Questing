@@ -28,7 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 import java.io.IOException;
 
-@Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.026b,)", acceptableRemoteVersions = "[1.12.2.000j,1.12.2.000k]")
+@Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.026b,)")
 public class RPGQuesting
 {
     public static final String MODID = "rpgquesting";
