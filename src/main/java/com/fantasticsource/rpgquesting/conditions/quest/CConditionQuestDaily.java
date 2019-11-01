@@ -56,7 +56,8 @@ public class CConditionQuestDaily extends CQuestCondition
 
             CQuest quest = CQuests.get(questName.value);
             if (quest == null) result.add("Quest must not yet be completed today (quest does not exist!): \"" + questName.value + '"');
-            else if (!quest.isCompleted((EntityPlayerMP) entity)) result.add("Quest must not yet be completed today: \"" + quest.name.value + '"');
+            else if (quest.isCompleted((EntityPlayerMP) entity)) result.add("Quest must not yet be completed today: \"" + quest.name.value + '"');
+            if (result.size() > 0) System.out.println(result.get(result.size() - 1));
         }
         return result;
     }

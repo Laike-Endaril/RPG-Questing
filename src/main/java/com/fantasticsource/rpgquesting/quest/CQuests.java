@@ -228,8 +228,6 @@ public class CQuests extends Component
         CPlayerQuestData data = playerQuestData.get(player.getPersistentID());
         if (data == null) return false;
 
-        data.startData.remove(name);
-
         String group = quest.group.value;
         LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(group);
         if (map == null || map.remove(name) == null) return false;
@@ -261,8 +259,6 @@ public class CQuests extends Component
         if (quest == null) return false;
 
         CPlayerQuestData data = playerQuestData.computeIfAbsent(player.getPersistentID(), o -> new CPlayerQuestData(player));
-
-        data.startData.remove(name);
 
         String group = quest.group.value;
         LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> map = data.inProgressQuests.get(group);
