@@ -1,7 +1,7 @@
 package com.fantasticsource.rpgquesting.quest;
 
+import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.component.CItemStack;
-import com.fantasticsource.mctools.sound.SimpleSound;
 import com.fantasticsource.rpgquesting.Network;
 import com.fantasticsource.rpgquesting.RPGQuesting;
 import com.fantasticsource.rpgquesting.Sounds;
@@ -82,7 +82,7 @@ public class CQuests extends Component
 
         track(player, name);
 
-        SimpleSound.playOnClient(player, Sounds.QUEST_ACCEPTED);
+        MCTools.playSimpleSoundOnClient(player, Sounds.QUEST_ACCEPTED);
     }
 
     public static void track(EntityPlayerMP player, String name)
@@ -250,7 +250,7 @@ public class CQuests extends Component
         if (data.trackedQuestName.value.equals(name)) data.trackedQuestName.set("");
         data.saveAndSync();
 
-        SimpleSound.playOnClient(player, Sounds.QUEST_COMPLETE);
+        MCTools.playSimpleSoundOnClient(player, Sounds.QUEST_COMPLETE);
 
         return true;
     }
