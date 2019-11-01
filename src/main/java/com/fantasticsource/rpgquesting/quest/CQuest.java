@@ -34,7 +34,7 @@ public class CQuest extends Component implements IObfuscatedComponent
     public ArrayList<CCondition> conditions = new ArrayList<>();
 
     private boolean recursion = false;
-    private long recursionTime = -1;
+    private long lastWarning = -1;
 
 
     public CQuest()
@@ -86,19 +86,26 @@ public class CQuest extends Component implements IObfuscatedComponent
 
         if (recursion)
         {
-            if ((recursionTime == -1 || ServerTickTimer.currentTick() - recursionTime > 1200))
+            if ((lastWarning == -1 || ServerTickTimer.currentTick() - lastWarning > 1200))
             {
                 System.err.println("ERROR: infinite recursion detected in quest availability conditions for quest: " + name.value);
                 System.err.println("This happens when you require a quest be available in its own availability conditions (which is redundant), or have an indirect loop of 2 or more quests requiring each other be available");
                 System.err.println("Edit quest availability conditions to remove this error message");
-                recursionTime = ServerTickTimer.currentTick();
+                lastWarning = ServerTickTimer.currentTick();
             }
             return false;
         }
 
 
         recursion = true;
-        for (CCondition condition : conditions) if (condition.unmetConditions(player).size() > 0) return false;
+        for (CCondition condition : conditions)
+        {
+            if (condition.unmetConditions(player).size() > 0)
+            {
+                recursion = false;
+                return false;
+            }
+        }
         recursion = false;
 
         return true;
