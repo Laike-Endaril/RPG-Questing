@@ -1,7 +1,3 @@
-Check daily quests...they seem to be repeatable immediately upon completion?
-
-
-
 Move shown dialogue to a column in the center (still aligned left), including scrollbar, and add a spacer at the top and bottom
 
 
