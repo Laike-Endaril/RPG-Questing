@@ -1,7 +1,36 @@
+2 different dialogue styles:
+1.
 Move shown dialogue to a column in the center (still aligned left), including scrollbar, and add a spacer at the top and bottom
+Add player / entity models to left and right of column
+2.
+Change to a full-opacity textured GUI in center of screen, with models above text (see pin in discord dev table)
+
+
+
+Fix spacing in journal navigator
+
+
+
+When opening already-defined actions or conditions, default to the options tab
+
+
+
+Add innate conditions to certain actions...
+...give items -> intentory space available
+...branch -> dialogue and branch exist
+...quest actions -> quest exists and is in the right state of progress
+
+
+
+For some reason, /rpgq set Laike_Endaril Test unstarted is returning the usage when valid, on a daily quest
+
 
 
 Change save files to per-quest and per-dialogue, in group folders
+
+
+
+Have all quest conditions and actions autogen with the last questname stored in the quest editor gui var?
 
 
 
@@ -35,10 +64,6 @@ Based on Tiamat RPG level
 
 
 Rewards shown in dialogue & journal
-
-
-
-Show player and NPC models during dialogue
 
 
 

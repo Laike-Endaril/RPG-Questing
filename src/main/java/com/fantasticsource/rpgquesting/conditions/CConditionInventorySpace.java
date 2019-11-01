@@ -43,13 +43,24 @@ public class CConditionInventorySpace extends CCondition
         else
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            int i = 0, i2 = 5;
-            for (ItemStack stack : player.inventory.mainInventory)
+            if (Compat.faerunskills)
             {
-                if (Compat.faerunskills && --i2 > 0) continue;
-                if (stack.isEmpty() && ++i >= slotCount.value) return result;
+                int i = 0;
+                for (int i2 = 0; i2 < player.inventory.getSizeInventory() - 9; i2++)
+                {
+                    if (player.inventory.getStackInSlot(i2).isEmpty() && ++i >= slotCount.value) return result;
+                }
+                result.add("You need at least " + slotCount.value + " inventory space" + (slotCount.value == 1 ? "" : "s") + " available");
             }
-            result.add("You need at least " + slotCount.value + " inventory space" + (slotCount.value == 1 ? "" : "s") + " available");
+            else
+            {
+                int i = 0;
+                for (ItemStack stack : player.inventory.mainInventory.toArray(new ItemStack[0]))
+                {
+                    if (stack.isEmpty() && ++i >= slotCount.value) return result;
+                }
+                result.add("You need at least " + slotCount.value + " inventory space" + (slotCount.value == 1 ? "" : "s") + " available");
+            }
         }
         return result;
     }
