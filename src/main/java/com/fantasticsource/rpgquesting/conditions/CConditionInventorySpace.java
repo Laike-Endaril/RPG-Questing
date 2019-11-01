@@ -1,6 +1,7 @@
 package com.fantasticsource.rpgquesting.conditions;
 
 import com.fantasticsource.mctools.gui.GUIScreen;
+import com.fantasticsource.rpgquesting.compat.Compat;
 import com.fantasticsource.rpgquesting.gui.GUICondition;
 import com.fantasticsource.tools.component.CInt;
 import io.netty.buffer.ByteBuf;
@@ -42,9 +43,10 @@ public class CConditionInventorySpace extends CCondition
         else
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            int i = 0;
+            int i = 0, i2 = 5;
             for (ItemStack stack : player.inventory.mainInventory)
             {
+                if (Compat.faerunskills && --i2 > 0) continue;
                 if (stack.isEmpty() && ++i >= slotCount.value) return result;
             }
             result.add("You need at least " + slotCount.value + " inventory space" + (slotCount.value == 1 ? "" : "s") + " available");
@@ -65,7 +67,7 @@ public class CConditionInventorySpace extends CCondition
     public GUICondition getChoosableElement(GUIScreen screen)
     {
         GUICondition conditionElement = new GUICondition(screen, new CConditionInventorySpace(2));
-        conditionElement.text = conditionElement.text.replace("2", "x");
+        conditionElement.text = conditionElement.text.replace("1", "x");
         return conditionElement;
     }
 

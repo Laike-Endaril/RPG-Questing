@@ -133,5 +133,6 @@ public class RPGQuesting
         //Compat init
         if (Loader.isModLoaded("neat")) Compat.neat = true;
         if (Loader.isModLoaded("customnpcs")) Compat.customnpcs = true;
+        if (Loader.isModLoaded("faerunskills")) Compat.faerunskills = true;
     }
 }
