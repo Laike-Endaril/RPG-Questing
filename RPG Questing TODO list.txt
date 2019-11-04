@@ -1,3 +1,10 @@
+Dynamic objectives...
+...Hidden flag (whether it's shown)
+...Active flag (whether it can change)
+...Required flag (whether it's required to finish the quest)
+
+
+
 2 different dialogue styles:
 1.
 Move shown dialogue to a column in the center (still aligned left), including scrollbar, and add a spacer at the top and bottom
@@ -70,15 +77,6 @@ Rewards shown in dialogue & journal
 Quest attributes
 * Shareable (boolean; allows you to invite other players, giving them the option to start the quest, bypassing the normal quest start trigger)
 * Hidden (boolean; does not display marker or appear in journal when "available")
-
-
-
-Failable objectives
-eg. don't let x die (could be yourself, for arena survival)
-
-
-
-Dynamic objectives (eg. start out hidden)
 
 
 

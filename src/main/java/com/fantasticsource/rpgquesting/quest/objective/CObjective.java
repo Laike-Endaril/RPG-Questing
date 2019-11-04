@@ -14,7 +14,7 @@ import java.io.OutputStream;
 public abstract class CObjective extends Component implements IObfuscatedComponent
 {
     public CStringUTF8 text = new CStringUTF8();
-    public CBoolean progressIsPrefix = new CBoolean().set(true);
+    public CBoolean progressIsPrefix = new CBoolean().set(true), isRequired = new CBoolean().set(true), isActive = new CBoolean().set(true), isHidden = new CBoolean().set(false);
     CUUID owner = new CUUID();
 
     public final CObjective setOwner(EntityPlayerMP player)
@@ -48,6 +48,10 @@ public abstract class CObjective extends Component implements IObfuscatedCompone
         text.write(buf);
         progressIsPrefix.write(buf);
 
+        isRequired.write(buf);
+        isActive.write(buf);
+        isHidden.write(buf);
+
         return this;
     }
 
@@ -58,6 +62,10 @@ public abstract class CObjective extends Component implements IObfuscatedCompone
 
         text.read(buf);
         progressIsPrefix.read(buf);
+
+        isRequired.read(buf);
+        isActive.read(buf);
+        isHidden.read(buf);
 
         return this;
     }
@@ -71,6 +79,10 @@ public abstract class CObjective extends Component implements IObfuscatedCompone
         text.save(stream);
         progressIsPrefix.save(stream);
 
+        isRequired.save(stream);
+        isActive.save(stream);
+        isHidden.save(stream);
+
         return this;
     }
 
@@ -81,6 +93,10 @@ public abstract class CObjective extends Component implements IObfuscatedCompone
 
         text.load(stream);
         progressIsPrefix.load(stream);
+
+        isRequired.load(stream);
+        isActive.load(stream);
+        isHidden.load(stream);
 
         return this;
     }

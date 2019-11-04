@@ -238,6 +238,7 @@ public class ObjectiveEditorGUI extends GUIScreen
 
         if (objective != null)
         {
+            //Display
             GUILabeledTextInput progressIsPrefix = new GUILabeledTextInput(this, "Progress is prefix: ", "" + objective.progressIsPrefix.value, FilterBoolean.INSTANCE);
             progressIsPrefix.input.addRecalcActions(() ->
             {
@@ -266,6 +267,48 @@ public class ObjectiveEditorGUI extends GUIScreen
             objectiveEditor.add(new GUITextSpacer(this));
 
 
+            //Meta flags
+            GUILabeledTextInput isRequired = new GUILabeledTextInput(this, "Required: ", "" + objective.isRequired.value, FilterBoolean.INSTANCE);
+            isRequired.input.addRecalcActions(() ->
+            {
+                if (isRequired.input.valid())
+                {
+                    objective.isRequired.set(FilterBoolean.INSTANCE.parse(isRequired.input.text));
+                    current.setObjective(objective);
+                }
+            });
+            objectiveEditor.add(isRequired);
+            objectiveEditor.add(new GUITextSpacer(this));
+
+            GUILabeledTextInput isActive = new GUILabeledTextInput(this, "Active: ", "" + objective.isActive.value, FilterBoolean.INSTANCE);
+            isActive.input.addRecalcActions(() ->
+            {
+                if (isActive.input.valid())
+                {
+                    objective.isActive.set(FilterBoolean.INSTANCE.parse(isActive.input.text));
+                    current.setObjective(objective);
+                }
+            });
+            objectiveEditor.add(isActive);
+            objectiveEditor.add(new GUITextSpacer(this));
+
+            GUILabeledTextInput isHidden = new GUILabeledTextInput(this, "Hidden: ", "" + objective.isHidden.value, FilterBoolean.INSTANCE);
+            isHidden.input.addRecalcActions(() ->
+            {
+                if (isHidden.input.valid())
+                {
+                    objective.isHidden.set(FilterBoolean.INSTANCE.parse(isHidden.input.text));
+                    current.setObjective(objective);
+                }
+            });
+            objectiveEditor.add(isHidden);
+            objectiveEditor.add(new GUITextSpacer(this));
+
+
+            objectiveEditor.add(new GUITextSpacer(this));
+
+
+            //Objective-specific options
             Class cls = objective.getClass();
             if (cls == CObjectiveDialogue.class)
             {
