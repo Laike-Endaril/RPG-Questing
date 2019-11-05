@@ -4,8 +4,13 @@ import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.rpgquesting.compat.Compat;
 import com.fantasticsource.rpgquesting.dialogue.CDialogues;
 import com.fantasticsource.rpgquesting.gui.JournalGUI;
+import com.fantasticsource.rpgquesting.quest.CPlayerQuestData;
+import com.fantasticsource.rpgquesting.quest.CQuest;
 import com.fantasticsource.rpgquesting.quest.CQuests;
 import com.fantasticsource.rpgquesting.quest.QuestTracker;
+import com.fantasticsource.rpgquesting.quest.objective.CObjective;
+import com.fantasticsource.tools.component.CUUID;
+import com.fantasticsource.tools.datastructures.Pair;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,6 +32,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 @Mod(modid = RPGQuesting.MODID, name = RPGQuesting.NAME, version = RPGQuesting.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.026b,)", acceptableRemoteVersions = "[1.12.2.000j,1.12.2.000l]")
 public class RPGQuesting
@@ -71,6 +78,30 @@ public class RPGQuesting
 
         if (event.getSide() == Side.SERVER)
         {
+            CQuest quest = CQuests.get("Test");
+            if (quest != null) System.out.println(quest.objectives.get(0).isDone());
+
+            CPlayerQuestData data = CQuests.playerQuestData.get(event.getEntityPlayer().getPersistentID());
+            if (data != null)
+            {
+                LinkedHashMap<String, Pair<CUUID, ArrayList<CObjective>>> groupQuests = data.inProgressQuests.get("Test");
+                if (groupQuests != null)
+                {
+                    Pair<CUUID, ArrayList<CObjective>> questObjectives = groupQuests.get("Test");
+                    if (questObjectives != null)
+                    {
+                        System.out.println(questObjectives.getValue().size());
+                        if (questObjectives.getValue().size() > 0)
+                        {
+                            CObjective objective = questObjectives.getValue().get(0);
+                            System.out.println(objective.isDone());
+                            System.out.println(objective.isHidden);
+                        }
+                    }
+                }
+            }
+
+
             if (CDialogues.entityInteract((EntityPlayerMP) event.getEntityPlayer(), event.getTarget())) event.setCanceled(true);
         }
         else CDialogues.targetID = event.getTarget().getEntityId();

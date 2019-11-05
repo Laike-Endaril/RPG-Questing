@@ -1,5 +1,7 @@
+Figure out why hidden objectives are getting removed from their quests
+
 Dynamic objectives...
-...Hidden flag (whether it's shown)
+...Hidden flag (whether it's shown) (began implementation)
 ...Active flag (whether it can change)
 ...Required flag (whether it's required to finish the quest)
 

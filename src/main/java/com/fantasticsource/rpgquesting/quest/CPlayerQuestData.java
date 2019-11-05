@@ -273,9 +273,10 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
                 new CStringUTF8().set(subEntry.getKey()).write(buf);
 
                 ArrayList<CObjective> objectives = subEntry.getValue().getValue();
+                objectives.removeIf(e -> e.isHidden.value);
                 buf.writeInt(objectives.size());
 
-                for (CObjective objective : objectives) Component.writeMarked(buf, objective);
+                for (CObjective objective : objectives) IObfuscatedComponent.writeMarkedObf(buf, objective);
             }
         }
 
@@ -328,7 +329,7 @@ public class CPlayerQuestData extends Component implements IObfuscatedComponent
 
                 for (int i3 = buf.readInt(); i3 > 0; i3--)
                 {
-                    objectives.add((CObjective) Component.readMarked(buf));
+                    objectives.add((CObjective) IObfuscatedComponent.readMarkedObf(buf));
                 }
             }
         }
